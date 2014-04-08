@@ -1,0 +1,35 @@
+<html>
+  <head><title>REPOX Documentation</title></head>
+  <body>
+  	<center><a href="index.html">&lt; Back to index</a></center>
+    <h2>Install</h2>
+	
+	<h3>Java 6</h3>
+	The first thing to do to install REPOX is to get Java 6 or higher, for the Libraries that don't have it yet. The URL to retrieve it is: <a href="http://java.sun.com/javase/downloads/index.jsp">http://java.sun.com/javase/downloads/index.jsp</a>. It may be required to have administrative rights in Windows or root permission in Linux.
+
+	<h3 id="windows">Windows XP/Vista</h3>
+	<h4>Windows XP</h4>
+	First check that you are using an account with administrative permissions. To install REPOX, click twice on the file install.jar. If it doesn't work, open a command prompt and change directory to the one that has the installer and execute:
+	
+	<br /><br /><code>java -jar install.jar</code>
+	
+	<h4>Windows Vista</h4>
+	In Windows Vista it is necessary to execute the installer with special administrative permissions. So, a command prompt window with administrator rights is needed. To create one you need to:
+	
+	<br /><br /><code>Go to Start > All Programs > Accessories > then right-click on "Command Prompt" and select "Run as administrator".</code>
+	
+	<br /><br />Then change directory to the one that has the installer and execute:
+	
+	<br /><br /><code>java -jar install.jar</code>
+	
+	<h3 id="linux">Linux</h3>
+	REPOX has only been tested in Ubuntu. If you are using another distribution, the Jetty service may have to be installed manually. To install REPOX you need to use root or be a sudoer. Open a terminal and change the directory to the one that has the installer. If you are logged with root execute:
+	
+	<br /><br /><code>java -jar install.jar</code>
+	
+	<br /><br />If you are logged with a used which has sudoer permission execute:
+	
+	<br /><br /><code>sudo java -jar install.jar</code>
+
+  </body>
+</html>

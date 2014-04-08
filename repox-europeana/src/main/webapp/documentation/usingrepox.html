@@ -1,0 +1,95 @@
+<html>
+  <head><title>REPOX Documentation</title></head>
+  <body>
+    <center><a href="index.html">&lt; Back to index</a></center>
+    <h2>Start Using REPOX</h2>
+
+	<h3 id="runningjetty">1. Running Jetty Server</h3>
+	See <a href="jettyserver.html">Jetty Server</a> for ways to install or run the Jetty Server.
+	<br /><br />
+
+	<a href="usingrepox.html#top">Back to Top</a>
+
+	<h3 id="repoxhomepage">2. REPOX Homepage</h3>
+	Open the REPOX web page: <a href="http://localhost:$repox.jettyPort/repox" target="_blank">http://localhost:$repox.jettyPort/repox</a> in your browser.	 Except for the Homepage and OAI-PMH related pages all management in REPOX is protected by an authentication (user and password) defined during the installation.
+	<br /><br />
+
+	<a href="usingrepox.html#top">Back to Top</a>
+
+	<h3 id="mappingmetadata">3. Mapping Metadata to TEL format</h3>
+	This is an important step, as creating a metadata crosswalk from the Libraries format to TEL format is mandatory. There are already some transformations mapped, which can be edited and adapted as needed. To create a new mapping using an existing Data Source that already has records ingested, edit the Data Source and click "Create From Records" on the line "Transformation". To do so, skip this step and return at the end after completing all the steps and ingesting the Records.
+
+	<br /><br />Follow the menu link Schema Mapper, and then there are three options to create a transformation to the TEL format, described by their order on the page:
+	
+	<ul>
+		<li>Submitting a sample single Record XML file or a zip file with Records in XML to extract tags and create a mapping.</li>
+		<li>Submitting the XSLT Transformation file.</li>
+		<li>Viewing existing mappings, deleting them and editing them if it is possible. It will not be possible to edit a mapping if an XSLT transformation file was submitted.</li>
+	</ul>
+
+	<br />For example, to map UNIMARC records (in XML: MarcXchange/MarcXML) to TEL, the mapping unimarcToTel can be used. By clicking Edit, it is possible to adapt the connections visually: <br /><br />
+
+	<center><img src="images/mapschema.png" /></center>
+
+	<br /><br />
+	To create a connection, click one of the dots from one side and drag to a dot from the other side which corresponds to the same field. To delete a connection, hover the mouse on the dot, and then click the scissors that appear near it. It is also possible to create groups of tags (extracted from the XML Record), for example to associate an author's first and last name and then map it to a DC TEL tag. After submitting, it is possible to see the sample XML, the created transformation file (XSLT) and the result of applying the XSLT to the XML, and if the result is satisfactory, fill the fields and submit the mapping. The mapping can now be used in the Data Source creation/edition form (on the field Transformation to TEL).
+
+	<br /><br />To create a mapping from scratch, it is possible to use the section titled Map Schema Visually from Sample. Select an XML Record file or zip with several XML Records that will be used as a sample to extract possible tags. Then it is possible to perform the mapping like described in the previous paragraph.
+
+	<br /><br />Submitting an XSLT Transformation file can be done on the middle section, named "Submit Transformation". The field Identifier and Description serve the purpose of labelling the mapping. The field Source Format is case sensitive and defines for which metadata format the mapping is valid. To associate an Ingest Process with the mapping create or edit an Ingest Process and select id of the Schema Map created as 'Transformation to Tel'.    
+
+	<br /><br />
+	<a href="usingrepox.html#top">Back to Top</a>
+
+	<h3 id="creatingdataprovider">4. Creating a Data Provider and Data Source</h3>
+	To import the Records, a Data Provider with a Data Source must be created. A Data Provider represents an entity, like a Library, and a Data Source the source of the Records. To create a Data Provider go to the Home page and click "...Create..." on the right of the Data Provider label. Fill the name (has to start with a letter, can contain letters, numbers and the underscore _) and description. It is also possible to associate a logo to the Data Provider that will show up in the Homepage. Then submit and follow the link "...Create Data Source...". There are the following available types of Data Sources:
+
+	<ul>
+		<li>Folder - a directory with files in the format ISO2709 or an XML format (or zip files with files) that will be imported to REPOX in the format MarcXchange. For ISO2709 is possible to select the variant of ISO2709 that will be used and the Character Encoding of the files.</li>
+		<li>OAI-PMH - a source which accepts OAI-PMH requests. There are three fields that must be filled: the name, the OAI Server and the OAI Set that will be used.</li>
+	</ul>
+
+	An example of an ISO2709 Directory Data Source with the Standard implementation and UTF-8 character encoding:<br /><br />
+
+	<center><img src="images/createdatasource.png" /></center>
+
+	<br />
+	
+	The ID Policy defines how the record identifiers are assigned:
+
+	<ul>
+		<li>ID Generated - the Records imported don't have a unique identifier. All new Resources are assigned a unique identifier by REPOX.</li>
+		<li>ID Extracted - all the Records imported have a unique identifier, to be extracted from the Record using an XPath expression (ex: /record/id). This is a common scenario, as bibliographic metadata formats have tags for the identifier.</li>
+	</ul>
+
+	An important issue with ID extracted is the use of a namespace for the XPath expression. In the following record:
+	<p style="padding-left: 1em;">
+		&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;UTF-8&quot;?&gt;
+		<br />&lt;mx:record&nbsp;xmlns:mx=&quot;info:lc/xmlns/marcxchange-v1&quot;&nbsp;format=&quot;Unimarc&quot;&gt;
+		<br />&nbsp;&nbsp;&lt;mx:leader&gt;00543nac&nbsp;&nbsp;2200133&nbsp;&nbsp;&nbsp;45&nbsp;&nbsp;&lt;/mx:leader&gt;
+		<br />&nbsp;&nbsp;&lt;mx:controlfield&nbsp;tag=&quot;001&quot;&gt;kbr_1_866445&lt;/mx:controlfield&gt;
+		<br />&nbsp;&nbsp;...
+		<br />&lt;/mx:record&gt;
+	</p>
+	<br />
+	To use the tag &lt;mx:controlfield&nbsp;tag=&quot;001&quot;&gt; as the identifier insert in Xpath: /mx:record/mx:controlfield[@tag=&quot;001&quot;] and add a namespace with
+	<p style="padding-left: 1em;">
+		Namespace Prefix: mx
+		<br />Namespace Uri: info:lc/xmlns/marcxchange-v1 (the namespace that appears on mx:record as attribute xmlns:mx)
+	</p>
+	
+	<br /><br />
+	
+	The Output section defines the OAI-PMH set behaviour for this Data Source. Record Set and Description correspond to the OAI-PMH set and its description. The transformations enable providing the records in other formats by OAI-PMH.
+	
+	<br /><br />
+	
+ 	After submitting the Data Source, the Data Provider page has two new items for the Data Source: "Ingest Processes" and "Local File Export Processes". It is possible to Ingest the Records immediately or schedule a periodic ingesting as well as export the records ingested to the filesystem immediately or scheduled. The periodic ingesting works like the Linux cron. Two examples of possible uses: to ingest monthly on the 15th, change Day from * to 15, Hour to 0 and Minute to 0 (to ingest at midnight); to ingest daily at 16h30, change Minute to 30 and Hour to 16. To delete a periodical ingest, follow the link Scheduled Tasks in the menu (see <a href="scheduledtasks.html">Scheduled Tasks</a>). After each ingesting has started, it is possible to see the log file in the Data Provider View (after using "Ingest Now" use Refresh next to the Data Provider name so the log will show). To export the records in the format it is stored in REPOX, use the menu "Local File Export Processes" and fill the Folder field with a folder accessible to the server where REPOX is installed and the scheduling works as with Ingest Processes.
+
+	<br /><br />	
+
+	After ingesting Records into a Data Source, see <a href="oaipmhtests.html">OAI-PMH Tests</a> to check if the Records are being correctly ingested. To see how many records each Data Source has the Home page can be used.
+
+	<br /><br /><a href="usingrepox.html#top">Back to Top</a>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<errors>
+    <error time="2012-08-15 15:28:15 BST" class="pt.utl.ist.repox.oai.Harvester">
+        java.io.IOException: Server returned HTTP response code: 502 for URL: http://oai.bnf.fr/oai2/OAIHandler?verb=ListRecords&set=gallica&metadataPrefix=oai_dc at
+        sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39) at
+        sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27) at
+        java.lang.reflect.Constructor.newInstance(Constructor.java:513) at
+        sun.net.www.protocol.http.HttpURLConnection$6.run(HttpURLConnection.java:1491) at
+        java.security.AccessController.doPrivileged(Native Method) at
+        sun.net.www.protocol.http.HttpURLConnection.getChainedException(HttpURLConnection.java:1485) at
+        sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1139) at
+        org.oclc.oai.harvester2.verb.HarvesterVerb.harvest(HarvesterVerb.java:338) at
+        org.oclc.oai.harvester2.verb.HarvesterVerb.(HarvesterVerb.java:178) at
+        org.oclc.oai.harvester2.verb.ListRecords.(ListRecords.java:50) at
+        pt.utl.ist.repox.oai.Harvester.getListRecordsWithRetries(Harvester.java:313) at
+        pt.utl.ist.repox.oai.Harvester.run(Harvester.java:199) at
+        java.lang.Thread.run(Thread.java:662)
+        Caused by: java.io.IOException: Server returned HTTP response code: 502 for
+        URL: http://oai.bnf.fr/oai2/OAIHandler?verb=ListRecords&set=gallica&metadataPrefix=oai_dc at
+        sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1436) at
+        java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:379) at
+        org.oclc.oai.harvester2.verb.HarvesterVerb.harvest(HarvesterVerb.java:297) ...
+        5 more
+    </error>
+</errors>
+<summary>
+<info time="2012-08-15 15:27:12 BST" class="pt.utl.ist.repox.oai.DataSourceOai">
+    Starting to import from Data Source with id a0142</info>
+<info time="2012-08-15 15:27:12 BST" class="pt.utl.ist.repox.oai.Harvester">
+    Starting OAI Harvest URL: http://oai.bnf.fr/oai2/OAIHandler - Set:gallica</info>
+<info time="2012-08-15 15:27:12 BST" class="pt.utl.ist.repox.oai.Harvester">
+    sourceUrl: http://oai.bnf.fr/oai2/OAIHandler, sourceSet: gallica, outputBaseDir:
+    /data/solr1/repox/requests/[temp]OAI-PMH_Requests/oai.bnf.fr-gallica,
+    fromDateString: null, untilDateString: null, metadataFormat: oai_dc</info>
+<info time="2012-08-15 15:28:16 BST" class="pt.utl.ist.repox.oai.DataSourceOai">
+    Harvester thread exited without finishing. Exiting ingesting Data Source Oai.</info>
+<info time="2012-08-15 15:28:16 BST" class="pt.utl.ist.repox.oai.DataSourceOai">
+    Finished importing from Data Source with id a0142. Exit status: FAILED</info>

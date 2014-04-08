@@ -1,0 +1,40 @@
+.leftPanel {padding-top:20px; }
+.leftPanel .gwt-DecoratorPanel .topRight { background: transparent url(gwt_cal_demo/gwt/standard/images/vborder.png) repeat-y scroll 0 0; }
+.leftPanel .gwt-DecoratorPanel .bottomRight { background: transparent url(gwt_cal_demo/gwt/standard/images/vborder.png) repeat-y scroll 0 0; }
+
+
+.daysTabBar .gwt-DecoratedTabBar .tabTopLeft {
+  background: url(corner.png) no-repeat 0px -55px;
+  -background:#E8EEF7;
+}
+.daysTabBar .gwt-DecoratedTabBar .tabTopRight {
+  background: url(corner.png) no-repeat -6px -55px;
+  -background:#E8EEF7;
+}
+.daysTabBar .gwt-DecoratedTabBar .tabMiddleCenter { background: #E8EEF7; }
+.daysTabBar .gwt-DecoratedTabBar .tabMiddleLeft { background: #E8EEF7; }
+.daysTabBar .gwt-DecoratedTabBar .tabMiddleRight { background: #E8EEF7; }
+.daysTabBar .gwt-DecoratedTabBar .tabTopCenter { background: #E8EEF7; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopLeft {
+  background: url(corner.png) no-repeat 0px -61px;
+  -background:#D0E4F6;
+}
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopRight {
+  background: url(corner.png) no-repeat -6px -61px;
+  -background:#D0E4F6;
+}
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleCenter { background: #D0E4F6; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleLeft { background: #D0E4F6; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleRight { background: #D0E4F6; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopCenter { background: #D0E4F6; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarRest-wrapper { width:50px; }
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarFirst-wrapper {width:100%; }
+.daysTabBar .gwt-DecoratedTabBar .tabMiddleCenter {
+  color:#112ABB;
+  font-size:13px;
+  font-weight: normal;
+}
+.daysTabBar .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabMiddleCenter {
+  color:#000;
+  font-weight: bold;
+}

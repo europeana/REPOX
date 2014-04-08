@@ -1,0 +1,221 @@
+
+	
+.gwt-cal-DemoBody {
+	background:#dee4ea; padding:0px;margin:0px;overflow:hidden;overflow-x:hidden;overflow-y:hidden;
+}
+.gwt-cal-DemoBody .gwt-cal {
+	border:0px;
+	border-left:1px solid #A1A1A1;
+	width: 100%;
+	
+}
+.gwt-cal-DemoBody .gwt-cal-MonthView {
+	border:0px;
+	border-left:1px solid #A1A1A1;
+	width: 100%;
+	position: relative;
+	height: 527px;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
+	overflow: hidden;
+    background:#FFF;
+}
+.gwt-cal-DemoBody .gwt-cal-MonthView .grid {table-layout:fixed;background:#FFF;width:100%;height:100%;border-collapse:collapse;}
+
+.gwt-cal-HeaderPanel {
+height:47px;
+background: #CCCCCC url(header-gradient.gif);
+width:100%;
+border-bottom:1px solid #000;
+}
+.gwt-cal-FooterPanel {
+height:25px;
+background: #CCCCCC url(footer-gradient.gif);
+width:100%;
+line-height:25px;
+text-align:center;
+color:#353535;
+text-shadow: 1px 1px 1px #C7C7C7;
+font-size:12px;
+}
+.gwt-cal-FooterPanel a, .gwt-cal-FooterPanel a:visited {color:#353535;}
+
+/* Override gwt-DatePicker look and feel */
+/* to resemble the OSX iCal client look & feel */
+.gwt-cal-DemoBody .gwt-DatePicker {
+	border:0px;
+	background: #c0c6cd url(daypicker-gradient.gif);
+}
+
+.gwt-Cal-DemoBody .gwt-DatePicker .datePickerMonthSelector {
+background: transparent;
+}
+
+.gwt-Cal-DemoBody .gwt-DatePicker .datePickerNextButton,
+.gwt-Cal-DemoBody .gwt-DatePicker .datePickerPreviousButton {
+	color: #23344F;
+}
+.gwt-Cal-DemoBody .datePickerMonth {
+	color: #333333;
+	font-size: 14px;
+	text-shadow:.75px 1px 1px #F3F3F3
+}
+.gwt-Cal-DemoBody .datePickerDays {
+	background:transparent;
+}
+.gwt-Cal-DemoBody .datePickerDay{
+	font-weight:bold;
+	color:#333333;
+	text-shadow:0px 1px 1px #E5E5E5;
+}
+.gwt-Cal-DemoBody .datePickerDayIsWeekend {
+	background:transparent;
+	font-size:12px;
+	font-weight:bold;
+	color:#333333;
+}
+.gwt-Cal-DemoBody .datePickerDayIsFiller {
+	font-weight:bold;
+	font-size:12px;
+	color: #A6A6A6;
+	text-shadow:0px 1px 1px #E5E5E5;
+}
+.gwt-Cal-DemoBody .datePickerWeekdayLabel,
+.gwt-Cal-DemoBody .datePickerWeekendLabel{
+	font-size:10px;
+	font-weight:bold;
+	background:transparent;	
+}
+
+.gwt-Cal-DemoBody .datePickerDay  {
+	border-right: 1px solid #B0B7C1;
+	border-left: 1px solid #DCE3EB;
+	border-bottom: 1px solid #B0B7C1;
+	border-top: 1px solid #DCE3EB;
+	width:30px;
+	height:25px;
+}
+.gwt-Cal-DemoBody .datePickerDayIsHighlighted {
+	background:#5b739a url(selected-cell-gradient.gif);
+	border-right: 1px solid #4C6C93;
+	border-left: 1px solid #4C6C93;
+	border-bottom: 1px solid #4C6C93;
+	border-top: 1px solid #4C6C93;
+	color:#FFF;
+	text-shadow:0px 1px 5px #000;
+}
+.gwt-Cal-DemoBody .datePickerDayIsValue {
+	color:#FFF;
+	text-shadow:0px 1px 5px #000;
+	background:#5b739a url(selected-cell-gradient.gif);
+	border-right: 1px solid #4C6C93;
+	border-left: 1px solid #4C6C93;
+	border-bottom: 1px solid #4C6C93;
+	border-top: 1px solid #4C6C93;
+}
+.gwt-Cal-DemoBody .datePickerDayIsToday {
+	color:#FFF;
+	text-shadow:0px 1px 5px #000;
+	background:#5b739a url(today-cell-gradient.gif);
+	border-right: 1px solid #304769;
+	border-left: 1px solid #304769;
+	border-bottom: 1px solid #304769;
+	border-top: 1px solid #304769;
+}
+.gwt-Cal-DemoBody .splitter {
+	background: url(splitter-gradient.gif);
+	height:10px;
+	font-size:1px;
+}
+
+
+
+
+.todayButton {
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius:5px;
+height:25px;
+font-size:12px;
+font-weight:bold;
+-moz-box-shadow:1px 0.5px 0.5px #D5D5D5;
+-webkit-box-shadow:1px 0.5px 0.5px #D5D5D5;
+box-shadow:1px 0.5px 0.5px #D5D5D5;
+font-family:helvetica,arial,verdana;
+color:#333;
+background: #FFF url(button-gradient.gif);
+border:1px solid #666;
+text-shadow:1px 1px 1px #E7E7E7;
+margin-left:10px;
+}
+
+.previousButton {
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-bottomleft: 5px;
+
+height:25px;
+font-size:14px;
+font-weight:bold;
+-moz-box-shadow:1px 0.5px 0.5px #D5D5D5;
+-webkit-box-shadow:1px 0.5px 0.5px #D5D5D5;
+box-shadow:1px 0.5px 0.5px #D5D5D5;
+font-family:verdana;
+color:#333;
+background: #FFF url(button-gradient.gif);
+border:1px solid #666;
+text-shadow:1px 1px 1px #E7E7E7;
+margin-left:0px;
+margin-right:0px;
+}
+
+.nextButton {
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+-moz-border-radius-topright: 5px;
+-moz-border-radius-bottomright: 5px;
+
+height:25px;
+font-size:14px;
+font-weight:bold;
+-moz-box-shadow:1px 0.5px 0.5px #D5D5D5;
+-webkit-box-shadow:1px 0.5px 0.5px #D5D5D5;
+box-shadow:1px 0.5px 0.5px #D5D5D5;
+font-family:verdana;
+color:#333;
+background: #FFF url(button-gradient.gif);
+border:1px solid #666;
+text-shadow:1px 1px 1px #E7E7E7;
+border-left:0px;
+margin-left:0px;
+margin-right:0px;
+}
+
+
+
+
+.dayButton {
+white-space:nowrap;
+height:25px;
+font-size:12px;
+font-weight:bold;
+-moz-box-shadow:1px 0.5px 0.5px #D5D5D5;
+-webkit-box-shadow:1px 0.5px 0.5px #D5D5D5;
+box-shadow:1px 0.5px 0.5px #D5D5D5;
+font-family:helvetica,arial,verdana;
+color:#333;
+background: #FFF url(button-gradient.gif);
+border:1px solid #666;
+text-shadow:1px 1px 1px #E7E7E7;
+border-left:0px;
+margin-left:0px;
+margin-right:0px;
+}
+
+.dayButton.active{
+	background:#000 url(button-active-gradient.gif);
+	color:#FFF;
+	text-shadow:1px 1px 1px #333;
+}

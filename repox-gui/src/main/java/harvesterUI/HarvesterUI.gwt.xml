@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='harvesterui'>
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name="com.extjs.gxt.ui.GXT"/>
+    <inherits name='com.extjs.gxt.themes.Themes' />
+
+    <!-- Inherit the default GWT style sheet.  You can change       -->
+    <!-- the theme of your GWT application by uncommenting          -->
+    <!-- any one of the following lines.                            -->
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+    <inherits name="harvesterUI.HarvesterUI"/>
+
+    <inherits name='com.bradrydzewski.gwt.calendar.Calendar' />
+    <inherits name='com.bradrydzewski.gwt.calendar.theme.google.Google' />
+
+
+    <!-- XMApper              							          	-->
+    <!-- Local inherits                         					-->
+    <!--<inherits name='pt.ist.svgwt.SVGwt'/>-->
+    <!--<inherits name='pt.ist.mdr.gwt.MDRgwt'/>-->
+    <!--<inherits name='pt.ist.mdr.mapping.ui.MappingUI'/>-->
+    <!--<inherits name='pt.ist.mdr.concept.library.ui.MDRConceptLibrary'/>-->
+    <inherits name='pt.ist.mdr.mapping.ui.svg.MDRMappingSVG' />
+
+    <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+    <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+
+    <!-- Other module inherits                                      -->
+    <!-- User Agent -->
+    <!-- Compile faster but only works on Firefox/Chrome/IE Browser-->
+    <!--<set-property name="user.agent" value="gecko1_8"></set-property>-->
+
+
+    <!-- Specify the app entry point class.                         -->
+    <entry-point class='harvesterUI.client.HarvesterUI'/>
+
+    <extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="pt"/>
+    <extend-property name="locale" values="es"/>
+    <extend-property name="locale" values="nl"/>
+    <!--Default Language-->
+    <set-property-fallback name="locale" value="en"/>
+
+    <!-- Specify the paths for translatable code                    -->
+    <source path='client'/>
+    <source path='shared'/>
+
+</module>

@@ -1,0 +1,3 @@
+<#assign status = message>
+
+${message}

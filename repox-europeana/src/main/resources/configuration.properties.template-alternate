@@ -1,0 +1,20 @@
+# Directory of the Jetty home directory (used to place the war file)
+jetty.dir /mypath/jetty-6.1.22
+
+# boolean to use the SIP Database (true/false)
+useSipDatabase true
+
+#Database: Derby
+database.driverClassName org.apache.derby.jdbc.EmbeddedDriver
+database.embeddedDriver true
+database.url jdbc:derby:
+database.create true
+
+#Database: PostgreSQL
+#database.driverClassName org.postgresql.Driver
+#database.url jdbc:postgresql://localhost/repoxdb
+#database.user postgres
+#database.password postgres
+
+#MySQL properties example
+#database.url jdbc:mysql://127.0.0.1:3306/repoxkbr | database.driverClassName com.mysql.jdbc.Driver | database.embeddedDriver false | database.create true | username | password

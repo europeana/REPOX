@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>REPOX</display-name>
+    <description>Data Aggregation and Interoperability Manager</description>
+
+    <context-param>
+        <param-name>properties</param-name>
+        <param-value>oaicat.properties</param-value>
+        <description>
+            The location of the oaicat.properties file containing
+            data pairs used to initialize the OAI repository software.
+        </description>
+    </context-param>
+
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>repoxServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.RepoxServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>repoxServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/repoxservice</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>esManagementServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.externalServices.ESManagementServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>esManagementServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/esmservice</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataManagementServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.DataManagementServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataManagementServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/dataManagementService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>filterServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.filters.FilterServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>filterServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/filterService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>taskManagementServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.harvest.TaskManagementServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>taskManagementServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/taskManagementService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>rssServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.rss.RssServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rssServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/rssService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataSetOperationsServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataSetOperationsServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/dataSetOperationsService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>harvestOperationsServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.harvest.HarvestOperationsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>harvestOperationsServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/harvestOperationsService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>userManagementServiceImpl</servlet-name>
+        <servlet-class>harvesterUI.server.userManagement.UserManagementServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userManagementServiceImpl</servlet-name>
+        <url-pattern>/harvesterui/userManagementService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fileUploaderServler</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.dataProviders.DataProvidersImportUploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fileUploaderServler</servlet-name>
+        <url-pattern>/harvesterui/fileupload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>z39FileUploaderServlet</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.dataSets.Z39FileUpload</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>z39FileUploaderServlet</servlet-name>
+        <url-pattern>/harvesterui/z39fileupload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>transformationFileUploaderServlet</servlet-name>
+        <servlet-class>harvesterUI.server.transformations.TransformationFileUpload</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>transformationFileUploaderServlet</servlet-name>
+        <url-pattern>/harvesterui/transformationfileupload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>transformationFileDownload</servlet-name>
+        <servlet-class>harvesterUI.server.transformations.XslFileDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>transformationFileDownload</servlet-name>
+        <url-pattern>/harvesterui/transformationfiledownload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fileExportDownload</servlet-name>
+        <servlet-class>harvesterUI.server.harvest.DownloadExportZipFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fileExportDownload</servlet-name>
+        <url-pattern>/harvesterui/exportFileDownload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>openLogFile</servlet-name>
+        <servlet-class>harvesterUI.server.harvest.OpenLogFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>openLogFile</servlet-name>
+        <url-pattern>/harvesterui/openLogFile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExportDataFile</servlet-name>
+        <servlet-class>harvesterUI.server.userManagement.ExportAllDataFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExportDataFile</servlet-name>
+        <url-pattern>/harvesterui/exportDataFile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataProvidersServlet</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.dataProviders.DPServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataProvidersServlet</servlet-name>
+        <url-pattern>/harvesterui/dataProvidersService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>aggregatorsServlet</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.aggregators.AGGServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>aggregatorsServlet</servlet-name>
+        <url-pattern>/harvesterui/aggregatorsService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>transformationsService</servlet-name>
+        <servlet-class>harvesterUI.server.transformations.TransformationsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>transformationsService</servlet-name>
+        <url-pattern>/harvesterui/transformationsService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>searchServlet</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.search.SearchServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>searchServlet</servlet-name>
+        <url-pattern>/harvesterui/searchService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>tagsServlet</servlet-name>
+        <servlet-class>harvesterUI.server.dataManagement.dataSets.TagsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>tagsServlet</servlet-name>
+        <url-pattern>/harvesterui/tagsService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmapperServices</servlet-name>
+        <servlet-class>harvesterUI.server.xmapper.XMApperServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmapperServices</servlet-name>
+        <url-pattern>/harvesterui/xmapperServices</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>openTransformationResultLogFile</servlet-name>
+        <servlet-class>harvesterUI.server.transformations.OpenTransformationResultLogFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>openTransformationResultLogFile</servlet-name>
+        <url-pattern>/harvesterui/openTransformationResultLogFile</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet OAIHandler -->
+
+    <servlet>
+        <servlet-name>OAIHandler</servlet-name>
+        <description>
+            This servlet processes OAI verbs.
+            The initialization parameter names for this servlet are the
+            "servlet path" that will be received by this servlet (after the
+            filename extension is removed).  The corresponding value is the
+            name of the action class that will be used to process this request.
+        </description>
+        <servlet-class>org.oclc.oai.server.OAIHandler</servlet-class>
+        <!-- Load this servlet at server startup time -->
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OAIHandler</servlet-name>
+        <url-pattern>/OAIHandler</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Servlet REST -->
+    <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>harvesterUI.server.web.servlet.RestServlet</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Servlet SRU Record Update -->
+    <servlet>
+        <servlet-name>srurecordupdate</servlet-name>
+        <servlet-class>harvesterUI.server.sru.SruRecordUpdateServlet</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>srurecordupdate</servlet-name>
+        <url-pattern>/srurecordupdate/*</url-pattern>
+    </servlet-mapping>
+
+
+    <filter>
+        <filter-name>Set-Character-Encoding</filter-name>
+        <filter-class>harvesterUI.server.web.filter.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Set-Character-Encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>HarvesterUI.html</welcome-file>
+    </welcome-file-list>
+
+
+    <!-- todo security REST..
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>secure</web-resource-name>
+            <url-pattern>/rest/aggregators/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>manager</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>file</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>manager</role-name>
+    </security-role>
+    -->
+
+    <servlet>
+        <servlet-name>log4j-init</servlet-name>
+        <servlet-class>harvesterUI.server.util.Log4jInitServlet</servlet-class>
+
+        <init-param>
+            <param-name>log4j-init-file</param-name>
+            <param-value>WEB-INF/classes/log4j.configuration</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+</web-app>

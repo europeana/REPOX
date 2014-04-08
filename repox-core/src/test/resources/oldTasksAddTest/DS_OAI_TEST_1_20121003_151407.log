@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<report>
+  <status>OK</status>
+  <dataSetId>aTest</dataSetId>
+  <startTime>2012-10-03 15:14:07</startTime>
+  <endTime>2012-10-03 15:14:20</endTime>
+  <duration>00:00:12</duration>
+  <records>1499</records>
+  <summary>
+    <info time="2012-10-03 15:14:07 BST" class="pt.utl.ist.repox.oai.DataSourceOai">Starting to import from Data Source with id aTest</info>
+    <info time="2012-10-03 15:14:07 BST" class="pt.utl.ist.repox.oai.Harvester">Starting OAI Harvest URL: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler - Set:arquivocmlx</info>
+    <info time="2012-10-03 15:14:07 BST" class="pt.utl.ist.repox.oai.Harvester">sourceUrl: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler, sourceSet: arquivocmlx, outputBaseDir: D:/Projectos/repoxdata_new_Europeana/[temp]OAI-PMH_Requests\bd1.inesc-id.pt_8080-arquivocmlx, fromDateString: null, untilDateString: null, metadataFormat: oai_dc</info>
+    <info time="2012-10-03 15:14:09 BST" class="pt.utl.ist.repox.oai.Harvester">ResumptionToken: 1349273747373:arquivocmlx:oai_dc:250::</info>
+    <info time="2012-10-03 15:14:09 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:09 BST" class="pt.utl.ist.repox.oai.Harvester">ResumptionToken: 1349273748553:arquivocmlx:oai_dc:500::</info>
+    <info time="2012-10-03 15:14:10 BST" class="pt.utl.ist.repox.oai.Harvester">ResumptionToken: 1349273749260:arquivocmlx:oai_dc:750::</info>
+    <info time="2012-10-03 15:14:11 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:11 BST" class="pt.utl.ist.repox.oai.Harvester">ResumptionToken: 1349273750031:arquivocmlx:oai_dc:1000::</info>
+    <info time="2012-10-03 15:14:11 BST" class="pt.utl.ist.repox.oai.Harvester">ResumptionToken: 1349273750722:arquivocmlx:oai_dc:1250::</info>
+    <info time="2012-10-03 15:14:12 BST" class="pt.utl.ist.repox.oai.Harvester">Harvest finished - number of requests: 6</info>
+    <info time="2012-10-03 15:14:12 BST" class="pt.utl.ist.repox.oai.Harvester">Finished OAI Harvest URL: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler - Set:arquivocmlx</info>
+    <info time="2012-10-03 15:14:12 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:13 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:14 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:15 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:15 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:16 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:17 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:18 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:19 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Starting to split OAI-PMH request to Record Files</info>
+    <info time="2012-10-03 15:14:19 BST" class="pt.utl.ist.repox.oai.ResponseTransformer">Finished splitting OAI-PMH request to List</info>
+    <info time="2012-10-03 15:14:20 BST" class="pt.utl.ist.repox.oai.DataSourceOai">Ingest Process ended. Exiting.</info>
+    <info time="2012-10-03 15:14:20 BST" class="pt.utl.ist.repox.oai.DataSourceOai">Finished importing from Data Source with id aTest. Exit status: OK</info>
+  </summary>
+</report>

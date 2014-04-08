@@ -1,0 +1,26 @@
+/** MDR CSS Style **/
+
+/** Transformations Dialog **/
+.mdr-transf-details-top {
+    color:#1C3C78;
+    font-weight:bold;
+    padding-bottom:5px;
+    padding-top:0;
+    text-decoration:none;
+    /*white-space: nowrap;*/
+}
+
+.mdr-transf-details-mid {
+    color:green;
+    /*white-space: nowrap;*/
+}
+
+.mdr-transf-details-bot {
+    color:blue;
+    /*white-space: nowrap;*/
+}
+
+.mdr-header-title {
+    font-weight: bold;
+    text-decoration-color: #00008b;
+}

@@ -1,0 +1,9 @@
+2012-02-08 06:36:04 WET pt.utl.ist.repox.oai.DataSourceOai Starting to import from Data Source with id smallTest2
+2012-02-08 06:36:04 WET pt.utl.ist.repox.oai.Harvester Starting OAI Harvest URL: http://bd2.inesc-id.pt:8080/repox2Eudml/OAIHandler - Set:smallTest2
+2012-02-08 06:36:04 WET pt.utl.ist.repox.oai.Harvester sourceUrl: http://bd2.inesc-id.pt:8080/repox2Eudml/OAIHandler, sourceSet: smallTest2, outputBaseDir: /home/gpedrosa/repox2/repoxdata/[temp]OAI-PMH_Requests/bd2.inesc-id.pt_8080-smallTest2, fromDateString: null, untilDateString: null, metadataFormat: NLM-AI
+2012-02-08 06:36:04 WET pt.utl.ist.repox.oai.Harvester Harvest finished - number of requests: 1
+2012-02-08 06:36:04 WET pt.utl.ist.repox.oai.Harvester Finished OAI Harvest URL: http://bd2.inesc-id.pt:8080/repox2Eudml/OAIHandler - Set:smallTest2
+2012-02-08 06:36:05 WET pt.utl.ist.repox.oai.ResponseTransformer Starting to split OAI-PMH request to Record Files
+2012-02-08 06:36:05 WET pt.utl.ist.repox.oai.ResponseTransformer Finished splitting OAI-PMH request to List
+2012-02-08 06:36:05 WET pt.utl.ist.repox.oai.DataSourceOai Ingest Process ended. Exiting.
+2012-02-08 06:36:05 WET pt.utl.ist.repox.oai.DataSourceOai Finished importing from Data Source with id smallTest2. Exit status: OK

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mappings>
+  <dc>
+    <tag index="0" description="An entity primarily responsible for making the resource."><![CDATA[dc:creator]]></tag>
+    <tag index="1" description="An entity responsible for making contributions to the resource."><![CDATA[dc:contributor]]></tag>
+    <tag index="2" description="The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant."><![CDATA[dc:coverage]]></tag>
+    <tag index="3" description="A point or period of time associated with an event in the lifecycle of the resource."><![CDATA[dc:date]]></tag>
+    <tag index="4" description="An account of the resource."><![CDATA[dc:description]]></tag>
+    <tag index="5" description="The file format, physical medium, or dimensions of the resource."><![CDATA[dc:format]]></tag>
+    <tag index="6" description="An unambiguous reference to the resource within a given context."><![CDATA[dc:identifier]]></tag>
+    <tag index="7" description="A language of the resource."><![CDATA[dc:language]]></tag>
+    <tag index="8" description="An entity responsible for making the resource available."><![CDATA[dc:publisher]]></tag>
+    <tag index="9" description="A related resource."><![CDATA[dc:relation]]></tag>
+    <tag index="10" description="Information about rights held in and over the resource."><![CDATA[dc:rights]]></tag>
+    <tag index="11" description="A related resource from which the described resource is derived."><![CDATA[dc:source]]></tag>
+    <tag index="12" description="The topic of the resource."><![CDATA[dc:subject]]></tag>
+    <tag index="13" description="A name given to the resource."><![CDATA[dc:title]]></tag>
+    <tag index="14" description="The nature or genre of the resource."><![CDATA[dc:type]]></tag>
+    <tag index="15" description="dc:terms"><![CDATA[dc:terms]]></tag>
+    <tag index="16" description="dc:identifier"><![CDATA[dc:identifier]]></tag>
+    <tag index="17" description="dc:language"><![CDATA[dc:language]]></tag>
+  </dc>
+  <parsed>
+    <tag index="0" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      
+      
+      /record/datafield[@tag='020']/subfield[@code='a']
+    
+    
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="1" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      
+      /record/datafield[@tag='022' ]/subfield[@code='a']
+    
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="2" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      
+      group('URN:NBN:'::::/record/datafield[@tag='015']/subfield[@code='a']::'')
+    
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="3" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      
+      /record/datafield[@tag='856']/subfield[@code='u' or @code='g']
+    
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="4" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      
+      group(''::/record/datafield[@tag='245']::/record/datafield[@tag='245']/subfield[@code='a']::''::/record/datafield[@tag='245']/subfield[@code='b']::''::/record/datafield[@tag='245']/subfield[@code='n']::''::/record/datafield[@tag='245']/subfield[@code='p']::'')
+    
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="5" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      /record/datafield[@tag='130' or @tag='210' or @tag='222' or @tag='240' or @tag='242' or @tag='246' or @tag='730' or @tag='740']/subfield[@code='a']
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="6" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      
+      group(''::/record/datafield[@tag='710' or @tag='711' or @tag='720' or @tag='700' or    @tag='100' or @tag='110' or @tag='111']::/record/datafield[@tag='710' or @tag='711' or @tag='720' or @tag='700' or    @tag='100' or @tag='110' or @tag='111']/subfield[@code='a']::','::/record/datafield[@tag='710' or @tag='711' or @tag='720' or @tag='700' or    @tag='100' or @tag='110' or @tag='111']/subfield[@code='b']::','::/record/datafield[@tag='710' or @tag='711' or @tag='720' or @tag='700' or    @tag='100' or @tag='110' or @tag='111']/subfield[@code='f']::'')
+    
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="7" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      
+      group(''::/record/datafield[@tag='650' or @tag='651']::/record/datafield[@tag='650' or @tag='651']/subfield[@code='a']::','::/record/datafield[@tag='650' or @tag='651']/subfield[@code='b']::','::/record/datafield[@tag='650' or @tag='651']/subfield[@code='x']::','::/record/datafield[@tag='650' or @tag='651']/subfield[@code='y']::','::/record/datafield[@tag='650' or @tag='651']/subfield[@code='z']::'')
+    
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="8" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      /record/datafield[@tag='245']/subfield[@code='h']
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="9" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      /record/datafield[@tag='245']/subfield[@code='c']
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="10" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      /record/datafield[@tag='500']/subfield[@code='a']
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="11" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      /record/datafield[@tag='260']/subfield[@code='b']
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="12" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      
+      /record/datafield[@tag='260']/subfield[@code='a']
+    
+    
+    
+    ]]>
+    </tag>
+    <tag index="13" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      group(''::/record/datafield[@tag='800' or @tag='801' or @tag='810' or @tag='811' or @tag='820' or @tag='821']::/record/datafield[@tag='800' or @tag='801' or @tag='810' or @tag='811' or @tag='820' or @tag='821']/subfield[@code='a']::','::/record/datafield[@tag='800' or @tag='801' or @tag='810' or @tag='811' or @tag='820' or @tag='821']/subfield[@code='b']::','::/record/datafield[@tag='800' or @tag='801' or @tag='810' or @tag='811' or @tag='820' or @tag='821']/subfield[@code='f']::'')
+    
+    
+    ]]>
+    </tag>
+    <tag index="14" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      /record/datafield[@tag='260']/subfield[@code='c']
+    
+    
+    ]]>
+    </tag>
+    <tag index="15" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      /record/datafield[@tag='561']/subfield[@code='a']
+    
+    
+    ]]>
+    </tag>
+    <tag index="16" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      /record/datafield[@tag='243']/subfield[@code='a']
+    
+    
+    ]]>
+    </tag>
+    <tag index="17" occurrences="0">
+      <examples></examples><![CDATA[
+      
+      
+      /record/datafield[@tag='041']/subfield[@code='a']
+    
+    
+    ]]>
+    </tag>
+  </parsed>
+  <relations>
+    <relation>
+      <dc>0</dc>
+      <parsed>6</parsed>
+    </relation>
+    <relation>
+      <dc>0</dc>
+      <parsed>13</parsed>
+    </relation>
+    <relation>
+      <dc>4</dc>
+      <parsed>8</parsed>
+    </relation>
+    <relation>
+      <dc>4</dc>
+      <parsed>9</parsed>
+    </relation>
+    <relation>
+      <dc>4</dc>
+      <parsed>10</parsed>
+    </relation>
+    <relation>
+      <dc>6</dc>
+      <parsed>2</parsed>
+    </relation>
+    <relation>
+      <dc>8</dc>
+      <parsed>11</parsed>
+    </relation>
+    <relation>
+      <dc>8</dc>
+      <parsed>12</parsed>
+    </relation>
+    <relation>
+      <dc>9</dc>
+      <parsed>16</parsed>
+    </relation>
+    <relation>
+      <dc>11</dc>
+      <parsed>15</parsed>
+    </relation>
+    <relation>
+      <dc>12</dc>
+      <parsed>7</parsed>
+    </relation>
+    <relation>
+      <dc>13</dc>
+      <parsed>4</parsed>
+    </relation>
+    <relation>
+      <dc>14</dc>
+      <parsed>14</parsed>
+    </relation>
+    <relation>
+      <dc>15</dc>
+      <parsed>5</parsed>
+    </relation>
+    <relation>
+      <dc>16</dc>
+      <parsed>0</parsed>
+    </relation>
+    <relation>
+      <dc>16</dc>
+      <parsed>1</parsed>
+    </relation>
+    <relation>
+      <dc>16</dc>
+      <parsed>3</parsed>
+    </relation>
+    <relation>
+      <dc>17</dc>
+      <parsed>17</parsed>
+    </relation>
+  </relations>
+</mappings>

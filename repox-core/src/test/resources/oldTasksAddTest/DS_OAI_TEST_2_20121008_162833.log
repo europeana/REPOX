@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<report>
+  <status>OK</status>
+  <dataSetId>aTest</dataSetId>
+  <startTime>2012-10-08 16:28:33</startTime>
+  <endTime>2012-10-08 16:28:35</endTime>
+  <duration>00:00:01</duration>
+  <records>-1</records>
+  <summary>
+    <info time="2012-10-08 16:28:33 BST" class="pt.utl.ist.repox.oai.DataSourceOai">Starting to import from Data Source with id aTest</info>
+    <info time="2012-10-08 16:28:33 BST" class="pt.utl.ist.repox.oai.DataSourceOai">OAI-PMH harvest from date: 2012-10-03</info>
+    <info time="2012-10-08 16:28:33 BST" class="pt.utl.ist.repox.oai.Harvester">Starting OAI Harvest URL: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler - Set:arquivocmlx</info>
+    <info time="2012-10-08 16:28:33 BST" class="pt.utl.ist.repox.oai.Harvester">sourceUrl: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler, sourceSet: arquivocmlx, outputBaseDir: D:/Projectos/repoxdata_new_Europeana/[temp]OAI-PMH_Requests\bd1.inesc-id.pt_8080-arquivocmlx, fromDateString: 2012-10-03, untilDateString: null, metadataFormat: oai_dc</info>
+    <info time="2012-10-08 16:28:34 BST" class="pt.utl.ist.repox.oai.Harvester">Response was an empty list in operation ListRecords (may be invalid set or does not exist new records from the last ingest)</info>
+    <info time="2012-10-08 16:28:34 BST" class="pt.utl.ist.repox.oai.Harvester">Found errors in operation ListRecords, recorded to file D:\Projectos\repoxdata_new_Europeana\[temp]OAI-PMH_Requests\bd1.inesc-id.pt_8080-arquivocmlx\recordsRequest--1.xml</info>
+    <info time="2012-10-08 16:28:34 BST" class="pt.utl.ist.repox.oai.Harvester">Message Returned from the Server: The combination of the values of the from, until, set, and metadataPrefix arguments results in an empty list.</info>
+    <info time="2012-10-08 16:28:34 BST" class="pt.utl.ist.repox.oai.Harvester">Finished OAI Harvest URL: http://bd1.inesc-id.pt:8080/repoxel/OAIHandler - Set:arquivocmlx</info>
+    <info time="2012-10-08 16:28:35 BST" class="pt.utl.ist.repox.oai.DataSourceOai">Finished importing from Data Source with id aTest. Exit status: OK</info>
+  </summary>
+</report>

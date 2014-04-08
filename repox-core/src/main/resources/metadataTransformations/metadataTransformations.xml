@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metadataTransformations>
+  <metadataTransformation editable="true">
+    <id>unimarcToTel</id>
+    <description>Unimarc to tel</description>
+    <sourceFormat>MarcXchange</sourceFormat>
+    <destinationFormat>tel</destinationFormat>
+    <stylesheet>unimarcToTel.xsl</stylesheet>
+  </metadataTransformation>
+  <metadataTransformation editable="true">
+    <id>unimarcToOaiDc</id>
+    <description>Unimarc to oai_dc</description>
+    <sourceFormat>MarcXchange</sourceFormat>
+    <destinationFormat>oai_dc</destinationFormat>
+    <stylesheet>unimarcToOaiDc.xsl</stylesheet>
+  </metadataTransformation>
+  <metadataTransformation editable="true">
+    <id>marc21ToTel</id>
+    <description>Marc21 to tel</description>
+    <sourceFormat>MarcXchange</sourceFormat>
+    <destinationFormat>tel</destinationFormat>
+    <stylesheet>marc21ToTel.xsl</stylesheet>
+  </metadataTransformation>
+  <metadataTransformation editable="true">
+    <id>marc21ToOaiDc</id>
+    <description>Marc21 to oai_dc</description>
+    <sourceFormat>MarcXchange</sourceFormat>
+    <destinationFormat>oai_dc</destinationFormat>
+    <stylesheet>marc21ToOaiDc.xsl</stylesheet>
+  </metadataTransformation>
+  <metadataTransformation editable="false">
+    <id>marc21Toqdc</id>
+    <description>Marc21 to Qualified Dublin Core</description>
+    <sourceFormat>MarcXchange</sourceFormat>
+    <destinationFormat>qdc</destinationFormat>
+    <stylesheet>marc21Toqdc.xsl</stylesheet>
+  </metadataTransformation>
+  <metadataTransformation editable="false">
+    <id>oaiDcToTel</id>
+    <description>oai_dc to tel</description>
+    <sourceFormat>oai_dc</sourceFormat>
+    <destinationFormat>tel</destinationFormat>
+    <stylesheet>oaiDcToTel.xsl</stylesheet>
+  </metadataTransformation>
+</metadataTransformations>

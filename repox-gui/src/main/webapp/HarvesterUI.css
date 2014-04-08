@@ -1,0 +1,382 @@
+@import "resources/XMApper.css";
+@import "resources/MDR.css";
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    color: black;
+    /*margin: 40px 0px 70px;*/
+    text-align: left;
+}
+
+.transformation-result-row div {
+    font-size: 12px;
+}
+
+/*.view-transformation-row-label {*/
+    /*background-color: #EDECEC !important;*/
+    /*text-align: right;*/
+    /*font-weight: bold;*/
+    /*padding: 3px 3px 3px 0;*/
+/*}*/
+
+/*.view-transformation-row-value {*/
+    /*background-color: #F4F4F4;*/
+    /*font-size: 12px;*/
+    /*padding: 3px 3px 3px 5px;*/
+/*}*/
+
+.topNavToolbar {
+    background-color: #D0DEF0;
+    background-image: url("ExtGWT/images/default/toolbar/bg.gif");
+    border-color: #A9BFD3;
+    border-radius: 9px 9px 9px 9px;
+    margin-top: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 99% !important;
+}
+
+.alignTop{
+    top:0px!important;
+}
+
+/* Form Panel Styles -------*/
+.defaultFormFieldLabel{
+    clear: right;
+    display: block;
+    float: left;
+    padding: 3px 3px 3px 0;
+    position: relative;
+    width: 100px;
+    z-index: 2;
+    font-weight: bold;
+    background-color: #EDECEC !important;
+    text-align: right;
+    vertical-align: top;
+}
+
+.x-form-label {
+    padding: 3px 3px 3px 5px;
+}
+
+.defaultFormItemLabel {
+    /*padding: 0px 0px 0px 5px;*/
+    background-color: #f4f4f4;
+    vertical-align: top;
+}
+
+.noSchemaFoundWarning{
+    text-align: center;
+    vertical-align: middle;
+    font-weight:bold;
+    color: red;
+    margin-top: -4px;
+    padding: 7px;
+}
+
+/* END of Form Panel Styles -------*/
+
+/* -------------Advanced combo box CSS -------------*/
+.searchItem {
+    font: normal 11px tahoma, arial, helvetica, sans-serif;
+    padding: 3px 10px 3px 10px;
+    white-space: normal;
+    color: #555;
+}
+
+.searchItem h3 {
+    display: block;
+    font: inherit;
+    font-weight: bold;
+    color: #222;
+}
+
+.searchItem h3 span {
+    float: right;
+    font-weight: normal;
+    margin: 0 0 5px 5px;
+    width: 100px;
+    display: block;
+    clear: none;
+}
+
+/* END of Advanced combo box CSS -------*/
+
+/* Login Image */
+.loginImage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Image Button with no background*/
+.buttonNoBackground-ml,
+.buttonNoBackground-mr,
+.buttonNoBackground-tl,
+.buttonNoBackground-tc,
+.buttonNoBackground-tr,
+.buttonNoBackground-bl,
+.buttonNoBackground-bc,
+.buttonNoBackground-br {
+    display: none;
+}
+
+.buttonNoBackground-text{
+    text-align: center;
+    vertical-align: middle;
+    height: 16px;
+    width: 16px;
+    background-color: transparent;
+    /*border: none;*/
+    border: hidden;
+}
+
+.buttonNoBackground-text:hover{
+    cursor: pointer;
+}
+/* END - Image Button with no background*/
+
+/* Change all letters size and type*/
+* {
+    font-family: Tahoma, Verdana, sans-serif;
+    font-size: 11px;
+}
+
+.repoxLogoText {
+    font-size: 2em;
+    font-weight: bold;
+    margin: -26px 32px 0px;
+    color: black;
+}
+.required_txt {
+    font-size: 0.8em;
+    color: red;
+}
+
+.viewportBackground{
+    background: #f4f6f9;
+}
+
+.repoxFormBackground{
+    background: white;
+}
+
+.repoxCenterBlock {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.barPos {
+    margin: -33px 450px 0px;
+}
+
+.repoxLogoAndTitle{
+    vertical-align: middle;
+}
+
+.toolTip{
+    background: #e0ffff;
+    border-width: 1px;
+    border-style:solid;
+    text-align:center;
+    vertical-align: middle;
+}
+
+.x-grid3-row-selected {
+    background-image: none !important;
+    background-color: #90ee90 !important;
+    border-color: #a3bae9;
+}
+
+/* Alert Boxes */
+.x-notification-error .x-window-body{
+    margin: 0;
+    padding:1em ! important;
+    width: auto ! important;
+    background-color: #f08080;
+}
+
+.x-notification-success .x-window-body{
+    margin: 0;
+    padding:1em ! important;
+    width: auto ! important;
+    background-color: #90ee90;
+}
+
+.x-notification-info .x-window-body{
+    margin: 0;
+    padding:1em ! important;
+    width: auto ! important;
+    background-color: #fafad2;
+}
+
+/* Progress Bar -------*/
+.x-progress-wrap:hover {
+    cursor: pointer;
+}
+
+.x-progress-text {
+    font-size:11px;
+    font-weight:bold;
+    color:black;
+}
+
+/*.x-progress-wrap {*/
+/*border:1px solid;*/
+/*margin-top:4px;*/
+/*overflow:hidden;*/
+/*}*/
+
+.x-progress-text-back {
+    line-height:11px;
+}
+.ext-ie .x-progress-text-back {
+    line-height:10px;
+}
+
+/* Progress Bar END -------*/
+
+.hyperlink_icon:hover {
+    cursor: pointer;
+}
+
+.hyperlink_style_label_selected:hover {
+    cursor: pointer;
+}
+
+.hyperlink_style_label_selected {
+    text-decoration: none;
+}
+.hyperlink_style_label {
+    text-decoration: underline;
+}
+
+.oai_schemas_hyperlink_style_label {
+    text-decoration: underline;
+    float: left;
+}
+
+.hyperlink_style_label:hover, .oai_schemas_hyperlink_style_label:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.firstButton {
+    margin: 0px 450px 0px;
+}
+
+.westTreeItem {
+    font-size: 2em;
+    font-weight: bold;
+    color: black;
+}
+
+.serverResponseLabelError {
+    color: red;
+}
+
+/*.x-grid3-cell-inner {*/
+/*background-color: yellow;*/
+/*}*/
+
+/* Background Colors */
+.WHITE {
+    background-color: white;
+}
+.LIGHT_GRAY {
+    background-color: #d8e0ee;
+}
+.RED {
+    background-color: red;
+}
+
+.AGGREGATOR_STYLE {
+    background-color: #d8e0ee;
+}
+.DP_MANY_DS_STYLE {
+    background-color: #e1ecfc;
+}
+
+.DP_SINGLE_DS_STYLE {
+    background-color: #eff5fe;
+}
+
+.LIGHT_SLATE_GRAY {
+    background-color: #9ec5ff;
+}
+.LIGHT_BLUE {
+    background-color: #add8e6;
+}
+
+.MEDIUM_LIGHT_GRAY {
+    background-color: #e1ecfc;
+}
+
+.ULTRA_LIGHT_GRAY {
+    background-color: #eff5fe;
+}
+
+/*EUDML*/
+.LIGHT_ORANGE {
+    background-color: #e8c375;
+}
+
+.ULTRA_LIGHT_ORANGE {
+    background-color: #ffe9ba;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+    margin: 15px 6px 6px;
+}
+
+.layout {
+    margin: 90px 270px 6px;
+}
+
+.controlMenu {
+    margin: 90px 25px 6px;
+}
+
+.logo {
+    margin: 5px 22px 2px;
+}
+
+.treeItem {
+    font-weight: bold;
+}
+
+.menuItem {
+    font-size: 15px;
+}
+
+.repox_title{
+    font-size: 2em;
+    font-weight: bold;
+    color: purple;
+    /*margin: 40px 0px 70px;*/
+    text-align: left;
+}
+
+/* GRID Colors*/
+#OverviewGrid01 .x-grid3-row {
+    border-color: #cccccc;
+    border-top-color: #fff;
+}
+
+.x-grid-with-col-lines .x-grid3-row td.x-grid3-cell {
+    border-right-color: #cccccc;
+}
+
+.hiddenContainerContent{
+    overflow: hidden;
+}
+/* Change grid header lines */
+/*.x-grid3-hd-row .x-grid3-hd {*/
+/*border-left-color: #eee;*/
+/*border-right-color: #d0d0d0;*/
+/*}*/

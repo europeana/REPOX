@@ -1,0 +1,293 @@
+/********************************************************/
+/* 						MODEL TREE 						*/
+/********************************************************/
+
+.model-tree {
+	border-width: 1px;
+	border-color: lightblue;
+	border-style: solid none none;
+	font-size: 11px;
+	-moz-outline: none;
+	-moz-user-focus: none;
+}
+
+.model-tree .x-tree3-node {
+	width: auto;
+}
+
+/* For formating a TreePanel element */
+.model-tree .m-node {
+	cursor: pointer;
+	width: auto;
+	white-space: nowrap;
+	position: relative;
+	border: 1px solid lightblue;
+	border-right-style: none;
+	border-left-style: none;
+}
+/*	height: 23px;*/
+
+.model-tree .m-node-item {
+	text-decoration: none;
+	white-space: nowrap;
+	position: relative;
+}
+
+.model-filtered {
+	background-color: #CCFFCC
+}
+
+/*
+light yellow:FFFF99 brownish:CCCC99
+*/
+
+.model-tree .m-node-cardinality {
+	line-height: 16px;
+	height: 16px;
+	padding: 0 3px 0 3px;
+	top: -5px;
+}
+
+.model-tree .m-node-text {
+	line-height: 16px;
+	height: 16px;
+	margin: 0 3px 0 3px;
+	top: -5px;
+}
+
+.model-tree .m-node-icon {
+	top: 0px;
+}
+
+.model-tree .m-node-joint {
+	cursor: pointer;
+	margin: 0 2px;
+	top: 0px;
+}
+
+/* Node Connections */
+
+.model-tree .m-node-conn-line {
+	display: block;
+	white-space: nowrap;
+	position: absolute;
+	top: 5px;
+	height: 9px;
+}
+
+/* arrow */
+
+.m-node-conn-line .arrow {
+	display: none;
+	position: absolute;
+	top: -5px;
+	right: -1px;
+}
+
+.m-node-conn .arrow, .m-node-conn-focus .arrow {
+	display: block;
+}
+
+/*	line */
+.model-tree .m-node-conn-line .line {
+	display: block;
+	position: static;
+	border-width: 2px;
+	height: 4px;
+}
+
+.model-source-tree .m-node-conn-line {
+	right: 0px;
+}
+
+.model-target-tree .m-node-conn-line {
+	left: 0px;
+}
+
+.m-node-conn-blur .m-node-conn-line .line {
+	border-bottom-style: solid;
+	border-color: gray;
+}
+
+.m-node-conn .m-node-conn-line .line {
+	border-bottom-style: solid;
+	border-color: black;
+}
+
+.m-node-conn-focus .m-node-conn-line .line {
+	border-bottom-style: solid;
+	border-color: orange;
+}
+
+.m-node-conn-child .m-node-conn-line .line {
+	border-bottom-style: dashed;
+	border-color: gray;
+}
+
+.m-node-conn-child-focus .m-node-conn-line .line {
+	border-bottom-style: dashed;
+	border-color: orange;
+}
+
+/* underscore */
+.m-node-conn .m-node-text, .m-node-conn-focus .m-node-text {
+	border-bottom-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
+
+.m-node-conn-child .m-node-text, .m-node-conn-child-focus .m-node-text {
+	border-bottom-style: dashed;
+	border-width: 1px;
+	border-color: black;
+}
+
+/********************************************************/
+/* 					  DRAWING PANEL 					*/
+/********************************************************/
+
+.drawing-panel {
+    border-left-style: none;
+    border-right-style: none;
+}
+
+/********************************************************/
+/* 						 TOOLBOX 						*/
+/********************************************************/
+.m-toolbox {
+	border-top-style: none;
+	background-color: rgb(218,230,244)
+}
+
+.m-toolbox .m-toolset {
+	background-color: rgb(218,230,244)
+	/* background-color: rgb(194,216,242) */
+}
+
+.m-toolset .x-btn-tl {
+	background-position: -6px 0;
+}
+.m-toolset .x-btn-tr {
+	background-position: -9px 0;
+}
+.m-toolset .x-btn-tc {
+	background-position: 0 -9px;
+}
+.m-toolset .x-btn-ml {
+	background-position: -6px -24px;
+}
+.m-toolset .x-btn-mr {
+	background-position: -9px -24px;
+}
+.m-toolset .x-btn-mc {
+	background-position: 0 -2168px;
+}
+.m-toolset .x-btn-bl {
+	background-position: -6px -3px;
+}
+.m-toolset .x-btn-br {
+	background-position: -9px -3px;
+}
+.m-toolset .x-btn-bc {
+	background-position: 0 -18px;
+}
+
+/*
+.m-toolset .x-btn-tl, .m-toolset .x-btn-over .x-btn-tl {
+	background-position: -12px 0 !important;
+}
+.m-toolset .x-btn-tr, .m-toolset .x-btn-over .x-btn-tr {
+	background-position: -15px 0 !important;
+}
+.m-toolset .x-btn-tc, .m-toolset .x-btn-over .x-btn-tc {
+	background-position: 0 -12px !important;
+}
+.m-toolset .x-btn-ml, .m-toolset .x-btn-over .x-btn-ml {
+	background-position: -12px -24px !important;
+}
+.m-toolset .x-btn-mr, .m-toolset .x-btn-over .x-btn-mr {
+	background-position: -15px -24px !important;
+}
+.m-toolset .x-btn-mc, .m-toolset .x-btn-over .x-btn-mc {
+	background-position: 0 -3240px !important;
+}
+.m-toolset .x-btn-bl, .m-toolset .x-btn-over .x-btn-bl {
+	background-position: -12px -3px !important;
+}
+.m-toolset .x-btn-br, .m-toolset .x-btn-over .x-btn-br {
+	background-position: -15px -3px !important;
+}
+.m-toolset .x-btn-bc,  .mtoolset .x-btn-over .x-btn-bc {
+	background-position: 0 -21px !important;
+}
+
+.m-toolset .x-btn-pressed .x-btn-tl {
+	background-position: -6px 0 !important;
+}
+.m-toolset .x-btn-pressed .x-btn-tr {
+	background-position: -9px 0 !important;
+}
+.m-toolset .x-btn-pressed .x-btn-tc {
+	background-position: 0 -9px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-ml {
+	background-position: -6px -24px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-mr {
+	background-position: -9px -24px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-mc {
+	background-position: 0 -2168px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-bl {
+	background-position: -6px -3px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-br {
+	background-position: -9px -3px !important;
+}
+.m-toolset .x-btn-pressed .x-btn-bc {
+	background-position: 0 -18px !important;
+}
+*/
+
+/********************************************************/
+/* 					  DETAILS PANEL 					*/
+/********************************************************/
+.details-form {
+}
+
+.details-form .empty {
+	font-style: italic;
+	color: gray;
+}
+
+
+.details-form FORM {
+	background-color: white;
+	padding: 1px;
+}
+
+.details-form .x-form-item {
+	margin-bottom: 1px;
+}
+
+.details-form .x-form-item-label {
+	font-size: 8pt;
+	padding: 2px 4px 2px 4px;
+	margin-left: 1px;
+	background-color: rgb(237,236,236);
+	font-weight: bold;
+}
+
+.details-form .x-form-label {
+	background-color: rgb(247,247,247);
+	font-size: 8pt;
+	padding: 2px 4px 2px 4px;
+}
+
+.details-form .x-form-field-wrap {
+	font-size: 8pt;
+	background-color: rgb(247,247,247);
+	padding: 1px 0px 1px 0px;
+}
+

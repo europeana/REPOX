@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - Sample namespace-based configuration
+  -
+  - $Id: applicationContext-security.xml 3019 2008-05-01 17:51:48Z luke_t $
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+
+    <http auto-config="true">
+        <intercept-url pattern="/jsp/REST.jsp" access="IS_AUTHENTICATED_REMEMBERED" />
+
+        <intercept-url pattern="/propertiesForm.html" access="ROLE_ADMIN" />
+        <intercept-url pattern="/" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/Homepage*" access="IS_AUTHENTICATED_REMEMBERED" />
+
+        <intercept-url pattern="/aggregator/**" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/dataProvider/**" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/scheduler/**" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/statistics/**" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/mapMetadata/**" access="IS_AUTHENTICATED_REMEMBERED" />
+
+        <intercept-url pattern="/secure/extreme/**" access="ROLE_SUPERVISOR"/>
+        <intercept-url pattern="/secure/**" access="IS_AUTHENTICATED_REMEMBERED" />
+
+		<!-- Disable web URI authorization, as we're using <global-method-security> and have @Secured the services layer instead
+        <intercept-url pattern="/listAccounts.html" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/post.html" access="ROLE_TELLER" />
+        -->
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+
+        <form-login login-page="/jsp/login.jsp" authentication-failure-url="/jsp/login.jsp?login_error=1" />
+
+<!--
+    Uncomment to enable X509 client authentication support
+        <x509 />
+-->
+
+        <!-- All of this is unnecessary if auto-config="true"
+        <form-login />
+        <anonymous />
+        <http-basic />
+        <logout />
+        <remember-me /> -->
+
+        <!-- Uncomment to limit the number of sessions a user can have
+        <concurrent-session-control max-sessions="1" exception-if-maximum-exceeded="true"/>
+		-->
+    </http>
+
+    <!--
+    Usernames/Passwords are
+        admin/admin
+        user/user
+        rod/koala
+        dianne/emu
+        scott/wombat
+        peter/opal
+    -->
+    <authentication-provider>
+        <password-encoder hash="md5"/>
+        <user-service>
+            <user name="user" password="ee11cbb19052e40b07aac0ca060c23ee" authorities="ROLE_SUPERVISOR, ROLE_USER, ROLE_TELLER" />
+            <user name="admin" password="21232f297a57a5a743894a0e4a801fc3" authorities="ROLE_ADMIN" />
+            <!--
+            <user name="rod" password="a564de63c2d0da68cf47586ee05984d7" authorities="ROLE_SUPERVISOR, ROLE_USER, ROLE_TELLER" />
+	        <user name="dianne" password="65d15fe9156f9c4bbffd98085992a44e" authorities="ROLE_USER,ROLE_TELLER" />
+            <user name="scott" password="2b58af6dddbd072ed27ffc86725d7d3a" authorities="ROLE_USER" />
+            <user name="peter" password="22b5c9accc6e1ba628cedc63a72d57f8" authorities="ROLE_USER" />
+            -->
+	    </user-service>
+	</authentication-provider>
+
+</beans:beans>
