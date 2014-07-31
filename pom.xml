@@ -22,8 +22,8 @@
 		<module>repox-gui</module>
 	</modules>
 
-	<pluginRepositories>
-		<pluginRepository>
+	<repositories>
+		<repository>
 			<id>tel.plugins</id>
 			<name>Maven Plugin Repository</name>
 			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
@@ -31,8 +31,8 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+		</repository>
+	</repositories>
 
 	<distributionManagement>
 		<repository>

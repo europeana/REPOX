@@ -137,13 +137,6 @@
 		<classifier>gwt22</classifier>
 		</dependency>
 
-		<!-- New Dependency instead of the commented above -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.extjs</groupId> -->
-<!-- 			<artifactId>gxt</artifactId> -->
-<!-- 			<version>2.3.1-gwt22</version> -->
-<!-- 		</dependency> -->
-
 		<!--GWT Core Libs -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
