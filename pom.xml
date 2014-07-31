@@ -46,8 +46,6 @@
 			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
-<!-- 	Test Commit to master -->
 
 	<!-- Not active repositories -->
 	<!-- <repositories> -->
