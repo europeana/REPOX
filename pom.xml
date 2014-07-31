@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>repox-system</artifactId>
-    <groupId>repox</groupId>
-    <version>2.3.5</version>
-    <packaging>pom</packaging>
+	<artifactId>repox-system</artifactId>
+	<groupId>repox</groupId>
+	<version>2.3.5</version>
+	<packaging>pom</packaging>
 
-    <name>REPOX-SYSTEM</name>
-    <url>http://repox.ist.utl.pt/</url>
+	<name>REPOX-SYSTEM</name>
+	<url>http://repox.ist.utl.pt/</url>
 
-    <organization>
-        <name>Instituto Superior Técnico</name>
-        <url>http://www.ist.utl.pt</url>
-    </organization>
+	<organization>
+		<name>Instituto Superior Técnico</name>
+		<url>http://www.ist.utl.pt</url>
+	</organization>
 
-    <modules>
-        <module>repox-core</module>
-        <module>repox-europeana</module>
-        <module>repox-gui</module>
-    </modules>
-    
-    <pluginRepositories>
+	<modules>
+		<module>repox-core</module>
+		<module>repox-europeana</module>
+		<module>repox-gui</module>
+	</modules>
+
+	<pluginRepositories>
 		<pluginRepository>
 			<id>tel.plugins</id>
 			<name>Maven Plugin Repository</name>
@@ -46,13 +47,13 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-<!-- Not active repositories -->
-<!--     <repositories> -->
-<!--         <repository> -->
-<!--             <id>IST</id> -->
-<!--             <name>IST repository</name> -->
-<!--             <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
-<!--         </repository> -->
-<!--     </repositories> -->
-<!-- Not active repositories -->
+	<!-- Not active repositories -->
+	<!-- <repositories> -->
+	<!-- <repository> -->
+	<!-- <id>IST</id> -->
+	<!-- <name>IST repository</name> -->
+	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
+	<!-- </repository> -->
+	<!-- </repositories> -->
+	<!-- Not active repositories -->
 </project>
