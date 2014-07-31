@@ -20,12 +20,39 @@
         <module>repox-europeana</module>
         <module>repox-gui</module>
     </modules>
+    
+    <pluginRepositories>
+		<pluginRepository>
+			<id>tel.plugins</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
-    <repositories>
-        <repository>
-            <id>IST</id>
-            <name>IST repository</name>
-            <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url>
-        </repository>
-    </repositories>
+	<distributionManagement>
+		<repository>
+			<id>tel.release</id>
+			<name>TEL Release Repository</name>
+			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>tel.snapshot</id>
+			<name>TEL Snapshot Repository</name>
+			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+<!-- Not active repositories -->
+<!--     <repositories> -->
+<!--         <repository> -->
+<!--             <id>IST</id> -->
+<!--             <name>IST repository</name> -->
+<!--             <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
+<!--         </repository> -->
+<!--     </repositories> -->
+<!-- Not active repositories -->
 </project>
