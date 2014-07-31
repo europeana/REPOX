@@ -1,4 +1,3 @@
-
 /**
  Copyright 2006 OCLC, Online Computer Library Center
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,9 +39,10 @@ public class ListMetadataFormats extends HarvesterVerb {
      * Client-side ListMetadataFormats verb constructor
      *
      * @param baseURL the baseURL of the server to be queried
-     * @exception MalformedURLException the baseURL is bad
-     * @exception SAXException the xml response is bad
-     * @exception IOException an I/O error occurred
+     * @throws IOException 
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
     public ListMetadataFormats(String baseURL) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         this(baseURL, null);

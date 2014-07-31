@@ -1,4 +1,3 @@
-
 /**
  Copyright 2006 OCLC, Online Computer Library Center
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,18 +35,18 @@ import java.util.List;
 
 public class RawWrite {
     public static void main(String[] args) {
-	try {
-	    System.out.println(new Date());
-	    
-            HashMap options = getOptions(args);
+        try {
+            System.out.println(new Date());
+
+            HashMap<String, Object> options = getOptions(args);
             List rootArgs = (List)options.get("rootArgs");
-	    String baseURL;
+            String baseURL;
             if (rootArgs.size() > 0) {
                 baseURL = (String)rootArgs.get(0);
             } else {
                 throw new IllegalArgumentException();
             }
-            
+
             OutputStream out = System.out;
             String outFileName = (String)options.get("-out");
             String from = (String)options.get("-from");
@@ -58,42 +57,38 @@ public class RawWrite {
             String setSpec = (String)options.get("-setSpec");
 
             if (resumptionToken != null) {
-                if (outFileName != null)
-                    out = new FileOutputStream(outFileName, true);
+                if (outFileName != null) out = new FileOutputStream(outFileName, true);
                 run(baseURL, resumptionToken, out);
             } else {
-                if (outFileName != null)
-                    out = new FileOutputStream(outFileName);
+                if (outFileName != null) out = new FileOutputStream(outFileName);
                 run(baseURL, from, until, metadataPrefix, setSpec, out);
             }
-            
+
             if (out != System.out) out.close();
-	    System.out.println(new Date());
+            System.out.println(new Date());
         } catch (IllegalArgumentException e) {
             System.err.println("RawWrite <-from date> <-until date> <-metadataPrefix prefix> <-setSpec setName> <-resumptionToken token> <-out fileName> baseURL");
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    System.exit(-1);
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
-    public static void run(String baseURL, String resumptionToken,  OutputStream out)
-        throws IOException, ParserConfigurationException, SAXException, TransformerException,
-               NoSuchFieldException {
+    public static void run(String baseURL, String resumptionToken, OutputStream out) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchFieldException {
         ListRecords listRecords = new ListRecords(baseURL, resumptionToken);
         while (listRecords != null) {
             NodeList errors = listRecords.getErrors();
             if (errors != null && errors.getLength() > 0) {
                 System.out.println("Found errors");
                 int length = errors.getLength();
-                for (int i=0; i<length; ++i) {
+                for (int i = 0; i < length; ++i) {
                     Node item = errors.item(i);
                     System.out.println(item);
                 }
                 System.out.println("Error record: " + listRecords.toString());
                 break;
             }
-//             System.out.println(listRecords);
+            //             System.out.println(listRecords);
             out.write(listRecords.toString().getBytes("UTF-8"));
             out.write("\n".getBytes("UTF-8"));
             resumptionToken = listRecords.getResumptionToken();
@@ -107,11 +102,7 @@ public class RawWrite {
         out.write("</harvest>\n".getBytes("UTF-8"));
     }
 
-    public static void run(String baseURL, String from, String until,
-                           String metadataPrefix, String setSpec,
-                           OutputStream out)
-        throws IOException, ParserConfigurationException, SAXException, TransformerException,
-               NoSuchFieldException {
+    public static void run(String baseURL, String from, String until, String metadataPrefix, String setSpec, OutputStream out) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchFieldException {
         out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes("UTF-8"));
         out.write("<harvest>\n".getBytes("UTF-8"));
         out.write(new Identify(baseURL).toString().getBytes("UTF-8"));
@@ -120,21 +111,20 @@ public class RawWrite {
         out.write("\n".getBytes("UTF-8"));
         out.write(new ListSets(baseURL).toString().getBytes("UTF-8"));
         out.write("\n".getBytes("UTF-8"));
-        ListRecords listRecords = new ListRecords(baseURL, from, until, setSpec,
-                                                  metadataPrefix);
+        ListRecords listRecords = new ListRecords(baseURL, from, until, setSpec, metadataPrefix);
         while (listRecords != null) {
             NodeList errors = listRecords.getErrors();
             if (errors != null && errors.getLength() > 0) {
                 System.out.println("Found errors");
                 int length = errors.getLength();
-                for (int i=0; i<length; ++i) {
+                for (int i = 0; i < length; ++i) {
                     Node item = errors.item(i);
                     System.out.println(item);
                 }
                 System.out.println("Error record: " + listRecords.toString());
                 break;
             }
-//             System.out.println(listRecords);
+            //             System.out.println(listRecords);
             out.write(listRecords.toString().getBytes("UTF-8"));
             out.write("\n".getBytes("UTF-8"));
             String resumptionToken = listRecords.getResumptionToken();
@@ -148,15 +138,15 @@ public class RawWrite {
         out.write("</harvest>\n".getBytes("UTF-8"));
     }
 
-    private static HashMap getOptions(String[] args) {
-        HashMap<String,Object> options = new HashMap<String,Object>();
-        ArrayList rootArgs = new ArrayList();
+    private static HashMap<String, Object> getOptions(String[] args) {
+        HashMap<String, Object> options = new HashMap<String, Object>();
+        ArrayList<String> rootArgs = new ArrayList<String>();
         options.put("rootArgs", rootArgs);
-        
-        for (int i=0; i<args.length; ++i) {
+
+        for (int i = 0; i < args.length; ++i) {
             if (args[i].charAt(0) != '-') {
                 rootArgs.add(args[i]);
-            } else if (i+1 < args.length) {
+            } else if (i + 1 < args.length) {
                 options.put(args[i], args[++i]);
             } else {
                 throw new IllegalArgumentException();

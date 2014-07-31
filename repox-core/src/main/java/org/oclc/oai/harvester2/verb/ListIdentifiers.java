@@ -41,9 +41,14 @@ public class ListIdentifiers extends HarvesterVerb {
      * Client-side ListIdentifiers verb constructor
      *
      * @param baseURL the baseURL of the server to be queried
-     * @exception MalformedURLException the baseURL is bad
-     * @exception SAXException the xml response is bad
-     * @exception IOException an I/O error occurred
+     * @param from 
+     * @param until 
+     * @param set 
+     * @param metadataPrefix 
+     * @throws IOException 
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
     public ListIdentifiers(String baseURL, String from, String until, String set, String metadataPrefix)
             throws IOException, ParserConfigurationException, SAXException, TransformerException {

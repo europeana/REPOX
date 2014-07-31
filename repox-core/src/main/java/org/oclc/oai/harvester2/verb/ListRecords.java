@@ -1,4 +1,3 @@
-
 /**
  Copyright 2006 OCLC, Online Computer Library Center
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,9 +40,14 @@ public class ListRecords extends HarvesterVerb {
      * Client-side ListRecords verb constructor
      *
      * @param baseURL the baseURL of the server to be queried
-     * @exception MalformedURLException the baseURL is bad
-     * @exception SAXException the xml response is bad
-     * @exception IOException an I/O error occurred
+     * @param from 
+     * @param until 
+     * @param set 
+     * @param metadataPrefix 
+     * @throws IOException 
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
     public ListRecords(String baseURL, String from, String until, String set, String metadataPrefix)
     		throws IOException, ParserConfigurationException, SAXException, TransformerException {
@@ -102,7 +106,7 @@ public class ListRecords extends HarvesterVerb {
     }
 
     /**
-     * Get the total of number records from a specific set
+     * Get the total number of records from a specific set
      *
      * @return the oai:resumptionToken value
      * @throws TransformerException
@@ -145,7 +149,7 @@ public class ListRecords extends HarvesterVerb {
     }
 
     /**
-     * Get the total of number records from a specific set
+     * Get the total number of records from a specific set
      *
      * @return the oai:resumptionToken value
      * @throws TransformerException

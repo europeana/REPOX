@@ -22,45 +22,48 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 /**
- * This class represents an GetRecord response on either the server or on the
- * client
+ * This class represents an GetRecord response on either the server or on the client
  * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class GetRecord extends HarvesterVerb {
-	/**
-	 * Mock object constructor (for unit testing purposes)
-	 */
-	public GetRecord() {
-		super();
-	}
+    /**
+     * Mock object constructor (for unit testing purposes)
+     */
+    public GetRecord() {
+        super();
+    }
 
-	/**
-	 * Client-side GetRecord verb constructor
-	 * 
-	 * @param baseURL the baseURL of the server to be queried
-	 * @exception SAXException the xml response is bad
-	 * @exception IOException an I/O error occurred
-	 */
-	public GetRecord(String baseURL, String identifier, String metadataPrefix)
-			throws IOException, ParserConfigurationException, SAXException, TransformerException {
-		super(baseURL + "?verb=GetRecord&identifier=" + identifier + "&metadataPrefix=" + metadataPrefix);
-	}
+    /**
+     * Client-side GetRecord verb constructor
+     * 
+     * @param baseURL
+     *            the baseURL of the server to be queried
+     * @param identifier
+     * @param metadataPrefix
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
+     */
+    public GetRecord(String baseURL, String identifier, String metadataPrefix) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        super(baseURL + "?verb=GetRecord&identifier=" + identifier + "&metadataPrefix=" + metadataPrefix);
+    }
 
-	/**
-	 * Get the oai:identifier from the oai:header
-	 * 
-	 * @return the oai:identifier as a String
-	 * @throws TransformerException
-	 * @throws NoSuchFieldException
-	 */
-	public String getIdentifier() throws TransformerException, NoSuchFieldException {
-		if(SCHEMA_LOCATION_V2_0.equals(getSchemaLocation())) {
-			return getSingleString("/oai20:OAI-PMH/oai20:GetRecord/oai20:record/oai20:header/oai20:identifier");
-		} else if(SCHEMA_LOCATION_V1_1_GET_RECORD.equals(getSchemaLocation())) {
-			return getSingleString("/oai11_GetRecord:GetRecord/oai11_GetRecord:record/oai11_GetRecord:header/oai11_GetRecord:identifier");
-		} else {
-			throw new NoSuchFieldException(getSchemaLocation());
-		}
-	}
+    /**
+     * Get the oai:identifier from the oai:header
+     * 
+     * @return the oai:identifier as a String
+     * @throws TransformerException
+     * @throws NoSuchFieldException
+     */
+    public String getIdentifier() throws TransformerException, NoSuchFieldException {
+        if (SCHEMA_LOCATION_V2_0.equals(getSchemaLocation())) {
+            return getSingleString("/oai20:OAI-PMH/oai20:GetRecord/oai20:record/oai20:header/oai20:identifier");
+        } else if (SCHEMA_LOCATION_V1_1_GET_RECORD.equals(getSchemaLocation())) {
+            return getSingleString("/oai11_GetRecord:GetRecord/oai11_GetRecord:record/oai11_GetRecord:header/oai11_GetRecord:identifier");
+        } else {
+            throw new NoSuchFieldException(getSchemaLocation());
+        }
+    }
 }

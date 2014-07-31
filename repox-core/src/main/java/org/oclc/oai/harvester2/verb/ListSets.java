@@ -1,4 +1,3 @@
-
 /**
  Copyright 2006 OCLC, Online Computer Library Center
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,8 +39,10 @@ public class ListSets extends HarvesterVerb {
      * Client-side ListSets verb constructor
      *
      * @param baseURL the baseURL of the server to be queried
-     * @exception MalformedURLException the baseURL is bad
-     * @exception IOException an I/O error occurred
+     * @throws IOException 
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws TransformerException 
      */
     public ListSets(String baseURL) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         super(baseURL + "?verb=ListSets");
