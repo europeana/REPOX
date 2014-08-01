@@ -18,10 +18,6 @@
 		<url>http://www.ist.utl.pt</url>
 	</organization>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -111,37 +107,35 @@
 
 	<dependencies>
 		<!--REPOX Core Libs -->
+		<!-- <dependency> -->
+		<!-- <groupId>repox</groupId> -->
+		<!-- <artifactId>repox-core</artifactId> -->
+		<!-- </dependency> -->
+		
 		<dependency>
 			<groupId>repox</groupId>
-			<artifactId>repox-core</artifactId>
-			<version>1.3.6</version>
+			<artifactId>repox-europeana</artifactId>
 		</dependency>
 
+		<!-- Non existent dependency -->
 		<!--<dependency> -->
 		<!--<groupId>repox</groupId> -->
 		<!--<artifactId>repox-eudml</artifactId> -->
 		<!--<version>2.0.0</version> -->
 		<!--</dependency> -->
-
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-europeana</artifactId>
-			<version>2.0.0</version>
-		</dependency>
+		<!-- Non existent dependency -->
 
 		<!--Ext GWT Libs -->
 		<dependency>
-		<groupId>gxt</groupId>
-		<artifactId>gxt</artifactId>
-		<version>2.2.5</version>
-		<classifier>gwt22</classifier>
+			<groupId>gxt</groupId>
+			<artifactId>gxt</artifactId>
+			<classifier>gwt22</classifier>
 		</dependency>
 
 		<!--GWT Core Libs -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<version>2.4.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-io</groupId>
@@ -153,13 +147,11 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<version>2.4.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -167,58 +159,50 @@
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
 		</dependency>
 
 		<!--Calendar Libs -->
 		<dependency>
 			<groupId>com.bradrydzewski</groupId>
 			<artifactId>gwt-cal</artifactId>
-			<version>0.9.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.allen-sauer.gwt.dnd</groupId>
 			<artifactId>gwt-dnd</artifactId>
-			<version>3.1.2</version>
 		</dependency>
 
 		<!--Password Gen Lib -->
 		<dependency>
 			<groupId>org.mindrot</groupId>
 			<artifactId>jbcrypt</artifactId>
-			<version>0.3m</version>
 		</dependency>
 		<!--RSS Lib -->
 		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
-			<version>1.0</version>
 		</dependency>
 
 		<!-- LDAP Libs -->
 		<dependency>
 			<groupId>com.novell.ldap</groupId>
 			<artifactId>jldap</artifactId>
-			<version>4.3</version>
 		</dependency>
 
 		<!-- Testing Libs -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<!-- This is a previous verrion <version>4.11</version> -->
 		</dependency>
 
 		<!--XMApper Libs -->
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>mdr-mapping-ui-svg</artifactId>
-			<version>0.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>mdr-system</artifactId>
-			<version>0.1.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -233,12 +217,10 @@
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>xml-mapping-compiler</artifactId>
-			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>xslt-om</artifactId>
-			<version>0.1.2</version>
 		</dependency>
 
 	</dependencies>
