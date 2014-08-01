@@ -15,6 +15,12 @@
 		<name>Instituto Superior Técnico</name>
 		<url>http://www.ist.utl.pt</url>
 	</organization>
+	
+	<scm>
+        <connection>scm:git:git://github.com/europeana/repox2.git</connection>
+        <developerConnection>scm:git:git@github.com/europeana/repox2.git</developerConnection>
+        <url>https://github.com/europeana/repox2</url>
+    </scm>
 
 	<modules>
 		<module>repox-core</module>
