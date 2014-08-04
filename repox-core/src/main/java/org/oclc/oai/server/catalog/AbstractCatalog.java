@@ -70,6 +70,9 @@ public abstract class AbstractCatalog {
      */
     public RecordFactory getRecordFactory() { return recordFactory; }
     
+    /**
+     * @param harvestable
+     */
     public void setHarvestable(boolean harvestable) {
         this.harvestable = harvestable;
     }
@@ -82,13 +85,23 @@ public abstract class AbstractCatalog {
     
     /**
      * get the optional millisecondsToLive property (<0 indicates no limit)
+     * @return int of the milliseconds
      **/
     public int getMillisecondsToLive() { return millisecondsToLive; }
     
+    /**
+     * Record factory setter
+     * 
+     * @param recordFactory
+     */
     public void setRecordFactory(RecordFactory recordFactory) {
         this.recordFactory = recordFactory;
     }
     
+    /**
+     * Supported granularity setter
+     * @param i
+     */
     public void setSupportedGranularityOffset(int i) {
         supportedGranularityOffset = i;
     }
@@ -96,10 +109,13 @@ public abstract class AbstractCatalog {
     /**
      * Convert the requested 'from' parameter to the finest granularity supported
      * by this repository.
-     * @exception BadArgumentException one or more of the arguments are bad.
+     * 
+     * @param from 
+     * @throws BadArgumentException one or more of the arguments are bad.
+     * @return the new convert from parameter
      */
-    public String toFinestFrom(String from) 
-    throws BadArgumentException {
+    public String toFinestFrom(String from) throws BadArgumentException {
+        String convertedFrom = "";
         if (debug) {
             System.out.println("AbstractCatalog.toFinestFrom: from=" + from);
             System.out.println("                            target=" + VALID_GRANULARITIES[supportedGranularityOffset]);
@@ -113,23 +129,26 @@ public abstract class AbstractCatalog {
                 sb.setLength(sb.length()-1);
             
             sb.append(FROM_GRANULARITIES[supportedGranularityOffset].substring(sb.length()));
-            from = sb.toString();
+            convertedFrom = sb.toString();
         }
         
         if (!isValidGranularity(from)) {
             throw new BadArgumentException();
         }
         
-        return from;
+        return convertedFrom;
     }
     
     /**
-     * Convert the requested 'until' paramter to the finest granularity supported
+     * Convert the requested 'until' parameter to the finest granularity supported
      * by this repository
-     * @exception BadArgumentException one or more of the arguments are bad.
+     * 
+     * @param until
+     * @throws BadArgumentException one or more of the arguments are bad. 
+     * @return the new convert until parameter
      */
-    public String toFinestUntil(String until)
-    throws BadArgumentException {
+    public String toFinestUntil(String until) throws BadArgumentException {
+        String convertedUntil = "";
         if (until.length() == VALID_GRANULARITIES[supportedGranularityOffset].length()) {
             if (!isValidGranularity(until))
                 throw new BadArgumentException();
@@ -148,35 +167,40 @@ public abstract class AbstractCatalog {
             switch (sb.length()) {
             case 4: // YYYY
                 sb.append("-");
+                //$FALL-THROUGH$
             case 5: // YYYY-
                 sb.append("12");
+                //$FALL-THROUGH$
             case 7: // YYYY-MM
                 sb.append("-");
+                //$FALL-THROUGH$
             case 8: // YYYY-MM-
                 sb.append("31");
-                break;
-                
+                break;                
             case 6: // YYYY-M
             case 9: // YYYY-MM-D
                 throw new BadArgumentException();
             }
         }
         
-        until = sb.toString();
-        if (until.length() == VALID_GRANULARITIES[supportedGranularityOffset].length()) {
-            if (!isValidGranularity(until))
+        convertedUntil = sb.toString();
+        if (convertedUntil.length() == VALID_GRANULARITIES[supportedGranularityOffset].length()) {
+            if (!isValidGranularity(convertedUntil))
                 throw new BadArgumentException();
-            return until;
+            return convertedUntil;
         }
         
         if (sb.length() < VALID_GRANULARITIES[1].length()) {
             switch (sb.length()) {
             case 10: // YYYY-MM-DD
                 sb.append("T");
+                //$FALL-THROUGH$
             case 11: // YYYY-MM-DDT
                 sb.append("23");
+                //$FALL-THROUGH$
             case 13: // YYYY-MM-DDThh
                 sb.append(":");
+                //$FALL-THROUGH$
             case 14: // YYYY-MM-DDThh:
                 sb.append("59");
 //              case 16: // YYYY-MM-DDThh:mm
@@ -201,14 +225,16 @@ public abstract class AbstractCatalog {
                 
 //              if (sb.length() < VALID_GRANULARITIES[2].length()) {
 //              switch (sb.length()) {
+                //$FALL-THROUGH$
             case 16: // YYYY-MM-DDThh:mm
                 sb.append(":");
+                //$FALL-THROUGH$
             case 17: // YYYY-MM-DDThh:mm:
                 sb.append("59");
+                //$FALL-THROUGH$
             case 19: // YYYY-MM-DDThh:mm:ss
                 sb.append("Z");
                 break;
-                
             case 18: // YYYY-MM-DDThh:mm:s
                 throw new BadArgumentException();
             }
@@ -234,10 +260,10 @@ public abstract class AbstractCatalog {
 //      break;
 //      }
         
-        until = sb.toString();
-        if (!isValidGranularity(until))
+        convertedUntil = sb.toString();
+        if (!isValidGranularity(convertedUntil))
             throw new BadArgumentException();
-        return until;
+        return convertedUntil;
     }
     
     /**
@@ -308,19 +334,20 @@ public abstract class AbstractCatalog {
      * Retrieve the list of supported Sets. This should probably be initialized
      * by the constructor from the properties object that is passed to it.
      *
+     * @throws NoSetHierarchyException No sets are defined for this repository
+     * @throws OAIInternalServerError An error occurred
      * @return a Map object containing <setSpec> values as the Map keys and 
      * <setName> values for the corresponding the Map values.
-     * @exception NoSetHierarchyException No sets are defined for this repository
-     * @exception OAIInternalServerError An error occurred
      */
     public abstract Map listSets() throws NoSetHierarchyException, OAIInternalServerError;
     
     /**
      * Retrieve the next cluster of supported sets.
+     * 
+     * @throws BadResumptionTokenException The resumptionToken is bad.
+     * @throws OAIInternalServerError An error occurred
      * @return a Map object containing <setSpec> values as the Map keys and 
      * <setName> values for the corresponding the Map values.
-     * @exception BadResumptionTokenException The resumptionToken is bad.
-     * @exception OAIInternalServerError An error occurred
      */
     public abstract Map listSets(String resumptionToken)
     throws BadResumptionTokenException, OAIInternalServerError;
@@ -340,17 +367,14 @@ public abstract class AbstractCatalog {
      * @param properties Properties object containing entries necessary to
      * initialize the class
      * to be created.
+     * @param context 
+     * @throws Throwable 
      * @return on object instantiating the AbstractCatalog interface.
-     * @exception Throwable some sort of problem occurred.
      */
-    public static AbstractCatalog factory(Properties properties,
-            ServletContext context)
-    throws Throwable {
+    public static AbstractCatalog factory(Properties properties, ServletContext context) throws Throwable {
         AbstractCatalog oaiCatalog = null;
-        String oaiCatalogClassName =
-            properties.getProperty("AbstractCatalog.oaiCatalogClassName");
-        String recordFactoryClassName =
-            properties.getProperty("AbstractCatalog.recordFactoryClassName");
+        String oaiCatalogClassName = properties.getProperty("AbstractCatalog.oaiCatalogClassName");
+        String recordFactoryClassName = properties.getProperty("AbstractCatalog.recordFactoryClassName");
         if (oaiCatalogClassName == null) {
             throw new ClassNotFoundException(
             "AbstractCatalog.oaiCatalogClassName is missing from properties file");
@@ -363,9 +387,7 @@ public abstract class AbstractCatalog {
         try {
             Constructor oaiCatalogConstructor = null;
             try {
-                oaiCatalogConstructor =
-                    oaiCatalogClass.getConstructor(new Class[] {Properties.class,
-                            ServletContext.class});
+                oaiCatalogConstructor = oaiCatalogClass.getConstructor(new Class[] {Properties.class, ServletContext.class});
                 oaiCatalog =
                     (AbstractCatalog)oaiCatalogConstructor.newInstance(new Object[]
                                                                                   {properties, context});
@@ -381,10 +403,8 @@ public abstract class AbstractCatalog {
                         + recordFactoryClassName);
             }
             Class recordFactoryClass = Class.forName(recordFactoryClassName);
-            Constructor recordFactoryConstructor =
-                recordFactoryClass.getConstructor(new Class[] {Properties.class});
-            oaiCatalog.recordFactory =
-                (RecordFactory)recordFactoryConstructor.newInstance(new Object[] {properties});
+            Constructor recordFactoryConstructor = recordFactoryClass.getConstructor(new Class[] {Properties.class});
+            oaiCatalog.recordFactory = (RecordFactory)recordFactoryConstructor.newInstance(new Object[] {properties});
             if (debug) {
                 System.out.println("AbstractCatalog.factory: recordFactory=" + oaiCatalog.recordFactory);
             }
@@ -392,8 +412,7 @@ public abstract class AbstractCatalog {
             if (harvestable != null && harvestable.equals("false")) {
                 oaiCatalog.harvestable = false;
             }
-            String secondsToLive =
-                properties.getProperty("AbstractCatalog.secondsToLive");
+            String secondsToLive = properties.getProperty("AbstractCatalog.secondsToLive");
             if (secondsToLive != null) {
                 oaiCatalog.millisecondsToLive = Integer.parseInt(secondsToLive) * 1000;
             }
@@ -430,10 +449,9 @@ public abstract class AbstractCatalog {
      *
      * @param identifier the OAI identifier
      * @return a Vector containing schemaLocation Strings
-     * @exception IdDoesNotExistException The specified identifier doesn't exist.
-     * @exception NoMetadataFormatsException The identifier exists, but no metadataFormats are
-     * provided for it.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws IdDoesNotExistException 
+     * @throws NoMetadataFormatsException 
+     * @throws OAIInternalServerError 
      */
     public abstract Vector getSchemaLocations(String identifier)
     throws IdDoesNotExistException, NoMetadataFormatsException, OAIInternalServerError;
@@ -446,15 +464,16 @@ public abstract class AbstractCatalog {
      * @param until ending date in the form of YYYY-MM-DD or null if latest
      * date is desired
      * @param set set name or null if no set is desired
+     * @param metadataPrefix 
      * @return a Map object containing an optional "resumptionToken" key/value
      * pair and an "headers" Map object. The "headers" Map contains OAI
      * identifier keys with corresponding values of "true" or null depending on
      * whether the identifier is deleted or not.
-     * @exception BadArgumentException one or more of the arguments are bad.
-     * @exception CannotDisseminateFormatException the requested metadataPrefix isn't supported
-     * @exception NoItemsMatchException no items fit the criteria
-     * @exception NoSetHierarchyException sets aren't defined for this repository
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws BadArgumentException one or more of the arguments are bad.
+     * @throws CannotDisseminateFormatException the requested metadataPrefix isn't supported
+     * @throws NoItemsMatchException no items fit the criteria
+     * @throws NoSetHierarchyException sets aren't defined for this repository
+     * @throws OAIInternalServerError signals an http status code 500 problem
      */
     public abstract Map listIdentifiers(String from, String until, String set, String metadataPrefix)
     throws BadArgumentException, CannotDisseminateFormatException, NoItemsMatchException,
@@ -469,8 +488,9 @@ public abstract class AbstractCatalog {
      * pair and an "headers" Map object. The "headers" Map contains OAI
      * identifier keys with corresponding values of "true" or null depending on
      * whether the identifier is deleted or not.
-     * @exception BadResumptionTokenException The resumptionToken is bad.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws BadResumptionTokenException The resumptionToken is bad.
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws NoItemsMatchException 
      */
     public abstract Map listIdentifiers(String resumptionToken)
             throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException;
@@ -479,6 +499,7 @@ public abstract class AbstractCatalog {
      * Retrieve the specified metadata for the specified identifier
      *
      * @param identifier the OAI identifier
+     * @param metadataPrefix 
      * @return the String containing the result record.
      * @exception IdDoesNotExistException The specified identifier doesn't exist.
      * @exception CannotDisseminateFormatException The identifier exists, but doesn't support
@@ -492,6 +513,7 @@ public abstract class AbstractCatalog {
      * Retrieve the specified metadata for the specified identifier
      *
      * @param identifier the OAI identifier
+     * @param metadataPrefix 
      * @return the String containing the result record.
      * @exception OAIInternalServerError signals an http status code 500 problem
      * @throws CannotDisseminateFormatException 
@@ -512,6 +534,7 @@ public abstract class AbstractCatalog {
      * @param until ending date in the form of YYYY-MM-DD or null if latest
      * date is desired
      * @param set set name or null if no set is desired
+     * @param metadataPrefix 
      * @return a Map object containing an optional "resumptionToken" key/value
      * pair and a "records" Iterator object. The "records" Iterator contains a
      * set of Records objects.
@@ -558,8 +581,9 @@ public abstract class AbstractCatalog {
      * @return a Map object containing an optional "resumptionToken" key/value
      * pair and a "records" Iterator object. The "records" Iterator contains a
      * set of Records objects.
-     * @exception BadResumptionTokenException The resumptionToken is bad.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws BadResumptionTokenException The resumptionToken is bad.
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws NoItemsMatchException 
      */
     public Map listRecords(String resumptionToken)
             throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException {
@@ -590,14 +614,24 @@ public abstract class AbstractCatalog {
         return listRecordsMap;
     }
     
+    /**
+     * @param resumptionToken
+     * @return a resumption map
+     */
     public Map getResumptionMap(String resumptionToken) {
         return getResumptionMap(resumptionToken, -1, -1);
     }
     
-    public Map getResumptionMap(String resumptionToken, int completeListSize, int cursor) {
-        Map resumptionMap = null;
+    /**
+     * @param resumptionToken
+     * @param completeListSize
+     * @param cursor
+     * @return a resumption map
+     */
+    public Map<String, String> getResumptionMap(String resumptionToken, int completeListSize, int cursor) {
+        Map<String, String> resumptionMap = null;
         if (resumptionToken != null) {
-            resumptionMap = new HashMap();
+            resumptionMap = new HashMap<String, String>();
             resumptionMap.put("resumptionToken", resumptionToken);
             if (millisecondsToLive > 0) {
 //              Date now = new Date();
