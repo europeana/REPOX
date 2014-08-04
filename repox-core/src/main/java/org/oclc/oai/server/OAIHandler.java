@@ -26,6 +26,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,16 +41,15 @@ import java.util.zip.GZIPOutputStream;
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class OAIHandler extends HttpServlet {
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
+    /** OAIHandler PROPERTIES_SERVLET_CONTEXT_ATTRIBUTE */
     public static final String PROPERTIES_SERVLET_CONTEXT_ATTRIBUTE = OAIHandler.class.getName() + ".properties";
 
     private static final String VERSION = "1.5.56";
     private static boolean debug = false;
     private Log log = LogFactory.getLog(OAIHandler.class);
+    /** OAIHandler attributesMap */
     protected Map<String, Map<String, Object>> attributesMap = new HashMap<String, Map<String, Object>>();
     private ServletConfig initialConfig;
 
@@ -68,6 +68,7 @@ public class OAIHandler extends HttpServlet {
      * @param config servlet configuration information
      * @throws ServletException there was a problem with initialization
      */
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.initialConfig = config;
@@ -138,6 +139,13 @@ public class OAIHandler extends HttpServlet {
         }
     }
 
+    /**
+     * Get the attributes using a Properties Object as well
+     * 
+     * @param properties
+     * @return attributes as a Map
+     * @throws Throwable
+     */
     public Map<String, Object> getAttributes(Properties properties) throws Throwable {
         Map<String, Object> attributes = new HashMap<String, Object>();
         Enumeration attrNames = getServletContext().getAttributeNames();
@@ -183,6 +191,12 @@ public class OAIHandler extends HttpServlet {
         return attributes;
     }
 
+    /**
+     * Get the attributes using a Properties Object as well
+     * 
+     * @param pathInfo
+     * @return attributes as a Map
+     */
     public Map<String, Object> getAttributes(String pathInfo) {
         Map<String, Object> attributes = null;
         log.debug("pathInfo=" + pathInfo);
@@ -221,21 +235,21 @@ public class OAIHandler extends HttpServlet {
     }
 
     /**
-     * Peform the http GET action. Note that POST is shunted to here as well. The verb widget is taken from the request and
+     * Perform the HTTP GET action. Note that POST is shunted to here as well. The verb widget is taken from the request and
      * used to invoke an OAIVerb object of the corresponding kind to do the actual work of the verb.
      *
      * @param request  the servlet's request information
      * @param response the servlet's response information
      * @throws IOException an I/O error occurred
      */
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map attributes = getAttributes(request.getPathInfo());
+        Map<String, Object> attributes = getAttributes(request.getPathInfo());
         if (!filterRequest(request, response)) {
             return;
         }
 
-        if(request.getQueryString() != null &&
-                request.getQueryString().equals("reloadOAIProperties")){
+        if(request.getQueryString() != null && request.getQueryString().equals("reloadOAIProperties")){
             reloadOAIProperties();
             return;
         }
@@ -377,6 +391,19 @@ public class OAIHandler extends HttpServlet {
         return true;
     }
 
+    /**
+     * Get the result
+     * 
+     * @param attributes
+     * @param request
+     * @param response
+     * @param serverTransformer
+     * @param serverVerbs
+     * @param extensionVerbs
+     * @param extensionPath
+     * @return String of the result
+     * @throws Throwable
+     */
     public static String getResult(Map attributes, HttpServletRequest request, HttpServletResponse response,
                                    Transformer serverTransformer, Map serverVerbs, Map extensionVerbs, String extensionPath)
             throws Throwable {
@@ -396,7 +423,7 @@ public class OAIHandler extends HttpServlet {
                 verbClass = (Class) serverVerbs.get(verb);
             }
             if (verbClass == null) {
-                verbClass = (Class) attributes.get("OAIHandler.missingVerbClass");
+                verbClass =  (Class) attributes.get("OAIHandler.missingVerbClass");
             }
 
             Method construct = verbClass.getMethod("construct", new Class[]{HashMap.class, HttpServletRequest.class,
@@ -428,6 +455,7 @@ public class OAIHandler extends HttpServlet {
      *
      * @param request  the servlet's request information
      * @param response the servlet's response information
+     * @return a response Writer
      * @throws IOException an I/O error occurred
      */
     public static Writer getWriter(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -462,12 +490,13 @@ public class OAIHandler extends HttpServlet {
     }
 
     /**
-     * Peform a POST action. Actually this gets shunted to GET
+     * Perform a POST action. Actually this gets shunted to GET
      *
      * @param request  the servlet's request information
      * @param response the servlet's response information
      * @throws IOException an I/O error occurred
      */
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doGet(request, response);
     }
