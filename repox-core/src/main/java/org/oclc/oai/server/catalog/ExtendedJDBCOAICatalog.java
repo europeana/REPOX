@@ -238,20 +238,19 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      *
      * @param oaiIdentifier the OAI identifier
      * @return a Vector containing schemaLocation Strings
-     * @exception OAIInternalServerError signals an http status code 500 problem
-     * @exception IdDoesNotExistException the specified oaiIdentifier can't be found
-     * @exception NoMetadataFormatsException the specified oaiIdentifier was found
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws IdDoesNotExistException the specified oaiIdentifier can't be found
+     * @throws NoMetadataFormatsException the specified oaiIdentifier was found
      * but the item is flagged as deleted and thus no schemaLocations (i.e.
      * metadataFormats) can be produced.
      */
-    public Vector getSchemaLocations(String oaiIdentifier)
-    throws OAIInternalServerError, IdDoesNotExistException, NoMetadataFormatsException {
+    @Override
+    public Vector getSchemaLocations(String oaiIdentifier) throws OAIInternalServerError, IdDoesNotExistException, NoMetadataFormatsException {
         Connection con = null;
         try {
             con = startConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs =
-                stmt.executeQuery(populateIdentifierQuery(oaiIdentifier));
+            ResultSet rs = stmt.executeQuery(populateIdentifierQuery(oaiIdentifier));
             /*
              * Let your recordFactory decide which schemaLocations
              * (i.e. metadataFormats) it can produce from the record.
@@ -283,7 +282,10 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * the entire nativeItem is produced by the default query.
      * If other tables must be consulted, extend this class and
      * override this method. For best results, create one new entry
-     * in the nativeItem HashMap for each additional query peformed.
+     * in the nativeItem HashMap for each additional query performed.
+     * 
+     * @param con 
+     * @param nativeItem 
      */
     protected void extendItem(Connection con, HashMap nativeItem) {
     }
@@ -291,6 +293,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
     /**
      * Since the columns should only be read once, copy them into a
      * HashMap and consider that to be the "record"
+     * 
      * @param rs The ResultSet row
      * @return a HashMap mapping column names with values
      */
@@ -369,6 +372,8 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
     
     /**
      * Extend this class and override this method if necessary.
+     * @param date 
+     * @return String of a formatted from date
      */
     protected String formatFromDate(String date) {
         return formatDate(date);
@@ -376,6 +381,8 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
     
     /**
      * Extend this class and override this method if necessary.
+     * @param date 
+     * @return String of a formatted until date
      */
     protected String formatUntilDate(String date) {
         return formatDate(date);
@@ -385,6 +392,9 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * Change the String from UTC to SQL format
      * If this method doesn't suit your needs, extend this class and override
      * the method rather than change this code directly. 
+     * 
+     * @param date 
+     * @return String of a formatted date
      */
     protected String formatDate(String date) {
         StringBuffer sb = new StringBuffer();
@@ -401,12 +411,11 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * insert actual from, until, and set parameters into the identifierQuery String
      *
      * @param from the OAI from parameter
-     * @param until the OAI until paramter
+     * @param until the OAI until parameter
      * @param set the OAI set parameter
      * @return a String containing an SQL query
      */
-    private String populateIdentifierQuery(String oaiIdentifier)
-    throws OAIInternalServerError {
+    private String populateIdentifierQuery(String oaiIdentifier) throws OAIInternalServerError {
         StringTokenizer tokenizer = new StringTokenizer(identifierQuery, "\\");
         StringBuffer sb = new StringBuffer();
         if (tokenizer.hasMoreTokens())
@@ -437,12 +446,11 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * insert actual from, until, and set parameters into the identifierQuery String
      *
      * @param from the OAI from parameter
-     * @param until the OAI until paramter
+     * @param until the OAI until parameter
      * @param set the OAI set parameter
      * @return a String containing an SQL query
      */
-    private String populateSetSpecQuery(String oaiIdentifier)
-    throws OAIInternalServerError {
+    private String populateSetSpecQuery(String oaiIdentifier) throws OAIInternalServerError {
         StringTokenizer tokenizer = new StringTokenizer(setSpecQuery, "\\");
         StringBuffer sb = new StringBuffer();
         if (tokenizer.hasMoreTokens())
@@ -473,7 +481,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * insert actual from, until, and set parameters into the identifierQuery String
      *
      * @param from the OAI from parameter
-     * @param until the OAI until paramter
+     * @param until the OAI until parameter
      * @param set the OAI set parameter
      * @return a String containing an SQL query
      */
@@ -523,10 +531,10 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * of identifiers, it must call getRecord() individually for each as it constructs
      * its response. It's much more efficient to construct the entire response in one fell
      * swoop by overriding listRecords() as I've done here.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws OAIInternalServerError signals an http status code 500 problem
      */
-    public Map listIdentifiers(String from, String until, String set, String metadataPrefix)
-    throws NoItemsMatchException, OAIInternalServerError {
+    @Override
+    public Map listIdentifiers(String from, String until, String set, String metadataPrefix) throws NoItemsMatchException, OAIInternalServerError {
 //      purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -590,9 +598,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                  * resumptionToken attributes in the response. Otherwise, use the
                  * line after it that I've commented out.
                  *****************************************************************/
-                listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                        -1,
-                        0));
+                listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, 0));
                 //          listIdentifiersMap.put("resumptionMap",
                 //                                 getResumptionMap(resumptionTokenSb.toString()));
                 endConnection(con);
@@ -621,12 +627,12 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * previous listIdentifiers() Map result.
      * @return a Map object containing entries for "headers" and "identifiers" Iterators
      * (both containing Strings) as well as an optional "resumptionMap" Map.
-     * @exception BadResumptionTokenException the value of the resumptionToken
+     * @throws BadResumptionTokenException the value of the resumptionToken
      * is invalid or expired.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws OAIInternalServerError signals an HTTP status code 500 problem
      */
-    public Map listIdentifiers(String resumptionToken)
-    throws BadResumptionTokenException, OAIInternalServerError {
+    @Override
+    public Map listIdentifiers(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError {
 //      purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -708,9 +714,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                  * resumptionToken attributes in the response. Otherwise, use the
                  * line after it that I've commented out.
                  *****************************************************************/
-                listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                        -1,
-                        oldCount));
+                listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, oldCount));
                 //          listIdentifiersMap.put("resumptionMap",
                 //                                 getResumptionMap(resumptionTokenSb.toString()));
                 endConnection(con);
@@ -738,14 +742,13 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * @param oaiIdentifier the OAI identifier
      * @param metadataPrefix the OAI metadataPrefix
      * @return the <record/> portion of the XML response.
-     * @exception OAIInternalServerError signals an http status code 500 problem
-     * @exception CannotDisseminateFormatException the metadataPrefix is not
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws CannotDisseminateFormatException the metadataPrefix is not
      * supported by the item.
-     * @exception IdDoesNotExistException the oaiIdentifier wasn't found
+     * @throws IdDoesNotExistException the oaiIdentifier wasn't found
      */
-    public String getRecord(String oaiIdentifier, String metadataPrefix)
-    throws OAIInternalServerError, CannotDisseminateFormatException,
-    IdDoesNotExistException {
+    @Override
+    public String getRecord(String oaiIdentifier, String metadataPrefix) throws OAIInternalServerError, CannotDisseminateFormatException, IdDoesNotExistException {
         Connection con = null;
         try {
             con = startConnection();
@@ -785,13 +788,12 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * @param metadataPrefix the OAI metadataPrefix or null if no such limit is requested
      * @return a Map object containing entries for a "records" Iterator object
      * (containing XML <record/> Strings) and an optional "resumptionMap" Map.
-     * @exception OAIInternalServerError signals an http status code 500 problem
-     * @exception CannotDisseminateFormatException the metadataPrefix isn't
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws CannotDisseminateFormatException the metadataPrefix isn't
      * supported by the item.
      */
-    public Map listRecords(String from, String until, String set, String metadataPrefix)
-    throws CannotDisseminateFormatException, NoItemsMatchException,
-    OAIInternalServerError {
+    @Override
+    public Map listRecords(String from, String until, String set, String metadataPrefix) throws CannotDisseminateFormatException, NoItemsMatchException, OAIInternalServerError {
 //      purge(); // clean out old resumptionTokens
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
@@ -856,9 +858,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                  * resumptionToken attributes in the response. Otherwise, use the
                  * line after it that I've commented out.
                  *****************************************************************/
-                listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                        -1,
-                        0));
+                listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, 0));
                 //          listRecordsMap.put("resumptionMap",
                 //                                 getResumptionMap(resumptionTokenSbSb.toString()));
                 endConnection(con);
@@ -886,12 +886,12 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * previous listRecords() Map result.
      * @return a Map object containing entries for "headers" and "identifiers" Iterators
      * (both containing Strings) as well as an optional "resumptionMap" Map.
-     * @exception OAIInternalServerError signals an http status code 500 problem
-     * @exception BadResumptionTokenException the value of the resumptionToken argument
+     * @throws OAIInternalServerError signals an http status code 500 problem
+     * @throws BadResumptionTokenException the value of the resumptionToken argument
      * is invalid or expired.
      */
-    public Map listRecords(String resumptionToken)
-    throws BadResumptionTokenException, OAIInternalServerError {
+    @Override
+    public Map listRecords(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError {
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
 //      purge(); // clean out old resumptionTokens
@@ -975,9 +975,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                  * resumptionToken attributes in the response. Otherwise, use the
                  * line after it that I've commented out.
                  *****************************************************************/
-                listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                        -1,
-                        oldCount));
+                listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, oldCount));
                 //          listRecordsMap.put("resumptionMap",
                 //                                 getResumptionMap(resumptionTokenSb.toString()));
                 endConnection(con);
@@ -1002,14 +1000,13 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * Utility method to construct a Record object for a specified
      * metadataFormat from a native record
      *
-     * @param nativeItem native item from the dataase
+     * @param nativeItem native item from the database
      * @param metadataPrefix the desired metadataPrefix for performing the crosswalk
      * @return the <record/> String
-     * @exception CannotDisseminateFormatException the record is not available
+     * @throws CannotDisseminateFormatException the record is not available
      * for the specified metadataPrefix.
      */
-    private String constructRecord(HashMap nativeItem, String metadataPrefix)
-    throws CannotDisseminateFormatException, OAIInternalServerError {
+    private String constructRecord(HashMap nativeItem, String metadataPrefix) throws CannotDisseminateFormatException, OAIInternalServerError {
         String schemaURL = null;
         Iterator setSpecs = getSetSpecs(nativeItem);
         Iterator abouts = getAbouts(nativeItem);
@@ -1026,9 +1023,9 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      *
      * @return a Map object containing "sets" Iterator object (contains
      * <setSpec/> XML Strings) as well as an optional resumptionMap Map.
-     * @exception OAIBadRequestException signals an http status code 400 problem
      * @exception OAIInternalServerError signals an http status code 500 problem
      */
+    @Override
     public Map listSets() throws NoSetHierarchyException, OAIInternalServerError {
         if (setQuery == null) {
             if (sets.size() == 0)
@@ -1084,9 +1081,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                      * resumptionToken attributes in the response. Otherwise, use the
                      * line after it that I've commented out.
                      *****************************************************************/
-                    listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                            numRows,
-                            0));
+                    listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, 0));
                     //          listSetsMap.put("resumptionMap",
                     //                                 getResumptionMap(resumptionTokenSb.toString()));
                     endConnection(con);
@@ -1110,12 +1105,12 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
      * previous listSets() Map result.
      * @return a Map object containing "sets" Iterator object (contains
      * <setSpec/> XML Strings) as well as an optional resumptionMap Map.
-     * @exception BadResumptionTokenException the value of the resumptionToken
+     * @throws BadResumptionTokenException the value of the resumptionToken
      * is invalid or expired.
-     * @exception OAIInternalServerError signals an http status code 500 problem
+     * @throws OAIInternalServerError signals an http status code 500 problem
      */
-    public Map listSets(String resumptionToken)
-    throws OAIInternalServerError, BadResumptionTokenException {
+    @Override
+    public Map listSets(String resumptionToken) throws OAIInternalServerError, BadResumptionTokenException {
         if (setQuery == null) {
             throw new BadResumptionTokenException();
         } else {
@@ -1176,9 +1171,7 @@ public class ExtendedJDBCOAICatalog extends AbstractCatalog {
                      * resumptionToken attributes in the response. Otherwise, use the
                      * line after it that I've commented out.
                      *****************************************************************/
-                    listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-                            numRows,
-                            oldCount));
+                    listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, oldCount));
                     //          listSetsMap.put("resumptionMap",
                     //                                 getResumptionMap(resumptionTokenSb.toString()));
                 }
