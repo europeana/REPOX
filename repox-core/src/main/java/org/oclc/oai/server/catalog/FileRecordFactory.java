@@ -29,10 +29,9 @@ public class FileRecordFactory extends RecordFactory {
      * specified in the properties file.
      * @param properties Contains information to configure the factory:
      *                   specifically, the names of the crosswalk(s) supported
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public FileRecordFactory(Properties properties)
-	throws IllegalArgumentException {
+    public FileRecordFactory(Properties properties) throws IllegalArgumentException {
 	super(properties);
 	repositoryIdentifier = properties.getProperty("FileRecordFactory.repositoryIdentifier");
 	if (repositoryIdentifier == null) {
@@ -46,6 +45,7 @@ public class FileRecordFactory extends RecordFactory {
      * @param identifier OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
      * @return local identifier (e.g. ID/12345).
      */
+    @Override
     public String fromOAIIdentifier(String identifier) {
         try {
             StringTokenizer tokenizer = new StringTokenizer(identifier, ":");
@@ -63,6 +63,7 @@ public class FileRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return OAI identifier
      */
+    @Override
     public String getOAIIdentifier(Object nativeItem) {
 	StringBuffer sb = new StringBuffer();
 	sb.append("oai:");
@@ -78,6 +79,7 @@ public class FileRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return local identifier
      */
+    @Override
     public String getLocalIdentifier(Object nativeItem) {
         return (String)((HashMap)nativeItem).get("localIdentifier");
     }
@@ -87,10 +89,10 @@ public class FileRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing a datestamp somewhere
      * @return a String containing the datestamp for the item
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public String getDatestamp(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException  {
         return (String)((HashMap)nativeItem).get("lastModified");
     }
 
@@ -99,10 +101,10 @@ public class FileRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing a setspec somewhere
      * @return a String containing the setspec for the item
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public Iterator getSetSpecs(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
 	return null;
     }
 
@@ -111,8 +113,9 @@ public class FileRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing about information somewhere
      * @return a Iterator of Strings containing &lt;about&gt;s for the item
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
+    @Override
     public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
 	return null;
     }
@@ -122,10 +125,10 @@ public class FileRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing a possible delete indicator
      * @return true if record is deleted, false if not
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public boolean isDeleted(Object nativeItem)
-	throws IllegalArgumentException {
+    @Override
+    public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
 	return false;
     }
 
@@ -136,11 +139,10 @@ public class FileRecordFactory extends RecordFactory {
      * above individually.
      * 
      * @param nativeItem the native record
-     * @param schemaURL the schemaURL desired for the response
-     * @param the metadataPrefix from the request
      * @return a String containing the OAI &lt;record&gt; or null if the default method should be
      * used.
      */
+    @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
 	// Don't perform quick creates
 	return null;

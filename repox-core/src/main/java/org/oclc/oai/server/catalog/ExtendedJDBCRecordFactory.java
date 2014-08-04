@@ -21,7 +21,9 @@ import java.util.StringTokenizer;
  */
 public class ExtendedJDBCRecordFactory extends RecordFactory {
     private String repositoryIdentifier = null;
+    /** ExtendedJDBCRecordFactory identifierLabel */
     protected String identifierLabel = null;
+    /** ExtendedJDBCRecordFactory datestampLabel */
     protected String datestampLabel = null;
     
     /**
@@ -54,6 +56,7 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      * @param oaiIdentifier OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
      * @return local identifier (e.g. ID/12345).
      */
+    @Override
     public String fromOAIIdentifier(String oaiIdentifier) {
 	StringTokenizer tokenizer = new StringTokenizer(oaiIdentifier, ":");
 	try {
@@ -71,6 +74,7 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return local identifier
      */
+    @Override
     public String getLocalIdentifier(Object nativeItem) {
 // 	throws IllegalArgumentException {
 // 	try {
@@ -88,8 +92,8 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return OAI identifier
      */
-    public String getOAIIdentifier(Object nativeItem)
-	throws IllegalArgumentException {
+    @Override
+    public String getOAIIdentifier(Object nativeItem) throws IllegalArgumentException {
 	StringBuffer sb = new StringBuffer();
 	sb.append("oai:");
 	sb.append(repositoryIdentifier);
@@ -103,8 +107,9 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing a datestamp somewhere
      * @return a String containing the datestamp for the item
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
+    @Override
     public String getDatestamp(Object nativeItem) {
 // 	throws IllegalArgumentException  {
 // 	try {
@@ -117,15 +122,15 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
     }
 
     /**
-     * get the setspec from the item
+     * Get the setspec from the item
      *
      * @param nativeItem a native item presumably containing a setspec somewhere
      * @return a String containing the setspec for the item. Null if setSpecs aren't
      * derived from the nativeItem.
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public Iterator getSetSpecs(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
 	return null;
     }
 
@@ -135,8 +140,9 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      * @param nativeItem a native item presumably containing about information somewhere
      * @return a Iterator of Strings containing &lt;about&gt;s for the item. Null if
      * abouts aren't derived from the nativeItem
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
+    @Override
     public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
 	return null;
     }
@@ -146,10 +152,10 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      *
      * @param nativeItem a native item presumably containing a possible delete indicator
      * @return true if record is deleted, false if not
-     * @exception IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException Something is wrong with the argument.
      */
-    public boolean isDeleted(Object nativeItem)
-	throws IllegalArgumentException {
+    @Override
+    public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
 	return false;
     }
 
@@ -160,11 +166,10 @@ public class ExtendedJDBCRecordFactory extends RecordFactory {
      * above individually.
      * 
      * @param nativeItem the native record
-     * @param schemaURL the schemaURL desired for the response
-     * @param the metadataPrefix from the request
      * @return a String containing the OAI &lt;record&gt; or null if the default method should be
      * used.
      */
+    @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
 	// Don't perform quick creates
 	return null;
