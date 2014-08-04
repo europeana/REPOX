@@ -36,9 +36,12 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     private int              maxListSize;
     private boolean hideExtension = false;
 
+    /**
+     * Creates a new instance of this class.
+     * @param properties
+     */
     public FileSystemOAICatalog(Properties properties) {
         String          temp;
-
         dateFormatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         temp=properties.getProperty("FileSystemOAICatalog.maxListSize");
         if (temp==null)
@@ -163,20 +166,18 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      * @param     oaiIdentifier the OAI identifier
      * @param     metadataPrefix the OAI metadataPrefix
      * @return    the Record object containing the result.
-     * @exception CannotDisseminateFormatException signals an http status
+     * @throws CannotDisseminateFormatException signals an http status
      *                code 400 problem
-     * @exception IdDoesNotExistException signals an http status code 404
+     * @throws IdDoesNotExistException signals an http status code 404
      *                problem
-     * @exception OAIInternalServerError signals an http status code 500
+     * @throws OAIInternalServerError signals an http status code 500
      *                problem
      */
-    public String getRecord(String oaiIdentifier, String metadataPrefix)
-        throws IdDoesNotExistException, CannotDisseminateFormatException,
-               OAIInternalServerError {
+    @Override
+    public String getRecord(String oaiIdentifier, String metadataPrefix) throws IdDoesNotExistException, CannotDisseminateFormatException, OAIInternalServerError {
         HashMap nativeItem = null;
         try {
-	    String localIdentifier
-		= getRecordFactory().fromOAIIdentifier(oaiIdentifier);
+	    String localIdentifier = getRecordFactory().fromOAIIdentifier(oaiIdentifier);
 
             nativeItem = getNativeRecord(localIdentifier);
             if (nativeItem == null)
@@ -200,14 +201,11 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      *
      * @param oaiIdentifier the OAI identifier
      * @return a Vector containing schemaLocation Strings
-     * @exception OAIBadRequestException signals an http status code 400
-     *            problem
-     * @exception OAINotFoundException signals an http status code 404 problem
-     * @exception OAIInternalServerError signals an http status code 500
+     * @throws OAIInternalServerError signals an http status code 500
      *            problem
      */
-    public Vector getSchemaLocations(String oaiIdentifier)
-      throws IdDoesNotExistException, OAIInternalServerError, NoMetadataFormatsException {
+    @Override
+    public Vector getSchemaLocations(String oaiIdentifier) throws IdDoesNotExistException, OAIInternalServerError, NoMetadataFormatsException {
         HashMap nativeItem = null;
         try {
 	    String localIdentifier
@@ -238,11 +236,9 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      * pair and an "identifiers" Map object. The "identifiers" Map contains OAI
      * identifier keys with corresponding values of "true" or null depending on
      * whether the identifier is deleted or not.
-     * @exception OAIBadRequestException signals an http status code 400
-     *            problem
      */
-    public Map listIdentifiers(String from, String until, String set, String metadataPrefix)
-        throws NoItemsMatchException {
+    @Override
+    public Map listIdentifiers(String from, String until, String set, String metadataPrefix) throws NoItemsMatchException {
         purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -288,10 +284,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
 	     * resumptionToken attributes in the response. Otherwise, use the
 	     * line after it that I've commented out.
 	     *****************************************************************/
- 	    listIdentifiersMap.put("resumptionMap",
- 				   getResumptionMap(resumptionTokenSb.toString(),
- 						    numRows,
- 						    0));
+ 	    listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, 0));
 // 	    listIdentifiersMap.put("resumptionMap",
 // 				   getResumptionMap(resumptionTokenSb.toString()));
 	}
@@ -309,11 +302,9 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      * pair and an "identifiers" Map object. The "identifiers" Map contains OAI
      * identifier keys with corresponding values of "true" or null depending on
      * whether the identifier is deleted or not.
-     * @exception OAIBadRequestException signals an http status code 400
-     *            problem
      */
-    public Map listIdentifiers(String resumptionToken)
-      throws BadResumptionTokenException {
+    @Override
+    public Map listIdentifiers(String resumptionToken) throws BadResumptionTokenException {
         purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -379,9 +370,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
 	     * resumptionToken attributes in the response. Otherwise, use the
 	     * line after it that I've commented out.
 	     *****************************************************************/
-	    listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-								     numRows,
-								     oldCount));
+	    listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, oldCount));
 	    //          listIdentifiersMap.put("resumptionMap",
 	    //                                 getResumptionMap(resumptionTokenSb.toString()));
 	}
@@ -416,7 +405,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * get an Iterator containing the setSpecs for the nativeItem
+     * Get an Iterator containing the setSpecs for the nativeItem
      *
      * @param rs ResultSet containing the nativeItem
      * @return an Iterator containing the list of setSpec values for this nativeItem
@@ -426,7 +415,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * get an Iterator containing the abouts for the nativeItem
+     * Get an Iterator containing the abouts for the nativeItem
      *
      * @param rs ResultSet containing the nativeItem
      * @return an Iterator containing the list of about values for this nativeItem
@@ -447,15 +436,12 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      * @return a Map object containing an optional "resumptionToken" key/value
      * pair and a "records" Iterator object. The "records" Iterator contains a
      * set of Records objects.
-     * @exception OAIBadRequestException signals an http status code 400
      *            problem
-     * @exception OAIInternalServerError signals an http status code 500
+     * @throws OAIInternalServerError signals an http status code 500
      *            problem
      */
-    public Map listRecords(String from, String until, String set,
-                                    String metadataPrefix)
-      throws CannotDisseminateFormatException,
-      OAIInternalServerError, NoItemsMatchException {
+    @Override
+    public Map listRecords(String from, String until, String set, String metadataPrefix) throws CannotDisseminateFormatException, OAIInternalServerError, NoItemsMatchException {
         purge(); // clean out old resumptionTokens
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
@@ -504,10 +490,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
 	     * resumptionToken attributes in the response. Otherwise, use the
 	     * line after it that I've commented out.
 	     *****************************************************************/
- 	    listRecordsMap.put("resumptionMap",
- 				   getResumptionMap(resumptionTokenSb.toString(),
- 						    numRows,
- 						    0));
+ 	    listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, 0));
 // 	    listRecordsMap.put("resumptionMap",
 // 				   getResumptionMap(resumptionTokenSb.toString()));
 	}
@@ -524,11 +507,9 @@ public class FileSystemOAICatalog extends AbstractCatalog {
      * @return a Map object containing an optional "resumptionToken" key/value
      * pair and a "records" Iterator object. The "records" Iterator contains a
      * set of Records objects.
-     * @exception OAIBadRequestException signals an http status code 400
-     *            problem
      */
-    public Map listRecords(String resumptionToken)
-      throws BadResumptionTokenException {
+    @Override
+    public Map listRecords(String resumptionToken) throws BadResumptionTokenException {
         purge(); // clean out old resumptionTokens
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
@@ -600,9 +581,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
 	     * resumptionToken attributes in the response. Otherwise, use the
 	     * line after it that I've commented out.
 	     *****************************************************************/
-	    listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(),
-								     numRows,
-								     oldCount));
+	    listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, oldCount));
 	    //          listRecordsMap.put("resumptionMap",
 	    //                                 getResumptionMap(resumptionTokenSb.toString()));
 	}
@@ -612,6 +591,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     }
 
 
+    @Override
     public Map listSets() throws NoSetHierarchyException {
 	throw new NoSetHierarchyException();
 //         Map listSetsMap = new HashMap();
@@ -620,8 +600,8 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     }
 
 
-    public Map listSets(String resumptionToken)
-      throws BadResumptionTokenException {
+    @Override
+    public Map listSets(String resumptionToken) throws BadResumptionTokenException {
 	throw new BadResumptionTokenException();
     }
 
@@ -629,6 +609,7 @@ public class FileSystemOAICatalog extends AbstractCatalog {
     /**
      * close the repository
      */
+    @Override
     public void close() { }
 
 

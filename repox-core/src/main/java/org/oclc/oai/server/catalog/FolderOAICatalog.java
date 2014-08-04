@@ -49,8 +49,13 @@ public class FolderOAICatalog extends AbstractCatalog {
     private ArrayList sets = null;
     private ServletContext context = null;
     
-    public FolderOAICatalog(Properties properties, ServletContext context)
-    throws IOException {
+    /**
+     * Creates a new instance of this class.
+     * @param properties
+     * @param context
+     * @throws IOException
+     */
+    public FolderOAICatalog(Properties properties, ServletContext context) throws IOException {
         this.context = context;
         String          temp;
         
@@ -337,8 +342,8 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception OAIInternalServerError signals an http status code 500
      *                problem
      */
-    public String getRecord(String oaiIdentifier, String metadataPrefix)
-    throws IdDoesNotExistException, CannotDisseminateFormatException {
+    @Override
+    public String getRecord(String oaiIdentifier, String metadataPrefix) throws IdDoesNotExistException, CannotDisseminateFormatException {
         Document nativeItem = null;
 //        try {
         String resourcePath = (String) identifierMap.get(oaiIdentifier);
@@ -369,8 +374,8 @@ public class FolderOAICatalog extends AbstractCatalog {
      *            problem
      * @exception OAINotFoundException signals an http status code 404 problem
      */
-    public Vector getSchemaLocations(String oaiIdentifier)
-    throws IdDoesNotExistException, NoMetadataFormatsException {
+    @Override
+    public Vector getSchemaLocations(String oaiIdentifier) throws IdDoesNotExistException, NoMetadataFormatsException {
         ArrayList extensionList = null;
 //      try {
         String localIdentifier
@@ -404,8 +409,8 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception OAIBadRequestException signals an http status code 400
      *            problem
      */
-    public Map listIdentifiers(String from, String until, String set, String metadataPrefix)
-    throws NoItemsMatchException {
+    @Override
+    public Map listIdentifiers(String from, String until, String set, String metadataPrefix) throws NoItemsMatchException {
         purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -456,10 +461,7 @@ public class FolderOAICatalog extends AbstractCatalog {
              * resumptionToken attributes in the response. Otherwise, use the
              * line after it that I've commented out.
              *****************************************************************/
-            listIdentifiersMap.put("resumptionMap",
-                    getResumptionMap(resumptionTokenSb.toString(),
-                            numRows,
-                            0));
+            listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, 0));
 //          listIdentifiersMap.put("resumptionMap",
 //          getResumptionMap(resumptionTokenSb.toString()));
         }
@@ -480,8 +482,8 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception OAIBadRequestException signals an http status code 400
      *            problem
      */
-    public Map listIdentifiers(String resumptionToken)
-    throws BadResumptionTokenException {
+    @Override
+    public Map listIdentifiers(String resumptionToken) throws BadResumptionTokenException {
         purge(); // clean out old resumptionTokens
         Map listIdentifiersMap = new HashMap();
         ArrayList headers = new ArrayList();
@@ -578,8 +580,7 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception CannotDisseminateFormatException the record is not available
      * for the specified metadataPrefix.
      */
-    private String constructRecord(Document nativeItem, String metadataPrefix)
-    throws CannotDisseminateFormatException {
+    private String constructRecord(Document nativeItem, String metadataPrefix) throws CannotDisseminateFormatException {
         String schemaURL = null;
         Iterator setSpecs = getSetSpecs(nativeItem);
         Iterator abouts = getAbouts(nativeItem);
@@ -628,10 +629,8 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception OAIInternalServerError signals an http status code 500
      *            problem
      */
-    public Map listRecords(String from, String until, String set,
-            String metadataPrefix)
-    throws CannotDisseminateFormatException,
-    NoItemsMatchException {
+    @Override
+    public Map listRecords(String from, String until, String set, String metadataPrefix) throws CannotDisseminateFormatException, NoItemsMatchException {
         purge(); // clean out old resumptionTokens
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
@@ -710,8 +709,7 @@ public class FolderOAICatalog extends AbstractCatalog {
      * @exception OAIBadRequestException signals an http status code 400
      *            problem
      */
-    public Map listRecords(String resumptionToken)
-    throws BadResumptionTokenException {
+    public Map listRecords(String resumptionToken) throws BadResumptionTokenException {
         purge(); // clean out old resumptionTokens
         Map listRecordsMap = new HashMap();
         ArrayList records = new ArrayList();
