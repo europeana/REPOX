@@ -52,6 +52,7 @@ public class FolderRecordFactory extends RecordFactory {
      * @param identifier OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
      * @return local identifier (e.g. ID/12345).
      */
+    @Override
     public String fromOAIIdentifier(String identifier) {
         try {
             StringTokenizer tokenizer = new StringTokenizer(identifier, ":");
@@ -69,6 +70,7 @@ public class FolderRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return OAI identifier
      */
+    @Override
     public String getOAIIdentifier(Object nativeItem) {
         Document doc = (Document)nativeItem;
         try {
@@ -90,6 +92,7 @@ public class FolderRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return local identifier
      */
+    @Override
     public String getLocalIdentifier(Object nativeItem) {
         return "foo";
 //        return (String)((Document)nativeItem).get("localIdentifier");
@@ -102,8 +105,8 @@ public class FolderRecordFactory extends RecordFactory {
      * @return a String containing the datestamp for the item
      * @exception IllegalArgumentException Something is wrong with the argument.
      */
-    public String getDatestamp(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException  {
         Document doc = (Document)nativeItem;
         try {
             return XPathAPI.eval(doc, "/record/header/datestamp").str();
@@ -120,8 +123,8 @@ public class FolderRecordFactory extends RecordFactory {
      * @return a String containing the setspec for the item
      * @exception IllegalArgumentException Something is wrong with the argument.
      */
-    public Iterator getSetSpecs(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
         ArrayList list = new ArrayList();
         Document doc = (Document) nativeItem;
         try {
@@ -156,8 +159,8 @@ public class FolderRecordFactory extends RecordFactory {
      * @return true if record is deleted, false if not
      * @exception IllegalArgumentException Something is wrong with the argument.
      */
-    public boolean isDeleted(Object nativeItem)
-	throws IllegalArgumentException {
+    @Override
+    public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
 	return false;
     }
 
@@ -173,6 +176,7 @@ public class FolderRecordFactory extends RecordFactory {
      * @return a String containing the OAI &lt;record&gt; or null if the default method should be
      * used.
      */
+    @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
         return null;
 //	Document doc = (Document)nativeItem;

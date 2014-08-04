@@ -26,9 +26,9 @@ public class IMSXMLRecordFactory extends RecordFactory {
      * specified in the properties file.
      * @param properties Contains information to configure the factory:
      *                   specifically, the names of the crosswalk(s) supported
+     * @throws IllegalArgumentException 
      */
-    public IMSXMLRecordFactory(Properties properties)
-	throws IllegalArgumentException {
+    public IMSXMLRecordFactory(Properties properties) throws IllegalArgumentException {
 	super(properties);
     }
 
@@ -38,6 +38,7 @@ public class IMSXMLRecordFactory extends RecordFactory {
      * @param identifier OAI identifier
      * @return local identifier
      */
+    @Override
     public String fromOAIIdentifier(String identifier) {
 	StringTokenizer tokenizer = new StringTokenizer(identifier, ":");
 	tokenizer.nextToken();
@@ -51,8 +52,8 @@ public class IMSXMLRecordFactory extends RecordFactory {
      * @param nativeItem native Item object
      * @return OAI identifier
      */
-    public String getOAIIdentifier(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public String getOAIIdentifier(Object nativeItem) throws IllegalArgumentException  {
 	throw new IllegalArgumentException("Identifier isn't available in native item");
     }
 
@@ -62,8 +63,8 @@ public class IMSXMLRecordFactory extends RecordFactory {
      * @param nativeItem a native item presumably containing a datestamp somewhere
      * @return a String containing the datestamp for the item
      */
-    public String getDatestamp(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException  {
 	throw new IllegalArgumentException("Datestamp isn't available in native item");
     }
 
@@ -73,21 +74,23 @@ public class IMSXMLRecordFactory extends RecordFactory {
      * @param nativeItem a native item presumably containing a setspec somewhere
      * @return a String containing the setspec for the item
      */
-    public Iterator getSetSpecs(Object nativeItem)
-	throws IllegalArgumentException  {
+    @Override
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
 	throw new IllegalArgumentException("SetSpecs aren't available in native item");
     }
 
-    public boolean isDeleted(Object nativeItem)
-	throws IllegalArgumentException {
+    @Override
+    public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
 	throw new IllegalArgumentException("IsDeleted isn't available in native item");
     }
 
+    @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataFormat) {
 	// Can't do quickCreates?
 	return null;
     }
 
+    @Override
     public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
 	throw new IllegalArgumentException("getAbouts isn't available in native item");
     }
