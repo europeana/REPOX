@@ -24,13 +24,14 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
- * This class represents a GetRecord response on either the server or the client.
- *
+ * This class represents a GetRecord response on either the server or the
+ * client.
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class GetRecord extends ServerVerb {
-    private static final boolean debug = false;
-    private static ArrayList validParamNames = new ArrayList();
+    private static final boolean debug           = false;
+    private static ArrayList     validParamNames = new ArrayList();
     static {
         validParamNames.add("verb");
         validParamNames.add("identifier");
@@ -39,24 +40,30 @@ public class GetRecord extends ServerVerb {
 
     /**
      * Construct the xml response on the server-side.
-     *
-     * @param context the servlet context
-     * @param request the servlet request
+     * 
+     * @param context
+     *            the servlet context
+     * @param request
+     *            the servlet request
+     * @param response 
+     * @param serverTransformer 
      * @return a String containing the XML response
-     * @exception OAIBadRequestException an http 400 status error occurred
-     * @exception OAINotFoundException an http 404 status error occurred
-     * @exception OAIInternalServerError an http 500 status error occurred
+     * @throws OAIBadRequestException
+     *                an http 400 status error occurred
+     * @throws OAINotFoundException
+     *                an http 404 status error occurred
+     * @throws OAIInternalServerError
+     *                an http 500 status error occurred
+     * @throws TransformerException 
      */
-    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response,
-                                   Transformer serverTransformer) throws OAIInternalServerError, TransformerException {
-        Properties properties = (Properties) context.get("OAIHandler.properties");
-        AbstractCatalog abstractCatalog = (AbstractCatalog) context.get("OAIHandler.catalog");
+    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws OAIInternalServerError, TransformerException {
+        Properties properties = (Properties)context.get("OAIHandler.properties");
+        AbstractCatalog abstractCatalog = (AbstractCatalog)context.get("OAIHandler.catalog");
         String baseURL = properties.getProperty("OAIHandler.baseURL");
-        if(baseURL == null) {
+        if (baseURL == null) {
             try {
                 baseURL = request.getRequestURL().toString();
-            }
-            catch (java.lang.NoSuchMethodError f) {
+            } catch (java.lang.NoSuchMethodError f) {
                 baseURL = request.getRequestURL().toString();
             }
         }
@@ -64,13 +71,13 @@ public class GetRecord extends ServerVerb {
         String identifier = request.getParameter("identifier");
         String metadataPrefix = request.getParameter("metadataPrefix");
 
-        if(debug) {
+        if (debug) {
             System.out.println("GetRecord.constructGetRecord: identifier=" + identifier);
             System.out.println("GetRecord.constructGetRecord: metadataPrefix=" + metadataPrefix);
         }
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         String styleSheet = properties.getProperty("OAIHandler.styleSheet");
-        if(styleSheet != null) {
+        if (styleSheet != null) {
             sb.append("<?xml-stylesheet type=\"text/xsl\" href=\"");
             sb.append(styleSheet);
             sb.append("\"?>");
@@ -78,8 +85,7 @@ public class GetRecord extends ServerVerb {
         sb.append("<" + OAIUtil.getTag("OAI-PMH") + " xmlns" + (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().isUseOAINamespace() ? ":oai" : "") + "=\"http://www.openarchives.org/OAI/2.0/\"");
         sb.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         String extraXmlns = properties.getProperty("OAIHandler.extraXmlns");
-        if(extraXmlns != null)
-            sb.append(" ").append(extraXmlns);
+        if (extraXmlns != null) sb.append(" ").append(extraXmlns);
         sb.append(" xsi:schemaLocation=\"http://www.openarchives.org/OAI/2.0/");
         sb.append(" http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd\">");
         sb.append("<" + OAIUtil.getTag("responseDate") + ">");
@@ -89,17 +95,17 @@ public class GetRecord extends ServerVerb {
         // sb.append(getRequestURL(request));
         // sb.append("</requestURL>");
         try {
-            if(metadataPrefix == null || metadataPrefix.length() == 0 || identifier == null || identifier.length() == 0
-                    || identifier.equalsIgnoreCase("null") || hasBadArguments(request, validParamNames.iterator(), validParamNames)) {
+            if (metadataPrefix == null || metadataPrefix.length() == 0 || identifier == null || identifier.length() == 0 || identifier.equalsIgnoreCase("null") || hasBadArguments(request, validParamNames.iterator(), validParamNames)) {
                 throw new BadArgumentException();
             }
-			/*Crosswalks crosswalks = abstractCatalog.getCrosswalks();
-			else if(!crosswalks.containsValue(metadataPrefix)) {
-				throw new CannotDisseminateFormatException(metadataPrefix);
-			} */
+            /*
+             * Crosswalks crosswalks = abstractCatalog.getCrosswalks(); else
+             * if(!crosswalks.containsValue(metadataPrefix)) { throw new
+             * CannotDisseminateFormatException(metadataPrefix); }
+             */
             else {
                 String record = abstractCatalog.getRecord(identifier, metadataPrefix);
-                if(record != null) {
+                if (record != null) {
                     sb.append(getRequestElement(request, validParamNames, baseURL));
                     sb.append("<" + OAIUtil.getTag("GetRecord") + ">");
                     sb.append(record);
@@ -108,18 +114,15 @@ public class GetRecord extends ServerVerb {
                     throw new IdDoesNotExistException(identifier);
                 }
             }
-        }
-        catch (BadArgumentException e) {
+        } catch (BadArgumentException e) {
             sb.append("<" + OAIUtil.getTag("request") + " verb=\"GetRecord\">");
             sb.append(baseURL);
             sb.append("</" + OAIUtil.getTag("request") + ">");
             sb.append(e.getMessage());
-        }
-        catch (CannotDisseminateFormatException e) {
+        } catch (CannotDisseminateFormatException e) {
             sb.append(getRequestElement(request, validParamNames, baseURL));
             sb.append(e.getMessage());
-        }
-        catch (IdDoesNotExistException e) {
+        } catch (IdDoesNotExistException e) {
             sb.append(getRequestElement(request, validParamNames, baseURL));
             sb.append(e.getMessage());
         }

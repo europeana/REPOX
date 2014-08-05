@@ -38,6 +38,9 @@ public class Tag extends Datatype {
     /** The value zero (ASCII octal 060). */
     protected static final char zero = '\060';
 
+    /**
+     * Creates a new instance of this class.
+     */
     protected Tag() {}
 
     /**
@@ -74,8 +77,7 @@ public class Tag extends Datatype {
      * <li>or a lowercase letter
      * <li>or an uppercase letter.
      * </ul><p>
-     *
-     * @param tag the tag name
+     * @param value
      * @return <code>boolean</code> - a valid (true) or invalid (false)
      *                                tag character
      */

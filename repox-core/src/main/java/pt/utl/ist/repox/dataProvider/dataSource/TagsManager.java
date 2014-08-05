@@ -3,6 +3,7 @@ package pt.utl.ist.repox.dataProvider.dataSource;
 import org.apache.log4j.Logger;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
+
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
@@ -16,47 +17,52 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created to REPOX.
- * User: Edmundo
- * Date: 12-12-2011
- * Time: 14:18
+ * Created to REPOX. User: Edmundo Date: 12-12-2011 Time: 14:18
  */
 public class TagsManager {
     private static final Logger log = Logger.getLogger(TagsManager.class);
 
     private List<DataSourceTag> tags;
-    private File configurationFile;
+    private File                configurationFile;
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param configurationFile
+     * @throws IOException
+     * @throws DocumentException
+     */
     public TagsManager(File configurationFile) throws IOException, DocumentException {
         super();
         this.configurationFile = configurationFile;
         loadAllTags();
     }
 
+    @SuppressWarnings("javadoc")
     public List<DataSourceTag> getTags() {
-        if(tags == null)
-            tags = new ArrayList<DataSourceTag>();
+        if (tags == null) tags = new ArrayList<DataSourceTag>();
         return tags;
     }
 
+    /**
+     * @param tagName
+     * @return MessageType
+     */
     public MessageType removeTag(String tagName) {
         try {
-            File tagsFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().
-                    getXmlConfigPath() + File.separator + "dataSetTags.xml");
+            File tagsFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath() + File.separator + "dataSetTags.xml");
 
-            if(!tagsFile.exists())
-                return MessageType.NOT_FOUND;
+            if (!tagsFile.exists()) return MessageType.NOT_FOUND;
 
             SAXReader reader = new SAXReader();
             Document document = reader.read(tagsFile);
 
             List list = document.selectNodes("//tags/tag");
 
-            for(Object node: list){
-                Node n = (Node) node;
+            for (Object node : list) {
+                Node n = (Node)node;
                 String currentTagName = n.valueOf("@name");
-                if(currentTagName.equals(tagName))
-                    n.detach();
+                if (currentTagName.equals(tagName)) n.detach();
             }
 
             XmlUtil.writePrettyPrint(tagsFile, document);
@@ -74,29 +80,33 @@ public class TagsManager {
         }
     }
 
+    /**
+     * @param isUpdate
+     * @param tagName
+     * @param oldTagName
+     * @return MessageType
+     */
     public MessageType saveTag(boolean isUpdate, String tagName, String oldTagName) {
         try {
-            File tagsFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-                    getConfiguration().getXmlConfigPath() + File.separator + "dataSetTags.xml");
+            File tagsFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath() + File.separator + "dataSetTags.xml");
             Document document;
-            if(!tagsFile.exists()){
+            if (!tagsFile.exists()) {
                 document = DocumentHelper.createDocument();
                 document.addElement("tags");
-            }else{
+            } else {
                 SAXReader reader = new SAXReader();
                 document = reader.read(tagsFile);
             }
 
-            if(isUpdate && !tagName.equals(oldTagName) && tagAlreadyExists(tagName))
+            if (isUpdate && !tagName.equals(oldTagName) && tagAlreadyExists(tagName))
                 return MessageType.ALREADY_EXISTS;
-            else if(!isUpdate && tagAlreadyExists(tagName))
-                return MessageType.ALREADY_EXISTS;
+            else if (!isUpdate && tagAlreadyExists(tagName)) return MessageType.ALREADY_EXISTS;
 
-            if(isUpdate){
+            if (isUpdate) {
                 List<Node> list = document.selectNodes("//tags/tag");
-                for(Node tagNode: list){
+                for (Node tagNode : list) {
                     String currentTagName = tagNode.valueOf("@name");
-                    if(currentTagName.equals(oldTagName)){
+                    if (currentTagName.equals(oldTagName)) {
                         tagNode.detach();
                     }
                 }
@@ -111,8 +121,7 @@ public class TagsManager {
 
             loadAllTags();
 
-            if(isUpdate)
-                updateTagInAllDataSets(dataSourceTag, oldTagName);
+            if (isUpdate) updateTagInAllDataSets(dataSourceTag, oldTagName);
 
             return MessageType.OK;
         } catch (DocumentException e) {
@@ -124,22 +133,22 @@ public class TagsManager {
         }
     }
 
-    private boolean tagAlreadyExists(String tagName){
-        for(DataSourceTag dataSourceTag : getTags()){
-            if(tagName.equals(dataSourceTag.getName()))
-                return true;
+    private boolean tagAlreadyExists(String tagName) {
+        for (DataSourceTag dataSourceTag : getTags()) {
+            if (tagName.equals(dataSourceTag.getName())) return true;
         }
         return false;
     }
 
+    /**
+     * 
+     */
     public synchronized void loadAllTags() {
-        if(!configurationFile.exists()) {
-            return;
-        }
+        if (!configurationFile.exists()) { return; }
 
         getTags().clear();
 
-        try{
+        try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(configurationFile);
             List<Element> tagsElements = document.getRootElement().elements();
@@ -153,14 +162,17 @@ public class TagsManager {
         }
     }
 
-    public void removeTagInAllDataSets(String tagName){
-        for(Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()){
-            if(object instanceof DataSourceContainer){
-                DataSource dataSource = ((DataSourceContainer) object).getDataSource();
+    /**
+     * @param tagName
+     */
+    public void removeTagInAllDataSets(String tagName) {
+        for (Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()) {
+            if (object instanceof DataSourceContainer) {
+                DataSource dataSource = ((DataSourceContainer)object).getDataSource();
                 Iterator<DataSourceTag> iterator = dataSource.getTags().iterator();
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     DataSourceTag currentTag = iterator.next();
-                    if(tagName.equals(currentTag.getName())){
+                    if (tagName.equals(currentTag.getName())) {
                         iterator.remove();
                     }
                 }
@@ -170,18 +182,22 @@ public class TagsManager {
         try {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().saveData();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         } catch (DocumentException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
-    public void updateTagInAllDataSets(DataSourceTag dataSourceTag, String oldTagName){
-        for(Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()){
-            if(object instanceof DataSourceContainer){
-                DataSource dataSource = ((DataSourceContainer) object).getDataSource();
-                for(DataSourceTag currentTag : dataSource.getTags()){
-                    if(oldTagName.equals(currentTag.getName())){
+    /**
+     * @param dataSourceTag
+     * @param oldTagName
+     */
+    public void updateTagInAllDataSets(DataSourceTag dataSourceTag, String oldTagName) {
+        for (Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()) {
+            if (object instanceof DataSourceContainer) {
+                DataSource dataSource = ((DataSourceContainer)object).getDataSource();
+                for (DataSourceTag currentTag : dataSource.getTags()) {
+                    if (oldTagName.equals(currentTag.getName())) {
                         currentTag.setName(dataSourceTag.getName());
                     }
                 }
@@ -191,9 +207,9 @@ public class TagsManager {
         try {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().saveData();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         } catch (DocumentException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         }
     }
 }

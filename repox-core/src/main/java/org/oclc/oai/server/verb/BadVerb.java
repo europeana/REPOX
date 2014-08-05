@@ -22,26 +22,27 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
- * This class represents an BadVerb response on either the server or
- * on the client
- *
+ * This class represents an BadVerb response on either the server or on the
+ * client
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class BadVerb extends ServerVerb {
     /**
      * Construct the xml response on the server side.
-     *
-     * @param context the servlet context
-     * @param request the servlet request
+     * 
+     * @param context
+     *            the servlet context
+     * @param request
+     *            the servlet request
+     * @param response
+     * @param serverTransformer
      * @return a String containing the xml response
+     * @throws TransformerException
      */
-    public static String construct(HashMap context,
-                                   HttpServletRequest request, HttpServletResponse response,
-                                   Transformer serverTransformer)
-            throws TransformerException {
+    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws TransformerException {
 
-        Properties properties =
-                (Properties)context.get("OAIHandler.properties");
+        Properties properties = (Properties)context.get("OAIHandler.properties");
         StringBuffer sb = new StringBuffer();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         String styleSheet = properties.getProperty("OAIHandler.styleSheet");
@@ -50,8 +51,6 @@ public class BadVerb extends ServerVerb {
             sb.append(styleSheet);
             sb.append("\"?>");
         }
-
-
 
         sb.append("<" + OAIUtil.getTag("OAI-PMH") + " xmlns" + (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().isUseOAINamespace() ? ":oai" : "") + "=\"http://www.openarchives.org/OAI/2.0/\"");
         sb.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");

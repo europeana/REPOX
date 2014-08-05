@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.*;
@@ -35,79 +36,115 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ */
 public class DataSourceDirectoryImporter extends DataSource {
-    private static final Logger log = Logger.getLogger(DataSourceDirectoryImporter.class);
+    private static final Logger  log = Logger.getLogger(DataSourceDirectoryImporter.class);
 
-    private FileExtractStrategy extractStrategy;
+    private FileExtractStrategy  extractStrategy;
     private FileRetrieveStrategy retrieveStrategy;
-    private CharacterEncoding characterEncoding;
-    private String sourcesDirPath;
-    private String recordXPath;
-    private Map<String, String> namespaces;
-    private String idTypePolicy;
+    private CharacterEncoding    characterEncoding;
+    private String               sourcesDirPath;
+    private String               recordXPath;
+    private Map<String, String>  namespaces;
+    private String               idTypePolicy;
 
+    @SuppressWarnings("javadoc")
     public String getIdTypePolicy() {
         return idTypePolicy;
     }
 
+    @SuppressWarnings("javadoc")
     public void setIdTypePolicy(String idTypePolicy) {
         this.idTypePolicy = idTypePolicy;
     }
 
+    @SuppressWarnings("javadoc")
     public FileRetrieveStrategy getRetrieveStrategy() {
         return retrieveStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public void setRetrieveStrategy(FileRetrieveStrategy retrieveStrategy) {
         this.retrieveStrategy = retrieveStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public FileExtractStrategy getExtractStrategy() {
         return extractStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public void setExtractStrategy(FileExtractStrategy extractStrategy) {
         this.extractStrategy = extractStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public CharacterEncoding getCharacterEncoding() {
         return characterEncoding;
     }
 
+    @SuppressWarnings("javadoc")
     public void setCharacterEncoding(CharacterEncoding characterEncoding) {
         this.characterEncoding = characterEncoding;
     }
 
+    @SuppressWarnings("javadoc")
     public String getSourcesDirPath() {
         return sourcesDirPath;
     }
 
+    @SuppressWarnings("javadoc")
     public void setSourcesDirPath(String sourcesDirPath) {
         this.sourcesDirPath = sourcesDirPath;
     }
 
+    @SuppressWarnings("javadoc")
     public String getRecordXPath() {
         return recordXPath;
     }
 
+    @SuppressWarnings("javadoc")
     public void setRecordXPath(String recordXPath) {
         this.recordXPath = recordXPath;
     }
 
+    @SuppressWarnings("javadoc")
     public Map<String, String> getNamespaces() {
         return namespaces;
     }
 
+    @SuppressWarnings("javadoc")
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public DataSourceDirectoryImporter() {
         super();
     }
 
-    public DataSourceDirectoryImporter(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat,
-                                       FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, String sourcesDirPath,
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param dataProvider
+     * @param id
+     * @param description
+     * @param schema
+     * @param namespace
+     * @param metadataFormat
+     * @param extractStrategy
+     * @param retrieveStrategy
+     * @param characterEncoding
+     * @param sourcesDirPath
+     * @param recordIdPolicy
+     * @param metadataTransformations
+     * @param recordXPath
+     * @param namespacesMap
+     */
+    public DataSourceDirectoryImporter(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, String sourcesDirPath,
                                        RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations, String recordXPath, Map<String, String> namespacesMap) {
         super(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
         this.characterEncoding = characterEncoding;
@@ -118,7 +155,6 @@ public class DataSourceDirectoryImporter extends DataSource {
         this.retrieveStrategy = retrieveStrategy;
     }
 
-
     @Override
     public Status ingestRecords(File logFile, boolean fullIngest) throws IOException, DocumentException, SQLException {
         log.debug("INGESTING NOW - Directory Importer!");
@@ -128,23 +164,21 @@ public class DataSourceDirectoryImporter extends DataSource {
         Date startIngestTime = new Date();
         LogUtil.startLogInfo(logFile, startIngestTime, StatusDS.RUNNING.name(), id);
 
-        if(retrieveStrategy instanceof DataSourceHttp){
+        if (retrieveStrategy instanceof DataSourceHttp) {
             log.debug("INGESTING NOW - Retrieving Files from HTTP...");
             retrieveStrategy.retrieveFiles(getId());
-        }
-        else if(retrieveStrategy instanceof DataSourceFtp){
+        } else if (retrieveStrategy instanceof DataSourceFtp) {
             log.debug("INGESTING NOW - Retrieving Files from FTP...");
             retrieveStrategy.retrieveFiles(getId());
         }
 
         // Remove all records from IdGenerated because there is no version management or it is a full ingest
-        if(this.getRecordIdPolicy() instanceof IdGenerated || fullIngest) {
+        if (this.getRecordIdPolicy() instanceof IdGenerated || fullIngest) {
             boolean successfulDeletion = emptyRecords();
 
-            if(!successfulDeletion) {
+            if (!successfulDeletion) {
                 StringUtil.simpleLog("Importing aborted - unable to delete the current Records", this.getClass(), logFile);
-                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount,
-                        lastIngestDeletedCount);
+                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                 return Status.FAILED;
             }
 
@@ -153,11 +187,10 @@ public class DataSourceDirectoryImporter extends DataSource {
 
             //Update the XML file
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().saveData();
-        }
-        else{
+        } else {
             //if there is a previous successful harvest and has finished
             RecordCount recordCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, true);
-            if(recordCount != null && recordCount.getCount() > 0 && getLastUpdate() != null) {
+            if (recordCount != null && recordCount.getCount() > 0 && getLastUpdate() != null) {
                 String syncDateString = DateUtil.date2String(getLastUpdate(), TimeUtil.SHORT_DATE_FORMAT);
                 StringUtil.simpleLog("Directory Importer harvest from date: " + syncDateString, this.getClass(), logFile);
             }
@@ -171,28 +204,27 @@ public class DataSourceDirectoryImporter extends DataSource {
         List<RecordRepox> batchRecords = new ArrayList<RecordRepox>();
 
         /*
-        //todo
-            long startTime = (new Date()).getTime();
-            long totalTime = ((new Date()).getTime() - startTime ) / 1000;
-            statisticsHarvester.add(totalTime);
-        */
+         * //todo long startTime = (new Date()).getTime(); long totalTime =
+         * ((new Date()).getTime() - startTime ) / 1000;
+         * statisticsHarvester.add(totalTime);
+         */
 
         int totalRecords = 0;
         for (File file : changedFiles) {
-            if(stopExecution) {
-                if(forceStopExecution){
-                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+            if (stopExecution) {
+                if (forceStopExecution) {
+                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                     return Task.Status.FORCE_EMPTY;
                 }
                 StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                 return Status.CANCELED;
             }
 
-            if(file.exists() && file.isFile()) {
-//                StringUtil.simpleLog("Checking file: " + file.getName(), this.getClass(), logFile,false);
+            if (file.exists() && file.isFile()) {
+                //                StringUtil.simpleLog("Checking file: " + file.getName(), this.getClass(), logFile,false);
 
-                if(file.getName().endsWith(".zip")) {
+                if (file.getName().endsWith(".zip")) {
                     // zip file
                     ZipInputStream in = null;
                     try {
@@ -201,25 +233,25 @@ public class DataSourceDirectoryImporter extends DataSource {
                         TimeUtil.startTimers();
 
                         // Folders inside the zip file with special characters in the name are not allowed
-                        while((entry = in.getNextEntry()) != null) {
-                            if(stopExecution) {
-                                if(forceStopExecution){
-                                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        while ((entry = in.getNextEntry()) != null) {
+                            if (stopExecution) {
+                                if (forceStopExecution) {
+                                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                                     return Task.Status.FORCE_EMPTY;
                                 }
                                 StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                                 in.close();
-                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                                 return Status.CANCELED;
                             }
 
                             TimeUtil.getTimeSinceLastTimerArray(0);
 
-                            if(extractStrategy instanceof Iso2709FileExtract || entry.getName().toLowerCase().endsWith(".xml")) {
+                            if (extractStrategy instanceof Iso2709FileExtract || entry.getName().toLowerCase().endsWith(".xml")) {
                                 String outFilename = UUID.randomUUID().toString() + ".xml";
-                                File tempDir =  ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
+                                File tempDir = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
                                 File unzippedFile = new File(tempDir, outFilename);
-                                StringUtil.simpleLog("Importing zip entry: " + entry.getName(), this.getClass(), logFile,false);
+                                StringUtil.simpleLog("Importing zip entry: " + entry.getName(), this.getClass(), logFile, false);
 
                                 // Open the output file
                                 OutputStream out = new FileOutputStream(unzippedFile);
@@ -240,27 +272,25 @@ public class DataSourceDirectoryImporter extends DataSource {
                                 try {
                                     extractStrategy.iterateRecords(repoxRecordHandler, this, unzippedFile, characterEncoding, logFile);
                                     totalRecords = repoxRecordHandler.countTotalRecords;
-                                    if(batchRecords.size() >= RECORDS_BATCH_SIZE){
+                                    if (batchRecords.size() >= RECORDS_BATCH_SIZE) {
                                         repoxRecordHandler.savePendingRecords();
                                     }
 
-                                    if(stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
+                                    if (stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
                                         // stop execution created by ingest source code (activated when has the sample's number records)
-                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(), id, lastIngestCount, lastIngestDeletedCount);
                                         return Status.OK;
-                                    }
-                                    else if(stopExecution) {
+                                    } else if (stopExecution) {
                                         // stop forced by REPOX user (tasks)
-                                        if(forceStopExecution){
-                                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        if (forceStopExecution) {
+                                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                                             return Task.Status.FORCE_EMPTY;
                                         }
                                         StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                                         return Status.CANCELED;
                                     }
-                                }
-                                catch(Exception e) {
+                                } catch (Exception e) {
                                     log.error("Error importing batch " + file.getAbsolutePath() + ": " + e.getMessage(), e);
                                     StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                                 }
@@ -275,34 +305,32 @@ public class DataSourceDirectoryImporter extends DataSource {
 
                     } catch (FileNotFoundException e) {
                         StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
-                    }
-                    finally {
+                    } finally {
                         in.close();
                     }
-                }
-                else if(file.getName().endsWith(".tar.gz")) {
+                } else if (file.getName().endsWith(".tar.gz")) {
                     // tar.gz file
                     try {
-                        File tempDir =  ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
+                        File tempDir = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
                         List<File> listFiles = TarGz.unTarGz(file, tempDir);
                         TimeUtil.startTimers();
 
                         // Folders inside the zip file with special characters in the name are not allowed
                         for (File file2Ingest : listFiles) {
-                            if(stopExecution) {
-                                if(forceStopExecution){
-                                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                            if (stopExecution) {
+                                if (forceStopExecution) {
+                                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                                     return Task.Status.FORCE_EMPTY;
                                 }
                                 StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                                 return Status.CANCELED;
                             }
 
                             TimeUtil.getTimeSinceLastTimerArray(0);
 
-                            if(extractStrategy instanceof Iso2709FileExtract || file2Ingest.getName().toLowerCase().endsWith(".xml")) {
-                                StringUtil.simpleLog("Importing zip entry: " + file2Ingest.getName(), this.getClass(), logFile,false);
+                            if (extractStrategy instanceof Iso2709FileExtract || file2Ingest.getName().toLowerCase().endsWith(".xml")) {
+                                StringUtil.simpleLog("Importing zip entry: " + file2Ingest.getName(), this.getClass(), logFile, false);
 
                                 TimeUtil.getTimeSinceLastTimerArray(1);
 
@@ -310,27 +338,25 @@ public class DataSourceDirectoryImporter extends DataSource {
                                 try {
                                     extractStrategy.iterateRecords(repoxRecordHandler, this, file2Ingest, characterEncoding, logFile);
                                     totalRecords = repoxRecordHandler.countTotalRecords;
-                                    if(batchRecords.size() >= RECORDS_BATCH_SIZE){
+                                    if (batchRecords.size() >= RECORDS_BATCH_SIZE) {
                                         repoxRecordHandler.savePendingRecords();
                                     }
 
-                                    if(stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
+                                    if (stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
                                         // stop execution created by ingest source code (activated when has the sample's number records)
-                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(), id, lastIngestCount, lastIngestDeletedCount);
                                         return Status.OK;
-                                    }
-                                    else if(stopExecution) {
+                                    } else if (stopExecution) {
                                         // stop forced by REPOX user (tasks)
-                                        if(forceStopExecution){
-                                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        if (forceStopExecution) {
+                                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                                             return Task.Status.FORCE_EMPTY;
                                         }
                                         StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                                         return Status.CANCELED;
                                     }
-                                }
-                                catch(Exception e) {
+                                } catch (Exception e) {
                                     log.error("Error importing batch " + file.getAbsolutePath() + ": " + e.getMessage(), e);
                                     StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                                 }
@@ -347,36 +373,32 @@ public class DataSourceDirectoryImporter extends DataSource {
                     } catch (ArchiveException e) {
                         StringUtil.simpleLog("Error extracting file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                     }
-                }
-                else {
+                } else {
                     RepoxRecordHandler repoxRecordHandler = new RepoxRecordHandler(batchRecords, logFile, file, totalRecords);
                     try {
                         extractStrategy.iterateRecords(repoxRecordHandler, this, file, characterEncoding, logFile);
                         totalRecords = repoxRecordHandler.countTotalRecords;
                         /*
-                        // records are stored during iterator process
-                        if(batchRecords.size() >= RECORDS_BATCH_SIZE){
-                            repoxRecordHandler.savePendingRecords();
-                        }
-                        */
+                         * // records are stored during iterator process
+                         * if(batchRecords.size() >= RECORDS_BATCH_SIZE){
+                         * repoxRecordHandler.savePendingRecords(); }
+                         */
 
-                        if(stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
+                        if (stopExecution && maxRecord4Sample != -1 && maxRecord4Sample <= totalRecords) {
                             // stop execution created by ingest source code (activated when has the sample's number records)
-                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(),id,lastIngestCount, lastIngestDeletedCount);
+                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(), id, lastIngestCount, lastIngestDeletedCount);
                             return Status.OK;
-                        }
-                        else if(stopExecution) {
+                        } else if (stopExecution) {
                             // stop forced by REPOX user (tasks)
-                            if(forceStopExecution){
-                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                            if (forceStopExecution) {
+                                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                                 return Task.Status.FORCE_EMPTY;
                             }
                             StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                             return Status.CANCELED;
                         }
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         log.error("Error importing batch " + file.getAbsolutePath() + ": " + e.getMessage(), e);
                         StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                     }
@@ -388,20 +410,26 @@ public class DataSourceDirectoryImporter extends DataSource {
         importBatchRecords(batchRecords, logFile);
         addDeletedRecords(batchRecords);
 
-        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(),id,lastIngestCount, lastIngestDeletedCount);
+        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(), id, lastIngestCount, lastIngestDeletedCount);
 
         return ingestStatus;
     }
 
+    /**
+     * @param batchRecords
+     * @param logFile
+     * @throws IOException
+     * @throws DocumentException
+     * @throws SQLException
+     */
     protected void importBatchRecords(List<RecordRepox> batchRecords, File logFile) throws IOException, DocumentException, SQLException {
         //long memBefore = Runtime.getRuntime().totalMemory() / (1024 * 1024);
         TimeUtil.getTimeSinceLastTimerArray(9);
 
         RecordCountManager recordCountManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager();
-        if(recordCountManager.getRecordCount(id) != null) {
+        if (recordCountManager.getRecordCount(id) != null) {
             log.debug("[BEFORE] Count: " + recordCountManager.getRecordCount(id).getCount());
         }
-
 
         // to avoid duplicates
         Map<String, RecordRepox> batchRecordsWithoutDuplicates = new HashMap<String, RecordRepox>();
@@ -410,21 +438,22 @@ public class DataSourceDirectoryImporter extends DataSource {
         }
         batchRecords = new ArrayList<RecordRepox>(batchRecordsWithoutDuplicates.values());
 
-        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords,logFile);
+        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords, logFile);
 
-        if(recordCountManager.getRecordCount(id) != null) {
+        if (recordCountManager.getRecordCount(id) != null) {
             log.debug("[AFTER]  count: " + recordCountManager.getRecordCount(id).getCount());
         }
 
         /*
-        double importTime = TimeUtil.getTimeSinceLastTimerArray(9) / 1000.0;
-        long memAfter = Runtime.getRuntime().totalMemory() / (1024 * 1024);
-        */
-        if(batchRecords.size() != 0){
+         * double importTime = TimeUtil.getTimeSinceLastTimerArray(9) / 1000.0;
+         * long memAfter = Runtime.getRuntime().totalMemory() / (1024 * 1024);
+         */
+        if (batchRecords.size() != 0) {
             /*
-            log.info(batchRecords.size() + " records imported in " + importTime + "s." +
-            " Memory before/after (MB) : " + memBefore + "/"+ memAfter);
-            */
+             * log.info(batchRecords.size() + " records imported in " +
+             * importTime + "s." + " Memory before/after (MB) : " + memBefore +
+             * "/"+ memAfter);
+             */
             StringUtil.simpleLog(batchRecords.size() + " records imported", this.getClass(), logFile);
             lastIngestCount += batchRecords.size();
         }
@@ -444,48 +473,43 @@ public class DataSourceDirectoryImporter extends DataSource {
 
         Element extractStrategyNode = sourceNode.addElement("retrieveStrategy");
 
-        if(getRetrieveStrategy() instanceof DataSourceFtp){
-            DataSourceFtp dataSourceFtp = (DataSourceFtp) getRetrieveStrategy();
+        if (getRetrieveStrategy() instanceof DataSourceFtp) {
+            DataSourceFtp dataSourceFtp = (DataSourceFtp)getRetrieveStrategy();
             extractStrategyNode.addAttribute("type", DataSourceFtp.class.getName());
             extractStrategyNode.addElement("server").setText(dataSourceFtp.getServer());
-            if(dataSourceFtp.getIdTypeAccess().equals(DataSourceFtp.NORMAL) && !dataSourceFtp.getIdTypeAccess().isEmpty()) {
+            if (dataSourceFtp.getIdTypeAccess().equals(DataSourceFtp.NORMAL) && !dataSourceFtp.getIdTypeAccess().isEmpty()) {
                 extractStrategyNode.addElement("user").setText((dataSourceFtp.getUser() != null ? dataSourceFtp.getUser() : ""));
                 extractStrategyNode.addElement("password").setText(dataSourceFtp.getPassword() != null ? dataSourceFtp.getPassword() : "");
             }
             extractStrategyNode.addElement("folderPath").setText(dataSourceFtp.getFtpPath());
-        }
-        else if(getRetrieveStrategy() instanceof DataSourceHttp){
-            DataSourceHttp dataSourceHttp = (DataSourceHttp) getRetrieveStrategy();
+        } else if (getRetrieveStrategy() instanceof DataSourceHttp) {
+            DataSourceHttp dataSourceHttp = (DataSourceHttp)getRetrieveStrategy();
             extractStrategyNode.addAttribute("type", DataSourceHttp.class.getName());
             extractStrategyNode.addElement("url").setText(dataSourceHttp.getUrl());
-        }
-        else if(getRetrieveStrategy() instanceof DataSourceFolder){
+        } else if (getRetrieveStrategy() instanceof DataSourceFolder) {
             extractStrategyNode.addAttribute("type", DataSourceFolder.class.getName());
         }
 
-
-        if(getExtractStrategy() instanceof Iso2709FileExtract) {
-            Iso2709FileExtract extractStrategy = (Iso2709FileExtract) getExtractStrategy();
+        if (getExtractStrategy() instanceof Iso2709FileExtract) {
+            Iso2709FileExtract extractStrategy = (Iso2709FileExtract)getExtractStrategy();
             sourceNode.addAttribute("isoImplementationClass", extractStrategy.getIsoImplementationClass().toString());
             sourceNode.addAttribute("characterEncoding", getCharacterEncoding().toString());
             sourceNode.addElement("fileExtract").setText(Iso2709FileExtract.class.getSimpleName());
-        }
-        else if(getExtractStrategy() instanceof MarcXchangeFileExtract) {
+        } else if (getExtractStrategy() instanceof MarcXchangeFileExtract) {
             sourceNode.addElement("fileExtract").setText(MarcXchangeFileExtract.class.getSimpleName());
-        }
-        else if(getExtractStrategy() instanceof SimpleFileExtract) {
+        } else if (getExtractStrategy() instanceof SimpleFileExtract) {
             sourceNode.addElement("fileExtract").setText(SimpleFileExtract.class.getSimpleName());
 
-            if(getRecordXPath() != null){
+            if (getRecordXPath() != null) {
                 Element splitRecords = sourceNode.addElement("splitRecords");
                 splitRecords.addElement("recordXPath").setText(getRecordXPath());
 
-                if(getNamespaces() != null && getNamespaces().size() > 0){
+                if (getNamespaces() != null && getNamespaces().size() > 0) {
                     Element namespacesElement = splitRecords.addElement("namespaces");
 
                     //System.out.println("currentDataSource.getNamespaces() = " + currentDataSource.getNamespaces());
 
-                    for(String currentKey : getNamespaces().keySet()) {
+                    for (String currentKey : getNamespaces().keySet()) {
                         Element namespaceElement = namespacesElement.addElement("namespace");
                         namespaceElement.addElement("namespacePrefix").setText(currentKey);
                         namespaceElement.addElement("namespaceUri").setText(getNamespaces().get(currentKey));
@@ -496,13 +520,13 @@ public class DataSourceDirectoryImporter extends DataSource {
         return sourceNode;
     }
 
-    class RepoxRecordHandler implements FileExtractStrategy.RecordHandler{
+    class RepoxRecordHandler implements FileExtractStrategy.RecordHandler {
         List<RecordRepox> batchRecords;
-        File logFile;
-        File file;
-        int countTotalRecords;
-        Status ingestStatus;
-        long startTime;
+        File              logFile;
+        File              file;
+        int               countTotalRecords;
+        Status            ingestStatus;
+        long              startTime;
 
         public RepoxRecordHandler(List<RecordRepox> batchRecords, File logFile, File file, int actualNumber) {
             this.batchRecords = batchRecords;
@@ -520,10 +544,9 @@ public class DataSourceDirectoryImporter extends DataSource {
             this.ingestStatus = ingestStatus;
         }
 
-        public void handleRecord(RecordRepox record){
-            if(stopExecution) {
-                return;
-            }
+        @Override
+        public void handleRecord(RecordRepox record) {
+            if (stopExecution) { return; }
 
             try {
                 batchRecords.add(record);
@@ -531,16 +554,15 @@ public class DataSourceDirectoryImporter extends DataSource {
                 // todo - to be removed
                 //log.debug("IDs -> " + record.getId() + " ; " + file.getName());
 
-                if(maxRecord4Sample == -1 && batchRecords.size() >= RECORDS_BATCH_SIZE) {
+                if (maxRecord4Sample == -1 && batchRecords.size() >= RECORDS_BATCH_SIZE) {
                     importBatchRecords(batchRecords, logFile);
                     addDeletedRecords(batchRecords);
                     countTotalRecords = countTotalRecords + batchRecords.size();
-                    long totalTime = ((new Date()).getTime() - startTime ) / 1000;
+                    long totalTime = ((new Date()).getTime() - startTime) / 1000;
                     statisticsHarvester.add(totalTime);
                     startTime = (new Date()).getTime();
                     batchRecords.clear();
-                }
-                else if(maxRecord4Sample != -1 && maxRecord4Sample <= (countTotalRecords + batchRecords.size())){
+                } else if (maxRecord4Sample != -1 && maxRecord4Sample <= (countTotalRecords + batchRecords.size())) {
                     // test used when REPOX is getting a sample and the XML file has more records than the maxRecord4Sample
                     importBatchRecords(batchRecords, logFile);
                     addDeletedRecords(batchRecords);
@@ -550,16 +572,14 @@ public class DataSourceDirectoryImporter extends DataSource {
                 }
 
                 ingestStatus = Status.OK;
-            }
-            catch(Exception e) {
-                if(stopExecution) {
-                    if(forceStopExecution){
+            } catch (Exception e) {
+                if (stopExecution) {
+                    if (forceStopExecution) {
                         ingestStatus = Task.Status.FORCE_EMPTY;
                     }
                     StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                     ingestStatus = Task.Status.CANCELED;
-                }
-                else{
+                } else {
                     log.error("Error importing batch " + file.getAbsolutePath() + ": " + e.getMessage(), e);
                     StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                     ingestStatus = Status.ERRORS;
@@ -567,29 +587,25 @@ public class DataSourceDirectoryImporter extends DataSource {
             }
         }
 
-        public void savePendingRecords(){
-            if(stopExecution) {
-                return;
-            }
+        public void savePendingRecords() {
+            if (stopExecution) { return; }
 
             try {
-                if(batchRecords.size() > 0) {
+                if (batchRecords.size() > 0) {
                     importBatchRecords(batchRecords, logFile);
                     addDeletedRecords(batchRecords);
                     countTotalRecords = countTotalRecords + batchRecords.size();
                     batchRecords.clear();
                 }
                 ingestStatus = Status.OK;
-            }
-            catch(Exception e) {
-                if(stopExecution) {
-                    if(forceStopExecution){
+            } catch (Exception e) {
+                if (stopExecution) {
+                    if (forceStopExecution) {
                         ingestStatus = Task.Status.FORCE_EMPTY;
                     }
                     StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                     ingestStatus = Task.Status.CANCELED;
-                }
-                else{
+                } else {
                     log.error("Error importing batch " + file.getAbsolutePath() + ": " + e.getMessage(), e);
                     StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                     ingestStatus = Status.ERRORS;
@@ -615,38 +631,36 @@ public class DataSourceDirectoryImporter extends DataSource {
     }
 
     @Override
-    public int getTotalRecords2Harvest(){
-        try{
-            if(numberOfRecords2Harvest == -1){
+    public int getTotalRecords2Harvest() {
+        try {
+            if (numberOfRecords2Harvest == -1) {
                 File sourcesDir = new File(sourcesDirPath);
                 File[] changedFiles = FileUtil.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
                 numberOfRecords2Harvest = 0;
 
                 for (File file : changedFiles) {
-                    if(file.getName().endsWith(".zip")) {
+                    if (file.getName().endsWith(".zip")) {
                         // zip file
                         ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 
                         // Folders inside the zip file with special characters in the name are not allowed
-                        while((in.getNextEntry()) != null) {
+                        while ((in.getNextEntry()) != null) {
                             numberOfRecords2Harvest++;
                         }
 
-                    }
-                    else if(file.getName().endsWith(".tar.gz")) {
+                    } else if (file.getName().endsWith(".tar.gz")) {
                         // tar.gz file
-                        File tempDir =  ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
+                        File tempDir = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
                         List<File> listFiles = TarGz.unTarGz(file, tempDir);
                         numberOfRecords2Harvest += listFiles.size();
-                    }
-                    else{
+                    } else {
                         numberOfRecords2Harvest++;
                     }
                 }
             }
 
             return numberOfRecords2Harvest;
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -655,7 +669,7 @@ public class DataSourceDirectoryImporter extends DataSource {
     public String getNumberOfRecords2HarvestStr() {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMAN);
         return numberFormat.format(getTotalRecords2Harvest());
-//        return String.valueOf(new File(sourcesDirPath).listFiles().length);
+        //        return String.valueOf(new File(sourcesDirPath).listFiles().length);
     }
 
     @Override

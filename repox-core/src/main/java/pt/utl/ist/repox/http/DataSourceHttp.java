@@ -6,6 +6,7 @@ package pt.utl.ist.repox.http;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+
 import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtil;
@@ -18,21 +19,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-
-public class DataSourceHttp implements FileRetrieveStrategy{
+/**
+ */
+public class DataSourceHttp implements FileRetrieveStrategy {
     private static final Logger log = Logger.getLogger(DataSourceHttp.class);
 
-    private String url;
+    private String              url;
 
+    @SuppressWarnings("javadoc")
     public String getUrl() {
         return url;
     }
 
+    @SuppressWarnings("javadoc")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public boolean retrieveFiles(String dataSourceId){
+    @Override
+    public boolean retrieveFiles(String dataSourceId) {
         createOutputDirPath(url, dataSourceId);
 
         String tempRepoxFolder = getOutputHttpPath(url, dataSourceId);
@@ -41,8 +46,7 @@ public class DataSourceHttp implements FileRetrieveStrategy{
             URL sourceURL = new URL(url);
             InputStream inputStream = sourceURL.openStream();
 
-            String outputFileName = url.substring(url.lastIndexOf("/")+1);
-
+            String outputFileName = url.substring(url.lastIndexOf("/") + 1);
 
             File outuputFile = new File(tempRepoxFolder + "/" + outputFileName);
             FileOutputStream outPutStream = new FileOutputStream(outuputFile);
@@ -53,7 +57,7 @@ public class DataSourceHttp implements FileRetrieveStrategy{
             inputStream.close();
             outPutStream.close();
 
-            if(outuputFile.exists()){
+            if (outuputFile.exists()) {
                 URLConnection urlConnection = sourceURL.openConnection();
                 outuputFile.setLastModified(urlConnection.getLastModified());
             }
@@ -68,10 +72,14 @@ public class DataSourceHttp implements FileRetrieveStrategy{
         return true;
     }
 
-
-    public static boolean createOutputDirPath(String url, String set){
+    /**
+     * @param url
+     * @param set
+     * @return boolean
+     */
+    public static boolean createOutputDirPath(String url, String set) {
         File output = new File(getOutputHttpPath(url, set));
-        if(output.exists()){
+        if (output.exists()) {
             try {
                 FileUtils.deleteDirectory(output);
                 log.info("Deleted Data Source HTTP dir with success from Data Source.");
@@ -83,21 +91,23 @@ public class DataSourceHttp implements FileRetrieveStrategy{
         return output.mkdir();
     }
 
-    public static String getOutputHttpPath(String url, String set){
+    /**
+     * @param url
+     * @param set
+     * @return String
+     */
+    public static String getOutputHttpPath(String url, String set) {
         String httpRequestPath = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getHttpRequestPath();
-
-        String outputDirString = httpRequestPath
-                + File.separator + FileUtil.sanitizeToValidFilename(url)
-                + "-" + FileUtil.sanitizeToValidFilename(set);
-
+        String outputDirString = httpRequestPath + File.separator + FileUtil.sanitizeToValidFilename(url) + "-" + FileUtil.sanitizeToValidFilename(set);
         return outputDirString;
     }
-    
 
-
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param url
+     */
     public DataSourceHttp(String url) {
         this.url = url;
     }
 }
-
-

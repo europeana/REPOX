@@ -7,6 +7,7 @@
 package pt.utl.ist.marc.iso2709;
 
 import org.apache.log4j.Logger;
+
 import pt.utl.ist.characters.CharacterConverterI;
 import pt.utl.ist.marc.Record;
 import pt.utl.ist.util.NUtil;
@@ -29,7 +30,6 @@ public class IsoNavigator {
     private int inc=50;
     private String charset=null;
     
-    /** Creates a new instance of ISONavigator */
 //    public IsoNavigator(String filename, MarcObjectFactory factory) {
 //        this.factory=factory;
 //        init(filename);
@@ -41,11 +41,18 @@ public class IsoNavigator {
 //        init(filename);
 //    }
     
+    /** Creates a new instance of ISONavigator 
+     * @param filename 
+     * @param increment */
     public IsoNavigator(String filename,int increment) {
         inc=increment;
         init(filename, null);
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param filename
+     */
     public IsoNavigator(String filename) {
         
         if (!NUtil.getSystemCharset().equals("Cp1252"))       
@@ -61,10 +68,20 @@ public class IsoNavigator {
 //        
 //    }
     
+    /**
+     * Creates a new instance of this class.
+     * @param filename
+     * @param marcReader
+     */
     public IsoNavigator(String filename, MARCPartialReader marcReader) {
     	this.marcReader=marcReader;
     	init(filename, null);
     }
+    /**
+     * Creates a new instance of this class.
+     * @param filename
+     * @param converter
+     */
     public IsoNavigator(String filename, CharacterConverterI converter) {
     	init(filename, converter);
     	
@@ -90,10 +107,14 @@ public class IsoNavigator {
 		}
     }
     
+    @SuppressWarnings("javadoc")
     public void setIncrement(int inc){
         this.inc=inc;
     }
     
+    /**
+     * @return the next List of Records
+     */
     public List<Record> getNextRecords(){
         try {
             if (!started){
@@ -107,10 +128,17 @@ public class IsoNavigator {
         return handler.records;
     }
     
+    /**
+     * 
+     */
     public void close(){
         marcReader.close();
     }
 
+    /**
+     * @param iso
+     * @return boolean
+     */
     public static boolean canRead(File iso) {
     	try {
 			IteratorIso2709 it=new IteratorIso2709(iso);
@@ -124,12 +152,18 @@ public class IsoNavigator {
     	return true;
     }
     
-    
+    /**
+     * @param filename
+     * @return counted records
+     */
     public static int countRecordsInIso(String filename){
         return countRecordsInIso(new File(filename));
     }
-
     
+    /**
+     * @param file
+     * @return counted records
+     */
     public static int countRecordsInIso(File file){
         try {
             BufferedReader reader=new BufferedReader(new FileReader(file));
@@ -191,6 +225,9 @@ public class IsoNavigator {
     }
     
     
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
     	System.err.println(IsoNavigator.countRecordsAndItemsInIso(new File("c:\\desktop\\teste.iso")));
     }

@@ -47,7 +47,8 @@ public class XMLRecordFactory extends RecordFactory {
 	 * @param identifier OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
 	 * @return local identifier (e.g. ID/12345).
 	 */
-	public String fromOAIIdentifier(String identifier) {
+	@Override
+    public String fromOAIIdentifier(String identifier) {
 		return identifier;
 	}
 
@@ -57,7 +58,8 @@ public class XMLRecordFactory extends RecordFactory {
 	 * @param nativeItem native Item object
 	 * @return OAI identifier
 	 */
-	public String getOAIIdentifier(Object nativeItem) {
+	@Override
+    public String getOAIIdentifier(Object nativeItem) {
 		String xmlRec = (String) nativeItem;
 		int startOffset = xmlRec.indexOf(identifierStart);
 		int endOffset = xmlRec.indexOf(identifierEnd);
@@ -69,9 +71,10 @@ public class XMLRecordFactory extends RecordFactory {
 	 * 
 	 * @param nativeItem a native item presumably containing a datestamp somewhere
 	 * @return a String containing the datestamp for the item
-	 * @exception IllegalArgumentException Something is wrong with the argument.
+	 * @throws IllegalArgumentException Something is wrong with the argument.
 	 */
-	public String getDatestamp(Object nativeItem) throws IllegalArgumentException {
+	@Override
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException {
 		String xmlRec = (String) nativeItem;
 		int startOffset = xmlRec.indexOf(datestampStart);
 		int endOffset = xmlRec.indexOf(datestampEnd);
@@ -83,9 +86,10 @@ public class XMLRecordFactory extends RecordFactory {
 	 * 
 	 * @param nativeItem a native item presumably containing a setspec somewhere
 	 * @return a String containing the setspec for the item
-	 * @exception IllegalArgumentException Something is wrong with the argument.
+	 * @throws IllegalArgumentException Something is wrong with the argument.
 	 */
-	public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException {
+	@Override
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException {
 		ArrayList list = new ArrayList();
 		String xmlRec = (String) nativeItem;
 		for (int startOffset = xmlRec.indexOf(setSpecStart); startOffset >= 0; startOffset = xmlRec.indexOf(setSpecStart,
@@ -101,9 +105,10 @@ public class XMLRecordFactory extends RecordFactory {
 	 * 
 	 * @param nativeItem a native item presumably containing about information somewhere
 	 * @return a Iterator of Strings containing &lt;about&gt;s for the item
-	 * @exception IllegalArgumentException Something is wrong with the argument.
+	 * @throws IllegalArgumentException Something is wrong with the argument.
 	 */
-	public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
+	@Override
+    public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
 		ArrayList list = new ArrayList();
 		String xmlRec = (String) nativeItem;
 		for (int startOffset = xmlRec.indexOf(aboutStart); startOffset >= 0; startOffset = xmlRec.indexOf(aboutStart,
@@ -119,9 +124,10 @@ public class XMLRecordFactory extends RecordFactory {
 	 * 
 	 * @param nativeItem a native item presumably containing a possible delete indicator
 	 * @return true if record is deleted, false if not
-	 * @exception IllegalArgumentException Something is wrong with the argument.
+	 * @throws IllegalArgumentException Something is wrong with the argument.
 	 */
-	public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
+	@Override
+    public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
 		String xmlRec = (String) nativeItem;
 		return xmlRec.indexOf("<header status=\"deleted\"") != -1;
 	}
@@ -132,11 +138,12 @@ public class XMLRecordFactory extends RecordFactory {
 	 * create it by calling the methods above individually.
 	 * 
 	 * @param nativeItem the native record
-	 * @param schemaURL the schemaURL desired for the response
-	 * @param the metadataPrefix from the request
+	 * @param schemaLocation the schemaURL desired for the response
+	 * @param metadataPrefix from the request
 	 * @return a String containing the OAI &lt;record&gt; or null if the default method should be used.
 	 */
-	public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
+	@Override
+    public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
 		// Don't perform quick creates
 		return null;
 	}

@@ -12,7 +12,7 @@ package org.oclc.oai.server.verb;
 
 /**
  * http 500 internal server error exception
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class OAIInternalServerError extends Exception {
@@ -23,8 +23,11 @@ public class OAIInternalServerError extends Exception {
 
     /**
      * Construct the exception
-     *
-     * @param s a message
+     * 
+     * @param s
+     *            a message
      */
-    public OAIInternalServerError(String s) { super(s); }
+    public OAIInternalServerError(String s) {
+        super(s);
+    }
 }

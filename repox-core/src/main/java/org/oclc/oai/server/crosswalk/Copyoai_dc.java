@@ -20,30 +20,32 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Convert native "item" to oai_dc. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to oai_dc. In this case, the native "item" is assumed
+ * to already be formatted as an OAI <record> element, with the possible
+ * exception that multiple metadataFormats may be present in the <metadata>
+ * element. The "crosswalk", merely involves pulling out the one that is
+ * requested.
  */
 public class Copyoai_dc extends XSLTCrosswalk {
-    private boolean debug=false;
-//     private Transformer transformer = null;
-    
+    private boolean debug = false;
+
+    //     private Transformer transformer = null;
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
+     * @throws OAIInternalServerError 
      */
-    public Copyoai_dc(Properties properties)
-        throws OAIInternalServerError {
- 	super(properties, "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd", (String)null);
+    public Copyoai_dc(Properties properties) throws OAIInternalServerError {
+        super(properties, "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd", (String)null);
         try {
             String xsltName = properties.getProperty("Copyoai_dc.xsltName");
             String classpathXSL = properties.getProperty("Copyoai_dc.classpathXSL");
-            if (debug) System.out.println("Copyoai_dc.Copyoai_dc: xsltName="
-                                          + xsltName);
+            if (debug) System.out.println("Copyoai_dc.Copyoai_dc: xsltName=" + xsltName);
             if (xsltName != null) {
                 StreamSource xslSource = new StreamSource(new FileInputStream(xsltName));
                 TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -59,12 +61,15 @@ public class Copyoai_dc extends XSLTCrosswalk {
             throw new OAIInternalServerError(e.getMessage());
         }
     }
-    
+
     /**
      * Can this nativeItem be represented in DC format?
-     * @param nativeItem a record in native format
+     * 
+     * @param nativeItem
+     *            a record in native format
      * @return true if DC format is possible, false otherwise.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem) {
         ArrayList list = (ArrayList)nativeItem;
         return list.contains("oai_dc");

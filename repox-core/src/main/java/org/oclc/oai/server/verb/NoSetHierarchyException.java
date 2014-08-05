@@ -14,7 +14,7 @@ import org.oclc.oai.util.OAIUtil;
 
 /**
  * An OAI cannotDisseminateFormatException
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class NoSetHierarchyException extends Exception {
@@ -23,7 +23,10 @@ public class NoSetHierarchyException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public NoSetHierarchyException() {
-        super("<" + OAIUtil.getTag("error") + " code=\"noSetHierarchy\">The repository does not support sets." +  "</" + OAIUtil.getTag("error") + ">");
+        super("<" + OAIUtil.getTag("error") + " code=\"noSetHierarchy\">The repository does not support sets." + "</" + OAIUtil.getTag("error") + ">");
     }
 }

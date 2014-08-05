@@ -12,7 +12,7 @@ package org.oclc.oai.server.verb;
 
 /**
  * An OAI cannotDisseminateFormatException
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class NoRecordsMatchException extends NoItemsMatchException {

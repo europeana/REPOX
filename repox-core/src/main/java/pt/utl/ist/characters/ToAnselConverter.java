@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ */
 public class ToAnselConverter {
 
     private static byte[][] doubleCharsOld;
@@ -290,6 +292,10 @@ public class ToAnselConverter {
     }
 
 
+    /**
+     * @param array
+     * @return the converted bytes
+     */
     public static byte[] convertBytes(byte[] array) {
         byte[] ret=null;
         int retries=0;
@@ -344,6 +350,10 @@ public class ToAnselConverter {
         return ret;
     }
 
+    /**
+     * @param str
+     * @return the converted String
+     */
     public static String convertString(String str) {
 
 //        Matcher m = numerosIndexacaoPattern.matcher(str);
@@ -362,6 +372,9 @@ public class ToAnselConverter {
     }
 
 
+    /**
+     * @param rec
+     */
     public static void convertRecord(Record rec){
         if (rec==null)
             return;
@@ -451,9 +464,13 @@ public class ToAnselConverter {
     }
 
 
-    /**************************************************************************
-     ************                    Main                    ******************
-     *************************************************************************/
+    /**
+     * ***********************************************************************
+     * *********** Main ******************
+     * ***********************************************************************
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
 
         System.err.println(ToAnselConverter.convertString("< >dá  ecoraçauo º ª"));

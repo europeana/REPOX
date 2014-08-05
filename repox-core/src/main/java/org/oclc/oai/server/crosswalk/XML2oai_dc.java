@@ -15,58 +15,63 @@ import org.oclc.oai.server.verb.CannotDisseminateFormatException;
 import java.util.Properties;
 
 /**
- * Convert native "item" to oai_dc. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to oai_dc. In this case, the native "item" is assumed
+ * to already be formatted as an OAI <record> element, with the possible
+ * exception that multiple metadataFormats may be present in the <metadata>
+ * element. The "crosswalk", merely involves pulling out the one that is
+ * requested.
  */
 public class XML2oai_dc extends Crosswalk {
-    private static final String elementName = "oai_dc:dc";
+    private static final String elementName  = "oai_dc:dc";
     private static final String elementStart = "<" + elementName;
-    private static final String elementEnd = elementName + ">";
-	
+    private static final String elementEnd   = elementName + ">";
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
      */
     public XML2oai_dc(Properties properties) {
-	super("http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd");
+        super("http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd");
     }
 
     /**
      * Can this nativeItem be represented in DC format?
-     * @param nativeItem a record in native format
+     * 
+     * @param nativeItem
+     *            a record in native format
      * @return true if DC format is possible, false otherwise.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem) {
-	String fullItem = (String)nativeItem;
-	if ((fullItem.indexOf(elementStart)) >= 0)
-	    return true;
-	return false;
+        String fullItem = (String)nativeItem;
+        if ((fullItem.indexOf(elementStart)) >= 0) return true;
+        return false;
     }
 
     /**
      * Perform the actual crosswalk.
-     *
-     * @param nativeItem the native "item". In this case, it is
-     * already formatted as an OAI <record> element, with the
-     * possible exception that multiple metadataFormats are
-     * present in the <metadata> element.
-     * @return a String containing the XML to be stored within the <metadata> element.
-     * @exception CannotDisseminateFormatException nativeItem doesn't support this format.
+     * 
+     * @param nativeItem
+     *            the native "item". In this case, it is already formatted as an
+     *            OAI <record> element, with the possible exception that
+     *            multiple metadataFormats are present in the <metadata>
+     *            element.
+     * @return a String containing the XML to be stored within the <metadata>
+     *         element.
+     * @throws CannotDisseminateFormatException
+     *             nativeItem doesn't support this format.
      */
-    public String createMetadata(Object nativeItem)
-	throws CannotDisseminateFormatException {
-	String fullItem = (String)nativeItem;
+    @Override
+    public String createMetadata(Object nativeItem) throws CannotDisseminateFormatException {
+        String fullItem = (String)nativeItem;
 
-	int startOffset = fullItem.indexOf(elementStart);
-	if (startOffset == -1) {
-	    throw new CannotDisseminateFormatException(getSchemaLocation());
-	}
-	int endOffset = fullItem.indexOf(elementEnd) + elementEnd.length();
-	return fullItem.substring(startOffset, endOffset);
+        int startOffset = fullItem.indexOf(elementStart);
+        if (startOffset == -1) { throw new CannotDisseminateFormatException(getSchemaLocation()); }
+        int endOffset = fullItem.indexOf(elementEnd) + elementEnd.length();
+        return fullItem.substring(startOffset, endOffset);
     }
 }

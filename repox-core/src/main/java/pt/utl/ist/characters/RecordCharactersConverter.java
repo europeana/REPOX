@@ -17,6 +17,10 @@ import java.util.List;
  */
 public class RecordCharactersConverter {
 
+    /**
+     * @param rec
+     * @param converter
+     */
     public static void convertRecord(Record rec, CharacterConverterI converter){
         if (rec==null)
             return;
@@ -41,6 +45,10 @@ public class RecordCharactersConverter {
 
 
 
+    /**
+     * @param rec
+     * @param encoding
+     */
     public static void convertRecord(Record rec, String encoding){
         try{
             if (rec==null)
@@ -65,11 +73,21 @@ public class RecordCharactersConverter {
         }
     }
 
+    /**
+     * @param str
+     * @param encoding
+     * @return the converted String
+     * @throws UnsupportedEncodingException
+     */
     public static String convertString(String str, String encoding) throws UnsupportedEncodingException{
         String newData=new String(str.getBytes("ISO8859_1"),encoding);
         return newData;
     }
 
+    /**
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception{
         System.err.println(RecordCharactersConverter.convertString("Alfabetiza‡„o em l¡ngua","Cp850"));
     }

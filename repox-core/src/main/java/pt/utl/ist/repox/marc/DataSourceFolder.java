@@ -6,16 +6,19 @@ package pt.utl.ist.repox.marc;
 
 import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
 
+/**
+ */
+public class DataSourceFolder implements FileRetrieveStrategy {
 
-public class DataSourceFolder implements FileRetrieveStrategy{
+    @Override
+    public boolean retrieveFiles(String dataSourceId) {
 
-    public boolean retrieveFiles(String dataSourceId){
-        
         return true;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public DataSourceFolder() {
     }
 }
-
-

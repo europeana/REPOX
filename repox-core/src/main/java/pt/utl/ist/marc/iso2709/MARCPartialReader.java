@@ -33,34 +33,41 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <p><code>MARCReader</code> parses MARC records and notifies the
- * {@link MARCHandler} implementation about events occuring in the
- * parsed records.  </p>
- *
- * <p>The following <code>main()</code> method shows the basic use of the
- * <code>MARCReader</code> object:</p>
+ * <p>
+ * <code>MARCReader</code> parses MARC records and notifies the
+ * {@link MARCHandler} implementation about events occuring in the parsed
+ * records.
+ * </p>
+ * 
+ * <p>
+ * The following <code>main()</code> method shows the basic use of the
+ * <code>MARCReader</code> object:
+ * </p>
+ * 
  * <pre>
  * public static void main(String args[]) {
- *   String infile = args[0];
- *
- *   // create a new MARCReader instance
- *   MARCReader marcReader = new MARCReader();
- *
- *   // register the MARCHandler implementation
- *   marcReader.setMARCHandler(new MARCHandlerImpl());
- *
- *   // send the file to the parse method
- *   // the try block is there to catch exceptions
- *   // thrown by the parser
- *   try {
- *     marcReader.parse(infile);
- *   } catch (Exception e) {
- *     e.printStackTrace();
- *   }
+ *     String infile = args[0];
+ * 
+ *     // create a new MARCReader instance
+ *     MARCReader marcReader = new MARCReader();
+ * 
+ *     // register the MARCHandler implementation
+ *     marcReader.setMARCHandler(new MARCHandlerImpl());
+ * 
+ *     // send the file to the parse method
+ *     // the try block is there to catch exceptions
+ *     // thrown by the parser
+ *     try {
+ *         marcReader.parse(infile);
+ *     } catch (Exception e) {
+ *         e.printStackTrace();
+ *     }
  * }
  * </pre>
- * <p><code>MARCReader</code> can throw the following exceptions when
- * it encounters problems while parsing MARC records:</p>
+ * <p>
+ * <code>MARCReader</code> can throw the following exceptions when it encounters
+ * problems while parsing MARC records:
+ * </p>
  * <ul>
  * <li>{@link ParseRecordException}
  * <li>{@link ParseDirectoryException}
@@ -68,158 +75,180 @@ import java.io.InputStream;
  * <li>{@link IllegalTagException}
  * <li>{@link IllegalIndicatorException}
  * <li>{@link IllegalIdentifierException}
- * </ul><p>
- *
+ * </ul>
+ * <p>
+ * 
  * @author Bas Peters - <a href="mailto:mail@bpeters.com">mail@bpeters.com</a>
  * @version 0.2
  */
 public class MARCPartialReader extends MARCReader {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger log = Logger.getLogger(MARCPartialReader.class);
-    
-    protected long numberOfRecords=0;
-    protected InputStream reader;
-
-	byte[] buf=new byte[1024];
-	int bufIdx=0;
-	int read=0;
-	
-    public MARCPartialReader() {
-    	super();
-    }
-
-    public MARCPartialReader(String charset) {
-    	super(charset);
-    }
-  
     /**
-     * <p>Sends a file to the MARC parser.</p>
-     *
-     * @param filename the filename
-     * @param numRecords the number of records to parse in each call
+     * Logger for this class
+     */
+    private static final Logger log             = Logger.getLogger(MARCPartialReader.class);
+
+    /** MARCPartialReader numberOfRecords */
+    protected long              numberOfRecords = 0;
+    /** MARCPartialReader reader */
+    protected InputStream       reader;
+
+    byte[]                      buf             = new byte[1024];
+    int                         bufIdx          = 0;
+    int                         read            = 0;
+
+    /**
+     * Creates a new instance of this class.
+     */
+    public MARCPartialReader() {
+        super();
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param charset
+     */
+    public MARCPartialReader(String charset) {
+        super(charset);
+    }
+
+    /**
+     * <p>
+     * Sends a file to the MARC parser.
+     * </p>
+     * 
+     * @param stream
+     * @param numRecords
+     *            the number of records to parse in each call
      */
     public void parse(InputStream stream, long numRecords) {
-        numberOfRecords=numRecords;
-//        	if(charset==null)
-//        		reader=new BufferedReader(new FileReader(filename));
-//        	else 
-//        		reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),charset));
-//        	reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),"ISO8859-1"));
-        	reader=stream;
-            parseTape(reader);
+        numberOfRecords = numRecords;
+        //        	if(charset==null)
+        //        		reader=new BufferedReader(new FileReader(filename));
+        //        	else 
+        //        		reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),charset));
+        //        	reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),"ISO8859-1"));
+        reader = stream;
+        parseTape(reader);
     }
-    
+
     /**
-     * <p>Sends a file to the MARC parser.</p>
-     *
-     * @param filename the filename
-     * @param numRecords the number of records to parse in each call
+     * <p>
+     * Sends a file to the MARC parser.
+     * </p>
+     * 
+     * @param filename
+     *            the filename
+     * @param numRecords
+     *            the number of records to parse in each call
      */
     public void parse(String filename, long numRecords) {
-        numberOfRecords=numRecords;
+        numberOfRecords = numRecords;
         try {
-//        	if(charset==null)
-//        		reader=new BufferedReader(new FileReader(filename));
-//        	else 
-//        		reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),charset));
-//        	reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),"ISO8859-1"));
-        	reader=new FileInputStream(filename);
+            //        	if(charset==null)
+            //        		reader=new BufferedReader(new FileReader(filename));
+            //        	else 
+            //        		reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),charset));
+            //        	reader=new BufferedReader(new InputStreamReader(new FileInputStream(filename),"ISO8859-1"));
+            reader = new FileInputStream(filename);
             parseTape(reader);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void continueParse() {
-            parseTape(reader);
-    }
-    
-    public void close(){
-    	try {
-			reader.close();
-			marcHandler.endTape();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-    }
     /**
-     * <p>Parses the tape.</p>
-     *
-     * @param in the {@link BufferedReader}
+     * 
+     */
+    public void continueParse() {
+        parseTape(reader);
+    }
+
+    /**
+     * 
+     */
+    public void close() {
+        try {
+            reader.close();
+            marcHandler.endTape();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * <p>
+     * Parses the tape.
+     * </p>
+     * 
+     * @param in
+     *            the {@link BufferedReader}
      */
     private void parseTape(InputStream in) {
         boolean isFinished = false;
-        long readRecords=0;
+        long readRecords = 0;
 
         // if input stream contains no data
-        if (in == null)
-            throw new ParseRecordException("no data");
-        
+        if (in == null) throw new ParseRecordException("no data");
+
         try {
             // start of tape notification
-            if (marcHandler != null)
-                marcHandler.startTape();
-            
-            // read tape and process each record
-            while (! isFinished) {
-            	int size=0;
-    			byte[] rec=new byte[1024*5];
-//    			byte[] buf=new byte[1024];
-    			
+            if (marcHandler != null) marcHandler.startTape();
 
-    			
-    			if(read<=0) {
-    				read=in.read(buf);
-    				bufIdx=0;
-    			}
-    			while (read!=-1 && !isFinished) {
-        			if(read<=0) {
-        				read=in.read(buf);
-        				bufIdx=0;
-        			}
-    				for( ; bufIdx<buf.length && read>0 ; bufIdx++) {
-    					read--;
-    					rec[size]=buf[bufIdx];
-    					size++;
-    					if(buf[bufIdx] == rt) {
-        					try {
-								parseRecord(rec);
-								readRecords++;
-							} catch (RuntimeException e) {
-								log.error(e.getMessage(), e);
-							}
-        					size=0;
-                            if (readRecords>=numberOfRecords) {
+            // read tape and process each record
+            while (!isFinished) {
+                int size = 0;
+                byte[] rec = new byte[1024 * 5];
+                //    			byte[] buf=new byte[1024];
+
+                if (read <= 0) {
+                    read = in.read(buf);
+                    bufIdx = 0;
+                }
+                while (read != -1 && !isFinished) {
+                    if (read <= 0) {
+                        read = in.read(buf);
+                        bufIdx = 0;
+                    }
+                    for (; bufIdx < buf.length && read > 0; bufIdx++) {
+                        read--;
+                        rec[size] = buf[bufIdx];
+                        size++;
+                        if (buf[bufIdx] == rt) {
+                            try {
+                                parseRecord(rec);
+                                readRecords++;
+                            } catch (RuntimeException e) {
+                                log.error(e.getMessage(), e);
+                            }
+                            size = 0;
+                            if (readRecords >= numberOfRecords) {
                                 isFinished = true;
                                 bufIdx++;
-                            	break;
+                                break;
                             }
-    					} else if(size==1 && (buf[bufIdx] == '\n' || buf[bufIdx] == '\r') ) {
-        					size=0;
-    					}else if(size==rec.length){
-    						//criar um rec maior
-    						byte[] recBig=new byte[rec.length*2];
-    						System.arraycopy(rec, 0, recBig, 0, rec.length);
-    						rec=recBig;
-    					}
-    				}
-    				
-    			} // end of while (true)
+                        } else if (size == 1 && (buf[bufIdx] == '\n' || buf[bufIdx] == '\r')) {
+                            size = 0;
+                        } else if (size == rec.length) {
+                            //criar um rec maior
+                            byte[] recBig = new byte[rec.length * 2];
+                            System.arraycopy(rec, 0, recBig, 0, rec.length);
+                            rec = recBig;
+                        }
+                    }
 
-    			if(read<0) 
-    				isFinished=true;
+                } // end of while (true)
+
+                if (read < 0) isFinished = true;
             } // end of while (! isFinished)
-            
+
             // end of tape notification
-            if (marcHandler != null)
-                marcHandler.endTape();
-            
+            if (marcHandler != null) marcHandler.endTape();
+
         } catch (IOException e) {
             log.error(e, e);
         }
-    }   
-    
+    }
+
 }
 // End of MARCREader.java
