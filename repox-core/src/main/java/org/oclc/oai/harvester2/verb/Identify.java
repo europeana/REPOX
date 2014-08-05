@@ -23,7 +23,8 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 /**
- * This class represents an Identify response on either the server or on the client
+ * This class represents an Identify response on either the server or on the
+ * client
  * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */

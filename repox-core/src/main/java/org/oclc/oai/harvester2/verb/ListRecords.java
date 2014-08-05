@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * This class represents an ListRecords response on either the server or
- * on the client
- *
+ * This class represents an ListRecords response on either the server or on the
+ * client
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class ListRecords extends HarvesterVerb {
@@ -35,28 +35,28 @@ public class ListRecords extends HarvesterVerb {
     public ListRecords() {
         super();
     }
-    
+
     /**
      * Client-side ListRecords verb constructor
-     *
-     * @param baseURL the baseURL of the server to be queried
-     * @param from 
-     * @param until 
-     * @param set 
-     * @param metadataPrefix 
-     * @throws IOException 
-     * @throws ParserConfigurationException 
-     * @throws SAXException 
-     * @throws TransformerException 
+     * 
+     * @param baseURL
+     *            the baseURL of the server to be queried
+     * @param from
+     * @param until
+     * @param set
+     * @param metadataPrefix
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
      */
-    public ListRecords(String baseURL, String from, String until, String set, String metadataPrefix)
-    		throws IOException, ParserConfigurationException, SAXException, TransformerException {
-    	super(baseURL + "?verb=ListRecords" + (from != null ? "&from=" + from : "") + (until != null ? "&until=" + until : "")
-        		+ (set != null ? "&set=" + URLEncoder.encode(set, "UTF-8") : "") + "&metadataPrefix=" + metadataPrefix);
+    public ListRecords(String baseURL, String from, String until, String set, String metadataPrefix) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        super(baseURL + "?verb=ListRecords" + (from != null ? "&from=" + from : "") + (until != null ? "&until=" + until : "") + (set != null ? "&set=" + URLEncoder.encode(set, "UTF-8") : "") + "&metadataPrefix=" + metadataPrefix);
     }
-    
+
     /**
      * Client-side ListRecords verb constructor (resumptionToken version)
+     * 
      * @param baseURL
      * @param resumptionToken
      * @throws IOException
@@ -64,14 +64,13 @@ public class ListRecords extends HarvesterVerb {
      * @throws SAXException
      * @throws TransformerException
      */
-    public ListRecords(String baseURL, String resumptionToken) throws IOException, ParserConfigurationException, SAXException,
-    		TransformerException {
+    public ListRecords(String baseURL, String resumptionToken) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         super(baseURL + "?verb=ListRecords" + "&resumptionToken=" + URLEncoder.encode(resumptionToken, "UTF-8"));
     }
 
     /**
      * Get the oai:resumptionToken from the response
-     *
+     * 
      * @return the oai:resumptionToken value
      * @throws TransformerException
      * @throws NoSuchFieldException
@@ -86,7 +85,7 @@ public class ListRecords extends HarvesterVerb {
             throw new NoSuchFieldException(namespace);
         }
     }
-    
+
     /**
      * Get the oai:resumptionToken from the response
      * 
@@ -107,7 +106,7 @@ public class ListRecords extends HarvesterVerb {
 
     /**
      * Get the total number of records from a specific set
-     *
+     * 
      * @return the oai:resumptionToken value
      * @throws TransformerException
      * @throws NoSuchFieldException
@@ -123,24 +122,18 @@ public class ListRecords extends HarvesterVerb {
             throw new NoSuchFieldException(namespace);
         }
 
-        if(!value2Return.isEmpty()){
-            try{
+        if (!value2Return.isEmpty()) {
+            try {
                 return Integer.valueOf(value2Return);
-            }
-            catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return 0;
             }
-        }
-        else{
-            if(namespace.contains(NAMESPACE_V2_0)) {
-                if(!getSingleString("/oai20:OAI-PMH/oai20:ListRecords/oai20:resumptionToken").equals("")){
-                    return 0;
-                }
+        } else {
+            if (namespace.contains(NAMESPACE_V2_0)) {
+                if (!getSingleString("/oai20:OAI-PMH/oai20:ListRecords/oai20:resumptionToken").equals("")) { return 0; }
                 return getNodeList("//oai20:header").getLength();
             } else if (namespace.contains(NAMESPACE_V1_1)) {
-                if(!getSingleString("/oai11_ListRecords:ListRecords/oai11_ListRecords:resumptionToken").equals("")){
-                    return 0;
-                }
+                if (!getSingleString("/oai11_ListRecords:ListRecords/oai11_ListRecords:resumptionToken").equals("")) { return 0; }
                 return getNodeList("//oai11_ListRecords:header").getLength();
             } else {
                 throw new NoSuchFieldException(namespace);
@@ -150,14 +143,14 @@ public class ListRecords extends HarvesterVerb {
 
     /**
      * Get the total number of records from a specific set
-     *
+     * 
      * @return the oai:resumptionToken value
      * @throws TransformerException
      * @throws NoSuchFieldException
      */
     public int getRecordsNumberPerResponse() throws TransformerException, NoSuchFieldException {
         String namespace = getDefaultNamespace();
-        if(namespace.contains(NAMESPACE_V2_0)) {
+        if (namespace.contains(NAMESPACE_V2_0)) {
             return getNodeList("//oai20:header").getLength();
         } else if (namespace.contains(NAMESPACE_V1_1)) {
             return getNodeList("//oai11_ListRecords:header").getLength();
@@ -165,5 +158,5 @@ public class ListRecords extends HarvesterVerb {
             throw new NoSuchFieldException(namespace);
         }
     }
-    
+
 }

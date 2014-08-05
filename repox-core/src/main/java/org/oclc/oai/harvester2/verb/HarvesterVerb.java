@@ -422,7 +422,8 @@ public abstract class HarvesterVerb {
     }
 
     /**
-     * Get a NodeList containing the nodes in the response DOM for the specified XPath
+     * Get a NodeList containing the nodes in the response DOM for the specified
+     * XPath
      * 
      * @param xpath
      * @return the NodeList for the XPath into the response DOM
@@ -437,8 +438,12 @@ public abstract class HarvesterVerb {
         // Element docEl = getDocument().getDocumentElement();
         // return docEl.toString();
         /*
-         * Source input = new DOMSource(getDocument()); StringWriter sw = new StringWriter(); Result output = new StreamResult(sw); try { Transformer idTransformer = xformFactory.newTransformer(); idTransformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); idTransformer.transform(input,
-         * output); return sw.toString(); } catch (TransformerException e) { return e.getMessage(); }
+         * Source input = new DOMSource(getDocument()); StringWriter sw = new
+         * StringWriter(); Result output = new StreamResult(sw); try {
+         * Transformer idTransformer = xformFactory.newTransformer();
+         * idTransformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,
+         * "yes"); idTransformer.transform(input, output); return sw.toString();
+         * } catch (TransformerException e) { return e.getMessage(); }
          */
 
         //Serialize DOM

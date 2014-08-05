@@ -168,19 +168,40 @@ public class EmailSender {
         /*
          * Multipart mp = new MimeMultipart("alternative");
          * 
-         * // plain text email Template templateText = getResourceTemplate(template + TEMPLATE_NAME_AFFIX_TEXT); BodyPart textPart = new MimeBodyPart(); textPart.setDataHandler(new DataHandler(new DataSource() { public InputStream getInputStream() throws IOException { return new
-         * StringBufferInputStream(textWriter.toString()); } public OutputStream getOutputStream() throws IOException { throw new IOException("Read-only data"); } public String getContentType() { return "text/plain"; } public String getName() { return "main"; } }));
+         * // plain text email Template templateText =
+         * getResourceTemplate(template + TEMPLATE_NAME_AFFIX_TEXT); BodyPart
+         * textPart = new MimeBodyPart(); textPart.setDataHandler(new
+         * DataHandler(new DataSource() { public InputStream getInputStream()
+         * throws IOException { return new
+         * StringBufferInputStream(textWriter.toString()); } public OutputStream
+         * getOutputStream() throws IOException { throw new
+         * IOException("Read-only data"); } public String getContentType() {
+         * return "text/plain"; } public String getName() { return "main"; }
+         * }));
          * 
          * mp.addBodyPart(textPart);
          * 
-         * // html email try { Template templateHtml = getResourceTemplate(template + TEMPLATE_NAME_AFFIX_TEXT); Multipart htmlContent = new MimeMultipart("related"); BodyPart htmlPage = new MimeBodyPart(); htmlPage.setDataHandler(new DataHandler(new DataSource() { public InputStream
-         * getInputStream() throws IOException { return new StringBufferInputStream(htmlWriter.toString()); } public OutputStream getOutputStream() throws IOException { throw new IOException("Read-only data"); } public String getContentType() { return "text/html"; } public String getName() { return
-         * "main"; } })); htmlContent.addBodyPart(htmlPage); BodyPart htmlPart = new MimeBodyPart(); htmlPart.setContent(htmlContent); mp.addBodyPart(htmlPart); } catch (Exception e) { // TODO: log if no html template found }
+         * // html email try { Template templateHtml =
+         * getResourceTemplate(template + TEMPLATE_NAME_AFFIX_TEXT); Multipart
+         * htmlContent = new MimeMultipart("related"); BodyPart htmlPage = new
+         * MimeBodyPart(); htmlPage.setDataHandler(new DataHandler(new
+         * DataSource() { public InputStream getInputStream() throws IOException
+         * { return new StringBufferInputStream(htmlWriter.toString()); } public
+         * OutputStream getOutputStream() throws IOException { throw new
+         * IOException("Read-only data"); } public String getContentType() {
+         * return "text/html"; } public String getName() { return "main"; } }));
+         * htmlContent.addBodyPart(htmlPage); BodyPart htmlPart = new
+         * MimeBodyPart(); htmlPart.setContent(htmlContent);
+         * mp.addBodyPart(htmlPart); } catch (Exception e) { // TODO: log if no
+         * html template found }
          * 
          * mimeMessage.setContent(mp);
          * 
          * 
-         * SimpleMailMessage message = new SimpleMailMessage(); message.setSubject(subject); message.setFrom(fromEmail); message.setTo(toEmail); String emailText = createEmailText(model); message.setText(emailText); mailSender.send(message);
+         * SimpleMailMessage message = new SimpleMailMessage();
+         * message.setSubject(subject); message.setFrom(fromEmail);
+         * message.setTo(toEmail); String emailText = createEmailText(model);
+         * message.setText(emailText); mailSender.send(message);
          */
     }
 

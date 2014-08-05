@@ -15,83 +15,90 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
- * IMSXMLRecordFactory converts native XML items to Record objects and vice versa.
- * This factory assumes the native XML item looks exactly like the <record>
- * element of an OAI GetRecord response, with the possible exception that the
- * <metadata> element contains multiple metadataFormats from which to choose.
+ * IMSXMLRecordFactory converts native XML items to Record objects and vice
+ * versa. This factory assumes the native XML item looks exactly like the
+ * <record> element of an OAI GetRecord response, with the possible exception
+ * that the <metadata> element contains multiple metadataFormats from which to
+ * choose.
  */
 public class IMSXMLRecordFactory extends RecordFactory {
     /**
      * Construct an IMSXMLRecordFactory capable of producing the Crosswalk(s)
      * specified in the properties file.
-     * @param properties Contains information to configure the factory:
-     *                   specifically, the names of the crosswalk(s) supported
-     * @throws IllegalArgumentException 
+     * 
+     * @param properties
+     *            Contains information to configure the factory: specifically,
+     *            the names of the crosswalk(s) supported
+     * @throws IllegalArgumentException
      */
     public IMSXMLRecordFactory(Properties properties) throws IllegalArgumentException {
-	super(properties);
+        super(properties);
     }
 
     /**
      * Utility method to parse the 'local identifier' from the OAI identifier
-     *
-     * @param identifier OAI identifier
+     * 
+     * @param identifier
+     *            OAI identifier
      * @return local identifier
      */
     @Override
     public String fromOAIIdentifier(String identifier) {
-	StringTokenizer tokenizer = new StringTokenizer(identifier, ":");
-	tokenizer.nextToken();
-	tokenizer.nextToken();
-	return tokenizer.nextToken();
+        StringTokenizer tokenizer = new StringTokenizer(identifier, ":");
+        tokenizer.nextToken();
+        tokenizer.nextToken();
+        return tokenizer.nextToken();
     }
 
     /**
      * Construct an OAI identifier from the native item
-     *
-     * @param nativeItem native Item object
+     * 
+     * @param nativeItem
+     *            native Item object
      * @return OAI identifier
      */
     @Override
-    public String getOAIIdentifier(Object nativeItem) throws IllegalArgumentException  {
-	throw new IllegalArgumentException("Identifier isn't available in native item");
+    public String getOAIIdentifier(Object nativeItem) throws IllegalArgumentException {
+        throw new IllegalArgumentException("Identifier isn't available in native item");
     }
 
     /**
      * get the datestamp from the item
-     *
-     * @param nativeItem a native item presumably containing a datestamp somewhere
+     * 
+     * @param nativeItem
+     *            a native item presumably containing a datestamp somewhere
      * @return a String containing the datestamp for the item
      */
     @Override
-    public String getDatestamp(Object nativeItem) throws IllegalArgumentException  {
-	throw new IllegalArgumentException("Datestamp isn't available in native item");
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException {
+        throw new IllegalArgumentException("Datestamp isn't available in native item");
     }
 
     /**
      * get the setspec from the item
-     *
-     * @param nativeItem a native item presumably containing a setspec somewhere
+     * 
+     * @param nativeItem
+     *            a native item presumably containing a setspec somewhere
      * @return a String containing the setspec for the item
      */
     @Override
-    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
-	throw new IllegalArgumentException("SetSpecs aren't available in native item");
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException {
+        throw new IllegalArgumentException("SetSpecs aren't available in native item");
     }
 
     @Override
     public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
-	throw new IllegalArgumentException("IsDeleted isn't available in native item");
+        throw new IllegalArgumentException("IsDeleted isn't available in native item");
     }
 
     @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataFormat) {
-	// Can't do quickCreates?
-	return null;
+        // Can't do quickCreates?
+        return null;
     }
 
     @Override
     public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
-	throw new IllegalArgumentException("getAbouts isn't available in native item");
+        throw new IllegalArgumentException("getAbouts isn't available in native item");
     }
 }

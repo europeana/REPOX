@@ -21,7 +21,9 @@ import java.util.*;
 import java.util.Date;
 
 /**
- * JDBCLimitedOAICatalog is an example of how to implement the AbstractCatalog interface for JDBC. Pattern an implementation of the AbstractCatalog interface after this class to have OAICat work with your JDBC database.
+ * JDBCLimitedOAICatalog is an example of how to implement the AbstractCatalog
+ * interface for JDBC. Pattern an implementation of the AbstractCatalog
+ * interface after this class to have OAICat work with your JDBC database.
  * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
@@ -29,7 +31,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     private static final boolean debug                  = false;
 
     /**
-     * SQL identifier query (loaded from properties) \\i -> localIdentifier, \\o -> oaiIdentifier
+     * SQL identifier query (loaded from properties) \\i -> localIdentifier, \\o
+     * -> oaiIdentifier
      */
     private String               identifierQuery        = null;
 
@@ -39,7 +42,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     private String               rangeQuery             = null;
 
     /**
-     * SQL range query (loaded from properties) \\f -> from, \\u -> until, \\s -> set
+     * SQL range query (loaded from properties) \\f -> from, \\u -> until, \\s
+     * -> set
      */
     private String               rangeSetQuery          = null;
 
@@ -49,12 +53,14 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     private String               setQuery               = null;
 
     /**
-     * SQL query to get a list of available sets that apply to a particular identifier
+     * SQL query to get a list of available sets that apply to a particular
+     * identifier
      */
     private String               setSpecQuery           = null;
 
     /**
-     * SQL query to get a list of available abouts that apply to a particular identifier
+     * SQL query to get a list of available abouts that apply to a particular
+     * identifier
      */
     private String               aboutQuery             = null;
 
@@ -68,17 +74,20 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     private String               setDescriptionLabel    = null;
 
     /**
-     * maximum number of entries to return for ListRecords and ListIdentifiers (loaded from properties)
+     * maximum number of entries to return for ListRecords and ListIdentifiers
+     * (loaded from properties)
      */
     private int                  maxListSize;
 
     /**
-     * The format required for dates in SQL queries "UTC" = YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ other = YYYY/MM/DD
+     * The format required for dates in SQL queries "UTC" = YYYY-MM-DD or
+     * YYYY-MM-DDTHH:MM:SSZ other = YYYY/MM/DD
      */
     private String               dateFormat             = null;
 
     /**
-     * Set Strings to be loaded from the properties file (if they are to be loaded from properties rather than queried from the database)
+     * Set Strings to be loaded from the properties file (if they are to be
+     * loaded from properties rather than queried from the database)
      */
     ArrayList                    sets                   = new ArrayList();
 
@@ -209,7 +218,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * Retrieve a list of schemaLocation values associated with the specified oaiIdentifier.
+     * Retrieve a list of schemaLocation values associated with the specified
+     * oaiIdentifier.
      * 
      * @param oaiIdentifier
      *            the OAI identifier
@@ -219,7 +229,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * @throws IdDoesNotExistException
      *             the specified oaiIdentifier can't be found
      * @throws NoMetadataFormatsException
-     *             the specified oaiIdentifier was found but the item is flagged as deleted and thus no schemaLocations (i.e. metadataFormats) can be produced.
+     *             the specified oaiIdentifier was found but the item is flagged
+     *             as deleted and thus no schemaLocations (i.e. metadataFormats)
+     *             can be produced.
      */
     @Override
     public Vector getSchemaLocations(String oaiIdentifier) throws OAIInternalServerError, IdDoesNotExistException, NoMetadataFormatsException {
@@ -229,15 +241,20 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(populateIdentifierQuery(oaiIdentifier));
             /*
-             * Let your recordFactory decide which schemaLocations (i.e. metadataFormats) it can produce from the record. Doing so will preserve the separation of database access (which happens here) from the record content interpretation (which is the responsibility of the RecordFactory
-             * implementation).
+             * Let your recordFactory decide which schemaLocations (i.e.
+             * metadataFormats) it can produce from the record. Doing so will
+             * preserve the separation of database access (which happens here)
+             * from the record content interpretation (which is the
+             * responsibility of the RecordFactory implementation).
              */
             if (!rs.next()) {
                 endConnection(con);
                 throw new IdDoesNotExistException(oaiIdentifier);
             } else {
                 /*
-                 * Make sure the identifierQuery returns the columns you need (if any) to determine the supported schemaLocations for this item
+                 * Make sure the identifierQuery returns the columns you need
+                 * (if any) to determine the supported schemaLocations for this
+                 * item
                  */
                 HashMap nativeItem = getColumnValues(rs);
                 endConnection(con);
@@ -251,7 +268,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * Since the columns should only be read once, copy them into a HashMap and consider that to be the "record"
+     * Since the columns should only be read once, copy them into a HashMap and
+     * consider that to be the "record"
      * 
      * @param rs
      *            The ResultSet row
@@ -278,7 +296,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * insert actual from, until, and set parameters into the rangeQuery String NOTE! This retrieves an extra record so we can decide if EOF has been reached.
+     * insert actual from, until, and set parameters into the rangeQuery String
+     * NOTE! This retrieves an extra record so we can decide if EOF has been
+     * reached.
      * 
      * @param from
      *            the OAI from parameter
@@ -351,7 +371,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * Change the String from UTC to SQL format If this method doesn't suit your needs, extend this class and override the method rather than change this code directly.
+     * Change the String from UTC to SQL format If this method doesn't suit your
+     * needs, extend this class and override the method rather than change this
+     * code directly.
      * 
      * @param date
      * @return formatted date
@@ -372,7 +394,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * insert actual from, until, and set parameters into the identifierQuery String
+     * insert actual from, until, and set parameters into the identifierQuery
+     * String
      * 
      * @param from
      *            the OAI from parameter
@@ -410,7 +433,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * insert actual from, until, and set parameters into the identifierQuery String
+     * insert actual from, until, and set parameters into the identifierQuery
+     * String
      * 
      * @param from
      *            the OAI from parameter
@@ -448,7 +472,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * insert actual from, until, and set parameters into the identifierQuery String
+     * insert actual from, until, and set parameters into the identifierQuery
+     * String
      * 
      * @param from
      *            the OAI from parameter
@@ -496,9 +521,20 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      *            the set name or null if no such limit is requested
      * @param metadataPrefix
      *            the OAI metadataPrefix or null if no such limit is requested
-     * @return a Map object containing entries for "headers" and "identifiers" Iterators (both containing Strings) as well as an optional "resumptionMap" Map. It may seem strange for the map to include both "headers" and "identifiers" since the identifiers can be obtained from the headers. This may
-     *         be true, but AbstractCatalog.listRecords() can operate quicker if it doesn't need to parse identifiers from the XML headers itself. Better still, do like I do below and override AbstractCatalog.listRecords(). AbstractCatalog.listRecords() is relatively inefficient because given the
-     *         list of identifiers, it must call getRecord() individually for each as it constructs its response. It's much more efficient to construct the entire response in one fell swoop by overriding listRecords() as I've done here.
+     * @return a Map object containing entries for "headers" and "identifiers"
+     *         Iterators (both containing Strings) as well as an optional
+     *         "resumptionMap" Map. It may seem strange for the map to include
+     *         both "headers" and "identifiers" since the identifiers can be
+     *         obtained from the headers. This may be true, but
+     *         AbstractCatalog.listRecords() can operate quicker if it doesn't
+     *         need to parse identifiers from the XML headers itself. Better
+     *         still, do like I do below and override
+     *         AbstractCatalog.listRecords(). AbstractCatalog.listRecords() is
+     *         relatively inefficient because given the list of identifiers, it
+     *         must call getRecord() individually for each as it constructs its
+     *         response. It's much more efficient to construct the entire
+     *         response in one fell swoop by overriding listRecords() as I've
+     *         done here.
      * @exception OAIInternalServerError
      *                signals an http status code 500 problem
      */
@@ -523,7 +559,10 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
             /* load the headers and identifiers ArrayLists. */
             for (count = 0; count < maxListSize && rs.next(); ++count) {
                 HashMap nativeItem = getColumnValues(rs);
-                /* Use the RecordFactory to extract header/identifier pairs for each item */
+                /*
+                 * Use the RecordFactory to extract header/identifier pairs for
+                 * each item
+                 */
                 //                RecordFactory rf = getRecordFactory();
                 Iterator setSpecs = getSetSpecs(nativeItem);
                 String[] header = getRecordFactory().createHeader(nativeItem, setSpecs);
@@ -562,7 +601,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                 resumptionTokenSb.append(metadataPrefix);
 
                 /*****************************************************************
-                 * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                 * Use the following line if you wish to include the optional
+                 * resumptionToken attributes in the response. Otherwise, use
+                 * the line after it that I've commented out.
                  *****************************************************************/
                 listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, 0));
                 //          listIdentifiersMap.put("resumptionMap",
@@ -588,8 +629,11 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * Retrieve the next set of identifiers associated with the resumptionToken
      * 
      * @param resumptionToken
-     *            implementation-dependent format taken from the previous listIdentifiers() Map result.
-     * @return a Map object containing entries for "headers" and "identifiers" Iterators (both containing Strings) as well as an optional "resumptionMap" Map.
+     *            implementation-dependent format taken from the previous
+     *            listIdentifiers() Map result.
+     * @return a Map object containing entries for "headers" and "identifiers"
+     *         Iterators (both containing Strings) as well as an optional
+     *         "resumptionMap" Map.
      * @exception BadResumptionTokenException
      *                the value of the resumptionToken is invalid or expired.
      * @exception OAIInternalServerError
@@ -640,7 +684,10 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
             /* load the headers and identifiers ArrayLists. */
             for (count = 0; count < maxListSize && rs.next(); ++count) {
                 HashMap nativeItem = getColumnValues(rs);
-                /* Use the RecordFactory to extract header/identifier pairs for each item */
+                /*
+                 * Use the RecordFactory to extract header/identifier pairs for
+                 * each item
+                 */
                 Iterator setSpecs = getSetSpecs(nativeItem);
                 String[] header = getRecordFactory().createHeader(nativeItem, setSpecs);
                 headers.add(header[0]);
@@ -670,7 +717,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                 resumptionTokenSb.append(metadataPrefix);
 
                 /*****************************************************************
-                 * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                 * Use the following line if you wish to include the optional
+                 * resumptionToken attributes in the response. Otherwise, use
+                 * the line after it that I've commented out.
                  *****************************************************************/
                 listIdentifiersMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, oldCount));
                 //          listIdentifiersMap.put("resumptionMap",
@@ -729,9 +778,15 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * Retrieve a list of records that satisfy the specified criteria. Note, though, that unlike the other OAI verb type methods implemented here, both of the listRecords methods are already implemented in AbstractCatalog rather than abstracted. This is because it is possible to implement
-     * ListRecords as a combination of ListIdentifiers and GetRecord combinations. Nevertheless, I suggest that you override both the AbstractCatalog.listRecords methods here since it will probably improve the performance if you create the response in one fell swoop rather than construct it one
-     * GetRecord at a time.
+     * Retrieve a list of records that satisfy the specified criteria. Note,
+     * though, that unlike the other OAI verb type methods implemented here,
+     * both of the listRecords methods are already implemented in
+     * AbstractCatalog rather than abstracted. This is because it is possible to
+     * implement ListRecords as a combination of ListIdentifiers and GetRecord
+     * combinations. Nevertheless, I suggest that you override both the
+     * AbstractCatalog.listRecords methods here since it will probably improve
+     * the performance if you create the response in one fell swoop rather than
+     * construct it one GetRecord at a time.
      * 
      * @param from
      *            beginning date using the proper granularity
@@ -741,7 +796,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      *            the set name or null if no such limit is requested
      * @param metadataPrefix
      *            the OAI metadataPrefix or null if no such limit is requested
-     * @return a Map object containing entries for a "records" Iterator object (containing XML <record/> Strings) and an optional "resumptionMap" Map.
+     * @return a Map object containing entries for a "records" Iterator object
+     *         (containing XML <record/> Strings) and an optional
+     *         "resumptionMap" Map.
      * @exception OAIInternalServerError
      *                signals an http status code 500 problem
      * @exception CannotDisseminateFormatException
@@ -806,7 +863,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                 resumptionTokenSb.append(metadataPrefix);
 
                 /*****************************************************************
-                 * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                 * Use the following line if you wish to include the optional
+                 * resumptionToken attributes in the response. Otherwise, use
+                 * the line after it that I've commented out.
                  *****************************************************************/
                 listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, 0));
                 //          listRecordsMap.put("resumptionMap",
@@ -831,12 +890,16 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * Retrieve the next set of records associated with the resumptionToken
      * 
      * @param resumptionToken
-     *            implementation-dependent format taken from the previous listRecords() Map result.
-     * @return a Map object containing entries for "headers" and "identifiers" Iterators (both containing Strings) as well as an optional "resumptionMap" Map.
+     *            implementation-dependent format taken from the previous
+     *            listRecords() Map result.
+     * @return a Map object containing entries for "headers" and "identifiers"
+     *         Iterators (both containing Strings) as well as an optional
+     *         "resumptionMap" Map.
      * @exception OAIInternalServerError
      *                signals an http status code 500 problem
      * @exception BadResumptionTokenException
-     *                the value of the resumptionToken argument is invalid or expired.
+     *                the value of the resumptionToken argument is invalid or
+     *                expired.
      */
     @Override
     public Map listRecords(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError {
@@ -915,7 +978,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                 resumptionTokenSb.append(metadataPrefix);
 
                 /*****************************************************************
-                 * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                 * Use the following line if you wish to include the optional
+                 * resumptionToken attributes in the response. Otherwise, use
+                 * the line after it that I've commented out.
                  *****************************************************************/
                 listRecordsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), -1, oldCount));
                 //          listRecordsMap.put("resumptionMap",
@@ -937,7 +1002,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * Utility method to construct a Record object for a specified metadataFormat from a native record
+     * Utility method to construct a Record object for a specified
+     * metadataFormat from a native record
      * 
      * @param nativeItem
      *            native item from the dataase
@@ -945,7 +1011,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      *            the desired metadataPrefix for performing the crosswalk
      * @return the <record/> String
      * @exception CannotDisseminateFormatException
-     *                the record is not available for the specified metadataPrefix.
+     *                the record is not available for the specified
+     *                metadataPrefix.
      */
     private String constructRecord(HashMap nativeItem, String metadataPrefix) throws CannotDisseminateFormatException, OAIInternalServerError {
         String schemaURL = null;
@@ -961,7 +1028,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     /**
      * Retrieve a list of sets that satisfy the specified criteria
      * 
-     * @return a Map object containing "sets" Iterator object (contains <setSpec/> XML Strings) as well as an optional resumptionMap Map.
+     * @return a Map object containing "sets" Iterator object (contains
+     *         <setSpec/> XML Strings) as well as an optional resumptionMap Map.
      * @exception OAIBadRequestException
      *                signals an http status code 400 problem
      * @exception OAIInternalServerError
@@ -996,7 +1064,10 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
 
                 /* load the sets ArrayLists. */
                 for (count = 0; count < maxListSize && rs.next(); ++count) {
-                    /* Use the RecordFactory to extract header/set pairs for each item */
+                    /*
+                     * Use the RecordFactory to extract header/set pairs for
+                     * each item
+                     */
                     HashMap nativeItem = getColumnValues(rs);
                     sets.add(getSetXML(nativeItem));
                     if (debug) System.out.println("JDBCLimitedOAICatalog.listSets: adding an entry");
@@ -1018,7 +1089,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                     resumptionTokenSb.append(Integer.toString(numRows));
 
                     /*****************************************************************
-                     * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                     * Use the following line if you wish to include the
+                     * optional resumptionToken attributes in the response.
+                     * Otherwise, use the line after it that I've commented out.
                      *****************************************************************/
                     listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, 0));
                     //          listSetsMap.put("resumptionMap",
@@ -1040,8 +1113,10 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * Retrieve the next set of sets associated with the resumptionToken
      * 
      * @param resumptionToken
-     *            implementation-dependent format taken from the previous listSets() Map result.
-     * @return a Map object containing "sets" Iterator object (contains <setSpec/> XML Strings) as well as an optional resumptionMap Map.
+     *            implementation-dependent format taken from the previous
+     *            listSets() Map result.
+     * @return a Map object containing "sets" Iterator object (contains
+     *         <setSpec/> XML Strings) as well as an optional resumptionMap Map.
      * @exception BadResumptionTokenException
      *                the value of the resumptionToken is invalid or expired.
      * @exception OAIInternalServerError
@@ -1103,7 +1178,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
                     resumptionTokenSb.append(Integer.toString(numRows));
 
                     /*****************************************************************
-                     * Use the following line if you wish to include the optional resumptionToken attributes in the response. Otherwise, use the line after it that I've commented out.
+                     * Use the following line if you wish to include the
+                     * optional resumptionToken attributes in the response.
+                     * Otherwise, use the line after it that I've commented out.
                      *****************************************************************/
                     listSetsMap.put("resumptionMap", getResumptionMap(resumptionTokenSb.toString(), numRows, oldCount));
                     //          listSetsMap.put("resumptionMap",
@@ -1124,7 +1201,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * 
      * @param rs
      *            ResultSet containing the nativeItem
-     * @return an Iterator containing the list of setSpec values for this nativeItem
+     * @return an Iterator containing the list of setSpec values for this
+     *         nativeItem
      */
     private Iterator getSetSpecs(HashMap nativeItem) throws OAIInternalServerError {
         Connection con = null;
@@ -1155,7 +1233,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
      * 
      * @param rs
      *            ResultSet containing the nativeItem
-     * @return an Iterator containing the list of about values for this nativeItem
+     * @return an Iterator containing the list of about values for this
+     *         nativeItem
      */
     private Iterator getAbouts(HashMap nativeItem) throws OAIInternalServerError {
         Connection con = null;
@@ -1216,7 +1295,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * get the setSpec XML string. Extend this class and override this method if the setSpec can't be directly taken from the result set as a String
+     * get the setSpec XML string. Extend this class and override this method if
+     * the setSpec can't be directly taken from the result set as a String
      * 
      * @param rs
      *            ResultSet
@@ -1232,7 +1312,8 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * get the setName XML string. Extend this class and override this method if the setName can't be directly taken from the result set as a String
+     * get the setName XML string. Extend this class and override this method if
+     * the setName can't be directly taken from the result set as a String
      * 
      * @param rs
      *            ResultSet
@@ -1243,7 +1324,9 @@ public class JDBCLimitedOAICatalog extends AbstractCatalog {
     }
 
     /**
-     * get the setDescription XML string. Extend this class and override this method if the setDescription can't be directly taken from the result set as a String
+     * get the setDescription XML string. Extend this class and override this
+     * method if the setDescription can't be directly taken from the result set
+     * as a String
      * 
      * @param rs
      *            ResultSet

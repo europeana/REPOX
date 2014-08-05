@@ -16,33 +16,35 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
- * FileRecordFactory converts native XML "items" to "record" Strings.
- * This factory assumes the native XML item looks exactly like the <record>
- * element of an OAI GetRecord response, with the possible exception that the
- * <metadata> element contains multiple metadataFormats from which to choose.
+ * FileRecordFactory converts native XML "items" to "record" Strings. This
+ * factory assumes the native XML item looks exactly like the <record> element
+ * of an OAI GetRecord response, with the possible exception that the <metadata>
+ * element contains multiple metadataFormats from which to choose.
  */
 public class FileRecordFactory extends RecordFactory {
     private String repositoryIdentifier = null;
-    
+
     /**
      * Construct an FileRecordFactory capable of producing the Crosswalk(s)
      * specified in the properties file.
-     * @param properties Contains information to configure the factory:
-     *                   specifically, the names of the crosswalk(s) supported
-     * @throws IllegalArgumentException Something is wrong with the argument.
+     * 
+     * @param properties
+     *            Contains information to configure the factory: specifically,
+     *            the names of the crosswalk(s) supported
+     * @throws IllegalArgumentException
+     *             Something is wrong with the argument.
      */
     public FileRecordFactory(Properties properties) throws IllegalArgumentException {
-	super(properties);
-	repositoryIdentifier = properties.getProperty("FileRecordFactory.repositoryIdentifier");
-	if (repositoryIdentifier == null) {
-	    throw new IllegalArgumentException("FileRecordFactory.repositoryIdentifier is missing from the properties file");
-	}
+        super(properties);
+        repositoryIdentifier = properties.getProperty("FileRecordFactory.repositoryIdentifier");
+        if (repositoryIdentifier == null) { throw new IllegalArgumentException("FileRecordFactory.repositoryIdentifier is missing from the properties file"); }
     }
 
     /**
      * Utility method to parse the 'local identifier' from the OAI identifier
-     *
-     * @param identifier OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
+     * 
+     * @param identifier
+     *            OAI identifier (e.g. oai:oaicat.oclc.org:ID/12345)
      * @return local identifier (e.g. ID/12345).
      */
     @Override
@@ -59,24 +61,26 @@ public class FileRecordFactory extends RecordFactory {
 
     /**
      * Construct an OAI identifier from the native item
-     *
-     * @param nativeItem native Item object
+     * 
+     * @param nativeItem
+     *            native Item object
      * @return OAI identifier
      */
     @Override
     public String getOAIIdentifier(Object nativeItem) {
-	StringBuffer sb = new StringBuffer();
-	sb.append("oai:");
-	sb.append(repositoryIdentifier);
-	sb.append(":");
-	sb.append(getLocalIdentifier(nativeItem));
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("oai:");
+        sb.append(repositoryIdentifier);
+        sb.append(":");
+        sb.append(getLocalIdentifier(nativeItem));
+        return sb.toString();
     }
 
     /**
      * Extract the local identifier from the native item
-     *
-     * @param nativeItem native Item object
+     * 
+     * @param nativeItem
+     *            native Item object
      * @return local identifier
      */
     @Override
@@ -86,65 +90,77 @@ public class FileRecordFactory extends RecordFactory {
 
     /**
      * get the datestamp from the item
-     *
-     * @param nativeItem a native item presumably containing a datestamp somewhere
+     * 
+     * @param nativeItem
+     *            a native item presumably containing a datestamp somewhere
      * @return a String containing the datestamp for the item
-     * @throws IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException
+     *             Something is wrong with the argument.
      */
     @Override
-    public String getDatestamp(Object nativeItem) throws IllegalArgumentException  {
+    public String getDatestamp(Object nativeItem) throws IllegalArgumentException {
         return (String)((HashMap)nativeItem).get("lastModified");
     }
 
     /**
      * get the setspec from the item
-     *
-     * @param nativeItem a native item presumably containing a setspec somewhere
+     * 
+     * @param nativeItem
+     *            a native item presumably containing a setspec somewhere
      * @return a String containing the setspec for the item
-     * @throws IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException
+     *             Something is wrong with the argument.
      */
     @Override
-    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException  {
-	return null;
+    public Iterator getSetSpecs(Object nativeItem) throws IllegalArgumentException {
+        return null;
     }
 
     /**
      * Get the about elements from the item
-     *
-     * @param nativeItem a native item presumably containing about information somewhere
+     * 
+     * @param nativeItem
+     *            a native item presumably containing about information
+     *            somewhere
      * @return a Iterator of Strings containing &lt;about&gt;s for the item
-     * @throws IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException
+     *             Something is wrong with the argument.
      */
     @Override
     public Iterator getAbouts(Object nativeItem) throws IllegalArgumentException {
-	return null;
+        return null;
     }
 
     /**
      * Is the record deleted?
-     *
-     * @param nativeItem a native item presumably containing a possible delete indicator
+     * 
+     * @param nativeItem
+     *            a native item presumably containing a possible delete
+     *            indicator
      * @return true if record is deleted, false if not
-     * @throws IllegalArgumentException Something is wrong with the argument.
+     * @throws IllegalArgumentException
+     *             Something is wrong with the argument.
      */
     @Override
     public boolean isDeleted(Object nativeItem) throws IllegalArgumentException {
-	return false;
+        return false;
     }
 
     /**
-     * Allows classes that implement RecordFactory to override the default create() method.
-     * This is useful, for example, if the entire &lt;record&gt; is already packaged as the native
-     * record. Return null if you want the default handler to create it by calling the methods
-     * above individually.
+     * Allows classes that implement RecordFactory to override the default
+     * create() method. This is useful, for example, if the entire
+     * &lt;record&gt; is already packaged as the native record. Return null if
+     * you want the default handler to create it by calling the methods above
+     * individually.
      * 
-     * @param nativeItem the native record
-     * @return a String containing the OAI &lt;record&gt; or null if the default method should be
-     * used.
+     * @param nativeItem
+     *            the native record
+     * @return a String containing the OAI &lt;record&gt; or null if the default
+     *         method should be used.
      */
     @Override
     public String quickCreate(Object nativeItem, String schemaLocation, String metadataPrefix) {
-	// Don't perform quick creates
-	return null;
+        // Don't perform quick creates
+        return null;
     }
 }

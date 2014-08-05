@@ -22,9 +22,9 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 /**
- * This class represents an ListSets response on either the server or
- * on the client
- *
+ * This class represents an ListSets response on either the server or on the
+ * client
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class ListSets extends HarvesterVerb {
@@ -34,24 +34,24 @@ public class ListSets extends HarvesterVerb {
     public ListSets() {
         super();
     }
-    
+
     /**
      * Client-side ListSets verb constructor
-     *
-     * @param baseURL the baseURL of the server to be queried
-     * @throws IOException 
-     * @throws ParserConfigurationException 
-     * @throws SAXException 
-     * @throws TransformerException 
+     * 
+     * @param baseURL
+     *            the baseURL of the server to be queried
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
      */
     public ListSets(String baseURL) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         super(baseURL + "?verb=ListSets");
     }
 
-
     /**
      * Get the oai:resumptionToken from the response
-     *
+     * 
      * @return the oai:resumptionToken as a String
      * @throws TransformerException
      * @throws NoSuchFieldException

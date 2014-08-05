@@ -22,7 +22,8 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 /**
- * This class represents an GetRecord response on either the server or on the client
+ * This class represents an GetRecord response on either the server or on the
+ * client
  * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */

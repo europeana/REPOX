@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * This class represents an ListMetadataFormats response on either the server or
  * on the client
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class ListMetadataFormats extends HarvesterVerb {
@@ -34,22 +34,24 @@ public class ListMetadataFormats extends HarvesterVerb {
     public ListMetadataFormats() {
         super();
     }
-    
+
     /**
      * Client-side ListMetadataFormats verb constructor
-     *
-     * @param baseURL the baseURL of the server to be queried
-     * @throws IOException 
-     * @throws ParserConfigurationException 
-     * @throws SAXException 
-     * @throws TransformerException 
+     * 
+     * @param baseURL
+     *            the baseURL of the server to be queried
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
      */
     public ListMetadataFormats(String baseURL) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         this(baseURL, null);
     }
-    
+
     /**
      * Client-side ListMetadataFormats verb constructor (identifier version)
+     * 
      * @param baseURL
      * @param identifier
      * @throws IOException
@@ -57,8 +59,7 @@ public class ListMetadataFormats extends HarvesterVerb {
      * @throws SAXException
      * @throws TransformerException
      */
-    public ListMetadataFormats(String baseURL, String identifier) throws IOException, ParserConfigurationException, SAXException,
-    		TransformerException {
+    public ListMetadataFormats(String baseURL, String identifier) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         super(baseURL + "?verb=ListMetadataFormats" + (identifier != null ? "&identifier=" + identifier : ""));
     }
 }
