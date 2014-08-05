@@ -22,97 +22,102 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Iterator;
 
+/**
+ */
 public class MarcXchangeFileExtract implements FileExtractStrategy {
-//	MetadataFormat.MarcXchange;
+    //	MetadataFormat.MarcXchange;
 
-	private static final Logger log = Logger.getLogger(MarcXchangeFileExtract.class);
+    private static final Logger log = Logger.getLogger(MarcXchangeFileExtract.class);
 
-	public void iterateRecords(RecordHandler recordHandler, DataSource dataSource, File file, CharacterEncoding characterEncoding,
-			File logFile){
-		Iterator<RecordRepox> it = new RecordIterator(dataSource, file, characterEncoding, logFile);
-        while(it.hasNext()){
+    @Override
+    public void iterateRecords(RecordHandler recordHandler, DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) {
+        Iterator<RecordRepox> it = new RecordIterator(dataSource, file, characterEncoding, logFile);
+        while (it.hasNext()) {
             recordHandler.handleRecord(it.next());
         }
-	}
+    }
 
-	public boolean isXmlExclusive() {
-		return true;
-	}
+    @Override
+    public boolean isXmlExclusive() {
+        return true;
+    }
 
-	private class RecordIterator implements Iterator<RecordRepox> {
-		private DataSource dataSource;
-		private File file;
-		private CharacterEncoding characterEncoding;
-		private File logFile;
+    private class RecordIterator implements Iterator<RecordRepox> {
+        private DataSource        dataSource;
+        private File              file;
+        private CharacterEncoding characterEncoding;
+        private File              logFile;
 
-		private Iterator<Record> recordIterator;
+        private Iterator<Record>  recordIterator;
 
-		public RecordIterator(DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) {
-			this.dataSource = dataSource;
-			this.file = file;
-			this.characterEncoding = characterEncoding;
-			this.logFile = logFile;
+        public RecordIterator(DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) {
+            this.dataSource = dataSource;
+            this.file = file;
+            this.characterEncoding = characterEncoding;
+            this.logFile = logFile;
 
-			try {
-//				StringUtil.simpleLog("Extracting records from file: " + file.getName(), this.getClass(), logFile);
-				TimeUtil.getTimeSinceLastTimerArray(2);
-				if(file.length() > 1048576) { // File larger than 1MB - Use asynchronous iteration
-					recordIterator = new IteratorMarcXChange(file);
-				}
-				else {
-					recordIterator = MarcSaxParser.parse(new FileInputStream(file)).iterator();
-				}
-				log.debug("Parsed MarcXChange: " + TimeUtil.getTimeSinceLastTimerArray(2));
-			}
-			catch (Exception e) {
-				recordIterator = null;
-				StringUtil.simpleLog("Error parsing records from file: " + file.getName() + " ERROR: " + e.getMessage(),
-						this.getClass(), logFile);
-			}
-		}
+            try {
+                //				StringUtil.simpleLog("Extracting records from file: " + file.getName(), this.getClass(), logFile);
+                TimeUtil.getTimeSinceLastTimerArray(2);
+                if (file.length() > 1048576) { // File larger than 1MB - Use asynchronous iteration
+                    recordIterator = new IteratorMarcXChange(file);
+                } else {
+                    recordIterator = MarcSaxParser.parse(new FileInputStream(file)).iterator();
+                }
+                log.debug("Parsed MarcXChange: " + TimeUtil.getTimeSinceLastTimerArray(2));
+            } catch (Exception e) {
+                recordIterator = null;
+                StringUtil.simpleLog("Error parsing records from file: " + file.getName() + " ERROR: " + e.getMessage(), this.getClass(), logFile);
+            }
+        }
 
-		public boolean hasNext() {
+        @Override
+        public boolean hasNext() {
             return recordIterator != null && recordIterator.hasNext();
-		}
+        }
 
-		public RecordRepox next() {
-			try {
-				TimeUtil.getTimeSinceLastTimerArray(2);
-				Record currentRecord = recordIterator.next();
-				log.debug("Iterate MarcXChange: " + TimeUtil.getTimeSinceLastTimerArray(2));
-				RecordCharactersConverter.convertRecord(currentRecord, new UnderCode32Remover());
+        @Override
+        public RecordRepox next() {
+            try {
+                TimeUtil.getTimeSinceLastTimerArray(2);
+                Record currentRecord = recordIterator.next();
+                log.debug("Iterate MarcXChange: " + TimeUtil.getTimeSinceLastTimerArray(2));
+                RecordCharactersConverter.convertRecord(currentRecord, new UnderCode32Remover());
 
-				boolean isRecordDeleted = (currentRecord.getLeader().charAt(5) == 'd');
-				RecordRepoxMarc recordMarc = new RecordRepoxMarc(currentRecord);
+                boolean isRecordDeleted = (currentRecord.getLeader().charAt(5) == 'd');
+                RecordRepoxMarc recordMarc = new RecordRepoxMarc(currentRecord);
                 recordMarc.setMarcFormat(dataSource.getMarcFormat());
-				RecordRepox record = dataSource.getRecordIdPolicy().createRecordRepox(recordMarc.getDom(), recordMarc.getId(), false, isRecordDeleted);
-				log.debug("Adding to import list record with id:" + record.getId());
+                RecordRepox record = dataSource.getRecordIdPolicy().createRecordRepox(recordMarc.getDom(), recordMarc.getId(), false, isRecordDeleted);
+                log.debug("Adding to import list record with id:" + record.getId());
 
-				return record;
+                return record;
 
-			}
-			catch (Exception e) {
-				StringUtil.simpleLog("Error importing record from file: " + file.getName() + " ERROR: " + e.getMessage(),
-						this.getClass(), logFile);
-				log.error(file.getName() + ": " + e.getMessage(), e);
-				return null;
-			}
-		}
+            } catch (Exception e) {
+                StringUtil.simpleLog("Error importing record from file: " + file.getName() + " ERROR: " + e.getMessage(), this.getClass(), logFile);
+                log.error(file.getName() + ": " + e.getMessage(), e);
+                return null;
+            }
+        }
 
-		public void remove() {
-		}
+        @Override
+        public void remove() {
+        }
 
-	}
-	
-	public static void main(String[] args) throws Exception {
-		Iterator<Record> recordIterator = MarcSaxParser.parse(new FileInputStream(new File("f:/temp/2marcxchange/999.xml"))).iterator();
-		Record currentRecord = recordIterator.next(); 
-		Element marcRootElement = XmlUtil.getRootElement(currentRecord.toXmlbytes());
-		Element recordElement = marcRootElement;
-		if(marcRootElement.elements().size() == 1 && marcRootElement.getName().equals("collection")) {
-			recordElement = (Element) marcRootElement.elements().get(0);
-		}
-		
-		System.out.println(recordElement.asXML());
-	}
+    }
+
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        Iterator<Record> recordIterator = MarcSaxParser.parse(new FileInputStream(new File("f:/temp/2marcxchange/999.xml"))).iterator();
+        Record currentRecord = recordIterator.next();
+        Element marcRootElement = XmlUtil.getRootElement(currentRecord.toXmlbytes());
+        Element recordElement = marcRootElement;
+        if (marcRootElement.elements().size() == 1 && marcRootElement.getName().equals("collection")) {
+            recordElement = (Element)marcRootElement.elements().get(0);
+        }
+
+        System.out.println(recordElement.asXML());
+    }
 }

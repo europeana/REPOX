@@ -14,7 +14,7 @@ import org.oclc.oai.util.OAIUtil;
 
 /**
  * An OAI cannotDisseminateFormatException
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class NoItemsMatchException extends Exception {
@@ -23,6 +23,9 @@ public class NoItemsMatchException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public NoItemsMatchException() {
         super("<" + OAIUtil.getTag("error") + " code=\"noRecordsMatch\">The combination of the values of the from, until, set, and metadataPrefix arguments results in an empty list." + "</" + OAIUtil.getTag("error") + ">");
     }

@@ -1,21 +1,39 @@
 package pt.utl.ist.repox.task.exception;
 
+/**
+ */
 public class IllegalFileFormatException extends Exception {
 
-	public IllegalFileFormatException() {
-		super();
-	}
+    /**
+     * Creates a new instance of this class.
+     */
+    public IllegalFileFormatException() {
+        super();
+    }
 
-	public IllegalFileFormatException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     * @param cause
+     */
+    public IllegalFileFormatException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public IllegalFileFormatException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param cause
+     */
+    public IllegalFileFormatException(Throwable cause) {
+        super(cause);
+    }
 
-	public IllegalFileFormatException(String message) {
-		super(message);
-	}
-	
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     */
+    public IllegalFileFormatException(String message) {
+        super(message);
+    }
+
 }

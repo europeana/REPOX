@@ -20,18 +20,26 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+/**
+ */
 public class RecordCountManager {
-    private static final Logger log = Logger.getLogger(RecordCountManager.class);
-    private static final int CYCLE_TIME = 60 * 5;  						// 1 minute
-    private static final int MAX_WAIT_TIME_CHANGES = 60 * 5;  		// 5 minutes
-    private static final int MAX_WAIT_TIME_NO_CHANGES = 60 * 60; 	// 60 minutes
-    private static final long MIN_WAIT_TIME_FULL_COUNT = 60 * 60 * 24 * 1000;		// number of milliseconds in a day
+    private static final Logger          log                      = Logger.getLogger(RecordCountManager.class);
+    private static final int             CYCLE_TIME               = 60 * 5;                                    // 1 minute
+    private static final int             MAX_WAIT_TIME_CHANGES    = 60 * 5;                                    // 5 minutes
+    private static final int             MAX_WAIT_TIME_NO_CHANGES = 60 * 60;                                   // 60 minutes
+    private static final long            MIN_WAIT_TIME_FULL_COUNT = 60 * 60 * 24 * 1000;                       // number of milliseconds in a day
 
-    private File configurationFile;
-    private Calendar lastGenerationCalendar;
-    private Calendar lastFullCount;
+    private File                         configurationFile;
+    private Calendar                     lastGenerationCalendar;
+    private Calendar                     lastFullCount;
     private HashMap<String, RecordCount> recordCounts;
 
+    /**
+     * Creates a new instance of this class.
+     * @param configurationFile
+     * @throws DocumentException
+     * @throws ParseException
+     */
     public RecordCountManager(File configurationFile) throws DocumentException, ParseException {
         super();
         this.configurationFile = configurationFile;
@@ -41,37 +49,28 @@ public class RecordCountManager {
     private HashMap<String, RecordCount> loadRecordCounts() throws DocumentException, ParseException {
         HashMap<String, RecordCount> recordCounts = new HashMap<String, RecordCount>();
 
-        if(!configurationFile.exists()) {
-            return recordCounts;
-        }
+        if (!configurationFile.exists()) { return recordCounts; }
 
         Element rootNode;
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(configurationFile);
             rootNode = document.getRootElement();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error loading Record Count configuration file", e);
             return recordCounts;
         }
 
-        if(rootNode.elements("recordcount") != null) {
+        if (rootNode.elements("recordcount") != null) {
             for (Object recordCountObject : rootNode.elements("recordcount")) {
-                Element recordCountElement = (Element) recordCountObject;
+                Element recordCountElement = (Element)recordCountObject;
                 Calendar lastCountDate = Calendar.getInstance();
                 lastCountDate.setTime(new SimpleDateFormat(TimeUtil.LONG_DATE_FORMAT).parse(recordCountElement.elementText("lastCountDate")));
                 Calendar lastCountWithChangesDate = Calendar.getInstance();
                 lastCountWithChangesDate.setTime(new SimpleDateFormat(TimeUtil.LONG_DATE_FORMAT).parse(recordCountElement.elementText("lastCountWithChangesDate")));
                 String dataSourceId = recordCountElement.elementText("dataSourceId");
                 String deletedRecords = recordCountElement.elementText("deletedRecords");
-                RecordCount recordCount = new RecordCount(
-                        dataSourceId,
-                        Integer.parseInt(recordCountElement.elementText("count")),
-                        Integer.parseInt((deletedRecords == null || deletedRecords.isEmpty()) ? "0" : deletedRecords),
-                        Integer.parseInt(recordCountElement.elementText("lastLineCounted")),
-                        lastCountDate,
-                        lastCountWithChangesDate);
+                RecordCount recordCount = new RecordCount(dataSourceId, Integer.parseInt(recordCountElement.elementText("count")), Integer.parseInt((deletedRecords == null || deletedRecords.isEmpty()) ? "0" : deletedRecords), Integer.parseInt(recordCountElement.elementText("lastLineCounted")), lastCountDate, lastCountWithChangesDate);
                 recordCounts.put(dataSourceId, recordCount);
             }
         }
@@ -83,14 +82,13 @@ public class RecordCountManager {
         RecordCount recordCount;
 
         int[] recordCountLastrowPair;
-        recordCountLastrowPair = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
-                .getRecordCountLastrowPair(dataSource, fromRow, null, null);
+        recordCountLastrowPair = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().getRecordCountLastrowPair(dataSource, fromRow, null, null);
 
         int count = recordCountLastrowPair[0];
         int lastRow = recordCountLastrowPair[1];
         int deleteRecords = recordCountLastrowPair[2];
         Calendar now = Calendar.getInstance();
-        recordCount = new RecordCount(dataSource.getId(), count, deleteRecords, lastRow,  now, now);
+        recordCount = new RecordCount(dataSource.getId(), count, deleteRecords, lastRow, now, now);
         return recordCount;
     }
 
@@ -100,7 +98,7 @@ public class RecordCountManager {
         Element rootNode = document.addElement("recordcounts");
 
         for (RecordCount recordCount : recordCounts.values()) {
-            if(recordCount != null){
+            if (recordCount != null) {
                 Element currentRecordNode = rootNode.addElement("recordcount");
                 String lastCountDateString = new SimpleDateFormat(TimeUtil.LONG_DATE_FORMAT).format(recordCount.getLastCountDate().getTime());
                 String lastCountWithChangesDateString = new SimpleDateFormat(TimeUtil.LONG_DATE_FORMAT).format(recordCount.getLastCountWithChangesDate().getTime());
@@ -118,23 +116,20 @@ public class RecordCountManager {
 
     private RecordCount generateCount(String dataSourceId, boolean forceFullCount, boolean withDeleted) throws IOException, DocumentException, SQLException {
         DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
-        if(dataSource == null) {
-            throw new RuntimeException("Data Source not found: " + dataSourceId);
-        }
+        if (dataSource == null) { throw new RuntimeException("Data Source not found: " + dataSourceId); }
 
         RecordCount recordCount;
 
-        if(!forceFullCount && recordCounts.containsKey(dataSourceId)) {
+        if (!forceFullCount && recordCounts.containsKey(dataSourceId)) {
             recordCount = recordCounts.get(dataSourceId);
             long now = System.currentTimeMillis();
-            long lastChangesTimeDiff = (now -recordCount.getLastCountWithChangesDate().getTimeInMillis()) / 1000;
+            long lastChangesTimeDiff = (now - recordCount.getLastCountWithChangesDate().getTimeInMillis()) / 1000;
             long lastCountTimeDiff = (now - recordCount.getLastCountDate().getTimeInMillis()) / 1000;
 
-            if(lastChangesTimeDiff <= MAX_WAIT_TIME_CHANGES || lastCountTimeDiff > MAX_WAIT_TIME_NO_CHANGES) {
+            if (lastChangesTimeDiff <= MAX_WAIT_TIME_CHANGES || lastCountTimeDiff > MAX_WAIT_TIME_NO_CHANGES) {
                 recordCount = getUpdatedRecordCount(dataSource, recordCount);
             }
-        }
-        else {
+        } else {
             recordCount = getCountFromRow(dataSource, null);
         }
 
@@ -144,11 +139,10 @@ public class RecordCountManager {
     private RecordCount getUpdatedRecordCount(DataSource dataSource, RecordCount currentRecordCount) throws SQLException {
         RecordCount newRecordCount = getCountFromRow(dataSource, currentRecordCount.getLastLineCounted());
 
-        if(newRecordCount.getCount() > 0) {
+        if (newRecordCount.getCount() > 0) {
             newRecordCount.setCount(currentRecordCount.getCount() + newRecordCount.getCount());
             currentRecordCount = newRecordCount;
-        }
-        else {
+        } else {
             currentRecordCount.setLastCountDate(newRecordCount.getLastCountDate());
             currentRecordCount.setDeleted(newRecordCount.getDeleted());
         }
@@ -163,31 +157,32 @@ public class RecordCountManager {
      * @return boolean
      */
     public boolean isTimeForFullCount(Calendar calendar) {
-        if(calendar.get(Calendar.HOUR_OF_DAY) == 0 && lastFullCount == null) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) == 0 && lastFullCount == null) {
             return true;
-        }
-        else if(calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                && (lastFullCount == null || calendar.getTimeInMillis() - lastFullCount.getTimeInMillis() > MIN_WAIT_TIME_FULL_COUNT)) {
-            return true;
-        }
+        } else if (calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && (lastFullCount == null || calendar.getTimeInMillis() - lastFullCount.getTimeInMillis() > MIN_WAIT_TIME_FULL_COUNT)) { return true; }
 
         return false;
     }
 
+    /**
+     * @param targetTime
+     * @return boolean indicating if its time to run
+     */
     public boolean isTimeToRun(Calendar targetTime) {
-        if(lastGenerationCalendar == null) {
-            return true;
-        }
+        if (lastGenerationCalendar == null) { return true; }
 
         long timeDiff = (targetTime.getTimeInMillis() - lastGenerationCalendar.getTimeInMillis()) / 1000;
         return timeDiff > CYCLE_TIME;
     }
 
+    /**
+     * @param forceFullCount
+     * @throws IOException
+     * @throws DocumentException
+     */
     public void generateCounts(boolean forceFullCount) throws IOException, DocumentException {
         Calendar generationStartTime = Calendar.getInstance();
         log.info("Generating Data Source counts" + (forceFullCount ? " forcing full count." : ""));
-
-
 
         HashMap<String, DataSourceContainer> dataSourceContainers = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().loadDataSourceContainers();
         HashMap<String, RecordCount> newRecordCounts = new HashMap<String, RecordCount>();
@@ -195,11 +190,10 @@ public class RecordCountManager {
         for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
             try {
                 log.debug("Starting count on Data Source: " + dataSourceContainer.getDataSource().getId());
-                RecordCount recordCount = generateCount(dataSourceContainer.getDataSource().getId(), forceFullCount,true);
+                RecordCount recordCount = generateCount(dataSourceContainer.getDataSource().getId(), forceFullCount, true);
                 newRecordCounts.put(dataSourceContainer.getDataSource().getId(), recordCount);
                 log.debug("Finished count on Data Source: " + dataSourceContainer.getDataSource().getId() + " # records: " + recordCount.getCount());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.warn("Error generating Data Source record count", e);
             }
         }
@@ -207,27 +201,34 @@ public class RecordCountManager {
         recordCounts = newRecordCounts;
         saveRecordCounts(recordCounts);
         lastGenerationCalendar = generationStartTime;
-        if(forceFullCount) {
+        if (forceFullCount) {
             lastFullCount = generationStartTime;
         }
     }
 
+    /**
+     * @param dataSourceId
+     * @param deletedRecords
+     * @throws IOException
+     */
     public void updateDeletedRecordsCount(String dataSourceId, int deletedRecords) throws IOException {
         RecordCount recordCount = recordCounts.get(dataSourceId);
-        if(recordCount == null) {
-            return;
-        }
+        if (recordCount == null) { return; }
 
         recordCount.setDeleted(recordCount.getDeleted() + deletedRecords);
         recordCounts.put(dataSourceId, recordCount);
         saveRecordCounts(recordCounts);
     }
 
+    /**
+     * @param dataSourceId
+     * @param eraseRecords
+     * @param deletedRecords
+     * @throws IOException
+     */
     public void updateEraseRecordsCount(String dataSourceId, int eraseRecords, int deletedRecords) throws IOException {
         RecordCount recordCount = recordCounts.get(dataSourceId);
-        if(recordCount == null) {
-            return;
-        }
+        if (recordCount == null) { return; }
 
         recordCount.setCount(recordCount.getCount() - eraseRecords);
         recordCount.setDeleted(recordCount.getDeleted() - deletedRecords);
@@ -235,48 +236,68 @@ public class RecordCountManager {
         saveRecordCounts(recordCounts);
     }
 
+    /**
+     * @param oldId
+     * @param newId
+     * @throws IOException
+     */
     public void renameDataSourceCounts(String oldId, String newId) throws IOException {
         RecordCount oldDataSourceCount = recordCounts.remove(oldId);
-        if(oldDataSourceCount != null){
+        if (oldDataSourceCount != null) {
             oldDataSourceCount.setDataSourceId(newId);
             recordCounts.put(newId, oldDataSourceCount);
         }
         saveRecordCounts(recordCounts);
     }
 
+    /**
+     * @param dataSourceId
+     * @throws IOException
+     */
     public void removeDataSourceCounts(String dataSourceId) throws IOException {
         recordCounts.remove(dataSourceId);
         saveRecordCounts(recordCounts);
 
     }
 
+    /**
+     * @param dataSourceId
+     * @return RecordCount
+     * @throws IOException
+     * @throws DocumentException
+     * @throws SQLException
+     */
     public RecordCount getRecordCount(String dataSourceId) throws IOException, DocumentException, SQLException {
         return getRecordCount(dataSourceId, false);
     }
 
+    /**
+     * @param dataSourceId
+     * @param forceUpdate
+     * @return RecordCount
+     * @throws IOException
+     * @throws DocumentException
+     * @throws SQLException
+     */
     public RecordCount getRecordCount(String dataSourceId, boolean forceUpdate) throws IOException, DocumentException, SQLException {
         DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
-        if(dataSource == null) {
-            return new RecordCount(dataSourceId, 0, 0, 0, null, null);
-        }
+        if (dataSource == null) { return new RecordCount(dataSourceId, 0, 0, 0, null, null); }
 
-        if(forceUpdate) {
+        if (forceUpdate) {
             RecordCount updatedRecordCount;
 
-            if(recordCounts.containsKey(dataSourceId)) {
+            if (recordCounts.containsKey(dataSourceId)) {
                 RecordCount currentRecordCount = recordCounts.get(dataSourceId);
                 updatedRecordCount = getUpdatedRecordCount(dataSource, currentRecordCount);
-            }
-            else {
-                updatedRecordCount = generateCount(dataSourceId, true,true);
+            } else {
+                updatedRecordCount = generateCount(dataSourceId, true, true);
             }
 
             recordCounts.put(dataSourceId, updatedRecordCount);
             saveRecordCounts(recordCounts);
 
             return updatedRecordCount;
-        }
-        else {
+        } else {
             return recordCounts.get(dataSourceId);
         }
     }

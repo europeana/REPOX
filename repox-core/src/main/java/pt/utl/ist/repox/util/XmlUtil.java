@@ -20,10 +20,17 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.nio.charset.Charset;
 
+/**
+ */
 public class XmlUtil {
-    private static final Logger log = Logger.getLogger(XmlUtil.class);
+    private static final Logger log               = Logger.getLogger(XmlUtil.class);
     private static final String XML_FILE_ENCODING = "UTF-8";
 
+    /**
+     * @param destinationFile
+     * @param document
+     * @throws IOException
+     */
     public static void writePrettyPrint(File destinationFile, Document document) throws IOException {
         OutputFormat format = OutputFormat.createPrettyPrint();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(destinationFile), XML_FILE_ENCODING);
@@ -32,7 +39,12 @@ public class XmlUtil {
         writer.close();
     }
 
-    public static String readFileAsString(File inputFile) throws IOException{
+    /**
+     * @param inputFile
+     * @return String of the file contents
+     * @throws IOException
+     */
+    public static String readFileAsString(File inputFile) throws IOException {
         String finalResult = "";
         String str;
         BufferedReader in = new BufferedReader(new FileReader(inputFile));
@@ -43,6 +55,11 @@ public class XmlUtil {
         return finalResult;
     }
 
+    /**
+     * @param outputStream
+     * @param document
+     * @throws IOException
+     */
     public static void writePrettyPrint(OutputStream outputStream, Document document) throws IOException {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, XML_FILE_ENCODING);
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -51,6 +68,11 @@ public class XmlUtil {
         writer.close();
     }
 
+    /**
+     * @param outputStream
+     * @param element
+     * @throws IOException
+     */
     public static void writePrettyPrint(OutputStream outputStream, Element element) throws IOException {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, XML_FILE_ENCODING);
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -59,6 +81,12 @@ public class XmlUtil {
         writer.close();
     }
 
+    /**
+     * @param xmlString
+     * @return root Element
+     * @throws DocumentException
+     * @throws UnsupportedEncodingException
+     */
     public static Element getRootElement(String xmlString) throws DocumentException, UnsupportedEncodingException {
         SAXReader reader = new SAXReader();
         InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
@@ -66,10 +94,14 @@ public class XmlUtil {
         return document.getRootElement();
     }
 
+    /**
+     * @param bytes
+     * @return the root element
+     * @throws DocumentException
+     * @throws UnsupportedEncodingException
+     */
     public static Element getRootElement(byte[] bytes) throws DocumentException, UnsupportedEncodingException {
-        if(bytes == null) {
-            return null;
-        }
+        if (bytes == null) { return null; }
 
         SAXReader reader = new SAXReader();
         InputStream inputStream = new ByteArrayInputStream(bytes);
@@ -77,12 +109,22 @@ public class XmlUtil {
         return document.getRootElement();
     }
 
+    /**
+     * @param xmlFile
+     * @return the root element
+     * @throws DocumentException
+     */
     public static Element getRootElement(File xmlFile) throws DocumentException {
         SAXReader reader = new SAXReader();
         Document document = reader.read(xmlFile);
         return document.getRootElement();
     }
 
+    /**
+     * @param firstElement
+     * @param secondElement
+     * @return boolean if the elements provided are equal
+     */
     public static boolean elementsEqual(Element firstElement, Element secondElement) {
         try {
             OutputFormat format = OutputFormat.createCompactFormat();
@@ -104,11 +146,18 @@ public class XmlUtil {
         }
     }
 
+    /**
+     * @param element
+     * @param destinationFile
+     * @param charset
+     * @param escapeText
+     * @throws IOException
+     */
     public static void writeXml(Element element, File destinationFile, Charset charset, boolean escapeText) throws IOException {
         OutputFormat outputFormat = OutputFormat.createPrettyPrint();
         outputFormat.setEncoding(charset.toString());
 
-        Document document = DocumentHelper.createDocument((Element) element.detach());
+        Document document = DocumentHelper.createDocument((Element)element.detach());
 
         XMLWriter writer = new XMLWriter(new OutputStreamWriter(new FileOutputStream(destinationFile), charset), outputFormat);
         writer.setEscapeText(escapeText);
@@ -116,11 +165,15 @@ public class XmlUtil {
         writer.close();
     }
 
+    /**
+     * @param element
+     * @param destinationFile
+     * @param charset
+     * @throws IOException
+     */
     public static void writeXml(Element element, File destinationFile, Charset charset) throws IOException {
         writeXml(element, destinationFile, charset, true);
     }
-
-
 
     /**
      * This method ensures that the output String has only valid XML unicode characters as specified by the
@@ -133,68 +186,74 @@ public class XmlUtil {
      */
     public static String removeInvalidXMLCharacters(String s) {
 
-        StringBuilder out = new StringBuilder();                // Used to hold the output.
-        int codePoint;                                          // Used to reference the current character.
-        int i=0;
-        while(i<s.length()) {
-            codePoint = s.codePointAt(i);                       // This is the unicode code of the character.
-            if ((codePoint == 0x9) ||          				    // Consider testing larger ranges first to improve speed.
-                    (codePoint == 0xA) ||
-                    (codePoint == 0xD) ||
-                    ((codePoint >= 0x20) && (codePoint <= 0xD7FF)) ||
-                    ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) ||
-                    ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF))) {
+        StringBuilder out = new StringBuilder(); // Used to hold the output.
+        int codePoint; // Used to reference the current character.
+        int i = 0;
+        while (i < s.length()) {
+            codePoint = s.codePointAt(i); // This is the unicode code of the character.
+            if ((codePoint == 0x9) || // Consider testing larger ranges first to improve speed.
+            (codePoint == 0xA) || (codePoint == 0xD) || ((codePoint >= 0x20) && (codePoint <= 0xD7FF)) || ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) || ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF))) {
                 out.append(Character.toChars(codePoint));
-            }else {
+            } else {
                 out.append(' ');
             }
-            i+= Character.charCount(codePoint);                 // Increment with the number of code units(java chars) needed to represent a Unicode char.
+            i += Character.charCount(codePoint); // Increment with the number of code units(java chars) needed to represent a Unicode char.
         }
         return out.toString();
     }
 
-
-    public static void validateXmlFile(String inputFilePath, String schema){
+    /**
+     * @param inputFilePath
+     * @param schema
+     */
+    public static void validateXmlFile(String inputFilePath, String schema) {
         try {
             SAXParserFactory sf = SAXParserFactory.newInstance();
             sf.setNamespaceAware(true);
             sf.setValidating(true);
             SAXParser sp = sf.newSAXParser();
-            sp.setProperty(
-                    "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-                    "http://www.w3.org/2001/XMLSchema");
-            sp.setProperty(
-                    "http://java.sun.com/xml/jaxp/properties/schemaSource",
-                    schema);
+            sp.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+            sp.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource", schema);
 
             DefaultHandler handler = new XmlDefaultHandler();
             sp.parse(new InputSource(new FileReader(inputFilePath)), handler);
             log.debug("Success");
-        }
-        catch (FactoryConfigurationError e) { log.error(e.toString()); }
-        catch (ParserConfigurationException e) { log.error(e.toString()); }
-        catch (SAXException e) { log.error(e.toString()); }
-        catch (IOException e) { log.error(e.toString()); }
-    }
-
-    public static class XmlDefaultHandler extends DefaultHandler{
-        /** @see org.xml.sax.ErrorHandler#error(SAXParseException)
-         */
-        public void error(SAXParseException spe) throws SAXException{
-            throw spe;
-        }
-
-        /** @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)
-         */
-        public void fatalError(SAXParseException spe) throws SAXException{
-            throw spe;
+        } catch (FactoryConfigurationError e) {
+            log.error(e.toString());
+        } catch (ParserConfigurationException e) {
+            log.error(e.toString());
+        } catch (SAXException e) {
+            log.error(e.toString());
+        } catch (IOException e) {
+            log.error(e.toString());
         }
     }
 
+    /**
+     */
+    public static class XmlDefaultHandler extends DefaultHandler {
+        /** 
+         * @see org.xml.sax.ErrorHandler#error(SAXParseException)
+         */
+        @Override
+        public void error(SAXParseException spe) throws SAXException {
+            throw spe;
+        }
 
+        /** 
+         * @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)
+         */
+        @Override
+        public void fatalError(SAXParseException spe) throws SAXException {
+            throw spe;
+        }
+    }
+
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
-        validateXmlFile("C:\\testeValidate\\test.xml",
-                "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd");
+        validateXmlFile("C:\\testeValidate\\test.xml", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd");
         /*
         System.out.println(
                 "<sfsdf>&nasdfij:);\""+((char)0x02)+"\'"

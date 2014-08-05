@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
+
 import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.dataProvider.*;
 import pt.utl.ist.repox.dataProvider.dataSource.*;
@@ -41,22 +42,28 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
+/**
+ */
 public class WebServicesImpl implements WebServices {
     private static final Logger log = Logger.getLogger(WebServicesImpl.class);
     private String requestURI;
 
+    @SuppressWarnings("javadoc")
     public String getRequestURI() {
         return requestURI;
     }
 
+    @SuppressWarnings("javadoc")
     public void setRequestURI(String requestURI) {
         this.requestURI = requestURI;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public WebServicesImpl() {
         super();
     }
-
 
     @Override
     public void writeDataProviders(OutputStream out) throws DocumentException, IOException {

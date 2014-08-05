@@ -1,21 +1,39 @@
 package pt.utl.ist.repox.services.web.rest;
 
+/**
+ */
 public class InvalidRequestException extends Exception {
 
-	public InvalidRequestException() {
-		super();
-	}
+    /**
+     * Creates a new instance of this class.
+     */
+    public InvalidRequestException() {
+        super();
+    }
 
-	public InvalidRequestException(String message) {
-		super(message);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     */
+    public InvalidRequestException(String message) {
+        super(message);
+    }
 
-	public InvalidRequestException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param cause
+     */
+    public InvalidRequestException(Throwable cause) {
+        super(cause);
+    }
 
-	public InvalidRequestException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     * @param cause
+     */
+    public InvalidRequestException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

@@ -6,6 +6,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
+
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.util.ConfigSingleton;
@@ -16,57 +17,70 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created to REPOX.
- * User: Edmundo
- * Date: 12-12-2011
- * Time: 14:18
+ * Created to REPOX. User: Edmundo Date: 12-12-2011 Time: 14:18
  */
 public class ExternalRestServicesManager {
-    private static final Logger log = Logger.getLogger(ExternalRestServicesManager.class);
+    private static final Logger       log = Logger.getLogger(ExternalRestServicesManager.class);
 
     // Map of sourceMetadataFormat to list of available ExternalRestServices for that source
     private List<ExternalRestService> externalRestServices;
-    private File configurationFile;
+    private File                      configurationFile;
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param configurationFile
+     * @throws IOException
+     * @throws DocumentException
+     */
     public ExternalRestServicesManager(File configurationFile) throws IOException, DocumentException {
         super();
         this.configurationFile = configurationFile;
         loadExternalRestServices();
     }
 
+    @SuppressWarnings("javadoc")
     public List<ExternalRestService> getExternalRestServices() throws IOException, DocumentException {
         return externalRestServices;
     }
 
+    @SuppressWarnings("javadoc")
     protected void setExternalRestServices(List<ExternalRestService> externalRestServices) {
         this.externalRestServices = externalRestServices;
     }
 
+    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
+    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }
 
+    /**
+     * @param externalServiceId
+     * @return ExternalRestService
+     * @throws IOException
+     * @throws DocumentException
+     */
     public synchronized ExternalRestService loadExternalRestService(String externalServiceId) throws IOException, DocumentException {
         for (ExternalRestService externalRestService : externalRestServices) {
-            if(externalRestService.getId().equals(externalServiceId)) {
-                return externalRestService;
-            }
+            if (externalRestService.getId().equals(externalServiceId)) { return externalRestService; }
         }
 
         return null;
     }
 
+    /**
+     * 
+     */
     public synchronized void loadExternalRestServices() {
         externalRestServices = new ArrayList<ExternalRestService>();
-        if(!configurationFile.exists()) {
-            return;
-        }
+        if (!configurationFile.exists()) { return; }
 
-        try{
+        try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(configurationFile);
             List<Element> externalServicesElements = document.getRootElement().elements();
@@ -79,28 +93,25 @@ public class ExternalRestServicesManager {
                 String externalResultsUri = currentElement.attributeValue("externalResultsUri");
                 String type = currentElement.attributeValue("type");
                 String externalServiceType = currentElement.attributeValue("externalServiceType");
-                if(externalServiceType == null || externalServiceType.isEmpty())
-                    externalServiceType = ExternalServiceType.MONITORED.name();
-                ExternalRestService externalRestService = new ExternalRestService(id, name, uri,statusUri, type,ExternalServiceType.valueOf(externalServiceType));
-                if(externalResultsUri != null)
-                    externalRestService.setExternalResultsUri(externalResultsUri);
+                if (externalServiceType == null || externalServiceType.isEmpty()) externalServiceType = ExternalServiceType.MONITORED.name();
+                ExternalRestService externalRestService = new ExternalRestService(id, name, uri, statusUri, type, ExternalServiceType.valueOf(externalServiceType));
+                if (externalResultsUri != null) externalRestService.setExternalResultsUri(externalResultsUri);
 
                 List list = currentElement.selectNodes("parameters/parameter");
-                for(Object node: list) {
-                    Node n = (Node) node;
+                for (Object node : list) {
+                    Node n = (Node)node;
                     String parameterName = n.valueOf("@name");
                     String parameterType = n.valueOf("@type");
-//                    String value = n.valueOf("value");
+                    //                    String value = n.valueOf("value");
                     boolean required = Boolean.parseBoolean(n.valueOf("@required"));
                     String exampleStr = n.valueOf("@example");
                     String semanticsStr = n.valueOf("@semantics");
 
-                    ServiceParameter serviceParameter = new ServiceParameter(parameterName,parameterType,required,
-                            exampleStr,semanticsStr);
-                    if(parameterType.equals("COMBO_FIELD")){
+                    ServiceParameter serviceParameter = new ServiceParameter(parameterName, parameterType, required, exampleStr, semanticsStr);
+                    if (parameterType.equals("COMBO_FIELD")) {
                         List comboList = n.selectNodes("comboValues/comboValue");
-                        for(Object comboNode: comboList) {
-                            Node nodeC = (Node) comboNode;
+                        for (Object comboNode : comboList) {
+                            Node nodeC = (Node)comboNode;
                             String comboVal = nodeC.getText();
                             serviceParameter.getComboValues().add(comboVal);
                         }
@@ -115,12 +126,15 @@ public class ExternalRestServicesManager {
         }
     }
 
-    public void replaceExternalServiceInAllDataSets(ExternalRestService externalRestService){
-        for(Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()){
-            if(object instanceof DataSourceContainer){
-                DataSource dataSource = ((DataSourceContainer) object).getDataSource();
-                for(ExternalRestService externalRestService1 : dataSource.getExternalRestServices()){
-                    if(externalRestService1.getId().equals(externalRestService.getId())){
+    /**
+     * @param externalRestService
+     */
+    public void replaceExternalServiceInAllDataSets(ExternalRestService externalRestService) {
+        for (Object object : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getAllDataList()) {
+            if (object instanceof DataSourceContainer) {
+                DataSource dataSource = ((DataSourceContainer)object).getDataSource();
+                for (ExternalRestService externalRestService1 : dataSource.getExternalRestServices()) {
+                    if (externalRestService1.getId().equals(externalRestService.getId())) {
                         externalRestService1.setId(externalRestService.getId());
                         externalRestService1.setExternalServiceType(externalRestService.getExternalServiceType());
                         externalRestService1.setName(externalRestService.getName());
@@ -129,7 +143,7 @@ public class ExternalRestServicesManager {
                         externalRestService1.setStatusUri(externalRestService.getStatusUri());
                         externalRestService1.setExternalResultsUri(externalRestService.getExternalResultsUri());
                         // TODO: Update external service parameters
-//                        externalRestService1.setServiceParameters(externalRestService.getServiceParameters());
+                        //                        externalRestService1.setServiceParameters(externalRestService.getServiceParameters());
                     }
                 }
             }
@@ -144,16 +158,19 @@ public class ExternalRestServicesManager {
         }
     }
 
-    public void startExternalService(String serviceId, String dataSetId) throws Exception{
+    /**
+     * @param serviceId
+     * @param dataSetId
+     * @throws Exception
+     */
+    public void startExternalService(String serviceId, String dataSetId) throws Exception {
         DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSetId).getDataSource();
-        File logFile = dataSource.getLogFile(dataSetId +"_single_service_run_");
-        ExternalRestServiceContainer externalRestServiceContainer =
-                new ExternalRestServiceContainer(ExternalServiceStates.ContainerType.SINGLE_SERVICE_EXECUTION,dataSource, logFile);
+        File logFile = dataSource.getLogFile(dataSetId + "_single_service_run_");
+        ExternalRestServiceContainer externalRestServiceContainer = new ExternalRestServiceContainer(ExternalServiceStates.ContainerType.SINGLE_SERVICE_EXECUTION, dataSource, logFile);
 
-
-        for(ExternalRestService externalRestService: dataSource.getExternalRestServices()){
-            if(externalRestService.getId().equals(serviceId)){
-                externalRestServiceContainer.addExternalService(new ExternalRestServiceThread(externalRestService,externalRestServiceContainer,logFile));
+        for (ExternalRestService externalRestService : dataSource.getExternalRestServices()) {
+            if (externalRestService.getId().equals(serviceId)) {
+                externalRestServiceContainer.addExternalService(new ExternalRestServiceThread(externalRestService, externalRestServiceContainer, logFile));
             }
         }
     }

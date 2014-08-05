@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ */
 public class ToHorizonConverter {
 
     private static byte[][] doubleCharsOld;
@@ -278,6 +280,10 @@ public class ToHorizonConverter {
     }
 
 
+    /**
+     * @param array
+     * @return the converted bytes
+     */
     public static byte[] convertBytes(byte[] array) {
         byte[] ret=null;
         int retries=0;
@@ -332,6 +338,10 @@ public class ToHorizonConverter {
         return ret;
     }
 
+    /**
+     * @param str
+     * @return the converted String
+     */
     public static String convertString(String str) {
 
 //        Matcher m = numerosIndexacaoPattern.matcher(str);
@@ -350,6 +360,9 @@ public class ToHorizonConverter {
     }
 
 
+    /**
+     * @param rec
+     */
     public static void convertRecord(Record rec){
         if (rec==null)
             return;
@@ -470,9 +483,13 @@ public class ToHorizonConverter {
     }
 
 
-    /**************************************************************************
-     ************                    Main                    ******************
-     *************************************************************************/
+    /**
+     * ***********************************************************************
+     * *********** Main ******************
+     * ***********************************************************************
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
 
         System.err.println(ToHorizonConverter.convertString("< >dá  ecoraçauo º ª"));

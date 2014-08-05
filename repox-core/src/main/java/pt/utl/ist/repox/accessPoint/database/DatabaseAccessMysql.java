@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+/**
+ */
 public class DatabaseAccessMysql implements DatabaseAccess {
 	private static final Logger log = Logger.getLogger(DatabaseAccessMysql.class);
 
@@ -20,6 +22,10 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 	protected String dbUrl;
     protected Properties dbProps;
 
+	/**
+	 * Creates a new instance of this class.
+	 * @param configuration
+	 */
 	public DatabaseAccessMysql(RepoxConfiguration configuration) {
 		super();
 
@@ -44,7 +50,8 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 		}
 	}
 
-	public String getVarType(Class classOfValue) {
+	@Override
+    public String getVarType(Class classOfValue) {
 		String valueType = "varchar(255)";
 
 		if(classOfValue.equals(Date.class)) {
@@ -60,6 +67,7 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 		return valueType;
 	}
 
+    @Override
     public boolean checkTableExists(String table, Connection con) {
         try {
             SqlUtil.getSingleValue("select * from " + table + " limit 0", con);
@@ -71,7 +79,8 @@ public class DatabaseAccessMysql implements DatabaseAccess {
         return true;
     }
 
-	public Connection openDbConnection() {
+	@Override
+    public Connection openDbConnection() {
 		try {
 			return DriverManager.getConnection(dbUrl, dbProps);
 		}
@@ -81,7 +90,8 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 		}
 	}
 
-	public void createTableIndexes(Connection con, String idType, String table, String valueType, boolean indexValue) {
+	@Override
+    public void createTableIndexes(Connection con, String idType, String table, String valueType, boolean indexValue) {
 		String createTableQuery = "CREATE TABLE " + table + " (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, " + "nc "
 		+ idType + " NOT NULL, " + "value " + valueType + ", deleted SMALLINT)";
 		log.info(createTableQuery);
@@ -96,15 +106,18 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 		}
 	}
 
-	public void deleteTable(Connection con, String table) throws SQLException {
+	@Override
+    public void deleteTable(Connection con, String table) throws SQLException {
 		PreparedStatement statement = con.prepareStatement("drop table " + table);
 		SqlUtil.runUpdate(statement);
 	}
 
+    @Override
     public String renameTableString(String oldTableName, String newTableName) {
         return "ALTER TABLE " + oldTableName + " RENAME TO " + newTableName;
     }
 
+    @Override
     public void renameIndexString(Connection con, String newTableName, String oldTableName, boolean indexValue) {
         String dropIndexQuery = "DROP INDEX " + oldTableName + "_i_nc ON " + newTableName;
         SqlUtil.runUpdate(dropIndexQuery, con);

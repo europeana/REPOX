@@ -21,6 +21,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class TarGz {
     private static final Logger log = Logger.getLogger(TarGz.class);
+
     /** Untar an input file into an output file.
 
      * The output file is created in the output folder, having the same name
@@ -40,7 +41,7 @@ public class TarGz {
 
         final List<File> untaredFiles = new LinkedList<File>();
         final InputStream is = new FileInputStream(inputFile);
-        final TarArchiveInputStream debInputStream = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);
+        final TarArchiveInputStream debInputStream = (TarArchiveInputStream)new ArchiveStreamFactory().createArchiveInputStream("tar", is);
         TarArchiveEntry entry = null;
         while ((entry = (TarArchiveEntry)debInputStream.getNextEntry()) != null) {
             final File outputFile = new File(outputDir, entry.getName());
@@ -48,9 +49,7 @@ public class TarGz {
                 log.debug(String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
                 if (!outputFile.exists()) {
                     log.debug(String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
-                    if (!outputFile.mkdirs()) {
-                        throw new IllegalStateException(String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
-                    }
+                    if (!outputFile.mkdirs()) { throw new IllegalStateException(String.format("Couldn't create directory %s.", outputFile.getAbsolutePath())); }
                 }
             } else {
                 log.debug(String.format("Creating output file %s.", outputFile.getAbsolutePath()));
@@ -97,21 +96,30 @@ public class TarGz {
         return outputFile;
     }
 
-
+    /**
+     * @param tarGzFile
+     * @param tempDir
+     * @return List of Files of the untared File 
+     * @throws IOException
+     * @throws ArchiveException
+     */
     public static List<File> unTarGz(File tarGzFile, File tempDir) throws IOException, ArchiveException {
         File tarFile = TarGz.unGzip(tarGzFile, tempDir);
         return TarGz.unTar(tarFile, tempDir);
     }
 
+    /**
+     * @param args
+     */
     public static void main(String args[]) {
-         try{
-             File tarGzFile = new File("C:\\Users\\Gilberto Pedrosa\\Desktop\\teste\\GDZ_Band.tar.gz");
-             File tempDir = new File("C:\\Users\\Gilberto Pedrosa\\Desktop\\teste\\temp");
-             List<File> listFiles = unTarGz(tarGzFile, tempDir);
+        try {
+            File tarGzFile = new File("C:\\Users\\Gilberto Pedrosa\\Desktop\\teste\\GDZ_Band.tar.gz");
+            File tempDir = new File("C:\\Users\\Gilberto Pedrosa\\Desktop\\teste\\temp");
+            List<File> listFiles = unTarGz(tarGzFile, tempDir);
 
-             System.out.println("listFiles = " + listFiles);
+            System.out.println("listFiles = " + listFiles);
 
-         }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

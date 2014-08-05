@@ -9,6 +9,10 @@ package pt.utl.ist.util.exceptions;
  */
 public class InvalidArgumentsException extends Exception {
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public InvalidArgumentsException(String identifier) {
         super(identifier);
     }

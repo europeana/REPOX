@@ -12,28 +12,31 @@ package pt.utl.ist.util.datediff;
 
 public class LeapYear {
 
-  public LeapYear() {
-  } // END constructor
+    /**
+    * Creates a new instance of this class.
+    */
+    public LeapYear() {
+    } // END constructor
 
-  /**
-   * isLeapYear.
-   * For Gregorian calendar only. Determines if the year specified is a leap
-   * year and returns true if it is.
-   *
-   * @param inYear The year to check if it is a leap year.
-   * @return boolean True if it is a leap year.
-   */
-  public boolean isLeapYear(int inYear) {
-    boolean leapFlag = false;
-    if (inYear % 4 == 0) {
-      if (inYear % 100 == 0) {
-        if (inYear % 400 == 0)
-          leapFlag = true;
-        else
-          leapFlag = false;
-      } else
-        leapFlag = true;
-    }
-    return leapFlag;
-  } // END isLeapYEar
+    /**
+     * isLeapYear.
+     * For Gregorian calendar only. Determines if the year specified is a leap
+     * year and returns true if it is.
+     *
+     * @param inYear The year to check if it is a leap year.
+     * @return boolean True if it is a leap year.
+     */
+    public boolean isLeapYear(int inYear) {
+        boolean leapFlag = false;
+        if (inYear % 4 == 0) {
+            if (inYear % 100 == 0) {
+                if (inYear % 400 == 0)
+                    leapFlag = true;
+                else
+                    leapFlag = false;
+            } else
+                leapFlag = true;
+        }
+        return leapFlag;
+    } // END isLeapYEar
 } // END CLASS LeapYear

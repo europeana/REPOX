@@ -18,25 +18,28 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * Convert native "item" to marc21. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to marc21. In this case, the native "item" is assumed
+ * to already be formatted as an OAI <record> element, with the possible
+ * exception that multiple metadataFormats may be present in the <metadata>
+ * element. The "crosswalk", merely involves pulling out the one that is
+ * requested.
  */
 public class XSLTmarc21Crosswalk extends XSLTCrosswalk {
     private boolean debug = false;
-//     private Transformer transformer = null;
-    
+
+    //     private Transformer transformer = null;
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
+     * @throws OAIInternalServerError 
      */
-    public XSLTmarc21Crosswalk(Properties properties)
-        throws OAIInternalServerError {
- 	super(properties, "http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd", null);
+    public XSLTmarc21Crosswalk(Properties properties) throws OAIInternalServerError {
+        super(properties, "http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd", null);
         String temp = properties.getProperty("XSLTmarc21Crosswalk.debug");
         if ("true".equals(temp)) debug = true;
         try {

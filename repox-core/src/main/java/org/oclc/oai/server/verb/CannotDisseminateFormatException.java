@@ -14,7 +14,7 @@ import org.oclc.oai.util.OAIUtil;
 
 /**
  * An OAI cannotDisseminateFormatException
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class CannotDisseminateFormatException extends Exception {
@@ -23,6 +23,10 @@ public class CannotDisseminateFormatException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     * @param metadataPrefix
+     */
     public CannotDisseminateFormatException(String metadataPrefix) {
         super("<" + OAIUtil.getTag("error") + " code=\"cannotDisseminateFormat\">\"" + metadataPrefix + "\" is not supported by the item or by the repository" + "</" + OAIUtil.getTag("error") + ">");
     }

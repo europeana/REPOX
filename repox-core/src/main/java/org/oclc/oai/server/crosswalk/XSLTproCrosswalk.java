@@ -18,24 +18,25 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * Convert native "item" to pro. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to pro. In this case, the native "item" is assumed to
+ * already be formatted as an OAI <record> element, with the possible exception
+ * that multiple metadataFormats may be present in the <metadata> element. The
+ * "crosswalk", merely involves pulling out the one that is requested.
  */
 public class XSLTproCrosswalk extends XSLTCrosswalk {
-//    private Transformer transformer = null;
-    
+    //    private Transformer transformer = null;
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
+     * @throws OAIInternalServerError 
      */
-    public XSLTproCrosswalk(Properties properties)
-        throws OAIInternalServerError {
- 	super(properties, "info:ofi/pro http://www.openurl.info/registry/docs/xsd/info:ofi/fmt:xml:xsd:pro", null);
+    public XSLTproCrosswalk(Properties properties) throws OAIInternalServerError {
+        super(properties, "info:ofi/pro http://www.openurl.info/registry/docs/xsd/info:ofi/fmt:xml:xsd:pro", null);
         try {
             String xsltName = properties.getProperty("XSLTproCrosswalk.xsltName");
             if (xsltName != null) {

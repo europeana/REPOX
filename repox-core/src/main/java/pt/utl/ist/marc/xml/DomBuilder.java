@@ -65,11 +65,7 @@ public class DomBuilder {
         Document doc=record2Dom(recs);
         return DomUtil.domToString(doc,withXmlDeclaration);
     }
-
-
-
-
-
+    
     /** Creates an XML representation of a marc record
      * @param rec a marc record
      * @return the record in xml
@@ -105,12 +101,10 @@ public class DomBuilder {
         return DomUtil.domToBytes(doc,withXmlDeclaration);
     }
 
-
-
-
-
-
-
+    /**
+     * @param recs
+     * @return Document
+     */
     public static Document record2Dom(List recs){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -133,12 +127,6 @@ public class DomBuilder {
             throw new RuntimeException(pce);
         }
     }
-
-
-
-
-
-
 
     /** Creates an XML representation of a marc record
      * @param rec a marc record
@@ -169,6 +157,7 @@ public class DomBuilder {
 
     /** Creates an XML representation of a marc record
      * @param rec a marc record
+     * @param document 
      *
      * @return Dom Document representing the record
      *
@@ -186,8 +175,6 @@ public class DomBuilder {
             throw new RuntimeException(pce);
         }
     }
-
-
 
     private static Element createRecordDom(Document document, Record rec) throws java.io.UnsupportedEncodingException{
         Element root =  document.createElementNS("http://www.bn.pt/standards/metadata/marcxml/1.0/","record");
@@ -242,10 +229,11 @@ public class DomBuilder {
         return root;
     }
 
+    /**
+     * @param args
+     */
     public static void main(String[] args){
         try{
-
-
 //            Document document = new org.apache.xerces.dom.DocumentImpl();
 //
 //            

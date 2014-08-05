@@ -3,6 +3,7 @@ package pt.utl.ist.repox.z3950;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
@@ -23,27 +24,43 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ */
 public class DataSourceZ3950 extends DataSource {
     private static final Logger log = Logger.getLogger(DataSourceZ3950.class);
 
-    private HarvestMethod harvestMethod;
+    private HarvestMethod       harvestMethod;
 
+    @SuppressWarnings("javadoc")
     public HarvestMethod getHarvestMethod() {
         return harvestMethod;
     }
 
+    @SuppressWarnings("javadoc")
     public void setHarvestMethod(HarvestMethod harvestMethod) {
         this.harvestMethod = harvestMethod;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public DataSourceZ3950() {
-        //
         super();
         this.metadataFormat = MetadataFormat.MarcXchange.toString();
     }
 
-    public DataSourceZ3950(DataProvider dataProvider, String id, String description, String schema, String namespace, HarvestMethod harvestMethod,
-                           RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
+    /**
+     * Creates a new instance of this class.
+     * @param dataProvider
+     * @param id
+     * @param description
+     * @param schema
+     * @param namespace
+     * @param harvestMethod
+     * @param recordIdPolicy
+     * @param metadataTransformations
+     */
+    public DataSourceZ3950(DataProvider dataProvider, String id, String description, String schema, String namespace, HarvestMethod harvestMethod, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
         super(dataProvider, id, description, schema, namespace, MetadataFormat.MarcXchange.toString(), recordIdPolicy, metadataTransformations);
         this.harvestMethod = harvestMethod;
 
@@ -57,13 +74,12 @@ public class DataSourceZ3950 extends DataSource {
         Date startIngestTime = new Date();
         LogUtil.startLogInfo(logFile, startIngestTime, StatusDS.RUNNING.name(), id);
 
-        if(harvestMethod.isFullIngestExclusive() || fullIngest) {
+        if (harvestMethod.isFullIngestExclusive() || fullIngest) {
             boolean successfulDeletion = emptyRecords();
 
-            if(!successfulDeletion) {
+            if (!successfulDeletion) {
                 StringUtil.simpleLog("Importing aborted - unable to delete the current Records", this.getClass(), logFile);
-                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount,
-                        lastIngestDeletedCount);
+                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                 return Task.Status.FAILED;
             }
 
@@ -75,20 +91,16 @@ public class DataSourceZ3950 extends DataSource {
         }
         Class harvestMethodClass = getHarvestMethod().getClass();
 
-        if(harvestMethodClass == IdSequenceHarvester.class){
+        if (harvestMethodClass == IdSequenceHarvester.class) {
             harvestMethod = new IdSequenceHarvester(harvestMethod.getTarget(), ((IdSequenceHarvester)harvestMethod).getMaximumId());
-        }
-        else if(harvestMethodClass == TimestampHarvester.class){
+        } else if (harvestMethodClass == TimestampHarvester.class) {
             harvestMethod = new TimestampHarvester(harvestMethod.getTarget(), ((TimestampHarvester)harvestMethod).getEarliestTimestamp());
-        }
-        else if(harvestMethodClass == IdListHarvester.class){
+        } else if (harvestMethodClass == IdListHarvester.class) {
             harvestMethod = new IdListHarvester(harvestMethod.getTarget(), ((IdListHarvester)harvestMethod).getIdListFile());
         }
 
-
         try {
-            StringUtil.simpleLog("Importing from Z39.50 Source: " + harvestMethod.getTarget().getAddress()
-                    + " using " + harvestMethod.getClass().getSimpleName(), this.getClass(), logFile);
+            StringUtil.simpleLog("Importing from Z39.50 Source: " + harvestMethod.getTarget().getAddress() + " using " + harvestMethod.getClass().getSimpleName(), this.getClass(), logFile);
 
             List<RecordRepox> batchRecords = new ArrayList<RecordRepox>();
             harvestMethod.init();
@@ -97,12 +109,11 @@ public class DataSourceZ3950 extends DataSource {
 
             Iterator<RecordRepox> recordIterator = harvestMethod.getIterator(this, logFile, fullIngest);
 
-            while(recordIterator.hasNext()) {
-                if(stopExecution) {
-                    if(forceStopExecution){
+            while (recordIterator.hasNext()) {
+                if (stopExecution) {
+                    if (forceStopExecution) {
                         ingestStatus = Task.Status.FORCE_EMPTY;
-                    }
-                    else{
+                    } else {
                         StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                         ingestStatus = Task.Status.CANCELED;
                     }
@@ -110,19 +121,17 @@ public class DataSourceZ3950 extends DataSource {
                 }
 
                 RecordRepox newRecord = recordIterator.next();
-                if(newRecord != null){
+                if (newRecord != null) {
                     batchRecords.add(newRecord);
-                }
-                else{
+                } else {
                     System.out.println(" = ");
                 }
 
-                if(maxRecord4Sample == -1 && batchRecords.size() >= RECORDS_BATCH_SIZE ){
+                if (maxRecord4Sample == -1 && batchRecords.size() >= RECORDS_BATCH_SIZE) {
                     importBatchRecords(batchRecords, logFile);
                     batchRecords = new ArrayList<RecordRepox>();
                     batchRecords.clear();
-                }
-                else if(maxRecord4Sample != -1 && maxRecord4Sample <= batchRecords.size()){
+                } else if (maxRecord4Sample != -1 && maxRecord4Sample <= batchRecords.size()) {
                     importBatchRecords(batchRecords, logFile);
                     batchRecords = new ArrayList<RecordRepox>();
                     StringUtil.simpleLog("Stop signal received. Sample set: max records number.", this.getClass(), logFile);
@@ -134,21 +143,19 @@ public class DataSourceZ3950 extends DataSource {
             // Import remaining records
             importBatchRecords(batchRecords, logFile);
             addDeletedRecords(batchRecords);
-//            batchRecords = new ArrayList<RecordRepox>();
+            //            batchRecords = new ArrayList<RecordRepox>();
             //liz
-//            ingestStatus = Task.Status.OK;
+            //            ingestStatus = Task.Status.OK;
 
-        } catch(Exception e) {
-            if(stopExecution) {
-                if(forceStopExecution){
+        } catch (Exception e) {
+            if (stopExecution) {
+                if (forceStopExecution) {
                     ingestStatus = Task.Status.FORCE_EMPTY;
-                }
-                else{
+                } else {
                     StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                     ingestStatus = Task.Status.CANCELED;
                 }
-            }
-            else{
+            } else {
                 log.error("Error ingesting records", e);
                 StringUtil.simpleLog("Error ingesting records " + e.getMessage(), e, this.getClass(), logFile);
                 ingestStatus = Task.Status.FAILED;
@@ -159,24 +166,24 @@ public class DataSourceZ3950 extends DataSource {
             harvestMethod.cleanup();
         }
 
-        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(),id,lastIngestCount,
-                lastIngestDeletedCount);
+        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(), id, lastIngestCount, lastIngestDeletedCount);
 
         return ingestStatus;
     }
+
     private void importBatchRecords(List<RecordRepox> batchRecords, File logFile) throws IOException, DocumentException, SQLException {
 
         /*System.out.println("****************************************************************************************************");
         System.out.println("********************************************************batchRecords.size() = " + batchRecords.size());
         System.out.println("****************************************************************************************************");
         System.out.println("****************************************************************************************************");
-*/
+        */
 
         long memBefore = Runtime.getRuntime().totalMemory() / (1024 * 1024);
         TimeUtil.getTimeSinceLastTimerArray(9);
 
         RecordCountManager recordCountManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager();
-        if(recordCountManager.getRecordCount(id) != null) {
+        if (recordCountManager.getRecordCount(id) != null) {
             log.debug("[BEFORE] Count: " + recordCountManager.getRecordCount(id).getCount());
         }
 
@@ -187,28 +194,26 @@ public class DataSourceZ3950 extends DataSource {
         }
         batchRecords = new ArrayList<RecordRepox>(batchRecordsWithoutDuplicates.values());
 
-        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords,logFile);
+        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords, logFile);
 
-        if(recordCountManager.getRecordCount(id) != null) {
+        if (recordCountManager.getRecordCount(id) != null) {
             log.debug("[AFTER]  count: " + recordCountManager.getRecordCount(id).getCount());
         }
 
         double importTime = TimeUtil.getTimeSinceLastTimerArray(9) / 1000.0;
         long memAfter = Runtime.getRuntime().totalMemory() / (1024 * 1024);
 
-        if(batchRecords.size()!=0 ){
-            log.info(batchRecords.size() + " records imported in " + importTime + "s." +
-                    " Memory before/after (MB) : " + memBefore + "/"+ memAfter);
+        if (batchRecords.size() != 0) {
+            log.info(batchRecords.size() + " records imported in " + importTime + "s." + " Memory before/after (MB) : " + memBefore + "/" + memAfter);
             StringUtil.simpleLog(batchRecords.size() + " records imported", this.getClass(), logFile);
             lastIngestCount += batchRecords.size();
         }
     }
 
     @Override
-    public boolean isWorking()  {
+    public boolean isWorking() {
         throw new RuntimeException("Unimplemented Operation");
     }
-
 
     @Override
     public Element addSpecificInfo(Element sourceElement) {
@@ -226,23 +231,23 @@ public class DataSourceZ3950 extends DataSource {
 
         targetElement.addElement("recordSyntax").setText(target.getRecordSyntax());
 
-        if(harvestMethod instanceof TimestampHarvester) {
+        if (harvestMethod instanceof TimestampHarvester) {
 
             sourceElement.addElement("harvestMethod").setText(TimestampHarvester.class.getSimpleName());
-            TimestampHarvester timestampHarvester = (TimestampHarvester) harvestMethod;
+            TimestampHarvester timestampHarvester = (TimestampHarvester)harvestMethod;
             String timestampString = DateUtil.date2String(timestampHarvester.getEarliestTimestamp(), "yyyyMMdd");
             sourceElement.addElement("earliestTimestamp").setText(timestampString);
 
-        } else if(harvestMethod instanceof IdListHarvester) {
+        } else if (harvestMethod instanceof IdListHarvester) {
 
             sourceElement.addElement("harvestMethod").setText(IdListHarvester.class.getSimpleName());
-            IdListHarvester idListHarvester = (IdListHarvester) harvestMethod;
+            IdListHarvester idListHarvester = (IdListHarvester)harvestMethod;
             sourceElement.addElement("idListFile").setText(idListHarvester.getIdListFile().getAbsolutePath());
 
-        } else if(harvestMethod instanceof IdSequenceHarvester) {
+        } else if (harvestMethod instanceof IdSequenceHarvester) {
             sourceElement.addElement("harvestMethod").setText(IdSequenceHarvester.class.getSimpleName());
-            IdSequenceHarvester idSequenceHarvester = (IdSequenceHarvester) harvestMethod;
-            if(idSequenceHarvester.getMaximumId() != null) {
+            IdSequenceHarvester idSequenceHarvester = (IdSequenceHarvester)harvestMethod;
+            if (idSequenceHarvester.getMaximumId() != null) {
                 sourceElement.addElement("maximumId").setText(String.valueOf(idSequenceHarvester.getMaximumId()));
             }
         }

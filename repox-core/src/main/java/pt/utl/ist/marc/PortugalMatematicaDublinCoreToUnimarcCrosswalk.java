@@ -17,9 +17,14 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ */
 public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 
+	/**
+	 * @param dc
+	 * @return the converted Record
+	 */
 	public static Record toUnimarc(Element dc) {
 		Record rec=new Record();
 		rec.setLeader("00000naa  2200000   450 ");
@@ -172,6 +177,10 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 	}
 	
 	
+	/**
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception{
 		Document dc=Dom4jUtil.parseDomFromFile(new File("c:\\desktop\\registos\\j-5293-b-vol1-fasc1-art1.xml"),"UTF-8");
 		System.out.println(toUnimarc((Element)dc.getRootElement()));

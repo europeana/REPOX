@@ -19,24 +19,25 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Convert native "item" to desc. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to desc. In this case, the native "item" is assumed to
+ * already be formatted as an OAI <record> element, with the possible exception
+ * that multiple metadataFormats may be present in the <metadata> element. The
+ * "crosswalk", merely involves pulling out the one that is requested.
  */
 public class Copydesc extends XSLTCrosswalk {
-//    private Transformer transformer = null;
-    
+    //    private Transformer transformer = null;
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
+     * @throws OAIInternalServerError 
      */
-    public Copydesc(Properties properties)
-        throws OAIInternalServerError {
- 	super(properties, "http://errol.oclc.org/oai:xmlregistry.oclc.org:sts/desc http://errol.oclc.org/oai:xmlregistry.oclc.org:sts/desc.xsd", null);
+    public Copydesc(Properties properties) throws OAIInternalServerError {
+        super(properties, "http://errol.oclc.org/oai:xmlregistry.oclc.org:sts/desc http://errol.oclc.org/oai:xmlregistry.oclc.org:sts/desc.xsd", null);
         try {
             String xsltName = properties.getProperty("Copydesc.xsltName");
             if (xsltName != null) {
@@ -49,12 +50,15 @@ public class Copydesc extends XSLTCrosswalk {
             throw new OAIInternalServerError(e.getMessage());
         }
     }
-    
+
     /**
      * Can this nativeItem be represented in DC format?
-     * @param nativeItem a record in native format
+     * 
+     * @param nativeItem
+     *            a record in native format
      * @return true if DC format is possible, false otherwise.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem) {
         ArrayList list = (ArrayList)nativeItem;
         return list.contains("desc");

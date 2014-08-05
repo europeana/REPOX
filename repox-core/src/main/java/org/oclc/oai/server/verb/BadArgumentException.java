@@ -11,11 +11,10 @@
 package org.oclc.oai.server.verb;
 
 import org.oclc.oai.util.OAIUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * An OAI badArgumentException
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class BadArgumentException extends Exception {
@@ -24,6 +23,9 @@ public class BadArgumentException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public BadArgumentException() {
         super("<" + OAIUtil.getTag("error") + " code=\"badArgument\">The request includes illegal arguments, is missing required arguments, includes a repeated argument, or values for arguments have an illegal syntax." + "</" + OAIUtil.getTag("error") + ">");
     }

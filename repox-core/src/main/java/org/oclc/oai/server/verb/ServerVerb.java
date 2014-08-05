@@ -26,35 +26,42 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 //import javax.servlet.http.HttpUtils;
 
 /**
  * ServerVerb is the parent class for each of the server-side OAI verbs.
- *
+ * 
  * @author Jefffrey A. Young, OCLC Online Computer Library Center
  */
 public abstract class ServerVerb {
-    private static final boolean debug = false;
+    private static final boolean debug      = false;
 
-    private int statusCode = HttpServletResponse.SC_OK; // http status
-    private String message = null; // http response message
+    private int                  statusCode = HttpServletResponse.SC_OK; // http status
+    private String               message    = null;                     // http response message
 
     /**
      * Complete XML response String
      */
-    protected String xmlText = null;
+    protected String             xmlText    = null;
 
     /**
      * Constructor
      */
-    protected ServerVerb() { }
+    protected ServerVerb() {
+    }
 
-    public static void init(Properties properties) {}
+    /**
+     * @param properties
+     */
+    public static void init(Properties properties) {
+    }
 
     /**
      * initialize the Verb from the specified xml text
-     *
-     * @param xmlText complete XML response string
+     * 
+     * @param xmlText
+     *            complete XML response string
      */
     protected void init(String xmlText) {
         if (debug) {
@@ -65,8 +72,9 @@ public abstract class ServerVerb {
 
     /**
      * Server-side verb constructor
-     *
-     * @param xmlText complete XML response string
+     * 
+     * @param xmlText
+     *            complete XML response string
      */
     public ServerVerb(String xmlText) {
         init(xmlText);
@@ -74,23 +82,29 @@ public abstract class ServerVerb {
 
     /**
      * Retrieve the http status code
-     *
+     * 
      * @return the http status code;
      */
-    public int getStatus() { return statusCode; }
+    public int getStatus() {
+        return statusCode;
+    }
 
     /**
      * Retrieve the http status message
-     *
+     * 
      * @return the http status message;
      */
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     /**
      * set the http status code and message
-     *
-     * @param statusCode the http status code
-     * @param message the http status message
+     * 
+     * @param statusCode
+     *            the http status code
+     * @param message
+     *            the http status message
      */
     protected void setError(int statusCode, String message) {
         this.statusCode = statusCode;
@@ -99,8 +113,9 @@ public abstract class ServerVerb {
 
     /**
      * Create an OAI response date from the specified date
-     *
-     * @param date the date to be transformed to an OAI response date
+     * 
+     * @param date
+     *            the date to be transformed to an OAI response date
      * @return a String representation of the OAI response Date.
      */
     public static String createResponseDate(Date date) {
@@ -112,16 +127,24 @@ public abstract class ServerVerb {
         return sb.toString();
     }
 
-    protected static String getRequestElement(HttpServletRequest request,
-            List validParamNames,
-            String baseURL) {
+    /**
+     * @param request
+     * @param validParamNames
+     * @param baseURL
+     * @return the requested element
+     */
+    protected static String getRequestElement(HttpServletRequest request, List validParamNames, String baseURL) {
         return getRequestElement(request, validParamNames, baseURL, false);
     }
 
-    protected static String getRequestElement(HttpServletRequest request,
-            List validParamNames,
-            String baseURL,
-            boolean xmlEncodeSetSpec) {
+    /**
+     * @param request
+     * @param validParamNames
+     * @param baseURL
+     * @param xmlEncodeSetSpec
+     * @return the requested element
+     */
+    protected static String getRequestElement(HttpServletRequest request, List validParamNames, String baseURL, boolean xmlEncodeSetSpec) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("<" + OAIUtil.getTag("request"));
@@ -135,13 +158,13 @@ public abstract class ServerVerb {
                     sb.append(name);
                     sb.append("=\"");
                     if (!xmlEncodeSetSpec && "set".equals(name)) {
-//                      try {
+                        //                      try {
                         sb.append(value);
-//                      sb.append(URLEncoder.encode(value, "UTF-8"));
-//                      } catch (UnsupportedEncodingException e) {
-//                      e.printStackTrace();
-//                      sb.append("UnsupportedEncodingException");
-//                      }
+                        //                      sb.append(URLEncoder.encode(value, "UTF-8"));
+                        //                      } catch (UnsupportedEncodingException e) {
+                        //                      e.printStackTrace();
+                        //                      sb.append("UnsupportedEncodingException");
+                        //                      }
                     } else {
                         sb.append(OAIUtil.xmlEncode(value));
                     }
@@ -155,24 +178,24 @@ public abstract class ServerVerb {
         return sb.toString();
     }
 
-    protected static boolean hasBadArguments(HttpServletRequest request,
-            Iterator requiredParamNames,
-            List validParamNames) {
+    /**
+     * @param request
+     * @param requiredParamNames
+     * @param validParamNames
+     * @return a boolean indicating if there are bad arguments in the request
+     */
+    protected static boolean hasBadArguments(HttpServletRequest request, Iterator requiredParamNames, List validParamNames) {
         while (requiredParamNames.hasNext()) {
             String name = (String)requiredParamNames.next();
             String value = request.getParameter(name);
-            if (value == null || value.length() == 0) {
-                return true;
-            }
+            if (value == null || value.length() == 0) { return true; }
         }
         Enumeration params = request.getParameterNames();
         while (params.hasMoreElements()) {
             String name = (String)params.nextElement();
             if (!validParamNames.contains(name)) {
                 return true;
-            } else if (request.getParameterValues(name).length > 1) {
-                return true;
-            }
+            } else if (request.getParameterValues(name).length > 1) { return true; }
         }
         String identifier = request.getParameter("identifier");
         try {
@@ -186,41 +209,49 @@ public abstract class ServerVerb {
         return false;
     }
 
-//  /**
-//  * Get the OAI requestURL from the verb response
-//  *
-//  * @param request the HTTP servlet request object
-//  * @return the current verb's requestURL value
-//  */
-//  protected static String getRequestURL(HttpServletRequest request) {
-//  StringBuffer sb = new StringBuffer();
-//  sb.append(HttpUtils.getRequestURL(request));
-//  sb.append("?");
-//  Enumeration params = request.getParameterNames();
-//  while (params.hasMoreElements()) {
-//  String name = (String)params.nextElement();
-//  String value = request.getParameter(name);
-//  sb.append(OAIUtil.xmlEncode(name));
-//  sb.append("=");
-//  sb.append(OAIUtil.xmlEncode(value));
-//  if (params.hasMoreElements()) {
-//  sb.append("&amp;");
-//  }
-//  }
-//  return sb.toString();
-//  }
+    //  /**
+    //  * Get the OAI requestURL from the verb response
+    //  *
+    //  * @param request the HTTP servlet request object
+    //  * @return the current verb's requestURL value
+    //  */
+    //  protected static String getRequestURL(HttpServletRequest request) {
+    //  StringBuffer sb = new StringBuffer();
+    //  sb.append(HttpUtils.getRequestURL(request));
+    //  sb.append("?");
+    //  Enumeration params = request.getParameterNames();
+    //  while (params.hasMoreElements()) {
+    //  String name = (String)params.nextElement();
+    //  String value = request.getParameter(name);
+    //  sb.append(OAIUtil.xmlEncode(name));
+    //  sb.append("=");
+    //  sb.append(OAIUtil.xmlEncode(value));
+    //  if (params.hasMoreElements()) {
+    //  sb.append("&amp;");
+    //  }
+    //  }
+    //  return sb.toString();
+    //  }
 
     /**
      * Get the complete XML response for the verb request
-     *
+     * 
      * @return the complete XML response for the verb request
      */
+    @Override
     public String toString() {
         return xmlText;
     }
 
-    protected static String render(HttpServletResponse response, String contentType, String result,
-            Transformer transformer) throws TransformerException {
+    /**
+     * @param response
+     * @param contentType
+     * @param result
+     * @param transformer
+     * @return the rendered String
+     * @throws TransformerException
+     */
+    protected static String render(HttpServletResponse response, String contentType, String result, Transformer transformer) throws TransformerException {
         String renderedResult = null;
         if (transformer != null) { // render on the server
             response.setContentType("text/html; charset=UTF-8");
@@ -264,11 +295,9 @@ public abstract class ServerVerb {
                 }
                 try {
                     Class serverVerbClass = Class.forName(verbClassName);
-                    Method init =
-                        serverVerbClass.getMethod("init",
-                                new Class[] {Properties.class});
+                    Method init = serverVerbClass.getMethod("init", new Class[] { Properties.class });
                     try {
-                        init.invoke(null, new Object[] {properties});
+                        init.invoke(null, new Object[] { properties });
                     } catch (InvocationTargetException e) {
                         throw e.getTargetException();
                     }

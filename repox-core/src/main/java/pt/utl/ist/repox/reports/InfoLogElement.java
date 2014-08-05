@@ -13,6 +13,13 @@ public class InfoLogElement extends LogElement{
     private Date occurenceTime;
     private String occurenceClass;
 
+    /**
+     * Creates a new instance of this class.
+     * @param name
+     * @param value
+     * @param occurenceTime
+     * @param occurenceClass
+     */
     public InfoLogElement(String name, String value,Date occurenceTime, String occurenceClass) {
         super(name, value);
         this.occurenceTime = occurenceTime;
@@ -20,10 +27,12 @@ public class InfoLogElement extends LogElement{
         this.type = LogEntryType.INFO;
     }
 
+    @SuppressWarnings("javadoc")
     public Date getOccurenceTime() {
         return occurenceTime;
     }
 
+    @SuppressWarnings("javadoc")
     public String getOccurenceClass() {
         return occurenceClass;
     }

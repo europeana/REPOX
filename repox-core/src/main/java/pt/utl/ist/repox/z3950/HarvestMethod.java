@@ -14,27 +14,32 @@ import java.util.Iterator;
  * @see IdSequenceHarvester
  */
 public interface HarvestMethod {
-	
-	/**
-	 * Startup processing and gathers required resources.
-	 */
-	public void init();
-	
-	/**
-	 * Clean the resources. 
-	 */
-	public void cleanup();
-	
-	/**
-	 * Returns an Iterator of records.
-	 */
-	public abstract Iterator<RecordRepox> getIterator(DataSource dataSource, File logFile, boolean fullIngest);
-	
-	/**
-	 * Returns true if method only allows full Ingest, false if allows incremental Ingest.
-	 */
-	public abstract boolean isFullIngestExclusive();
-	
-	public Target getTarget();
-	public void setTarget(Target target);
+
+    /**
+     * Startup processing and gathers required resources.
+     */
+    public void init();
+
+    /**
+     * Clean the resources. 
+     */
+    public void cleanup();
+
+    /**
+     * Returns an Iterator of records.
+     */
+    public abstract Iterator<RecordRepox> getIterator(DataSource dataSource, File logFile, boolean fullIngest);
+
+    /**
+     * Returns true if method only allows full Ingest, false if allows incremental Ingest.
+     */
+    public abstract boolean isFullIngestExclusive();
+
+    /**
+     * @return Target
+     */
+    public Target getTarget();
+
+    @SuppressWarnings("javadoc")
+    public void setTarget(Target target);
 }

@@ -9,6 +9,10 @@ package pt.utl.ist.util.exceptions;
  */
 public class ObjectNotFoundException extends Exception {
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public ObjectNotFoundException(String identifier) {
         super(identifier);
     }

@@ -6,6 +6,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
@@ -25,24 +26,33 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+/**
+ */
 public class StatisticsManagerDefault implements StatisticsManager {
     private static final Logger log = Logger.getLogger(StatisticsManagerDefault.class);
 
-    private File configurationFile;
+    private File                configurationFile;
 
+    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
+    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param configurationFile
+     */
     public StatisticsManagerDefault(File configurationFile) {
         super();
         this.configurationFile = configurationFile;
     }
 
+    @Override
     public RepoxStatistics generateStatistics(List<String> dataProviderIds) throws IOException, DocumentException, SQLException {
         int dataSourcesIdExtracted = 0;
         int dataSourcesIdGenerated = 0;
@@ -60,59 +70,49 @@ public class StatisticsManagerDefault implements StatisticsManager {
 
         List<DataProvider> dataProvidersList = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviders();
 
-        for(DataProvider dataProvider : dataProvidersList) {
-            if(dataProviderIds != null && !dataProviderIds.contains(dataProvider.getId()))
-                continue;
+        for (DataProvider dataProvider : dataProvidersList) {
+            if (dataProviderIds != null && !dataProviderIds.contains(dataProvider.getId())) continue;
 
             dataProviders++;
 
-            for(DataSourceContainer dataSourceContainer : dataProvider.getDataSourceContainers().values()) {
-                if(dataSourceContainer.getDataSource() instanceof DataSourceOai) {
+            for (DataSourceContainer dataSourceContainer : dataProvider.getDataSourceContainers().values()) {
+                if (dataSourceContainer.getDataSource() instanceof DataSourceOai) {
                     dataSourcesOai++;
-                }
-                else if(dataSourceContainer.getDataSource() instanceof DataSourceZ3950) {
+                } else if (dataSourceContainer.getDataSource() instanceof DataSourceZ3950) {
                     dataSourcesZ3950++;
-                }
-                else if(dataSourceContainer.getDataSource() instanceof DataSourceDirectoryImporter) {
+                } else if (dataSourceContainer.getDataSource() instanceof DataSourceDirectoryImporter) {
                     dataSourcesDirectoryImporter++;
                 }
 
-                if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvided) {
+                if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvided) {
                     dataSourcesIdProvided++;
-                }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtracted) {
+                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtracted) {
                     dataSourcesIdExtracted++;
-                }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGenerated) {
+                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGenerated) {
                     dataSourcesIdGenerated++;
-                }
-                else {
+                } else {
                     throw new RuntimeException("DataSource of unsupported class:" + dataSourceContainer.getDataSource().getClass().getName());
                 }
 
                 MetadataFormatStatistics metadataFormatStatistics = dataSourcesMetadataFormats.get(dataSourceContainer.getDataSource().getMetadataFormat());
-                if(metadataFormatStatistics == null) {
-                    dataSourcesMetadataFormats.put(dataSourceContainer.getDataSource().getMetadataFormat(),
-                            new MetadataFormatStatistics(1,ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-                                    getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()).getCount()));
-                }
-                else {
+                if (metadataFormatStatistics == null) {
+                    dataSourcesMetadataFormats.put(dataSourceContainer.getDataSource().getMetadataFormat(), new MetadataFormatStatistics(1, ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()).getCount()));
+                } else {
                     metadataFormatStatistics.addCollectionNumber();
-                    metadataFormatStatistics.addRecordNumber(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-                            getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()).getCount());
+                    metadataFormatStatistics.addRecordNumber(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()).getCount());
                 }
 
                 int dataSourceCount = 0;
 
-                if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()) != null){
+                if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()) != null) {
                     dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceContainer.getDataSource().getId()).getCount();
                 }
 
                 DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSourceContainer.getDataSource().getId());
-                if(dataProviderParent.getCountry() != null) {
+                if (dataProviderParent.getCountry() != null) {
                     int countryRecordsTotal = dataSourceCount;
 
-                    if(countriesRecords.get(dataProviderParent.getCountry()) != null) {
+                    if (countriesRecords.get(dataProviderParent.getCountry()) != null) {
                         countryRecordsTotal += countriesRecords.get(dataProviderParent.getCountry());
                     }
 
@@ -124,14 +124,13 @@ public class StatisticsManagerDefault implements StatisticsManager {
         }
 
         int dataSourcesTotal = dataSourcesOai + dataSourcesDirectoryImporter + dataSourcesZ3950;
-        float recordsAvgDataSource = (dataSourcesTotal == 0 ? 0 : (float) recordsTotal / (float) dataSourcesTotal);
-        float recordsAvgDataProvider = (dataProvidersList.size() == 0 ? 0 : (float) recordsTotal / (float) dataProvidersList.size());
+        float recordsAvgDataSource = (dataSourcesTotal == 0 ? 0 : (float)recordsTotal / (float)dataSourcesTotal);
+        float recordsAvgDataProvider = (dataProvidersList.size() == 0 ? 0 : (float)recordsTotal / (float)dataProvidersList.size());
 
-        return new RepoxStatisticsDefault(dataSourcesIdExtracted, dataSourcesIdGenerated, dataSourcesIdProvided,
-                dataProviders, dataSourcesOai, dataSourcesZ3950, dataSourcesDirectoryImporter, dataSourcesMetadataFormats, recordsAvgDataSource,
-                recordsAvgDataProvider, countriesRecords, recordsTotal);
+        return new RepoxStatisticsDefault(dataSourcesIdExtracted, dataSourcesIdGenerated, dataSourcesIdProvided, dataProviders, dataSourcesOai, dataSourcesZ3950, dataSourcesDirectoryImporter, dataSourcesMetadataFormats, recordsAvgDataSource, recordsAvgDataProvider, countriesRecords, recordsTotal);
     }
 
+    @Override
     public synchronized Document getStatisticsReport(RepoxStatistics repoxStatistics) throws IOException {
         Document document = DocumentHelper.createDocument();
 
@@ -145,7 +144,7 @@ public class StatisticsManagerDefault implements StatisticsManager {
         rootNode.addElement("dataSourcesOai").setText(String.valueOf(repoxStatistics.getDataSourcesOai()));
         rootNode.addElement("dataSourcesZ3950").setText(String.valueOf(repoxStatistics.getDataSourcesZ3950()));
         rootNode.addElement("dataSourcesDirectoryImporter").setText(String.valueOf(repoxStatistics.getDataSourcesDirectoryImporter()));
-        if(repoxStatistics.getDataSourcesMetadataFormats() != null && !repoxStatistics.getDataSourcesMetadataFormats().isEmpty()) {
+        if (repoxStatistics.getDataSourcesMetadataFormats() != null && !repoxStatistics.getDataSourcesMetadataFormats().isEmpty()) {
             Element dataSourcesMetadataFormatsElement = rootNode.addElement("dataSourcesMetadataFormats");
             for (Entry<String, MetadataFormatStatistics> currentFormat : repoxStatistics.getDataSourcesMetadataFormats().entrySet()) {
                 Element currentDSMF = dataSourcesMetadataFormatsElement.addElement("dataSourcesMetadataFormat");
@@ -158,7 +157,7 @@ public class StatisticsManagerDefault implements StatisticsManager {
         rootNode.addElement("recordsAvgDataSource").setText(String.valueOf(repoxStatistics.getRecordsAvgDataSource()));
         rootNode.addElement("recordsAvgDataProvider").setText(String.valueOf(repoxStatistics.getRecordsAvgDataProvider()));
         Element countriesRecordsElement = rootNode.addElement("countriesRecords");
-        if(repoxStatistics.getCountriesRecords() != null && !repoxStatistics.getCountriesRecords().isEmpty()) {
+        if (repoxStatistics.getCountriesRecords() != null && !repoxStatistics.getCountriesRecords().isEmpty()) {
             for (Entry<String, Integer> currentCountry : repoxStatistics.getCountriesRecords().entrySet()) {
                 Element currentCR = countriesRecordsElement.addElement("countryRecords");
                 currentCR.addAttribute("country", currentCountry.getKey());

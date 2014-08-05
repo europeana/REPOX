@@ -15,11 +15,12 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
-public class EmailUtilDefault implements EmailUtil{
-//	possible hosts: "mail.clix.pt"; "mail.ist.utl.pt"; "smtp.ist.utl.pt"; "mail.inesc-id.pt"; "smtp.inesc-id.pt"; "inesc-id.inesc-id.pt";
-//	/home/dreis/temp/lixo.csv
-//  repox@ist.utl.pt
+/**
+ */
+public class EmailUtilDefault implements EmailUtil {
+    //	possible hosts: "mail.clix.pt"; "mail.ist.utl.pt"; "smtp.ist.utl.pt"; "mail.inesc-id.pt"; "smtp.inesc-id.pt"; "inesc-id.inesc-id.pt";
+    //	/home/dreis/temp/lixo.csv
+    //  repox@ist.utl.pt
 
     private boolean send(String from, String[] to, String subject, String message, File[] attachments) throws Exception {
         String host = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
@@ -28,22 +29,22 @@ public class EmailUtilDefault implements EmailUtil{
         final String password = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getMailPassword();
         int port = Integer.valueOf(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpPort());
 
-        Properties props = setProperties(host,useAuthentication,port,port);
+        Properties props = setProperties(host, useAuthentication, port, port);
 
-        try{
+        try {
             Session session = Session.getInstance(props, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(user,password);
+                    return new PasswordAuthentication(user, password);
                 }
             });
-//            session.setDebug(true);
+            //            session.setDebug(true);
 
             MimeMessage msg = new MimeMessage(session);
 
             msg.setFrom(new InternetAddress(from));
 
             InternetAddress[] addressTo = new InternetAddress[to.length];
-            for(int i=0; i<to.length; i++){
+            for (int i = 0; i < to.length; i++) {
                 addressTo[i] = new InternetAddress(to[i]);
             }
 
@@ -51,7 +52,7 @@ public class EmailUtilDefault implements EmailUtil{
             msg.setSubject(subject);
             msg.setSentDate(new Date());
 
-            addMessageContent(msg,message,attachments);
+            addMessageContent(msg, message, attachments);
 
             Transport transport = session.getTransport("smtp");
             transport.connect(host, port, user, password);
@@ -67,21 +68,19 @@ public class EmailUtilDefault implements EmailUtil{
         }
     }
 
-    private void deleteZipFilesAfterEmailSent(File[] attachments){
-        if(attachments != null){
-            for(File file : attachments){
-                if(file.getName().contains(".zip"))
-                    file.delete();
+    private void deleteZipFilesAfterEmailSent(File[] attachments) {
+        if (attachments != null) {
+            for (File file : attachments) {
+                if (file.getName().contains(".zip")) file.delete();
             }
         }
     }
 
     private void addMessageContent(MimeMessage msg, String message, File[] attachments) throws MessagingException {
-        if(attachments == null || attachments.length == 0) {
+        if (attachments == null || attachments.length == 0) {
             // Create the message part
             msg.setText(message);
-        }
-        else {
+        } else {
             // Create the message part
             BodyPart messageBodyPart = new MimeBodyPart();
 
@@ -110,7 +109,7 @@ public class EmailUtilDefault implements EmailUtil{
 
         props.put("mail.smtp.host", host);
 
-        if(useSSLAuthentication) {
+        if (useSSLAuthentication) {
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.port", port);
             props.put("mail.smtp.socketFactory.port", sport);
@@ -120,30 +119,31 @@ public class EmailUtilDefault implements EmailUtil{
         return props;
     }
 
-    public void sendEmail(String fromEmail, String[] recipientsEmail,
-                          String subject, String message, File[] attachments, HashMap<String, Object> map) throws MessagingException, FileNotFoundException {
+    @Override
+    public void sendEmail(String fromEmail, String[] recipientsEmail, String subject, String message, File[] attachments, HashMap<String, Object> map) throws MessagingException, FileNotFoundException {
         try {
-            send(fromEmail,recipientsEmail,subject,message,attachments);
+            send(fromEmail, recipientsEmail, subject, message, attachments);
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
-    public File createZipFile(File logFile){
+    @Override
+    public File createZipFile(File logFile) {
         // These are the files to include in the ZIP file
-        String[] files = new String[]{logFile.getAbsolutePath()};
-        String[] filenames = new String[]{logFile.getName()};
+        String[] files = new String[] { logFile.getAbsolutePath() };
+        String[] filenames = new String[] { logFile.getName() };
 
         // Create a buffer for reading the files
         byte[] buf = new byte[1024];
 
-        File zippedFile = new File(logFile.getParentFile().getAbsolutePath()+ File.separator + logFile.getName()+".zip");
+        File zippedFile = new File(logFile.getParentFile().getAbsolutePath() + File.separator + logFile.getName() + ".zip");
         try {
             // Create the ZIP file
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
 
             // Compress the files
-            for (int i=0; i<filenames.length; i++) {
+            for (int i = 0; i < filenames.length; i++) {
                 FileInputStream in = new FileInputStream(files[i]);
 
                 // Add ZIP entry to output stream.
@@ -167,18 +167,21 @@ public class EmailUtilDefault implements EmailUtil{
         return zippedFile;
     }
 
-
+    /**
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
-//        String smtpServer = "smtp.gmail.com";
+        //        String smtpServer = "smtp.gmail.com";
         String fromEmail = "eudml@eudml.org";
-        String[] recipientsEmail = new String[]{"joao.a.edmundo@gmail.com"};
+        String[] recipientsEmail = new String[] { "joao.a.edmundo@gmail.com" };
         File[] attachments = new File[] { new File("src/test/resources/xslImportTest/new.xsl") };
         EmailUtilDefault emailUtilDefault = new EmailUtilDefault();
         emailUtilDefault.sendEmail(fromEmail, recipientsEmail, "REPOX email", "Test message", attachments, null);
-//        File newFile = new File("D:\\Projectos\\TESTS\\threads.xml");
-//        EmailUtilDefault emailUtilDefault = new EmailUtilDefault();
-//        emailUtilDefault.createZipFile(newFile);
+        //        File newFile = new File("D:\\Projectos\\TESTS\\threads.xml");
+        //        EmailUtilDefault emailUtilDefault = new EmailUtilDefault();
+        //        emailUtilDefault.createZipFile(newFile);
         System.exit(0);
     }
 }

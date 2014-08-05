@@ -1,21 +1,39 @@
 package pt.utl.ist.repox.z3950;
 
+/**
+ */
 public class HarvestFailureException extends Exception {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public HarvestFailureException() {
-		super();
-	}
-	
-	public HarvestFailureException(Exception e) {
-		super(e);
-	}
+    /**
+     * Creates a new instance of this class.
+     */
+    public HarvestFailureException() {
+        super();
+    }
 
-	public HarvestFailureException(String message, Exception e) {
-		super(message, e);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param e
+     */
+    public HarvestFailureException(Exception e) {
+        super(e);
+    }
 
-	public HarvestFailureException(String message) {
-		super(message);
-	}
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     * @param e
+     */
+    public HarvestFailureException(String message, Exception e) {
+        super(message, e);
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * @param message
+     */
+    public HarvestFailureException(String message) {
+        super(message);
+    }
 }

@@ -13,68 +13,88 @@ import java.util.Map;
  * 
  */
 public class RestRequest {
-	private String contextURL;
-	private String parsedRequestURI;
-	private String correctedQueryURI;
-	private List<String> uriHierarchy;
-	private Map<String, String> requestParameters;
-	
-	public String getContextURL() {
-		return contextURL;
-	}
+    private String              contextURL;
+    private String              parsedRequestURI;
+    private String              correctedQueryURI;
+    private List<String>        uriHierarchy;
+    private Map<String, String> requestParameters;
 
-	public void setContextURL(String contextURL) {
-		this.contextURL = contextURL;
-	}
+    @SuppressWarnings("javadoc")
+    public String getContextURL() {
+        return contextURL;
+    }
 
-	public String getParsedRequestURI() {
-		return parsedRequestURI;
-	}
-	
-	public void setParsedRequestURI(String parsedRequestURI) {
-		this.parsedRequestURI = parsedRequestURI;
-	}
+    @SuppressWarnings("javadoc")
+    public void setContextURL(String contextURL) {
+        this.contextURL = contextURL;
+    }
 
-	public String getCorrectedQueryURI() {
-		return correctedQueryURI;
-	}
+    @SuppressWarnings("javadoc")
+    public String getParsedRequestURI() {
+        return parsedRequestURI;
+    }
 
-	public void setCorrectedQueryURI(String correctedQueryURI) {
-		this.correctedQueryURI = correctedQueryURI;
-	}
+    @SuppressWarnings("javadoc")
+    public void setParsedRequestURI(String parsedRequestURI) {
+        this.parsedRequestURI = parsedRequestURI;
+    }
 
-	public List<String> getUriHierarchy() {
-		return uriHierarchy;
-	}
-	
-	public void setUriHierarchy(List<String> uriHierarchy) {
-		this.uriHierarchy = uriHierarchy;
-	}
-	
-	public Map<String, String> getRequestParameters() {
-		return requestParameters;
-	}
-	
-	public void setRequestParameters(Map<String, String> requestParameters) {
-		this.requestParameters = requestParameters;
-	}
-	
-	public String getFullRequestURI() {
-		return contextURL + parsedRequestURI + correctedQueryURI;
-	}
-	
-	public RestRequest() {
-		super();
-	}
+    @SuppressWarnings("javadoc")
+    public String getCorrectedQueryURI() {
+        return correctedQueryURI;
+    }
 
-	public RestRequest(String contextURL, String parsedRequestURI,
-			String correctedQueryURI, List<String> uriHierarchy,
-			Map<String, String> requestParameters) {
-		super();
-		this.contextURL = contextURL;
-		this.parsedRequestURI = parsedRequestURI;
-		this.correctedQueryURI = correctedQueryURI;
-		this.uriHierarchy = uriHierarchy;
-		this.requestParameters = requestParameters;
-	}
+    @SuppressWarnings("javadoc")
+    public void setCorrectedQueryURI(String correctedQueryURI) {
+        this.correctedQueryURI = correctedQueryURI;
+    }
+
+    @SuppressWarnings("javadoc")
+    public List<String> getUriHierarchy() {
+        return uriHierarchy;
+    }
+
+    @SuppressWarnings("javadoc")
+    public void setUriHierarchy(List<String> uriHierarchy) {
+        this.uriHierarchy = uriHierarchy;
+    }
+
+    @SuppressWarnings("javadoc")
+    public Map<String, String> getRequestParameters() {
+        return requestParameters;
+    }
+
+    @SuppressWarnings("javadoc")
+    public void setRequestParameters(Map<String, String> requestParameters) {
+        this.requestParameters = requestParameters;
+    }
+
+    @SuppressWarnings("javadoc")
+    public String getFullRequestURI() {
+        return contextURL + parsedRequestURI + correctedQueryURI;
+    }
+
+    /**
+     * Creates a new instance of this class.
+     */
+    public RestRequest() {
+        super();
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * @param contextURL
+     * @param parsedRequestURI
+     * @param correctedQueryURI
+     * @param uriHierarchy
+     * @param requestParameters
+     */
+    public RestRequest(String contextURL, String parsedRequestURI, String correctedQueryURI, List<String> uriHierarchy, Map<String, String> requestParameters) {
+        super();
+        this.contextURL = contextURL;
+        this.parsedRequestURI = parsedRequestURI;
+        this.correctedQueryURI = correctedQueryURI;
+        this.uriHierarchy = uriHierarchy;
+        this.requestParameters = requestParameters;
+    }
 }

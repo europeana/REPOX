@@ -9,6 +9,10 @@ package pt.utl.ist.util.exceptions;
  */
 public class IncompatibleInstanceException extends Exception {
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public IncompatibleInstanceException(String identifier) {
         super(identifier);
     }

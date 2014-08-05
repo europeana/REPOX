@@ -19,12 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import java.util.*;
+
 //import org.xml.sax.SAXException;
 
 /**
- * This class represents an Identify response on either the server or
- * on the client
- *
+ * This class represents an Identify response on either the server or on the
+ * client
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class Identify extends ServerVerb {
@@ -32,24 +33,23 @@ public class Identify extends ServerVerb {
     static {
         validParamNames.add("verb");
     }
-    
+
     /**
      * Construct the xml response on the server side.
-     *
-     * @param context the servlet context
-     * @param request the servlet request
+     * 
+     * @param context
+     *            the servlet context
+     * @param request
+     *            the servlet request
+     * @param response 
+     * @param serverTransformer 
      * @return a String containing the xml response
+     * @throws TransformerException 
      */
-    public static String construct(HashMap context,
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Transformer serverTransformer)
-    throws TransformerException {
+    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws TransformerException {
         String version = (String)context.get("OAIHandler.version");
-        AbstractCatalog abstractCatalog =
-            (AbstractCatalog)context.get("OAIHandler.catalog");
-        Properties properties =
-            (Properties)context.get("OAIHandler.properties");
+        AbstractCatalog abstractCatalog = (AbstractCatalog)context.get("OAIHandler.catalog");
+        Properties properties = (Properties)context.get("OAIHandler.properties");
         String baseURL = properties.getProperty("OAIHandler.baseURL");
 
         if (baseURL == null) {
@@ -113,7 +113,7 @@ public class Identify extends ServerVerb {
             // 	String compression = properties.getProperty("Identify.compression");
             // 	if (compression != null) {
             sb.append("<" + OAIUtil.getTag("compression") + ">gzip</" + OAIUtil.getTag("compression") + ">");
-//          sb.append("<compression>compress</compression>");
+            //          sb.append("<compression>compress</compression>");
             sb.append("<" + OAIUtil.getTag("compression") + ">deflate</" + OAIUtil.getTag("compression") + ">");
             // 	}
             String repositoryIdentifier = properties.getProperty("Identify.repositoryIdentifier");

@@ -1,5 +1,10 @@
 package pt.utl.ist.marc;
 
+/**
+ */
 public enum RecordType {
-BIBLIOGRAPHIC,AUTHORITY
+    /** RecordType BIBLIOGRAPHIC */
+    BIBLIOGRAPHIC, 
+    /** RecordType AUTHORITY */
+    AUTHORITY
 }

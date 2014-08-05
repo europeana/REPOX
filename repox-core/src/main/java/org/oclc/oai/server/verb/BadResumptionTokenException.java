@@ -23,6 +23,9 @@ public class BadResumptionTokenException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public BadResumptionTokenException() {
         super("<" + OAIUtil.getTag("error") + " code=\"badResumptionToken\">The value of the resumptionToken argument is invalid or expired"  + "</" + OAIUtil.getTag("error") + ">");
     }

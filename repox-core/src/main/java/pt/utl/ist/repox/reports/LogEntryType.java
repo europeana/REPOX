@@ -7,8 +7,12 @@ package pt.utl.ist.repox.reports;
  * Time: 15:30
  */
 public enum LogEntryType {
+    /** LogEntryType NORMAL */
     NORMAL,
+    /** LogEntryType ERROR */
     ERROR,
+    /** LogEntryType WARNING */
     WARNING,
+    /** LogEntryType INFO */
     INFO
 }

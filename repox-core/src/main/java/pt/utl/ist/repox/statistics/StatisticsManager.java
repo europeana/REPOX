@@ -7,9 +7,22 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ */
 public interface StatisticsManager {
-
+    /**
+     * @param dataProviderIds
+     * @return RepoxStatistics
+     * @throws IOException
+     * @throws DocumentException
+     * @throws SQLException
+     */
     public RepoxStatistics generateStatistics(List<String> dataProviderIds) throws IOException, DocumentException, SQLException;
 
+    /**
+     * @param repoxStatistics
+     * @return Document
+     * @throws IOException
+     */
     public Document getStatisticsReport(RepoxStatistics repoxStatistics) throws IOException;
 }

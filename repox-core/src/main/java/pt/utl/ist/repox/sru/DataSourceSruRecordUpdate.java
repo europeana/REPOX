@@ -13,15 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
- * 
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 24 de Abr de 2013
  */
 public class DataSourceSruRecordUpdate extends DataSource {
-
-    
-    
     /**
      * Creates a new instance of this class.
      * @param dataProvider
@@ -33,12 +28,8 @@ public class DataSourceSruRecordUpdate extends DataSource {
      * @param recordIdPolicy
      * @param metadataTransformations
      */
-    public DataSourceSruRecordUpdate(DataProvider dataProvider, String id, String description,
-                                     String schema, String namespace, String metadataFormat,
-                                     RecordIdPolicy recordIdPolicy,
-                                     Map<String, MetadataTransformation> metadataTransformations) {
-        super(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy,
-                metadataTransformations);
+    public DataSourceSruRecordUpdate(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
+        super(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
     }
 
     @Override
@@ -59,7 +50,7 @@ public class DataSourceSruRecordUpdate extends DataSource {
 
     @Override
     public int getTotalRecords2Harvest() {
-         return 0;
+        return 0;
     }
 
     @Override

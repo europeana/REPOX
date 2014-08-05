@@ -19,22 +19,27 @@ import java.util.Date;
  */
 public class TransformationResultLogger {
 
-    private String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private String        DATE_FORMAT                = "yyyy-MM-dd HH:mm:ss";
     private static String TRANSFORMATION_FILE_PREFIX = "trans_results___";
 
-    private Document document;
-    private File logFile;
+    private Document      document;
+    private File          logFile;
 
-    public TransformationResultLogger(){}
+    /**
+     * Creates a new instance of this class.
+     */
+    public TransformationResultLogger() {
+    }
 
+    /**
+     * Creates a new instance of this class.
+     * @param dataSetId
+     * @param transformationId
+     */
     public TransformationResultLogger(String dataSetId, String transformationId) {
-        logFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath()+ File.separator
-                + dataSetId + File.separator
-                + "logs" + File.separator
-                + TRANSFORMATION_FILE_PREFIX + encodeTransformationResultFileId(transformationId) + ".xml");
+        logFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + File.separator + dataSetId + File.separator + "logs" + File.separator + TRANSFORMATION_FILE_PREFIX + encodeTransformationResultFileId(transformationId) + ".xml");
 
-        if(logFile.exists())
-            logFile.delete();
+        if (logFile.exists()) logFile.delete();
 
         document = DocumentHelper.createDocument();
         Element root = document.addElement("resultLog");
@@ -43,46 +48,71 @@ public class TransformationResultLogger {
         root.addElement("errors");
     }
 
-    public void addOverallErrorEntry(String errorCause){
-        addRecordErrorEntry("JAVA_ERROR",errorCause);
+    /**
+     * @param errorCause
+     */
+    public void addOverallErrorEntry(String errorCause) {
+        addRecordErrorEntry("JAVA_ERROR", errorCause);
     }
 
-    public void addRecordErrorEntry(String recordId, String errorCause){
-        if(logFile != null && document != null){
-            Element errors = (Element) document.getRootElement().selectSingleNode("errors");
+    /**
+     * @param recordId
+     * @param errorCause
+     */
+    public void addRecordErrorEntry(String recordId, String errorCause) {
+        if (logFile != null && document != null) {
+            Element errors = (Element)document.getRootElement().selectSingleNode("errors");
             Element error = errors.addElement("error");
-            error.addAttribute("recordID",recordId);
+            error.addAttribute("recordID", recordId);
             error.setText(errorCause);
         }
     }
 
-    public void persistData(){
-        if(logFile != null && document != null){
+    /**
+     * 
+     */
+    public void persistData() {
+        if (logFile != null && document != null) {
             try {
-                XmlUtil.writePrettyPrint(logFile,document);
+                XmlUtil.writePrettyPrint(logFile, document);
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
             }
         }
     }
 
-    public String convertDateToString(Date date){
+    /**
+     * @param date
+     * @return String of the Date
+     */
+    public String convertDateToString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         return sdf.format(date);
     }
 
-    public static String encodeTransformationResultFileId(String transformationId){
-        return transformationId.replace(" ","_");
+    /**
+     * @param transformationId
+     * @return encoded String
+     */
+    public static String encodeTransformationResultFileId(String transformationId) {
+        return transformationId.replace(" ", "_");
     }
 
-    public static File getTransformationResultFile(String dataSetId, String transformationId){
-        return new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath()+ File.separator
-                + dataSetId + File.separator
-                + "logs" + File.separator
-                + TRANSFORMATION_FILE_PREFIX + encodeTransformationResultFileId(transformationId) + ".xml");
+    /**
+     * @param dataSetId
+     * @param transformationId
+     * @return File
+     */
+    public static File getTransformationResultFile(String dataSetId, String transformationId) {
+        return new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + File.separator + dataSetId + File.separator + "logs" + File.separator + TRANSFORMATION_FILE_PREFIX + encodeTransformationResultFileId(transformationId) + ".xml");
     }
 
-    public static boolean hasTransformationResultFile(String dataSetId, String transformationId){
-        return getTransformationResultFile(dataSetId,transformationId).exists();
+    /**
+     * @param dataSetId
+     * @param transformationId
+     * @return boolean
+     */
+    public static boolean hasTransformationResultFile(String dataSetId, String transformationId) {
+        return getTransformationResultFile(dataSetId, transformationId).exists();
     }
 }

@@ -9,6 +9,10 @@ package pt.utl.ist.util.exceptions;
  */
 public class SameStylesheetTransformationException extends Exception {
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public SameStylesheetTransformationException(String identifier) {
         super(identifier);
     }

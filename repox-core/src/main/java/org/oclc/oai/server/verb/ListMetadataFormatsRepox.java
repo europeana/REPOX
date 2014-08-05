@@ -26,12 +26,13 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * This class represents a ListMetadataFormats verb on either the client or on the server.
- *
+ * This class represents a ListMetadataFormats verb on either the client or on
+ * the server.
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class ListMetadataFormatsRepox extends ServerVerb {
-    private static ArrayList validParamNames = new ArrayList();
+    private static ArrayList validParamNames    = new ArrayList();
     static {
         validParamNames.add("verb");
         validParamNames.add("identifier");
@@ -43,23 +44,30 @@ public class ListMetadataFormatsRepox extends ServerVerb {
 
     /**
      * Server-side construction of the xml response
-     *
-     * @param context the servlet context
-     * @param request the servlet request
-     * @exception OAIBadRequestException an http 400 status code problem
-     * @exception OAINotFoundException an http 404 status code problem
-     * @exception OAIInternalServerError an http 500 status code problem
+     * 
+     * @param context
+     *            the servlet context
+     * @param request
+     *            the servlet request
+     * @param response 
+     * @param serverTransformer 
+     * @return 
+     * @exception OAIBadRequestException
+     *                an http 400 status code problem
+     * @exception OAINotFoundException
+     *                an http 404 status code problem
+     * @exception OAIInternalServerError
+     *                an http 500 status code problem
+     * @throws TransformerException 
      */
-    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response,
-                                   Transformer serverTransformer) throws OAIInternalServerError, TransformerException {
-        Properties properties = (Properties) context.get("OAIHandler.properties");
-        AbstractCatalog abstractCatalog = (AbstractCatalog) context.get("OAIHandler.catalog");
+    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws OAIInternalServerError, TransformerException {
+        Properties properties = (Properties)context.get("OAIHandler.properties");
+        AbstractCatalog abstractCatalog = (AbstractCatalog)context.get("OAIHandler.catalog");
         String baseURL = properties.getProperty("OAIHandler.baseURL");
-        if(baseURL == null) {
+        if (baseURL == null) {
             try {
                 baseURL = request.getRequestURL().toString();
-            }
-            catch (java.lang.NoSuchMethodError f) {
+            } catch (java.lang.NoSuchMethodError f) {
                 baseURL = request.getRequestURL().toString();
             }
         }
@@ -67,7 +75,7 @@ public class ListMetadataFormatsRepox extends ServerVerb {
         String identifier = request.getParameter("identifier");
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         String styleSheet = properties.getProperty("OAIHandler.styleSheet");
-        if(styleSheet != null) {
+        if (styleSheet != null) {
             sb.append("<?xml-stylesheet type=\"text/xsl\" href=\"");
             sb.append(styleSheet);
             sb.append("\"?>");
@@ -83,16 +91,16 @@ public class ListMetadataFormatsRepox extends ServerVerb {
         // sb.append(getRequestURL(request));
         // sb.append("</requestURL>");
         sb.append(getRequestElement(request, validParamNames, baseURL));
-        if(hasBadArguments(request, requiredParamNames.iterator(), validParamNames)) {
+        if (hasBadArguments(request, requiredParamNames.iterator(), validParamNames)) {
             sb.append(new BadArgumentException().getMessage());
         } else {
-            if(abstractCatalog.getClass().equals(DataSourceOaiCatalog.class)) {
-                DataSourceOaiCatalog catalog = (DataSourceOaiCatalog) abstractCatalog;
+            if (abstractCatalog.getClass().equals(DataSourceOaiCatalog.class)) {
+                DataSourceOaiCatalog catalog = (DataSourceOaiCatalog)abstractCatalog;
                 try {
                     Map<String, String> schemaLocations = catalog.getRepoxSchemaLocations(identifier);
 
                     sb.append("<" + OAIUtil.getTag("ListMetadataFormats") + ">");
-                    if(!schemaLocations.isEmpty()) {
+                    if (!schemaLocations.isEmpty()) {
                         for (Entry<String, String> currentEntry : schemaLocations.entrySet()) {
                             //						String schemaLocation = (String) schemaLocations.elementAt(i);
                             // StringTokenizer tokenizer = new StringTokenizer(schemaLocation);
@@ -101,9 +109,9 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                             String[] tokenizer = split(currentEntry.getValue());
                             String namespaceURI = null;
                             String schemaURL = null;
-                            if(tokenizer.length == 1) {
+                            if (tokenizer.length == 1) {
                                 namespaceURI = tokenizer[0];
-                            } else if(tokenizer.length > 1) {
+                            } else if (tokenizer.length > 1) {
                                 namespaceURI = tokenizer[0];
                                 schemaURL = tokenizer[1];
                             }
@@ -113,12 +121,12 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                             sb.append(currentEntry.getKey());
                             sb.append("</" + OAIUtil.getTag("metadataPrefix") + ">");
                             sb.append("<" + OAIUtil.getTag("schema") + ">");
-                            if(schemaURL != null) {
+                            if (schemaURL != null) {
                                 sb.append(schemaURL);
                             }
                             sb.append("</" + OAIUtil.getTag("schema") + ">");
                             sb.append("<" + OAIUtil.getTag("metadataNamespace") + ">");
-                            if(namespaceURI != null) {
+                            if (namespaceURI != null) {
                                 sb.append(namespaceURI);
                             }
                             sb.append("</" + OAIUtil.getTag("metadataNamespace") + ">");
@@ -126,23 +134,20 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                         }
                     }
                     sb.append("</" + OAIUtil.getTag("ListMetadataFormats") + ">");
-                }
-                catch (IdDoesNotExistException e) {
+                } catch (IdDoesNotExistException e) {
+                    sb.append(e.getMessage());
+                } catch (NoMetadataFormatsException e) {
                     sb.append(e.getMessage());
                 }
-                catch (NoMetadataFormatsException e) {
-                    sb.append(e.getMessage());
-                }
-            }
-            else {
+            } else {
                 Crosswalks crosswalks = abstractCatalog.getCrosswalks();
-                if(identifier == null || identifier.length() == 0) {
+                if (identifier == null || identifier.length() == 0) {
                     Iterator iterator = crosswalks.iterator();
                     sb.append("<" + OAIUtil.getTag("ListMetadataFormats") + ">");
                     while (iterator.hasNext()) {
-                        Map.Entry entry = (Map.Entry) iterator.next();
-                        String oaiSchemaLabel = (String) entry.getKey();
-                        CrosswalkItem crosswalkItem = (CrosswalkItem) entry.getValue();
+                        Map.Entry entry = (Map.Entry)iterator.next();
+                        String oaiSchemaLabel = (String)entry.getKey();
+                        CrosswalkItem crosswalkItem = (CrosswalkItem)entry.getValue();
                         Crosswalk crosswalk = crosswalkItem.getCrosswalk();
                         // StringTokenizer tokenizer = new StringTokenizer(crosswalk.getSchemaLocation());
                         // String namespaceURI = tokenizer.nextToken();
@@ -150,9 +155,9 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                         String[] tokenizer = split(crosswalk.getSchemaLocation());
                         String namespaceURI = null;
                         String schemaURL = null;
-                        if(tokenizer.length == 1) {
+                        if (tokenizer.length == 1) {
                             schemaURL = tokenizer[0];
-                        } else if(tokenizer.length > 1) {
+                        } else if (tokenizer.length > 1) {
                             namespaceURI = tokenizer[0];
                             schemaURL = tokenizer[1];
                         }
@@ -161,12 +166,12 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                         sb.append(oaiSchemaLabel);
                         sb.append("</" + OAIUtil.getTag("metadataPrefix") + ">");
                         sb.append("<" + OAIUtil.getTag("schema") + ">");
-                        if(schemaURL != null) {
+                        if (schemaURL != null) {
                             sb.append(schemaURL);
                         }
                         sb.append("</" + OAIUtil.getTag("schema") + ">");
                         sb.append("<" + OAIUtil.getTag("metadataNamespace") + ">");
-                        if(namespaceURI != null) {
+                        if (namespaceURI != null) {
                             sb.append(namespaceURI);
                         }
                         sb.append("</" + OAIUtil.getTag("metadataNamespace") + ">");
@@ -178,16 +183,16 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                         Vector schemaLocations = abstractCatalog.getSchemaLocations(identifier);
                         sb.append("<" + OAIUtil.getTag("ListMetadataFormats") + ">");
                         for (int i = 0; i < schemaLocations.size(); ++i) {
-                            String schemaLocation = (String) schemaLocations.elementAt(i);
+                            String schemaLocation = (String)schemaLocations.elementAt(i);
                             // StringTokenizer tokenizer = new StringTokenizer(schemaLocation);
                             // String namespaceURI = tokenizer.nextToken();
                             // String schemaURL = tokenizer.nextToken();
                             String[] tokenizer = split(schemaLocation);
                             String namespaceURI = null;
                             String schemaURL = null;
-                            if(tokenizer.length == 1) {
+                            if (tokenizer.length == 1) {
                                 schemaURL = tokenizer[0];
-                            } else if(tokenizer.length > 1) {
+                            } else if (tokenizer.length > 1) {
                                 namespaceURI = tokenizer[0];
                                 schemaURL = tokenizer[1];
                             }
@@ -197,23 +202,21 @@ public class ListMetadataFormatsRepox extends ServerVerb {
                             sb.append(crosswalks.getMetadataPrefix(namespaceURI, schemaURL));
                             sb.append("</" + OAIUtil.getTag("metadataPrefix") + ">");
                             sb.append("<" + OAIUtil.getTag("schema") + ">");
-                            if(schemaURL != null) {
+                            if (schemaURL != null) {
                                 sb.append(schemaURL);
                             }
                             sb.append("</" + OAIUtil.getTag("schema") + ">");
                             sb.append("<" + OAIUtil.getTag("metadataNamespace") + ">");
-                            if(namespaceURI != null) {
+                            if (namespaceURI != null) {
                                 sb.append(namespaceURI);
                             }
                             sb.append("</" + OAIUtil.getTag("metadataNamespace") + ">");
                             sb.append("</" + OAIUtil.getTag("metadataFormat") + ">");
                         }
                         sb.append("</" + OAIUtil.getTag("ListMetadataFormats") + ">");
-                    }
-                    catch (IdDoesNotExistException e) {
+                    } catch (IdDoesNotExistException e) {
                         sb.append(e.getMessage());
-                    }
-                    catch (NoMetadataFormatsException e) {
+                    } catch (NoMetadataFormatsException e) {
                         sb.append(e.getMessage());
                     }
                 }

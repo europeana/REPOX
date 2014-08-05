@@ -10,10 +10,12 @@ package pt.utl.ist.repox.util;
 public class ConfigSingleton {
     private static RepoxContextUtil repoxContextUtil;
 
+    @SuppressWarnings("javadoc")
     public static RepoxContextUtil getRepoxContextUtil() {
         return repoxContextUtil;
     }
 
+    @SuppressWarnings("javadoc")
     public static void setRepoxContextUtil(RepoxContextUtil repoxContextUtil) {
         ConfigSingleton.repoxContextUtil = repoxContextUtil;
     }

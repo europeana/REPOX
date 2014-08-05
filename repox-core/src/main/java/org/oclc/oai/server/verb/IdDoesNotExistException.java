@@ -14,7 +14,7 @@ import org.oclc.oai.util.OAIUtil;
 
 /**
  * An OAI idDoesNotExist Exception
- *
+ * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
 public class IdDoesNotExistException extends Exception {
@@ -23,6 +23,10 @@ public class IdDoesNotExistException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public IdDoesNotExistException(String identifier) {
         super("<" + OAIUtil.getTag("error") + " code=\"idDoesNotExist\">\"" + identifier + "\" is unknown or illegal in this repository</" + OAIUtil.getTag("error") + ">");
     }

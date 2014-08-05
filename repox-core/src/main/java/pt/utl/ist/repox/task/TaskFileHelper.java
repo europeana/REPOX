@@ -17,21 +17,25 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ */
 public class TaskFileHelper {
 
     private static final Logger log = Logger.getLogger(TaskFileHelper.class);
 
-	public static List<Task> loadTasks(File tasksFile) {
+    /**
+     * @param tasksFile
+     * @return List of Tasks
+     */
+    public static List<Task> loadTasks(File tasksFile) {
         List<Task> loadedTasks = new ArrayList<Task>();
 
-        if(!tasksFile.exists()) {
-            return loadedTasks;
-        }
+        if (!tasksFile.exists()) { return loadedTasks; }
 
-        try{
+        try {
             Document document = new SAXReader().read(tasksFile);
             List<Element> taskElements = document.getRootElement().elements("task");
-            if(!taskElements.isEmpty()) {
+            if (!taskElements.isEmpty()) {
                 for (Element loadedTaskElement : taskElements) {
                     TaskType taskType = TaskFactory.TaskType.valueOf(loadedTaskElement.attributeValue("type"));
                     Task task = TaskFactory.getInstance(taskType);
@@ -46,61 +50,84 @@ public class TaskFileHelper {
         }
         return loadedTasks;
     }
-	
-	public static synchronized void saveTasks(File tasksFile, List<Task> tasks) throws IOException {
-		Document document = DocumentHelper.createDocument();
-		Element rootNode = document.addElement("tasks");
-		
-		if(tasks != null) {
-			for (Task currentTask : tasks) {
-				Element taskNode = rootNode.addElement("task");
-				currentTask.setXml(taskNode);
-			}
-		}
-		
-		XmlUtil.writePrettyPrint(tasksFile, document);
-	}	
-	
 
-	public static synchronized void saveSingleTask(File tasksFile, Task task)
-			throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
-		List<Task> tasks = new ArrayList<Task>();
-		tasks.add(task);
-		saveTasks(tasksFile, tasks);
-	}
-	
-	public static synchronized void saveTask(File tasksFile, Task task)
-			throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
-		List<Task> loadedTasks = loadTasks(tasksFile);
-		loadedTasks.add(task);
-		saveTasks(tasksFile, loadedTasks);
-	}
-	
-	/**
-	 * Removes task from Tasks file if there is an equivalent action (same taskClass and parameters) in the file.  
-	 * 
-	 * @param task
-	 */
-	public static synchronized void removeTask(File tasksFile, Task task)
-			throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
-		List<Task> loadedTasks = loadTasks(tasksFile);
-		
-		log.warn("Class: TaskFileHelper - Number of tasks in recoverableTasks.xml file: " + loadedTasks.size() + "; Task to be removed: " + task.getTaskClass().getName() );
+    /**
+     * @param tasksFile
+     * @param tasks
+     * @throws IOException
+     */
+    public static synchronized void saveTasks(File tasksFile, List<Task> tasks) throws IOException {
+        Document document = DocumentHelper.createDocument();
+        Element rootNode = document.addElement("tasks");
 
-		Iterator<Task> iter = loadedTasks.iterator();
-		while (iter.hasNext()) {
-			Task runningTask = iter.next();
-			if(runningTask.equalsAction(task)) {
-				task.setFinishTime(Calendar.getInstance());
-				iter.remove();
+        if (tasks != null) {
+            for (Task currentTask : tasks) {
+                Element taskNode = rootNode.addElement("task");
+                currentTask.setXml(taskNode);
+            }
+        }
+
+        XmlUtil.writePrettyPrint(tasksFile, document);
+    }
+
+    /**
+     * @param tasksFile
+     * @param task
+     * @throws IOException
+     * @throws DocumentException
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     * @throws ParseException
+     */
+    public static synchronized void saveSingleTask(File tasksFile, Task task) throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
+        List<Task> tasks = new ArrayList<Task>();
+        tasks.add(task);
+        saveTasks(tasksFile, tasks);
+    }
+
+    /**
+     * @param tasksFile
+     * @param task
+     * @throws IOException
+     * @throws DocumentException
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     * @throws ParseException
+     */
+    public static synchronized void saveTask(File tasksFile, Task task) throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
+        List<Task> loadedTasks = loadTasks(tasksFile);
+        loadedTasks.add(task);
+        saveTasks(tasksFile, loadedTasks);
+    }
+
+    /**
+     * Removes task from Tasks file if there is an equivalent action (same taskClass and parameters) in the file.  
+     * @param tasksFile 
+     * @param task
+     * @throws IOException 
+     * @throws DocumentException 
+     * @throws ClassNotFoundException 
+     * @throws NoSuchMethodException 
+     * @throws ParseException 
+     */
+    public static synchronized void removeTask(File tasksFile, Task task) throws IOException, DocumentException, ClassNotFoundException, NoSuchMethodException, ParseException {
+        List<Task> loadedTasks = loadTasks(tasksFile);
+
+        log.warn("Class: TaskFileHelper - Number of tasks in recoverableTasks.xml file: " + loadedTasks.size() + "; Task to be removed: " + task.getTaskClass().getName());
+
+        Iterator<Task> iter = loadedTasks.iterator();
+        while (iter.hasNext()) {
+            Task runningTask = iter.next();
+            if (runningTask.equalsAction(task)) {
+                task.setFinishTime(Calendar.getInstance());
+                iter.remove();
                 log.warn("Class: TaskFileHelper - Task removed from file with success.");
-			}
-		}
+            }
+        }
 
         log.warn("Class: TaskFileHelper - Number of tasks in recoverableTasks.xml file: " + loadedTasks.size());
 
-		TaskFileHelper.saveTasks(tasksFile, loadedTasks);
-	}
-	
-	
+        TaskFileHelper.saveTasks(tasksFile, loadedTasks);
+    }
+
 }

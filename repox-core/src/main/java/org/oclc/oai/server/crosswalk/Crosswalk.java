@@ -40,11 +40,18 @@ public abstract class Crosswalk {
      * Constructor
      *
      * @param schemaLocation the schemaLocation supported by this crosswalk
+     * @param contentType 
      */
     public Crosswalk(String schemaLocation, String contentType) {
         this(schemaLocation, contentType, (String)null);
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param schemaLocation
+     * @param contentType
+     * @param docType
+     */
     public Crosswalk(String schemaLocation, String contentType, String docType) {
         this(schemaLocation, contentType, docType, (String)null);
     }
@@ -52,6 +59,9 @@ public abstract class Crosswalk {
      * Constructor
      *
      * @param schemaLocation the schemaLocation supported by this crosswalk
+     * @param contentType 
+     * @param docType 
+     * @param encoding 
      */
     public Crosswalk(String schemaLocation, String contentType, String docType, String encoding) {
         this.schemaLocation = schemaLocation;
@@ -69,10 +79,19 @@ public abstract class Crosswalk {
      */
     public String getSchemaLocation() { return schemaLocation; }
 
+    /**
+     * @return contentType
+     */
     public String getContentType() { return contentType; }
 
+    /**
+     * @return docType
+     */
     public String getDocType() { return docType; }
 
+    /**
+     * @return encoding
+     */
     public String getEncoding() { return encoding; }
 
     /**
@@ -92,7 +111,7 @@ public abstract class Crosswalk {
     }
 
     /**
-     * parse the namespaceURL from the schemaLocation
+     * Parse the namespaceURL from the schemaLocation
      *
      * @return the namespaceURL portion of the schemaLocation
      */
@@ -125,6 +144,7 @@ public abstract class Crosswalk {
      * returns the schemaLocation for this crosswalk.
      * @return a String containing the schemaLocation.
      */
+    @Override
     public String toString() {
 	return schemaLocation;
     }

@@ -7,28 +7,46 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ */
 public class ZipUtil {
-	public static byte[] zip(byte[] bytes) throws IOException {
-		int sChunk = 8192;
+    /**
+     * @param bytes
+     * @return zipped bytes
+     * @throws IOException
+     */
+    public static byte[] zip(byte[] bytes) throws IOException {
+        int sChunk = 8192;
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		GZIPOutputStream zipout = new GZIPOutputStream(out);
-		byte[] buffer = new byte[sChunk];
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPOutputStream zipout = new GZIPOutputStream(out);
+        byte[] buffer = new byte[sChunk];
 
-		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-		int length;
-		while ((length = in.read(buffer, 0, sChunk)) != -1)
-			zipout.write(buffer, 0, length);
-		in.close();
-		zipout.close();
-		
-		return out.toByteArray();
-	}
-	
-	public static byte[] zip(String zippedString, Charset charset) throws IOException {
-		return zip(zippedString.getBytes(charset));
-	}
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        int length;
+        while ((length = in.read(buffer, 0, sChunk)) != -1)
+            zipout.write(buffer, 0, length);
+        in.close();
+        zipout.close();
 
+        return out.toByteArray();
+    }
+
+    /**
+     * @param zippedString
+     * @param charset
+     * @return zipped bytes
+     * @throws IOException
+     */
+    public static byte[] zip(String zippedString, Charset charset) throws IOException {
+        return zip(zippedString.getBytes(charset));
+    }
+
+    /**
+     * @param listFiles2Zip
+     * @param output
+     * @throws IOException
+     */
     public static void zipFiles(File[] listFiles2Zip, File output) throws IOException {
         // These are the files to include in the ZIP file
 
@@ -40,7 +58,6 @@ public class ZipUtil {
 
         // Compress the files
         for (File actualFile : listFiles2Zip) {
-
 
             FileInputStream in = new FileInputStream(actualFile);
 
@@ -62,35 +79,49 @@ public class ZipUtil {
         out.close();
     }
 
-	public static byte[] unzip(byte[] zippedBytes) throws IOException {
-		int sChunk = 8192;
-		
-		ByteArrayInputStream in = new ByteArrayInputStream(zippedBytes);
-		GZIPInputStream zipin = new GZIPInputStream(in);
-		byte[] buffer = new byte[sChunk];
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int length;
-		while ((length = zipin.read(buffer, 0, sChunk)) != -1)
-			out.write(buffer, 0, length);
-		out.close();
-		zipin.close();
-        in.close();
-		
-		return out.toByteArray();
-	}
-	
+    /**
+     * @param zippedBytes
+     * @return unzipped bytes
+     * @throws IOException
+     */
+    public static byte[] unzip(byte[] zippedBytes) throws IOException {
+        int sChunk = 8192;
 
-	public static String unzip(byte[] zippedBytes, Charset charset) throws IOException {
-		return new String(unzip(zippedBytes), charset);
-	}
-	 
-	public static void main(String[] args) throws IOException {
-		String originalString = "Quero isto descomprimido com acentos";
-		
-		byte[] zippedValue = ZipUtil.zip(originalString, Charset.forName("ISO-8859-1"));
-		String unzippedValue = new String(ZipUtil.unzip(zippedValue));
-		
-		System.out.println("*   zipped: " + zippedValue);
-		System.out.println("* unzipped: " + unzippedValue);
-	}
+        ByteArrayInputStream in = new ByteArrayInputStream(zippedBytes);
+        GZIPInputStream zipin = new GZIPInputStream(in);
+        byte[] buffer = new byte[sChunk];
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int length;
+        while ((length = zipin.read(buffer, 0, sChunk)) != -1)
+            out.write(buffer, 0, length);
+        out.close();
+        zipin.close();
+        in.close();
+
+        return out.toByteArray();
+    }
+
+    /**
+     * @param zippedBytes
+     * @param charset
+     * @return unzipped bytes
+     * @throws IOException
+     */
+    public static String unzip(byte[] zippedBytes, Charset charset) throws IOException {
+        return new String(unzip(zippedBytes), charset);
+    }
+
+    /**
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        String originalString = "Quero isto descomprimido com acentos";
+
+        byte[] zippedValue = ZipUtil.zip(originalString, Charset.forName("ISO-8859-1"));
+        String unzippedValue = new String(ZipUtil.unzip(zippedValue));
+
+        System.out.println("*   zipped: " + zippedValue);
+        System.out.println("* unzipped: " + unzippedValue);
+    }
 }

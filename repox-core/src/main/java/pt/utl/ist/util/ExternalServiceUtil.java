@@ -13,20 +13,23 @@ import java.util.List;
  * Time: 18:43
  */
 public class ExternalServiceUtil {
-
+    /**
+     * @param document
+     * @param oaiServerUrl
+     */
     public static void replaceAllExternalServices(Document document, String oaiServerUrl) {
         List<Node> providers = document.getRootElement().selectNodes("//data-providers/provider");
-        for(Node providerNode : providers){
+        for (Node providerNode : providers) {
             List<Node> sources = providerNode.selectNodes("source");
-            for(Node sourceNode : sources){
+            for (Node sourceNode : sources) {
                 List<Node> restServicesList = sourceNode.selectNodes("restServices/restService");
-                for(Node restServiceNode : restServicesList){
+                for (Node restServiceNode : restServicesList) {
                     List<Node> parametersList = restServiceNode.selectNodes("parameters/parameter");
-                    for(Node parameterNode : parametersList){
+                    for (Node parameterNode : parametersList) {
                         String semantics = parameterNode.valueOf("@semantics");
-                        if(semantics.equals("SERVER_OAI_URL")){
+                        if (semantics.equals("SERVER_OAI_URL")) {
                             Element parameterEl = (Element)parameterNode;
-                            parameterEl.addAttribute("value",oaiServerUrl);
+                            parameterEl.addAttribute("value", oaiServerUrl);
                         }
                     }
                 }

@@ -20,61 +20,69 @@ import java.util.Map;
  */
 
 public class RecordSAXParser extends DefaultHandler {
-
-    public interface RecordHandler{
+    /**
+     */
+    public interface RecordHandler {
+        /**
+         * @param record
+         */
         public void handleRecord(Element record);
     }
 
-    RecordHandler handler;
+    RecordHandler               handler;
 
     //List<Element> records;
 
-    private String rootNodeValue;
-    private int actualLevel = 0;
-    private int rootNodeLevel = 0;
-    private boolean insideElement = false;
-    private String currentCharacters;
+    private String              rootNodeValue;
+    private int                 actualLevel   = 0;
+    private int                 rootNodeLevel = 0;
+    private boolean             insideElement = false;
+    private String              currentCharacters;
     private Map<String, String> namespaces;
 
-    /** Creates a new instance of RecordSAXParser */
+    /** Creates a new instance of RecordSAXParser 
+     * @param rootNodeValue 
+     * @param handler */
     public RecordSAXParser(String rootNodeValue, RecordHandler handler) {
         this.rootNodeValue = rootNodeValue;
-        this.handler=handler;
+        this.handler = handler;
         this.namespaces = new HashMap<String, String>();
     }
-
 
     /*   public List<Element> getRecords(){
             return records;
         }
     */
 
+    @Override
     public void startDocument() throws SAXException {
-//        records = new ArrayList<Element>();
+        //        records = new ArrayList<Element>();
     }
 
+    @Override
     public void endDocument() throws SAXException {
     }
 
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException  {
-        try{
-            if(!insideElement && !qName.equals(rootNodeValue)){
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        try {
+            if (!insideElement && !qName.equals(rootNodeValue)) {
                 // get all namespaces
                 for (int i = 0; i < attributes.getLength(); i++) {
                     // Get names and values for each attribute
                     String name = attributes.getQName(i);
-                    if(name.startsWith("xmlns")){
+                    if (name.startsWith("xmlns")) {
                         namespaces.put(name, attributes.getValue(i));
                     }
                 }
             }
 
-            if (qName.equals(rootNodeValue) && !insideElement){
+            if (qName.equals(rootNodeValue) && !insideElement) {
                 currentCharacters = "";
                 insideElement = true;
                 rootNodeLevel = actualLevel;
             }
-            if(insideElement){
+            if (insideElement) {
                 String att = "";
                 for (int i = 0; i < attributes.getLength(); i++) {
                     // Get names and values for each attribute
@@ -88,37 +96,37 @@ public class RecordSAXParser extends DefaultHandler {
                     value = value.replace("\'", "&#039;");
 
                     //if(!name.equals("") && !name.contains("xsi")){
-                    if(!name.equals("")){
-                        att+= " " + name + "=\"" + value + "\"";
+                    if (!name.equals("")) {
+                        att += " " + name + "=\"" + value + "\"";
                     }
                 }
 
-                if(qName.equals(rootNodeValue)){
+                if (qName.equals(rootNodeValue)) {
                     // add namespaces to record
                     String namespacesString = "";
                     for (String s : namespaces.keySet()) {
-                        if(!att.contains(s)){
+                        if (!att.contains(s)) {
                             namespacesString = " " + s + "=\"" + namespaces.get(s) + "\"" + namespacesString;
                         }
                     }
-                    currentCharacters+="<" + qName + att + namespacesString + ">";
-                }
-                else{
-                    currentCharacters+="<" + qName + att + ">";
+                    currentCharacters += "<" + qName + att + namespacesString + ">";
+                } else {
+                    currentCharacters += "<" + qName + att + ">";
                 }
             }
             actualLevel++;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SAXException(e);
         }
     }
 
-    public void endElement(String uri, String localName, String qName) throws SAXException  {
-        try{
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        try {
             actualLevel--;
-            if (qName.equals(rootNodeValue) && rootNodeLevel == actualLevel){
-                currentCharacters+="</" + qName + ">";
+            if (qName.equals(rootNodeValue) && rootNodeLevel == actualLevel) {
+                currentCharacters += "</" + qName + ">";
 
                 //System.out.println("currentCharacters = " + currentCharacters);
 
@@ -130,24 +138,25 @@ public class RecordSAXParser extends DefaultHandler {
                 // records.add(doc.getRootElement());
                 insideElement = false;
             }
-            if(insideElement){
-                currentCharacters+="</" + qName + ">";
+            if (insideElement) {
+                currentCharacters += "</" + qName + ">";
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SAXException(e);
         }
     }
 
+    @Override
     public void characters(char buf[], int offset, int len) throws SAXException {
-        String value = new String(buf,offset,len);
+        String value = new String(buf, offset, len);
 
         value = value.replace("<", "&lt;");
         value = value.replace(">", "&gt;");
         value = value.replace("&", "&amp;");
         value = value.replace("\"", "&quot;");
         value = value.replace("\'", "&#039;");
-        currentCharacters+=value;
+        currentCharacters += value;
     }
 
     /**
@@ -269,4 +278,3 @@ public class RecordSAXParser extends DefaultHandler {
     */
 
 }
-

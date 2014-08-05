@@ -16,10 +16,15 @@ public class StandardCharsetConverter implements CharacterConverterI{
     
 	String charset;
 	
+	/**
+	 * Creates a new instance of this class.
+	 * @param charset
+	 */
 	public StandardCharsetConverter(String charset) {
 		this.charset = charset;
 	}
 	
+    @Override
     public String convert(String s){
     	try {
 			return new String(s.getBytes(), charset);

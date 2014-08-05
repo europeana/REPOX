@@ -10,181 +10,221 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/**
- *
- * @author  Nuno Freire
- */
+
 /**
  * @author Nuno Freire
- *
  */
-public class Field  implements Serializable{
-	static final long serialVersionUID=2; 
-	
-	
-    protected short tag;    
-    protected char ind1=' ';
-    protected char ind2=' ';
-    protected String value=null;
-    protected List<Subfield> subfields=new ArrayList<Subfield>();
+public class Field implements Serializable {
+    static final long        serialVersionUID = 2;
+    /** Field tag */
+    protected short          tag;
+    /** Field ind1 */
+    protected char           ind1             = ' ';
+    /** Field ind2 */
+    protected char           ind2             = ' ';
+    /** Field value */
+    protected String         value            = null;
+    /** Field subfields */
+    protected List<Subfield> subfields        = new ArrayList<Subfield>();
 
-/**************************************************************************
- ************                  Constructors              ******************
- *************************************************************************/
-    /** Constructs an empty Field
+    /**************************************************************************
+     ************ Constructors ******************
+     *************************************************************************/
+    /**
+     * Constructs an empty Field
      * 
      */
-    public Field(){
-    }
-    
-
-    /** Constructs a data Field with empty subfields
-     * @param tag should be > 10
-     * @param ind1
-     * @param ind2
-     */
-    public Field( int tag, char ind1, char ind2){
-        this((short)tag,ind1,ind2);
-    }    
-    /** Constructs a data Field with empty subfields
-     * @param tag should be > 10
-     * @param ind1
-     * @param ind2
-     */
-    public Field( short tag, char ind1, char ind2){
-        this.tag=tag;
-        this.ind1=ind1;
-        this.ind2=ind2;
-        this.subfields=new ArrayList<Subfield>(1);
-    }
-    
-    public Field( short tag, char ind1, char ind2, char subfield, String value){
-        this(tag, ind1, ind2);
-        addSubfield(subfield, value);
-        
-    }
-    
-    public Field( short tag, char ind1, char ind2, char subfield, String value, char subfield2, String value2){
-    	this(tag, ind1, ind2);
-    	addSubfield(subfield, value); 
-    	addSubfield(subfield2, value2);
-    	
-    }
-    /** Constructs a control Field 
-     * @param tag should be < 10
-     * @param value 
-     */
-    public Field( int tag, String value){
-        this((short)tag, value);
-    }
-    /** Constructs a control Field 
-     * @param tag should be < 10
-     * @param value 
-     */
-    public Field( short tag, String value){
-        this.tag=(short)tag;
-        setValue(value);
+    public Field() {
     }
 
     /**
-     * @deprecated 
+     * Constructs a data Field with empty subfields
+     * 
+     * @param tag
+     *            should be > 10
+     * @param ind1
+     * @param ind2
      */
-    public Field( String tag, char ind1, char ind2){
-    	this(Integer.parseInt(tag),ind1,ind2);
+    public Field(int tag, char ind1, char ind2) {
+        this((short)tag, ind1, ind2);
+    }
+
+    /**
+     * Constructs a data Field with empty subfields
+     * 
+     * @param tag
+     *            should be > 10
+     * @param ind1
+     * @param ind2
+     */
+    public Field(short tag, char ind1, char ind2) {
+        this.tag = tag;
+        this.ind1 = ind1;
+        this.ind2 = ind2;
+        this.subfields = new ArrayList<Subfield>(1);
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * @param tag
+     * @param ind1
+     * @param ind2
+     * @param subfield
+     * @param value
+     */
+    public Field(short tag, char ind1, char ind2, char subfield, String value) {
+        this(tag, ind1, ind2);
+        addSubfield(subfield, value);
+
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * @param tag
+     * @param ind1
+     * @param ind2
+     * @param subfield
+     * @param value
+     * @param subfield2
+     * @param value2
+     */
+    public Field(short tag, char ind1, char ind2, char subfield, String value, char subfield2, String value2) {
+        this(tag, ind1, ind2);
+        addSubfield(subfield, value);
+        addSubfield(subfield2, value2);
+
+    }
+
+    /**
+     * Constructs a control Field
+     * 
+     * @param tag
+     *            should be < 10
+     * @param value
+     */
+    public Field(int tag, String value) {
+        this((short)tag, value);
+    }
+
+    /**
+     * Constructs a control Field
+     * 
+     * @param tag
+     *            should be < 10
+     * @param value
+     */
+    public Field(short tag, String value) {
+        this.tag = tag;
+        setValue(value);
     }
 
     /**
      * @deprecated
      */
-    public Field( String tag, String value){
-    	this(Integer.parseInt(tag),value);
+    @Deprecated
+    public Field(String tag, char ind1, char ind2) {
+        this(Integer.parseInt(tag), ind1, ind2);
     }
-    
-    
-    /** Constructs a field from a iso2709 string. Used to aid parsing of Record in ISO 2709
-     * @param iso2709 the iso2709 part of the record that contains this field's data
-     * @param tag the tag of the field
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public Field(String tag, String value) {
+        this(Integer.parseInt(tag), value);
+    }
+
+    /**
+     * Constructs a field from a iso2709 string. Used to aid parsing of Record
+     * in ISO 2709
+     * 
+     * @param iso2709
+     *            the iso2709 part of the record that contains this field's data
+     * @param tag
+     *            the tag of the field
      */
     public Field(String iso2709, short tag) {
-        this.tag=tag;
-        if (iso2709.endsWith(String.valueOf(Record.FT)))
-        	iso2709=iso2709.substring(0,iso2709.length()-1);
-        if (tag<10)
-        	value=iso2709;
+        this.tag = tag;
+        if (iso2709.endsWith(String.valueOf(Record.FT))) iso2709 = iso2709.substring(0, iso2709.length() - 1);
+        if (tag < 10)
+            value = iso2709;
         else {
-        	ind1=iso2709.charAt(0);
-        	ind2=iso2709.charAt(1);
-        	if(iso2709.length()>=4) {
-		    	String[] sfs=iso2709.substring(3).split(String.valueOf(Record.US));
-		    	for (String sfIso: sfs) {
-		    		if (sfIso.length()>=2)
-		    			subfields.add(new Subfield(sfIso));
-		    	}
-        	}
+            ind1 = iso2709.charAt(0);
+            ind2 = iso2709.charAt(1);
+            if (iso2709.length() >= 4) {
+                String[] sfs = iso2709.substring(3).split(String.valueOf(Record.US));
+                for (String sfIso : sfs) {
+                    if (sfIso.length() >= 2) subfields.add(new Subfield(sfIso));
+                }
+            }
         }
     }
-    
-/**************************************************************************
- ************                Public Methods              ******************
- *************************************************************************/
- 
- 	public void removeSubfield(char code) {
-	 	for (Iterator<Subfield> it=subfields.iterator() ; it.hasNext() ;) {
-	 		Subfield sf=it.next();
-	 		if (sf.getCode()==code)
-	 			it.remove();	 		
-	 	}
- 	}
- 
-    /** add a new subfield to the end of the subfield list
-     * @param code the subfield code
+
+    /**************************************************************************
+     ************ Public Methods ******************
+     *************************************************************************/
+
+    /**
+     * @param code 
+     */
+    public void removeSubfield(char code) {
+        for (Iterator<Subfield> it = subfields.iterator(); it.hasNext();) {
+            Subfield sf = it.next();
+            if (sf.getCode() == code) it.remove();
+        }
+    }
+
+    /**
+     * add a new subfield to the end of the subfield list
+     * 
+     * @param code
+     *            the subfield code
      * @return the created subfield
      */
-    public pt.utl.ist.marc.Subfield addSubfield(char code){
-        Subfield ret=new Subfield(code, " ");
+    public pt.utl.ist.marc.Subfield addSubfield(char code) {
+        Subfield ret = new Subfield(code, " ");
         subfields.add(ret);
         return ret;
     }
-    
-    /** add a new subfield to the end of the subfield list
+
+    /**
+     * add a new subfield to the end of the subfield list
+     * 
      * @param code
      * @param value
      * @return the created subfield
      */
-    public pt.utl.ist.marc.Subfield addSubfield(char code, String value){
-        Subfield ret=new Subfield(code, value);
+    public pt.utl.ist.marc.Subfield addSubfield(char code, String value) {
+        Subfield ret = new Subfield(code, value);
         subfields.add(ret);
         return ret;
     }
-    
 
-    
-    
-    
     /**
      * @return true if this field is a control field, false otherwise
      */
-    public boolean isControlField(){
-        return tag<10;
+    public boolean isControlField() {
+        return tag < 10;
     }
 
     /**
      * @return true if this field is a data field, false otherwise
      */
-    public boolean isDataField(){
-        return ! isControlField();
+    public boolean isDataField() {
+        return !isControlField();
     }
 
     /**
-      * Forms the string containing values of member variables in the Bean.
-      *
-      * @return String containing member variable values.
-      */
-    public String toString(){
-        StringBuffer b=new StringBuffer().append(tag).append(": ");
+     * Forms the string containing values of member variables in the Bean.
+     * 
+     * @return String containing member variable values.
+     */
+    @Override
+    public String toString() {
+        StringBuffer b = new StringBuffer().append(tag).append(": ");
         if (isControlField())
             b.append(value);
-        else{
+        else {
             b.append(ind1);
             b.append(ind2);
             for (Subfield el : subfields) {
@@ -192,197 +232,220 @@ public class Field  implements Serializable{
             }
         }
         return b.toString();
-    }     
-    
-    
+    }
 
-    
+    /**
+     * @return the html String
+     */
     public String toHtml() {
-    	StringBuffer ret=new StringBuffer()
-        .append("<b>"+tag+"</b> ");
-    	if (isControlField())
-    		ret.append(value);
-        else{
-        	ret.append(ind1).append(" ");
-        	ret.append(ind2).append(" ");
+        StringBuffer ret = new StringBuffer().append("<b>" + tag + "</b> ");
+        if (isControlField())
+            ret.append(value);
+        else {
+            ret.append(ind1).append(" ");
+            ret.append(ind2).append(" ");
             for (Subfield el : subfields) {
                 ret.append("<b>$").append(el.getCode()).append("</b>").append(el.getValue());
             }
         }
         return ret.toString();
-    	
+
     }
-    
+
     /**
      * @return a iso2709 string representation of the field
      */
-    public String toIso2709 (){
-        if (isControlField()){
+    public String toIso2709() {
+        if (isControlField()) {
             return getValue() + Record.FT;
-        }else{
-            StringBuffer dataField = new StringBuffer()
-            .append(getInd1()).append(getInd2());
+        } else {
+            StringBuffer dataField = new StringBuffer().append(getInd1()).append(getInd2());
             for (Subfield subfield1 : getSubfields()) {
                 Subfield subfield = subfield1;
                 dataField.append(subfield.toIso2709());
             }
             dataField.append(Record.FT);
             return dataField.toString();
-        }    
+        }
     }
 
-/**************************************************************************
- ************              Properties Methods            ******************
- *************************************************************************/    
-    public char getInd1(){
+    /**************************************************************************
+     ************ Properties Methods ******************
+     *************************************************************************/
+    
+    @SuppressWarnings("javadoc")
+    public char getInd1() {
         return ind1;
     }
-    public void setInd1(char ind1){
-        this.ind1 =  ind1;
+
+    @SuppressWarnings("javadoc")
+    public void setInd1(char ind1) {
+        this.ind1 = ind1;
     }
 
-    public char getInd2(){
+    @SuppressWarnings("javadoc")
+    public char getInd2() {
         return ind2;
     }
-    public void setInd2(char ind2){
-        this.ind2 =  ind2;
+
+    @SuppressWarnings("javadoc")
+    public void setInd2(char ind2) {
+        this.ind2 = ind2;
     }
 
-    public List<Subfield> getSubfields(){
+    @SuppressWarnings("javadoc")
+    public List<Subfield> getSubfields() {
         return subfields;
     }
-    public void setSubfields(List<Subfield> subfields){
-        this.subfields =  subfields;
+
+    @SuppressWarnings("javadoc")
+    public void setSubfields(List<Subfield> subfields) {
+        this.subfields = subfields;
     }
-    
-   
+
     /**
      * @return the tag of the field, formated in a 3 char string
      */
     public String getTagAsString() {
-    	return tagAsString(tag);
+        return tagAsString(tag);
     }
-    
-    
+
     /**
      * @return the tag of the field, formated in a 3 char string
      */
     public int getTagAsInt() {
-    	return (int) tag;
+        return (int)tag;
     }
-    
+
     /**
+     * @param tag 
      * @return the tag of the field, formated in a 3 char string
      */
     public static String tagAsString(int tag) {
-    	if (tag<10)
-    		return "00"+tag;
-    	if (tag<100)
-    		return "0"+tag;
-    	return String.valueOf(tag);
+        if (tag < 10) return "00" + tag;
+        if (tag < 100) return "0" + tag;
+        return String.valueOf(tag);
     }
-    
-    
-    /** sets the tag property using a string. 
-     * @param tag 
+
+    /**
+     * sets the tag property using a string.
+     * 
+     * @param tag
      */
     public void setTag(String tag) {
-        this.tag=Short.parseShort(tag);
+        this.tag = Short.parseShort(tag);
     }
 
+    @SuppressWarnings("javadoc")
     public short getTag() {
-    	return tag;
+        return tag;
     }
+
+    @SuppressWarnings("javadoc")
     public void setTag(int tag) {
-        this.tag=(short)tag;
+        this.tag = (short)tag;
     }
+
+    @SuppressWarnings("javadoc")
     public void setTag(short tag) {
-        this.tag=tag;
+        this.tag = tag;
     }
-    
+
+    @SuppressWarnings("javadoc")
     public String getValue() {
         return value;
-    }   
-    public void setValue(String value) {
-        this.value=value;
     }
-    
 
+    @SuppressWarnings("javadoc")
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    @Override
     public Field clone() {
-        Field newField=new Field();
-        newField.setTag(getTag());            
+        Field newField = new Field();
+        newField.setTag(getTag());
         newField.setInd1(getInd1());
         newField.setInd2(getInd2());
         if (isControlField())
             newField.setValue(getValue());
-        else{
+        else {
             for (Object o : getSubfields()) {
-                Subfield srcSf = (Subfield) o;
+                Subfield srcSf = (Subfield)o;
                 newField.addSubfield(srcSf.getCode(), srcSf.getValue());
             }
         }
         return newField;
     }
 
-
-    /**gets a subfield value in the field. To be used only for non repeatable subfields, as it returns the first subfield that matches.
-     * @param sf the subfield code
+    /**
+     * gets a subfield value in the field. To be used only for non repeatable
+     * subfields, as it returns the first subfield that matches.
+     * 
+     * @param sf
+     *            the subfield code
      * @return the first subfield value that matches, null otherwise
      */
     public String getSingleSubfieldValue(char sf) {
         int sz = subfields.size() - 1;
-		for (int idx = 0 ; idx <= sz ; idx++) {
-		    Subfield f=subfields.get( idx);
-            if (f.getCode()==sf)
-                return f.getValue();
-		}        
+        for (int idx = 0; idx <= sz; idx++) {
+            Subfield f = subfields.get(idx);
+            if (f.getCode() == sf) return f.getValue();
+        }
         return null;
     }
 
-
-    /**gets a subfield in the field. To be used only for non repeatable subfields, as it returns the first subfield that matches.
-     * @param sf the subfield code
+    /**
+     * gets a subfield in the field. To be used only for non repeatable
+     * subfields, as it returns the first subfield that matches.
+     * 
+     * @param sf
+     *            the subfield code
      * @return the first subfield that matches, null otherwise
      */
     public Subfield getSingleSubfield(char sf) {
         int sz = subfields.size() - 1;
-		for (int idx = 0 ; idx <= sz ; idx++) {
-		    Subfield f=subfields.get( idx);
-            if (f.getCode()==sf)
-                return f;
-		}        
+        for (int idx = 0; idx <= sz; idx++) {
+            Subfield f = subfields.get(idx);
+            if (f.getCode() == sf) return f;
+        }
         return null;
     }
 
-    
-    /** gets all values of the subfields that match
+    /**
+     * gets all values of the subfields that match
+     * 
      * @param sf
      * @return all values of the subfields that match, or an empty list
      */
     public List<String> getSubfieldValues(char sf) {
-        List<String> ret=new ArrayList<String>();
+        List<String> ret = new ArrayList<String>();
         int sz = subfields.size() - 1;
-		for (int idx = 0 ; idx <= sz ; idx++) {
-		    Subfield f=subfields.get( idx);
-            if (f.getCode()==sf){
+        for (int idx = 0; idx <= sz; idx++) {
+            Subfield f = subfields.get(idx);
+            if (f.getCode() == sf) {
                 ret.add(f.getValue());
             }
-		}        
+        }
         return ret;
     }
-    
-    
-    /** builds a string with the values of several subfields.
-     * @param useSubfields the subfield codes to include in the string
-     * @param separator the separator to use between subfields
-     * @param removeBicos remove the "<...>" if the subfields contain it. 
+
+    /**
+     * builds a string with the values of several subfields.
+     * 
+     * @param useSubfields
+     *            the subfield codes to include in the string
+     * @param separator
+     *            the separator to use between subfields
+     * @param removeBicos
+     *            remove the "<...>" if the subfields contain it.
      * @return the values of several subfields
      */
-    public String getHeadingString(char[] useSubfields, String separator, boolean removeBicos){        
-        StringBuffer value=new StringBuffer();
-        boolean first=true;
+    public String getHeadingString(char[] useSubfields, String separator, boolean removeBicos) {
+        StringBuffer value = new StringBuffer();
+        boolean first = true;
         for (Object o : getSubfields()) {
-            Subfield sf = (Subfield) o;
+            Subfield sf = (Subfield)o;
             boolean append = false;
             int sz = useSubfields.length;
             for (int idx = sz - 1; idx >= 0; idx--) {
@@ -403,14 +466,13 @@ public class Field  implements Serializable{
                 value.append(sfv);
             }
         }
-        String ret=value.toString().trim();
-        if (ret.length()>0){
+        String ret = value.toString().trim();
+        if (ret.length() > 0) {
             while (ret.endsWith(" "))
-                ret=ret.substring(0, ret.length()-1);
-            char lastChar=ret.charAt(ret.length()-1);
-            if (lastChar==',' || lastChar==';' || lastChar==':')
-                ret=ret.substring(0, ret.length()-1);
+                ret = ret.substring(0, ret.length() - 1);
+            char lastChar = ret.charAt(ret.length() - 1);
+            if (lastChar == ',' || lastChar == ';' || lastChar == ':') ret = ret.substring(0, ret.length() - 1);
         }
-        return ret;    
-    }  
+        return ret;
+    }
 }

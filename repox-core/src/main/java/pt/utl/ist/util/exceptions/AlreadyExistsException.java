@@ -9,6 +9,10 @@ package pt.utl.ist.util.exceptions;
  */
 public class AlreadyExistsException extends Exception {
 
+    /**
+     * Creates a new instance of this class.
+     * @param identifier
+     */
     public AlreadyExistsException(String identifier) {
         super(identifier);
     }

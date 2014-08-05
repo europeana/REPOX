@@ -35,6 +35,7 @@ public class RemovePontuationVisitor {
     private static Pattern pontuationSoleParentesisAtEndCleanPattern=Pattern.compile("[ \\)\\]\\}]+$");
     
     
+    /** RemovePontuationVisitor fields */
     protected static HashMap fields;
     static{
         fields=new HashMap(10);
@@ -142,6 +143,9 @@ public class RemovePontuationVisitor {
     }
     
     
+    /**
+     * @param rec
+     */
     public static void removePontuation(Record rec){
         for (Object o : rec.getFields()) {
             Field fld = (Field) o;
@@ -152,6 +156,9 @@ public class RemovePontuationVisitor {
         }        
     }    
 
+    /**
+     * @param rec
+     */
     public static void removePontuationAndBicos(Record rec){
         for (Object o : rec.getFields()) {
             Field fld = (Field) o;
@@ -179,12 +186,20 @@ public class RemovePontuationVisitor {
         }        
     }
     
+    /**
+     * @param doc
+     * @return Document
+     */
     public static Document removePontuation(Document doc){
         Record rec=new RecordBuilderFromMarcXml().parseDom(doc);
         removePontuation(rec);
         return DomBuilder.record2Dom(rec);
     }       
     
+    /**
+     * @param fld
+     * @param rd
+     */
     protected static void removePontuation(Field fld, RemoverDefinition rd){
         Subfield before=null;
         Subfield now=null;
@@ -210,6 +225,10 @@ public class RemovePontuationVisitor {
     }
 
     
+    /**
+     * @param sf
+     * @param regExp
+     */
     protected static void removePontuation(Subfield sf, String regExp){
         String value=sf.getValue();
         Pattern p = Pattern.compile(regExp);
@@ -219,28 +238,42 @@ public class RemovePontuationVisitor {
     }   
     
     
+    /**
+     */
     protected static class RemoverDefinition{
         public String field;
         public MapOfLists<String, String> before;
         public MapOfLists<String, String> in;
         
+        /**
+         * Creates a new instance of this class.
+         * @param field
+         */
         public RemoverDefinition(String field){
             this.field=field;
             before=new MapOfLists<String, String>();
             in=new MapOfLists<String, String>();
         }
         
+        /**
+         * @param subfield
+         * @param regExp
+         */
         public void addIn(String subfield, String regExp){
             in.put(subfield,regExp);
         }
+        /**
+         * @param subfield
+         * @param regExp
+         */
         public void addBefore(String subfield, String regExp){
             before.put(subfield,regExp);
         }
     }
     
-    
-    
-    
+    /**
+     * @param rec
+     */
     public static void removeAllPontuation(Record rec){
         for (Object o : rec.getFields()) {
             Field fld = (Field) o;
@@ -248,6 +281,9 @@ public class RemovePontuationVisitor {
         }        
     }    
     
+    /**
+     * @param fld
+     */
     public static void removeAllPontuation(Field fld){
         for(Subfield sf: fld.getSubfields()) {
         	Matcher m=pontuationAtStartPattern.matcher(sf.getValue());
@@ -270,13 +306,9 @@ public class RemovePontuationVisitor {
         }
     }     
     
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * @param args
+     */
     public static void main(String[] args){
         Record rec=new Record();
         Field f=rec.addField(225);

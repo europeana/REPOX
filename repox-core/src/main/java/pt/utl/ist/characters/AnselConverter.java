@@ -4,14 +4,17 @@ import pt.utl.ist.marc.Field;
 import pt.utl.ist.marc.Record;
 import pt.utl.ist.marc.Subfield;
 
+/**
+ * 4
+ */
 public class AnselConverter {
 
     private static byte[][] doubleCharsOld;
     private static byte[][] doubleCharsNew;
-    private static byte[] charsOld;
-    private static byte[] charsNew;
-    private static byte sepI;
-    private static byte sepF;
+    private static byte[]   charsOld;
+    private static byte[]   charsNew;
+    private static byte     sepI;
+    private static byte     sepF;
 
     static {
         sepI = getByte("0x95");
@@ -31,7 +34,7 @@ public class AnselConverter {
 
         doubleCharsOld[1] = new byte[11];
         doubleCharsNew[1] = new byte[11];
-//        doubleCharsOld[1][0]=getByte("0xC1"); 
+        //        doubleCharsOld[1][0]=getByte("0xC1"); 
         doubleCharsOld[1][0] = getByte("0xE1");
         doubleCharsOld[1][1] = getByte("0x61");
         doubleCharsOld[1][2] = getByte("0x41");
@@ -57,7 +60,7 @@ public class AnselConverter {
 
         doubleCharsOld[2] = new byte[13];
         doubleCharsNew[2] = new byte[13];
-//        doubleCharsOld[2][0]=getByte("0xC2"); 
+        //        doubleCharsOld[2][0]=getByte("0xC2"); 
         doubleCharsOld[2][0] = getByte("0xE2");
         doubleCharsOld[2][1] = getByte("0x61");
         doubleCharsOld[2][2] = getByte("0x41");
@@ -87,7 +90,7 @@ public class AnselConverter {
 
         doubleCharsOld[3] = new byte[11];
         doubleCharsNew[3] = new byte[11];
-//        doubleCharsOld[3][0]=getByte("0xC3"); 
+        //        doubleCharsOld[3][0]=getByte("0xC3"); 
         doubleCharsOld[3][0] = getByte("0xE3");
         doubleCharsOld[3][1] = getByte("0x61");
         doubleCharsOld[3][2] = getByte("0x41");
@@ -113,7 +116,7 @@ public class AnselConverter {
 
         doubleCharsOld[4] = new byte[7];
         doubleCharsNew[4] = new byte[7];
-//        doubleCharsOld[4][0]=getByte("0xC4"); 
+        //        doubleCharsOld[4][0]=getByte("0xC4"); 
         doubleCharsOld[4][0] = getByte("0xE4");
         doubleCharsOld[4][1] = getByte("0x61");
         doubleCharsOld[4][2] = getByte("0x41");
@@ -189,7 +192,10 @@ public class AnselConverter {
         charsNew[5] = getByte("0xBA");//
     }
 
-
+    /**
+     * @param array
+     * @return converted bytes
+     */
     public static byte[] convertBytes(byte[] array) {
         byte[] ret = new byte[array.length];
         int r = 0;
@@ -205,16 +211,13 @@ public class AnselConverter {
                 }
                 if (ends) {
                     k = sc;
-                }
-                else {
+                } else {
                     ret[r] = array[k];
                     r++;
                 }
-            }
-            else {
+            } else {
                 Byte newChar = null;
-                if (k < array.length - 1)
-                    newChar = findCharAtDouble(array[k], array[k + 1]);
+                if (k < array.length - 1) newChar = findCharAtDouble(array[k], array[k + 1]);
                 if (newChar == null)
                     newChar = findChar(array[k]);
                 else {
@@ -223,8 +226,7 @@ public class AnselConverter {
                 }
                 if (newChar != null) {
                     ret[r] = newChar;
-                }
-                else {
+                } else {
                     ret[r] = array[k];
                 }
                 r++;
@@ -237,8 +239,7 @@ public class AnselConverter {
         for (int idx = ret.length - 1; idx >= 0; idx--) {
             if (ret[idx] == empty) {
                 realsz = idx;
-            }
-            else
+            } else
                 break;
         }
         if (realsz != ret.length) {
@@ -251,21 +252,24 @@ public class AnselConverter {
         return ret;
     }
 
+    /**
+     * @param str
+     * @return converted String
+     */
     public static String convertString(String str) {
         return new String(convertBytes(str.getBytes()));
     }
 
-
+    /**
+     * @param rec
+     */
     public static void convertRecord(Record rec) {
-        if (rec == null) {
-            return;
-        }
+        if (rec == null) { return; }
         // todo: GDJ: this loop appears many times so the converters should all be restructured. it should be in one place only.
         for (Field field : rec.getFields()) {
             if (field.isControlField()) {
                 field.setValue(convertString(field.getValue()));
-            }
-            else {
+            } else {
                 for (Subfield subfield : field.getSubfields()) {
                     subfield.setValue(convertString(subfield.getValue()));
                 }
@@ -275,7 +279,7 @@ public class AnselConverter {
 
     /**
      * ***********************************************************************
-     * ***********                  Private Methods           ******************
+     * *********** Private Methods ******************
      * ***********************************************************************
      */
     private static byte getByte(String b) {
@@ -286,8 +290,7 @@ public class AnselConverter {
         for (int c = 0; c < doubleCharsOld.length; c++) {
             if (doubleCharsOld[c][0] == c1) {
                 for (int i = 0; i < doubleCharsOld[c].length; i++) {
-                    if (doubleCharsOld[c][i] == c2)
-                        return doubleCharsNew[c][i];
+                    if (doubleCharsOld[c][i] == c2) return doubleCharsNew[c][i];
                 }
             }
         }
@@ -296,18 +299,17 @@ public class AnselConverter {
 
     private static Byte findChar(byte ch) {
         for (int i = 0; i < charsOld.length; i++) {
-            if (charsOld[i] == ch) {
-                return charsNew[i];
-            }
+            if (charsOld[i] == ch) { return charsNew[i]; }
         }
         return null;
     }
 
-
     /**
      * ***********************************************************************
-     * ***********                    Main                    ******************
+     * *********** Main ******************
      * ***********************************************************************
+     * 
+     * @param args
      */
     public static void main(String[] args) {
 
@@ -315,11 +317,6 @@ public class AnselConverter {
         ByteInspector.printBytes("u".getBytes());
         ByteInspector.printBytes("ù".getBytes());
 
-
     } // main
 
 }
-
-
-
-

@@ -3,6 +3,7 @@ package pt.utl.ist.repox.z3950;
 import org.apache.log4j.Logger;
 import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.ResultSet.IRResultSet;
+
 import pt.utl.ist.characters.RecordCharactersConverter;
 import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.marc.Record;
@@ -19,16 +20,18 @@ import java.util.*;
  * Z39.50 Harvester by Date/time last modified
  */
 public class TimestampHarvester extends AbstractHarvester {
-    private static final Logger log = Logger.getLogger(TimestampHarvester.class);
+    private static final Logger log                          = Logger.getLogger(TimestampHarvester.class);
 
     //	private String creationDateBibAttribute="1011";
-    private String modificationDateBibAttribute = "1012";
-    private Date earliestTimestamp;
+    private String              modificationDateBibAttribute = "1012";
+    private Date                earliestTimestamp;
 
+    @SuppressWarnings("javadoc")
     public Date getEarliestTimestamp() {
         return earliestTimestamp;
     }
 
+    @SuppressWarnings("javadoc")
     public void setEarliestTimestamp(Date earliestTimestamp) {
         this.earliestTimestamp = earliestTimestamp;
     }
@@ -44,12 +47,12 @@ public class TimestampHarvester extends AbstractHarvester {
     }
 
     private class RecordIterator implements Iterator<RecordRepox> {
-        private DataSource dataSource;
-        private File logFile;
-        private boolean fullIngest;
-        private Date currentDay;
-        private Date tomorrow;
-        Record nextRecord = null;
+        private DataSource                       dataSource;
+        private File                             logFile;
+        private boolean                          fullIngest;
+        private Date                             currentDay;
+        private Date                             tomorrow;
+        Record                                   nextRecord = null;
 
         private Enumeration<InformationFragment> currentInformationFragment;
 
@@ -59,43 +62,38 @@ public class TimestampHarvester extends AbstractHarvester {
             this.fullIngest = fullIngest;
             this.currentDay = earliestTimestamp;
 
-            if(!this.fullIngest && dataSource.getLastUpdate() != null) {
+            if (!this.fullIngest && dataSource.getLastUpdate() != null) {
                 this.currentDay = dataSource.getLastUpdate();
             }
-            this.tomorrow=DateUtil.add(new Date(), 1, Calendar.DAY_OF_MONTH);
+            this.tomorrow = DateUtil.add(new Date(), 1, Calendar.DAY_OF_MONTH);
         }
 
         private boolean getNextBatch() throws HarvestFailureException {
-            int consecutiveErrors=0;
+            int consecutiveErrors = 0;
 
-            while(currentDay.before(tomorrow)) {
+            while (currentDay.before(tomorrow)) {
 
                 StringUtil.simpleLog("Harvesting " + DateUtil.date2String(currentDay, "yyyyMMdd"), this.getClass(), logFile);
-                String queryStr="@attrset bib-1 ";
-                queryStr+="@and @attr 2=4 @attr 4=5  @attr 6=1  @attr 1="+modificationDateBibAttribute+" \""+DateUtil.date2String(currentDay, "yyyyMMdd")+"\"";
-                queryStr+=" @attr 2=2 @attr 4=5  @attr 6=1  @attr 1="+modificationDateBibAttribute+" \""+DateUtil.date2String(currentDay, "yyyyMMdd")+"\"";
+                String queryStr = "@attrset bib-1 ";
+                queryStr += "@and @attr 2=4 @attr 4=5  @attr 6=1  @attr 1=" + modificationDateBibAttribute + " \"" + DateUtil.date2String(currentDay, "yyyyMMdd") + "\"";
+                queryStr += " @attr 2=2 @attr 4=5  @attr 6=1  @attr 1=" + modificationDateBibAttribute + " \"" + DateUtil.date2String(currentDay, "yyyyMMdd") + "\"";
 
                 log.debug("currentDay = " + currentDay);
                 log.debug("... = " + DateUtil.date2String(currentDay, "yyyyMMdd"));
 
-                IRResultSet results = runQuery(queryStr,logFile,dataSource.getId());
-                if(results == null) {
+                IRResultSet results = runQuery(queryStr, logFile, dataSource.getId());
+                if (results == null) {
                     consecutiveErrors++;
-                    if(consecutiveErrors > 10) {
-                        throw new HarvestFailureException("Importing aborted - Too many consecutive errors");
-                    }
-                }
-                else {
+                    if (consecutiveErrors > 10) { throw new HarvestFailureException("Importing aborted - Too many consecutive errors"); }
+                } else {
                     consecutiveErrors = 0;
 
-                    StringUtil.simpleLog("Iterate over results (status=" + results.getStatus() + "), count=" + results.getFragmentCount(),
-                            this.getClass(), logFile);
+                    StringUtil.simpleLog("Iterate over results (status=" + results.getStatus() + "), count=" + results.getFragmentCount(), this.getClass(), logFile);
                     currentInformationFragment = new org.jzkit.search.util.ResultSet.ReadAheadEnumeration(results);
 
-                    try{
+                    try {
                         nextRecord = handleRecord(currentInformationFragment.nextElement());
-                    }
-                    catch (ClassCastException e){
+                    } catch (ClassCastException e) {
                         StringUtil.simpleLog("ClassCastException: record with date: " + modificationDateBibAttribute, this.getClass(), logFile);
                     }
                     results.close();
@@ -143,28 +141,26 @@ public class TimestampHarvester extends AbstractHarvester {
             return false;
         }
 
+        @Override
         public boolean hasNext() {
             /*if(currentInformationFragment != null && currentInformationFragment.hasMoreElements()) {
                 return true;
             }*/
-            if(nextRecord != null) {
+            if (nextRecord != null) {
                 return true;
-            }
-            else {
+            } else {
                 try {
                     return getNextBatch();
-                }
-                catch(HarvestFailureException e) {
+                } catch (HarvestFailureException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
 
+        @Override
         public RecordRepox next() {
             try {
-                if(!hasNext()) {
-                    throw new NoSuchElementException();
-                }
+                if (!hasNext()) { throw new NoSuchElementException(); }
 
                 RecordCharactersConverter.convertRecord(nextRecord, new UnderCode32Remover());
                 boolean isRecordDeleted = (nextRecord.getLeader().charAt(5) == 'd');
@@ -178,20 +174,23 @@ public class TimestampHarvester extends AbstractHarvester {
                 //nextRecord=null;
                 //return next();
                 return null;//agregado
-            }finally {
-                nextRecord=null;
+            } finally {
+                nextRecord = null;
             }
         }
 
+        @Override
         public void remove() {
         }
 
     }
 
+    @Override
     public Iterator<RecordRepox> getIterator(DataSource dataSource, File logFile, boolean fullIngest) {
         return new RecordIterator(dataSource, logFile, fullIngest);
     }
 
+    @Override
     public boolean isFullIngestExclusive() {
         return false;
     }

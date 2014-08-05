@@ -19,44 +19,47 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Convert native "item" to mtx. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to mtx. In this case, the native "item" is assumed to
+ * already be formatted as an OAI <record> element, with the possible exception
+ * that multiple metadataFormats may be present in the <metadata> element. The
+ * "crosswalk", merely involves pulling out the one that is requested.
  */
 public class Copyxhtml extends XSLTCrosswalk {
-//     private Transformer transformer = null;
-    
+    //     private Transformer transformer = null;
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param properties
+     *            properties that are needed to configure the crosswalk.
+     * @throws OAIInternalServerError 
      */
-    public Copyxhtml(Properties properties)
-        throws OAIInternalServerError {
-  	super(properties, "http://www.w3.org/1999/xhtml http://www.w3.org/2002/08/xhtml/xhtml1-transitional.xsd", "text/html; charset=UTF-8", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+    public Copyxhtml(Properties properties) throws OAIInternalServerError {
+        super(properties, "http://www.w3.org/1999/xhtml http://www.w3.org/2002/08/xhtml/xhtml1-transitional.xsd", "text/html; charset=UTF-8", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
         try {
             String xsltName = properties.getProperty("Copyxhtml.xsltName");
             if (xsltName != null) {
                 StreamSource xslSource = new StreamSource(new FileInputStream(xsltName));
                 TransformerFactory tFactory = TransformerFactory.newInstance();
                 this.transformer = tFactory.newTransformer(xslSource);
-                System.out.println("Copyxhtml.Copyxhtml: transformer="
-                                   + this.transformer);
+                System.out.println("Copyxhtml.Copyxhtml: transformer=" + this.transformer);
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new OAIInternalServerError(e.getMessage());
         }
     }
-    
+
     /**
      * Can this nativeItem be represented in DC format?
-     * @param nativeItem a record in native format
+     * 
+     * @param nativeItem
+     *            a record in native format
      * @return true if DC format is possible, false otherwise.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem) {
         ArrayList list = (ArrayList)nativeItem;
         return list.contains("xhtml");

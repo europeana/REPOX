@@ -10,6 +10,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.oclc.oai.util.OAIUtil;
 import org.xml.sax.SAXException;
+
 import pt.utl.ist.repox.RunnableStoppable;
 import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
@@ -26,6 +27,7 @@ import pt.utl.ist.repox.util.ZipUtil;
 import pt.utl.ist.util.InvalidInputException;
 
 import javax.xml.transform.TransformerException;
+
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -37,69 +39,91 @@ import java.util.Date;
  *
  */
 public class ExportToFilesystem implements RunnableStoppable {
-    private static final Logger log = Logger.getLogger(ExportToFilesystem.class);
-    private static final int RECORDS_PER_REQUEST = 250;
+    private static final Logger log                 = Logger.getLogger(ExportToFilesystem.class);
+    private static final int    RECORDS_PER_REQUEST = 250;
 
-    private String taskId;
-    private String dataSourceId;
-    private File exportDir;
-    private boolean stopExecution = false;
-    private int recordsPerFile = 1;
-    private String metadataExportFormat;
-    private boolean executeProfile;
+    private String              taskId;
+    private String              dataSourceId;
+    private File                exportDir;
+    private boolean             stopExecution       = false;
+    private int                 recordsPerFile      = 1;
+    private String              metadataExportFormat;
+    private boolean             executeProfile;
 
+    @SuppressWarnings("javadoc")
     public String getTaskId() {
         return taskId;
     }
 
+    @SuppressWarnings("javadoc")
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 
+    @SuppressWarnings("javadoc")
     public String getDataSourceId() {
         return dataSourceId;
     }
 
+    @SuppressWarnings("javadoc")
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
 
+    @SuppressWarnings("javadoc")
     public File getExportDir() {
         return exportDir;
     }
 
+    @SuppressWarnings("javadoc")
     public void setExportDir(File exportDir) {
         this.exportDir = exportDir;
     }
 
+    @SuppressWarnings("javadoc")
     public int getRecordsPerFile() {
         return recordsPerFile;
     }
 
+    @SuppressWarnings("javadoc")
     public void setRecordsPerFile(int recordsPerFile) {
         this.recordsPerFile = recordsPerFile;
     }
 
+    @SuppressWarnings("javadoc")
     public boolean isExecuteProfile() {
         return executeProfile;
     }
 
+    @SuppressWarnings("javadoc")
     public void setExecuteProfile(boolean executeProfile) {
         this.executeProfile = executeProfile;
     }
 
+    @SuppressWarnings("javadoc")
     public String getMetadataExportFormat() {
         return metadataExportFormat;
     }
 
+    @SuppressWarnings("javadoc")
     public void setMetadataExportFormat(String metadataExportFormat) {
         this.metadataExportFormat = metadataExportFormat;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public ExportToFilesystem() {
         super();
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param taskId
+     * @param dataSourceId
+     * @param exportDirPath
+     * @param recordsPerFile
+     */
     public ExportToFilesystem(String taskId, String dataSourceId, String exportDirPath, String recordsPerFile) {
         this();
         this.taskId = taskId;
@@ -109,8 +133,15 @@ public class ExportToFilesystem implements RunnableStoppable {
         this.metadataExportFormat = "";
     }
 
-    public ExportToFilesystem(String taskId, String dataSourceId, String exportDirPath, String recordsPerFile,
-                              String metadataExportFormat) {
+    /**
+     * Creates a new instance of this class.
+     * @param taskId
+     * @param dataSourceId
+     * @param exportDirPath
+     * @param recordsPerFile
+     * @param metadataExportFormat
+     */
+    public ExportToFilesystem(String taskId, String dataSourceId, String exportDirPath, String recordsPerFile, String metadataExportFormat) {
         this();
         this.taskId = taskId;
         this.dataSourceId = dataSourceId;
@@ -119,8 +150,16 @@ public class ExportToFilesystem implements RunnableStoppable {
         this.metadataExportFormat = metadataExportFormat;
     }
 
-    public ExportToFilesystem(String taskId, String dataSourceId, String exportDirPath, String recordsPerFile,
-                              String metadataExportFormat, String executeProfile) {
+    /**
+     * Creates a new instance of this class.
+     * @param taskId
+     * @param dataSourceId
+     * @param exportDirPath
+     * @param recordsPerFile
+     * @param metadataExportFormat
+     * @param executeProfile
+     */
+    public ExportToFilesystem(String taskId, String dataSourceId, String exportDirPath, String recordsPerFile, String metadataExportFormat, String executeProfile) {
         this();
         this.taskId = taskId;
         this.dataSourceId = dataSourceId;
@@ -130,14 +169,12 @@ public class ExportToFilesystem implements RunnableStoppable {
         this.executeProfile = Boolean.parseBoolean(executeProfile);
     }
 
+    @Override
     public void run() {
         stopExecution = false;
 
         try {
-            if((exportDir.exists() && !exportDir.isDirectory())
-                    || (!exportDir.exists() && !exportDir.mkdirs())) {
-                throw new IOException("Invalid directory or unable to create directory with path " + exportDir.getAbsolutePath());
-            }
+            if ((exportDir.exists() && !exportDir.isDirectory()) || (!exportDir.exists() && !exportDir.mkdirs())) { throw new IOException("Invalid directory or unable to create directory with path " + exportDir.getAbsolutePath()); }
 
             AccessPointsManager accessPointsManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager();
             DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
@@ -164,15 +201,13 @@ public class ExportToFilesystem implements RunnableStoppable {
             Element rootElement = getRootElement(totalRecords);
             XMLWriter xmlWriter = null;
 
-            while(requestOffset < totalRecords) {
-                OaiListResponse oaiListResponse = accessPointsManager.getOaiRecordsFromDataSource(dataSource, null, null,
-                        requestOffset, RECORDS_PER_REQUEST, false);
+            while (requestOffset < totalRecords) {
+                OaiListResponse oaiListResponse = accessPointsManager.getOaiRecordsFromDataSource(dataSource, null, null, requestOffset, RECORDS_PER_REQUEST, false);
 
                 for (OaiItem currentItem : oaiListResponse.getOaiItems()) {
-                    if(stopExecution) {
+                    if (stopExecution) {
                         DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSource.getId());
-                        log.warn("Received stop signal: exiting export of Data Source " + dataSource.getId()
-                                + " from Data Provider " + dataProviderParent.getName() + " to dir: " + exportDir.getAbsolutePath());
+                        log.warn("Received stop signal: exiting export of Data Source " + dataSource.getId() + " from Data Provider " + dataProviderParent.getName() + " to dir: " + exportDir.getAbsolutePath());
                         return;
                     }
 
@@ -182,22 +217,20 @@ public class ExportToFilesystem implements RunnableStoppable {
                     Element recordToExport = getRecordToExport(currentItem);
 
                     try {
-                        if(isCreateFile) {
+                        if (isCreateFile) {
                             xmlWriter = getNewXmlWriter(batchNumber);
                             startXmlWriter(xmlWriter, rootElement);
                         }
 
                         xmlWriter.write(recordToExport);
 
-                        if(isCloseFile) {
+                        if (isCloseFile) {
                             endXmlWriter(xmlWriter, rootElement);
                         }
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         log.error("Error saving records of batch " + batchNumber + " of Data Source " + dataSourceId, e);
-                    }
-                    finally {
-                        if(isCloseFile) {
+                    } finally {
+                        if (isCloseFile) {
                             batchNumber++;
                         }
 
@@ -208,7 +241,6 @@ public class ExportToFilesystem implements RunnableStoppable {
                 requestOffset += RECORDS_PER_REQUEST;
             }
 
-
             // create a zip file with all files
             File zipFile = new File(exportDir, dataSourceId + "_" + DateFormatUtils.format(new Date(), TimeUtil.LONG_DATE_FORMAT_COMPACT) + ".zip");
 
@@ -218,8 +250,7 @@ public class ExportToFilesystem implements RunnableStoppable {
                 }
             };
 
-            if(exportDir.listFiles(xmlFileFilter).length > 0)
-                ZipUtil.zipFiles(exportDir.listFiles(xmlFileFilter), zipFile);
+            if (exportDir.listFiles(xmlFileFilter).length > 0) ZipUtil.zipFiles(exportDir.listFiles(xmlFileFilter), zipFile);
 
             /*
             if(executeProfile){
@@ -235,19 +266,17 @@ public class ExportToFilesystem implements RunnableStoppable {
     }
 
     private boolean isFileToCreate(int recordsCounter) {
-        if(recordsPerFile < 0) {
+        if (recordsPerFile < 0) {
             return recordsCounter == 1;
-        }
-        else {
+        } else {
             return ((recordsCounter - 1) % recordsPerFile) == 0;
         }
     }
 
     private boolean isFileToClose(int totalRecords, int recordsCounter) {
-        if(recordsPerFile < 0) {
+        if (recordsPerFile < 0) {
             return recordsCounter == totalRecords;
-        }
-        else {
+        } else {
             return (recordsCounter % recordsPerFile == 0) || (recordsCounter == totalRecords);
         }
     }
@@ -290,20 +319,15 @@ public class ExportToFilesystem implements RunnableStoppable {
 
             Element metadataElement = DocumentHelper.createElement("repox:metadata");
 
-            if(currentItem.isDeleted()) {
+            if (currentItem.isDeleted()) {
                 recordElement.addAttribute("deleted", "true");
-            }
-            else {
-
+            } else {
 
                 // to allow export to any XML format
                 String encodedIdentifier = OAIUtil.xmlEncode(identifier);
                 String xmlRecordString = (currentItem.getMetadata() != null ? new String(currentItem.getMetadata(), "UTF-8") : "");
 
-
-
-
-                if(metadataExportFormat != null && !metadataExportFormat.isEmpty()){
+                if (metadataExportFormat != null && !metadataExportFormat.isEmpty()) {
                     DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
 
                     Urn urn = new Urn(identifier);
@@ -312,27 +336,19 @@ public class ExportToFilesystem implements RunnableStoppable {
 
                     String oaiRecordHeader = "<header";
 
-                    if(recordRepox.isDeleted()) {
+                    if (recordRepox.isDeleted()) {
                         oaiRecordHeader += " status=\"deleted\"";
                     }
 
-                    oaiRecordHeader = oaiRecordHeader + "><identifier>" + encodedIdentifier + "</identifier>"
-                            + "<datestamp>" + currentItem.getDatestamp() + "</datestamp>"
-                            + "<setSpec>" + urn.getDataSourceId() + "</setSpec></header>";
+                    oaiRecordHeader = oaiRecordHeader + "><identifier>" + encodedIdentifier + "</identifier>" + "<datestamp>" + currentItem.getDatestamp() + "</datestamp>" + "<setSpec>" + urn.getDataSourceId() + "</setSpec></header>";
 
                     xmlRecordString = DataSourceOaiCatalog.getTransformedRecord(encodedIdentifier, metadataExportFormat, dataSource, recordRepox.getDom().asXML());
-                    if(xmlRecordString.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
-                        xmlRecordString = xmlRecordString.substring(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".length());
+                    if (xmlRecordString.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
+                        xmlRecordString = xmlRecordString.substring("<?xml version=\"1.0\" encoding=\"UTF-8\"?>".length());
                     }
                 }
                 Document recordMetadata = DocumentHelper.parseText(xmlRecordString);
                 metadataElement.add(recordMetadata.getRootElement().detach());
-
-
-
-
-
 
                 /*String xmlRecordString = new String(currentItem.getMetadata(), "UTF-8");
                 Document recordMetadata = DocumentHelper.parseText(xmlRecordString);
@@ -341,12 +357,10 @@ public class ExportToFilesystem implements RunnableStoppable {
             recordElement.add(metadataElement);
 
             return recordElement;
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             log.error("Could not get metadata in UTF-8", e);
             return null;
-        }
-        catch (DocumentException e) {
+        } catch (DocumentException e) {
             log.error("Could not parse XML from record of item " + currentItem.getIdentifier() + " of Data Source " + dataSourceId, e);
             return null;
         } catch (TransformerException e) {
@@ -364,15 +378,21 @@ public class ExportToFilesystem implements RunnableStoppable {
         }
     }
 
+    @Override
     public void stop() {
         stopExecution = true;
     }
 
+    /**
+     * @param args
+     * @throws DocumentException
+     * @throws IOException
+     */
     public static void main(String[] args) throws DocumentException, IOException {
         DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer("bn_teses").getDataSource();
-        ExportToFilesystem exportToFilesystem = new ExportToFilesystem("112911", dataSource.getId(), "f:/lixo" , "-1", "false");
+        ExportToFilesystem exportToFilesystem = new ExportToFilesystem("112911", dataSource.getId(), "f:/lixo", "-1", "false");
         System.out.println(exportToFilesystem.getRecordsPerFile());
-//		if(true) System.exit(0);
+        //		if(true) System.exit(0);
         exportToFilesystem.run();
     }
 }

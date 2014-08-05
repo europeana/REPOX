@@ -24,76 +24,83 @@ import java.util.HashMap;
 // import org.apache.axis.message.MessageElement;
 
 /**
- * Convert native "item" to oai_dc. In this case, the native "item"
- * is assumed to already be formatted as an OAI <record> element,
- * with the possible exception that multiple metadataFormats may
- * be present in the <metadata> element. The "crosswalk", merely
- * involves pulling out the one that is requested.
+ * Convert native "item" to oai_dc. In this case, the native "item" is assumed
+ * to already be formatted as an OAI <record> element, with the possible
+ * exception that multiple metadataFormats may be present in the <metadata>
+ * element. The "crosswalk", merely involves pulling out the one that is
+ * requested.
  */
 public class NodePassThruCrosswalk extends Crosswalk {
-//     private static Logger logger = Logger.getLogger(NodePassThruCrosswalk.class);
+    //     private static Logger logger = Logger.getLogger(NodePassThruCrosswalk.class);
     private static Transformer transformer = null;
-    
+
     /**
-     * The constructor assigns the schemaLocation associated with this crosswalk. Since
-     * the crosswalk is trivial in this case, no properties are utilized.
-     *
-     * @param properties properties that are needed to configure the crosswalk.
+     * The constructor assigns the schemaLocation associated with this
+     * crosswalk. Since the crosswalk is trivial in this case, no properties are
+     * utilized.
+     * 
+     * @param crosswalkItem
      */
     public NodePassThruCrosswalk(CrosswalkItem crosswalkItem) {
-	super(crosswalkItem.getMetadataNamespace() + " " + crosswalkItem.getSchema());
-// 	BasicConfigurator.configure();
-	TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	try {
-	    transformer = transformerFactory.newTransformer();
-	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-	    transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
-	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	} catch (Exception e) {
-	    e.printStackTrace();
-// 	    logger.fatal("failed to create transformer", e);
-	}
+        super(crosswalkItem.getMetadataNamespace() + " " + crosswalkItem.getSchema());
+        // 	BasicConfigurator.configure();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        try {
+            transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 	    logger.fatal("failed to create transformer", e);
+        }
     }
 
     /**
      * Can this nativeItem be represented in DC format?
-     * @param nativeItem a record in native format
+     * 
+     * @param nativeItem
+     *            a record in native format
      * @return true if DC format is possible, false otherwise.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem) {
-	return true;
+        return true;
     }
 
     /**
      * Perform the actual crosswalk.
-     *
-     * @param nativeItem the native "item". In this case, it is
-     * already formatted as an OAI <record> element, with the
-     * possible exception that multiple metadataFormats are
-     * present in the <metadata> element.
-     * @return a String containing the XML to be stored within the <metadata> element.
+     * 
+     * @param nativeItem
+     *            the native "item". In this case, it is already formatted as an
+     *            OAI <record> element, with the possible exception that
+     *            multiple metadataFormats are present in the <metadata>
+     *            element.
+     * @return a String containing the XML to be stored within the <metadata>
+     *         element.
      */
+    @Override
     public String createMetadata(Object nativeItem) {
-	try {
-	    HashMap hashMap = (HashMap)nativeItem;
-	    Element dataNode = (Element)hashMap.get("metadata");
-	    DOMSource source = new DOMSource(dataNode);
-	    StringWriter sw = new StringWriter();
-	    StreamResult result = new StreamResult(sw);
-	    synchronized (transformer) {
-		transformer.transform(source, result);
-	    }
-	    return sw.toString();
-	} catch (Exception e) {
-// 	    logger.warn("NodePassThruCrosswalk.createMetadata failed", e);
-	    e.printStackTrace();
-	    return e.getMessage();
-	}
-// 	MessageElement[] messageElement = stringOrXmlFragment.get_any();
-// 	StringBuffer sb = new StringBuffer();
-// 	for (int i=0; i<messageElement.length; ++i) {
-// 	    sb.append(messageElement[i].toString());
-// 	}
-// 	return sb.toString();
+        try {
+            HashMap hashMap = (HashMap)nativeItem;
+            Element dataNode = (Element)hashMap.get("metadata");
+            DOMSource source = new DOMSource(dataNode);
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+            synchronized (transformer) {
+                transformer.transform(source, result);
+            }
+            return sw.toString();
+        } catch (Exception e) {
+            // 	    logger.warn("NodePassThruCrosswalk.createMetadata failed", e);
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        // 	MessageElement[] messageElement = stringOrXmlFragment.get_any();
+        // 	StringBuffer sb = new StringBuffer();
+        // 	for (int i=0; i<messageElement.length; ++i) {
+        // 	    sb.append(messageElement[i].toString());
+        // 	}
+        // 	return sb.toString();
     }
 }

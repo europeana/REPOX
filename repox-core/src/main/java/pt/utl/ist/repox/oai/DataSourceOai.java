@@ -6,6 +6,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.oclc.oai.harvester2.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
@@ -21,7 +22,9 @@ import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.util.DateUtil;
+
 import javax.xml.transform.TransformerConfigurationException;
+
 import java.io.*;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -32,37 +35,46 @@ import java.util.*;
  * harvests its Records into the DataSource
  */
 public class DataSourceOai extends DataSource {
-    private static final Logger log = Logger.getLogger(DataSourceOai.class);
+    private static final Logger  log = Logger.getLogger(DataSourceOai.class);
 
-    private String oaiSourceURL;
-    private String oaiSet;
+    private String               oaiSourceURL;
+    private String               oaiSet;
 
     private FileRetrieveStrategy retrieveStrategy;
 
+    @SuppressWarnings("javadoc")
     public FileRetrieveStrategy getRetrieveStrategy() {
         return retrieveStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public void setRetrieveStrategy(FileRetrieveStrategy retrieveStrategy) {
         this.retrieveStrategy = retrieveStrategy;
     }
 
+    @SuppressWarnings("javadoc")
     public String getOaiSourceURL() {
         return oaiSourceURL;
     }
 
+    @SuppressWarnings("javadoc")
     public void setOaiSourceURL(String oaiSourceURL) {
         this.oaiSourceURL = oaiSourceURL;
     }
 
+    @SuppressWarnings("javadoc")
     public String getOaiSet() {
         return oaiSet;
     }
 
+    @SuppressWarnings("javadoc")
     public void setOaiSet(String oaiSet) {
         this.oaiSet = oaiSet;
     }
 
+    /**
+     * @return the metadata formats in a list
+     */
     public static List<String> getOaiMetadataFormats() {
         List<String> oaiMetadataFormats = new ArrayList<String>();
         oaiMetadataFormats.add(MetadataFormat.oai_dc.toString());
@@ -73,20 +85,45 @@ public class DataSourceOai extends DataSource {
         return oaiMetadataFormats;
     }
 
+    /**
+     * Creates a new instance of this class.
+     */
     public DataSourceOai() {
         super();
         metadataFormat = MetadataFormat.oai_dc.toString();
     }
 
-
-    public DataSourceOai(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat,
-                         RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param dataProvider
+     * @param id
+     * @param description
+     * @param schema
+     * @param namespace
+     * @param metadataFormat
+     * @param recordIdPolicy
+     * @param metadataTransformations
+     */
+    public DataSourceOai(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
         super(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
     }
 
-    public DataSourceOai(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat,
-                         String oaiSourceURL, String oaiSet, RecordIdPolicy recordIdPolicy,
-                         Map<String, MetadataTransformation> metadataTransformations) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param dataProvider
+     * @param id
+     * @param description
+     * @param schema
+     * @param namespace
+     * @param metadataFormat
+     * @param oaiSourceURL
+     * @param oaiSet
+     * @param recordIdPolicy
+     * @param metadataTransformations
+     */
+    public DataSourceOai(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
         this(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
         this.oaiSourceURL = oaiSourceURL;
         this.oaiSet = oaiSet;
@@ -105,15 +142,15 @@ public class DataSourceOai extends DataSource {
         Date startIngestTime = new Date();
         LogUtil.startLogInfo(logFile, startIngestTime, ingestStatus.name(), id);
 
-        if(fullIngest) {
+        if (fullIngest) {
             boolean successfulDeletion = emptyRecords();
-            if(!successfulDeletion) {
+            if (!successfulDeletion) {
                 StringUtil.simpleLog("Importing aborted - unable to delete the current Records", this.getClass(), logFile);
-                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount,lastIngestDeletedCount);
+                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                 return Task.Status.FAILED;
             }
 
-            if(ingestResumptionFile.exists()) {
+            if (ingestResumptionFile.exists()) {
                 ingestResumptionFile.delete();
             }
 
@@ -125,14 +162,12 @@ public class DataSourceOai extends DataSource {
         }
 
         File requestOutputDir = new File(outputDirPath);
-        if(!requestOutputDir.exists() && !requestOutputDir.mkdir()) {
-            throw new RuntimeException("Unable to create directory: " + outputDirPath);
-        }
+        if (!requestOutputDir.exists() && !requestOutputDir.mkdir()) { throw new RuntimeException("Unable to create directory: " + outputDirPath); }
 
         RecordCount recordCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, true);
 
         //if there is a previous successful harvest and has finished
-        if(recordCount != null && recordCount.getCount() > 0 && lastUpdate != null && !ingestResumptionFile.exists()) {
+        if (recordCount != null && recordCount.getCount() > 0 && lastUpdate != null && !ingestResumptionFile.exists()) {
             String syncDateString = DateUtil.date2String(lastUpdate, TimeUtil.SHORT_DATE_FORMAT);
             harvester.setFromDateString(syncDateString);
             StringUtil.simpleLog("OAI-PMH harvest from date: " + syncDateString, this.getClass(), logFile);
@@ -143,7 +178,7 @@ public class DataSourceOai extends DataSource {
         harvesterThread.start();
         int currentRequest = 1;
         try {
-            if(ingestResumptionFile.exists()) {
+            if (ingestResumptionFile.exists()) {
                 BufferedReader reader = new BufferedReader(new FileReader(ingestResumptionFile));
                 currentRequest = Integer.parseInt(reader.readLine());
                 reader.close();
@@ -154,57 +189,56 @@ public class DataSourceOai extends DataSource {
             TimeUtil.startTimers();
             TimeUtil.getTimeSinceLastTimerArray(8);
 
-            while(true) {
-                if(stopExecution) {
+            while (true) {
+                if (stopExecution) {
                     harvester.stop();
-                    if(forceStopExecution){
-                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                    if (forceStopExecution) {
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return Task.Status.FORCE_EMPTY;
                     }
                     StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                     return Task.Status.CANCELED;
                 }
-                while(!currentRequestFile.exists()) { // Wait for the Harvester to write the request file
-                    if(stopExecution) {
+                while (!currentRequestFile.exists()) { // Wait for the Harvester to write the request file
+                    if (stopExecution) {
                         harvester.stop();
-                        if(forceStopExecution){
-                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        if (forceStopExecution) {
+                            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                             return Task.Status.FORCE_EMPTY;
                         }
                         StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return Task.Status.CANCELED;
                     }
-                    if(harvester.isHarvestFinished()) {
+                    if (harvester.isHarvestFinished()) {
                         StringUtil.simpleLog("Ingest Process ended. Exiting.", this.getClass(), logFile);
                         log.info("* Total Time: " + TimeUtil.getTimeSinceLastTimerArray(8));
 
                         harvester.cleanUp();
-                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return ingestStatus;
                     }
-                    if(harvester.getRequestFileNoRecords().exists()){
+                    if (harvester.getRequestFileNoRecords().exists()) {
                         //StringUtil.simpleLog("Harvester result: " + harvester.readErrorCode(), this.getClass(), logFile);
-                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return Task.Status.OK;
                     }
 
-                    if(!harvesterThread.isAlive() && !harvester.isHarvestFinished() && getMaxRecord4Sample() == -1) {
+                    if (!harvesterThread.isAlive() && !harvester.isHarvestFinished() && getMaxRecord4Sample() == -1) {
                         StringUtil.simpleLog("Harvester thread exited without finishing. Exiting ingesting Data Source Oai.", this.getClass(), logFile);
-                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return Task.Status.FAILED;
                     }
                     Thread.sleep(1000);
                 }
                 Thread.sleep(500); // avoid trying to read request being written
 
-
                 statisticsHarvester = harvester.getStatisticsHarvest();
 
-                if(currentRequest == 1){
+                if (currentRequest == 1) {
                     ArrayList<Integer> infos = harvester.getServerInfos();
-                    if(infos != null && infos.size() > 1){
+                    if (infos != null && infos.size() > 1) {
                         numberOfRecords2Harvest = infos.get(0);
                         numberOfRecordsPerResponse = infos.get(1);
                     }
@@ -217,8 +251,7 @@ public class DataSourceOai extends DataSource {
                 List<RecordRepox> responseRecords;
                 try {
                     responseRecords = responseTransformer.splitResponseToRecords(currentRequestFile, this, logFile);
-                }
-                catch(DocumentException e) { // may be trying to read a request being written, wait for file to be written and retry
+                } catch (DocumentException e) { // may be trying to read a request being written, wait for file to be written and retry
                     log.info("Error reading XML (waiting 5s and retrying in case it's being written): " + e.getMessage(), e);
                     Thread.sleep(5000);
                     responseRecords = responseTransformer.splitResponseToRecords(currentRequestFile, this, logFile);
@@ -234,16 +267,16 @@ public class DataSourceOai extends DataSource {
 
                 log.info("Time for splitting " + responseRecords.size() + " records from response file: " + TimeUtil.getTimeSinceLastTimerArray(9));
 
-                while(batchRecords.size() > RECORDS_BATCH_SIZE) {
+                while (batchRecords.size() > RECORDS_BATCH_SIZE) {
                     List<RecordRepox> recordsToImport = batchRecords.subList(0, RECORDS_BATCH_SIZE);
                     batchRecords = batchRecords.subList(RECORDS_BATCH_SIZE, batchRecords.size());
 
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, recordsToImport,logFile);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, recordsToImport, logFile);
 
                     log.info("Time for importing " + recordsToImport.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
                 }
-                if(!batchRecords.isEmpty()) {
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords,logFile);
+                if (!batchRecords.isEmpty()) {
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords, logFile);
                     log.info("Time for importing last " + batchRecords.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
                 }
 
@@ -257,22 +290,21 @@ public class DataSourceOai extends DataSource {
 
                 currentRequestFile = harvester.getRequestFile(currentRequest);
             }
-        }
-        catch(Exception e) {
-            if(stopExecution) {
+        } catch (Exception e) {
+            if (stopExecution) {
                 harvester.stop();
-                if(forceStopExecution){
-                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+                if (forceStopExecution) {
+                    LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                     return Task.Status.FORCE_EMPTY;
                 }
                 StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
-                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(),id,lastIngestCount, lastIngestDeletedCount);
+                LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
                 return Task.Status.CANCELED;
             }
             log.error("Error ingesting : " + e.getMessage(), e);
             harvester.stop();
             StringUtil.simpleLog("Error ingesting. Exiting ingesting Data Source Oai.", e, this.getClass(), logFile);
-            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(),id,lastIngestCount, lastIngestDeletedCount);
+            LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
             return Task.Status.ERRORS;
         }
     }
@@ -281,36 +313,31 @@ public class DataSourceOai extends DataSource {
     public boolean isWorking() {
         try {
             ListIdentifiers listIdentifiers = new ListIdentifiers(oaiSourceURL, null, null, oaiSet, metadataFormat);
-            if(listIdentifiers.isResultEmpty()) {
-                return false;
-            }
+            if (listIdentifiers.isResultEmpty()) { return false; }
             NodeList errors = listIdentifiers.getErrors();
-            if(errors.getLength() > 0) {
-                return false;
-            }
-        }
-        catch(FileNotFoundException e) { //This is the error returned by a 404
+            if (errors.getLength() > 0) { return false; }
+        } catch (FileNotFoundException e) { //This is the error returned by a 404
             return false;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
 
         return true;
     }
 
+    /**
+     * @param dSOai
+     * @return boolean indicating if its the same resource
+     */
     public boolean isSameDataSource(DataSourceOai dSOai) {
-        return CompareUtil.compareObjectsAndNull(this.oaiSourceURL, dSOai.getOaiSourceURL())
-                && CompareUtil.compareObjectsAndNull(this.oaiSet, dSOai.getOaiSet());
+        return CompareUtil.compareObjectsAndNull(this.oaiSourceURL, dSOai.getOaiSourceURL()) && CompareUtil.compareObjectsAndNull(this.oaiSet, dSOai.getOaiSet());
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(!this.getClass().equals(obj.getClass())) {
-            return false;
-        }
+        if (!this.getClass().equals(obj.getClass())) { return false; }
 
-        DataSourceOai dSOai = (DataSourceOai) obj;
+        DataSourceOai dSOai = (DataSourceOai)obj;
         return equalsBaseProperties(dSOai) && isSameDataSource(dSOai);
 
     }
@@ -322,13 +349,12 @@ public class DataSourceOai extends DataSource {
         String outputDirPath = Harvester.getOutputDirPath(oaiSourceURL, oaiSet);
         File outputDir = new File(outputDirPath);
 
-        if(outputDir.exists()) {
-            try{
+        if (outputDir.exists()) {
+            try {
                 FileUtils.deleteDirectory(outputDir);
                 log.info("Deleted OAI-PMH dir with success from Data Source with id " + id);
                 outputDir.mkdir();
-            }
-            catch (IOException e){
+            } catch (IOException e) {
                 log.error("Unable to delete OAI-PMH dir from Data Source with id " + id);
             }
         }
@@ -338,7 +364,7 @@ public class DataSourceOai extends DataSource {
     public Element addSpecificInfo(Element sourceElement) {
         sourceElement.addAttribute("type", "DataSourceOai");
         sourceElement.addElement("oai-source").setText(getOaiSourceURL());
-        if(getOaiSet() != null && !getOaiSet().isEmpty()) {
+        if (getOaiSet() != null && !getOaiSet().isEmpty()) {
             sourceElement.addElement("oai-set").setText(getOaiSet());
         }
         return sourceElement;
@@ -353,7 +379,7 @@ public class DataSourceOai extends DataSource {
     public String getNumberOfRecords2HarvestStr() {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMAN);
         return numberFormat.format(numberOfRecords2Harvest);
-//        return String.valueOf(numberOfRecords2Harvest);
+        //        return String.valueOf(numberOfRecords2Harvest);
     }
 
     @Override
@@ -363,7 +389,7 @@ public class DataSourceOai extends DataSource {
 
     @Override
     public ArrayList<Long> getStatisticsHarvester() {
-        return statisticsHarvester;  //To change body of implemented methods use File | Settings | File Templates.
+        return statisticsHarvester; //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }
