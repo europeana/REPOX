@@ -15,12 +15,12 @@
 		<name>Instituto Superior Técnico</name>
 		<url>http://www.ist.utl.pt</url>
 	</organization>
-	
+
 	<scm>
-        <connection>scm:git:git://github.com/europeana/repox2.git</connection>
-        <developerConnection>scm:git:git@github.com/europeana/repox2.git</developerConnection>
-        <url>https://github.com/europeana/repox2</url>
-    </scm>
+		<connection>scm:git:git://github.com/europeana/repox2.git</connection>
+		<developerConnection>scm:git:git@github.com/europeana/repox2.git</developerConnection>
+		<url>https://github.com/europeana/repox2</url>
+	</scm>
 
 	<modules>
 		<module>repox-core</module>
@@ -29,40 +29,42 @@
 	</modules>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Versions -->
 		<repox:repox-core.version>1.3.6</repox:repox-core.version>
 		<repox:repox-europeana.version>2.0.0</repox:repox-europeana.version>
 		<eu.europeana:definitions.version>1.01</eu.europeana:definitions.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<postgresql:postgresql.version>9.1-901.jdbc4</postgresql:postgresql.version>
-		<mysql:mysql-connector-java.version>5.1.24</mysql:mysql-connector-java.version>
+		<mysql:mysql-connector-java.version>5.1.31</mysql:mysql-connector-java.version>
 		<dom4j:dom4j.version>1.6.1</dom4j:dom4j.version>
 		<junit:junit.version>4.11</junit:junit.version>
-		<concurrent:concurrent.version>1.3.3</concurrent:concurrent.version>
+		<concurrent:concurrent.version>1.3.4</concurrent:concurrent.version>
 		<servlets.com:cos.version>05Nov2002</servlets.com:cos.version>
-		<jaxen:jaxen.version>1.1.1</jaxen:jaxen.version>
-		<opensymphony:sitemesh.version>2.3</opensymphony:sitemesh.version>
+		<jaxen:jaxen.version>1.1.6</jaxen:jaxen.version>
+		<opensymphony:sitemesh.version>2.4.2</opensymphony:sitemesh.version>
 		<taglibs:standard.version>1.1.2</taglibs:standard.version>
 		<bsf:bsf.version>2.4.0</bsf:bsf.version>
 		<rhino:js.version>1.7R2</rhino:js.version>
 		<marc4j:marc4j.version>2.3.1</marc4j:marc4j.version>
-		<org.freemarker:freemarker.version>2.3.16</org.freemarker:freemarker.version>
+		<org.freemarker:freemarker.version>2.3.20</org.freemarker:freemarker.version>
 		<net.sf.saxon:saxon-xpath.version>8.7</net.sf.saxon:saxon-xpath.version>
 		<org.mortbay.jetty:servlet-api-2.5.version>6.1.14</org.mortbay.jetty:servlet-api-2.5.version>
 		<net.sf.saxon:saxon-dom.version>8.7</net.sf.saxon:saxon-dom.version>
-		<xerces:xercesImpl.version>2.8.1</xerces:xercesImpl.version>
-		<net.sourceforge.stripes:stripes.version>1.4.3</net.sourceforge.stripes:stripes.version>
+		<xerces:xercesImpl.version>2.11.0</xerces:xercesImpl.version>
+		<net.sourceforge.stripes:stripes.version>1.5.8</net.sourceforge.stripes:stripes.version>
 		<c3p0:c3p0.version>0.9.1.2</c3p0:c3p0.version>
-		<org.slf4j:slf4j-log4j12.version>1.5.2</org.slf4j:slf4j-log4j12.version>
+		<org.slf4j:slf4j-log4j12.version>1.7.7</org.slf4j:slf4j-log4j12.version>
 		<gxt:gxt.version>2.2.5</gxt:gxt.version>
 		<org.mindrot:jbcrypt.version>0.3m</org.mindrot:jbcrypt.version>
 		<rome:rome.version>1.0</rome:rome.version>
 
 		<com.google.gwt:gwt-user.version>2.4.0</com.google.gwt:gwt-user.version>
-		<com.google.gwt:gwt-servlet.version>2.4.0</com.google.gwt:gwt-servlet.version>
-		<com.novell.ldap:jldap.version>4.3</com.novell.ldap:jldap.version>
+		<com.google.gwt:gwt-servlet.version>2.5.1</com.google.gwt:gwt-servlet.version>
+		<com.novell.ldap:jldap.version>2009-10-07</com.novell.ldap:jldap.version>
 		<com.bradrydzewski:gwt-cal.version>0.9.3.1</com.bradrydzewski:gwt-cal.version>
-		<com.allen-sauer.gwt.dnd:gwt-dnd.version>3.1.2</com.allen-sauer.gwt.dnd:gwt-dnd.version>
-		<com.ibm.icu:icu4j.version>4.0.1</com.ibm.icu:icu4j.version>
+		<com.allen-sauer.gwt.dnd:gwt-dnd.version>3.3.1</com.allen-sauer.gwt.dnd:gwt-dnd.version>
+		<com.ibm.icu:icu4j.version>53.1</com.ibm.icu:icu4j.version>
 
 		<pt.ist:mdr-mapping-ui-svg.version>0.1.4</pt.ist:mdr-mapping-ui-svg.version>
 		<pt.ist:mdr-system.version>0.1.1</pt.ist:mdr-system.version>
@@ -70,15 +72,15 @@
 		<pt.ist:xslt-om.version>0.1.2</pt.ist:xslt-om.version>
 
 		<log4j:log4j.version>1.2.17</log4j:log4j.version>
-		<log4j:apache-log4j-extras.version>1.1</log4j:apache-log4j-extras.version>
+		<log4j:apache-log4j-extras.version>1.2.17</log4j:apache-log4j-extras.version>
 
-		<org.apache.derby:derby.version>10.5.3.0_1</org.apache.derby:derby.version>
-		<org.apache.commons:commons-compress.version>1.2</org.apache.commons:commons-compress.version>
-		<org.apache.derby:derbytools.version>10.5.3.0_1</org.apache.derby:derbytools.version>
+		<org.apache.derby:derby.version>10.10.2.0</org.apache.derby:derby.version>
+		<org.apache.commons:commons-compress.version>1.8.1</org.apache.commons:commons-compress.version>
+		<org.apache.derby:derbytools.version>10.10.2.0</org.apache.derby:derbytools.version>
 
-		<javax.mail:mail.version>1.4</javax.mail:mail.version>
+		<javax.mail:mail.version>1.4.7</javax.mail:mail.version>
 		<javax.activation:activation.version>1.1.1</javax.activation:activation.version>
-		<javax.servlet:jstl.version>1.1.2</javax.servlet:jstl.version>
+		<javax.servlet:jstl.version>1.2</javax.servlet:jstl.version>
 		<javax.resource:connector.version>1.0</javax.resource:connector.version>
 		<javax.servlet:servlet-api.version>2.5</javax.servlet:servlet-api.version>
 
@@ -86,22 +88,22 @@
 		<org.jzkit:jzkit_core.version>3.0.0</org.jzkit:jzkit_core.version>
 		<org.jzkit:jzkit_z3950_plugin.version>3.0.0</org.jzkit:jzkit_z3950_plugin.version>
 
-		<xalan:xalan.version>2.7.1</xalan:xalan.version>
-		<xalan:serializer.version>2.7.1</xalan:serializer.version>
+		<xalan:xalan.version>2.7.2</xalan:xalan.version>
+		<xalan:serializer.version>2.7.2</xalan:serializer.version>
 
-		<commons-codec:commons-codec.version>1.3</commons-codec:commons-codec.version>
+		<commons-codec:commons-codec.version>1.9</commons-codec:commons-codec.version>
 		<commons-collections:commons-collections.version>3.2.1</commons-collections:commons-collections.version>
-		<commons-discovery:commons-discovery.version>0.2</commons-discovery:commons-discovery.version>
-		<commons-io:commons-io.version>2.2</commons-io:commons-io.version>
+		<commons-discovery:commons-discovery.version>0.5</commons-discovery:commons-discovery.version>
+		<commons-io:commons-io.version>2.4</commons-io:commons-io.version>
 		<commons-httpclient:commons-httpclient.version>3.1</commons-httpclient:commons-httpclient.version>
-		<commons-logging:commons-logging.version>1.1</commons-logging:commons-logging.version>
-		<commons-net:commons-net.version>3.0.1</commons-net:commons-net.version>
-		<commons-pool:commons-pool.version>1.2</commons-pool:commons-pool.version>
-		<commons-dbcp:commons-dbcp.version>1.2.2</commons-dbcp:commons-dbcp.version>
-		<commons-lang:commons-lang.version>2.4</commons-lang:commons-lang.version>
-		<commons-beanutils:commons-beanutils.version>1.7.0</commons-beanutils:commons-beanutils.version>
+		<commons-logging:commons-logging.version>1.2</commons-logging:commons-logging.version>
+		<commons-net:commons-net.version>3.3</commons-net:commons-net.version>
+		<commons-pool:commons-pool.version>1.6</commons-pool:commons-pool.version>
+		<commons-dbcp:commons-dbcp.version>1.4</commons-dbcp:commons-dbcp.version>
+		<commons-lang:commons-lang.version>2.6</commons-lang:commons-lang.version>
+		<commons-beanutils:commons-beanutils.version>1.9.2</commons-beanutils:commons-beanutils.version>
 
-		<spring.version>3.1.0.RELEASE</spring.version>
+		<spring.version>4.0.6.RELEASE</spring.version>
 		<org.springframework:spring-aop.version>${spring.version}</org.springframework:spring-aop.version>
 		<org.springframework:spring-beans.version>${spring.version}</org.springframework:spring-beans.version>
 		<org.springframework:spring-context.version>${spring.version}</org.springframework:spring-context.version>
@@ -111,16 +113,16 @@
 		<org.springframework:spring-webmvc.version>${spring.version}</org.springframework:spring-webmvc.version>
 		<org.springframework:spring-context-support.version>${spring.version}</org.springframework:spring-context-support.version>
 		<org.springframework:spring-orm.version>3.0.2.RELEASE</org.springframework:spring-orm.version>
-		<org.springframework.security:spring-security-acl.version>2.0.4</org.springframework.security:spring-security-acl.version>
-		<org.springframework.security:spring-security-core.version>2.0.4</org.springframework.security:spring-security-core.version>
-		<org.springframework.security:spring-security-taglibs.version>2.0.4</org.springframework.security:spring-security-taglibs.version>
-		<org.springframework:spring-test.version>3.0.2.RELEASE</org.springframework:spring-test.version>
+		<org.springframework.security:spring-security-acl.version>3.2.4.RELEASE</org.springframework.security:spring-security-acl.version>
+		<org.springframework.security:spring-security-core.version>3.2.4.RELEASE</org.springframework.security:spring-security-core.version>
+		<org.springframework.security:spring-security-taglibs.version>3.2.4.RELEASE</org.springframework.security:spring-security-taglibs.version>
+		<org.springframework:spring-test.version>${spring.version}</org.springframework:spring-test.version>
 		<org.springmodules:spring-modules-validation.version>0.8a</org.springmodules:spring-modules-validation.version>
 
-		<org.hibernate:hibernate-entitymanager.version>3.3.2.GA</org.hibernate:hibernate-entitymanager.version>
-		<org.hibernate:hibernate-annotations.version>3.4.0.GA</org.hibernate:hibernate-annotations.version>
-		<org.hibernate:hibernate-validator.version>4.0.2.GA</org.hibernate:hibernate-validator.version>
-		<org.hibernate:hibernate-core.version>3.5.1-Final</org.hibernate:hibernate-core.version>
+		<org.hibernate:hibernate-entitymanager.version>4.3.6.Final</org.hibernate:hibernate-entitymanager.version>
+		<org.hibernate:hibernate-annotations.version>3.5.6-Final</org.hibernate:hibernate-annotations.version>
+		<org.hibernate:hibernate-validator.version>5.1.2.Final</org.hibernate:hibernate-validator.version>
+		<org.hibernate:hibernate-core.version>4.3.6.Final</org.hibernate:hibernate-core.version>
 	</properties>
 
 	<dependencyManagement>
