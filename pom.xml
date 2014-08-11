@@ -59,8 +59,8 @@
 		<org.mindrot:jbcrypt.version>0.3m</org.mindrot:jbcrypt.version>
 		<rome:rome.version>1.0</rome:rome.version>
 
-		<com.google.gwt:gwt-user.version>2.5.1</com.google.gwt:gwt-user.version>
-		<com.google.gwt:gwt-servlet.version>2.5.1</com.google.gwt:gwt-servlet.version>
+		<com.google.gwt:gwt-user.version>2.4.0</com.google.gwt:gwt-user.version>
+		<com.google.gwt:gwt-servlet.version>2.4.0</com.google.gwt:gwt-servlet.version>
 		<com.novell.ldap:jldap.version>2009-10-07</com.novell.ldap:jldap.version>
 		<com.bradrydzewski:gwt-cal.version>0.9.3.1</com.bradrydzewski:gwt-cal.version>
 		<com.allen-sauer.gwt.dnd:gwt-dnd.version>3.3.1</com.allen-sauer.gwt.dnd:gwt-dnd.version>
