@@ -46,6 +46,9 @@ The europeana profile is used for the inclusion of the `configuration.properties
 These 2 files are located under the directory `/repox-gui/src/main/profiles/europeana`.
 The `configuration.properties` file contains configurations for storage directories that Repox will be using as well as PostgreSQL connection settings.  
 Changes can be made to the `configuration.properties` file to fit the needs of the developer.
+Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory and will ignore the `configuration.properties` located in the WEB-INF/classes directory.
+
+For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml` and for the end product they need to be uncommented again.
 
 ###Deploying Repox###
 - - -

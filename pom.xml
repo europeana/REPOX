@@ -11,22 +11,22 @@
 	<name>REPOX-SYSTEM</name>
 	<url>http://repox.ist.utl.pt/</url>
 
-	<organizations>
-		<organization>
-			<name>Instituto Superior Técnico</name>
-			<url>http://www.ist.utl.pt</url>
-		</organization>
+	<organization>
+		<name>Instituto Superior Técnico</name>
+		<url>http://www.ist.utl.pt</url>
+	</organization>
 
-		<organization>
-		<name>The European Library</name>
-		<url>http://www.theeuropeanlibrary.org</url>
-		</organization>
-		
-		<organization>
-		<name>Europeana</name>
-		<url>http://pro.europeana.eu/</url>
-		</organization>
-	</organizations>
+	<contributors>
+		<contributor>
+			<name>The European Library</name>
+			<url>http://www.theeuropeanlibrary.org</url>
+		</contributor>
+
+		<contributor>
+			<name>Europeana</name>
+			<url>http://pro.europeana.eu/</url>
+		</contributor>
+	</contributors>
 
 	<scm>
 		<connection>scm:git:git://github.com/europeana/repox2.git</connection>

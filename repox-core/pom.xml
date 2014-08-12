@@ -14,22 +14,22 @@
 	<version>1.3.6</version>
 	<packaging>jar</packaging>
 
-	<organizations>
-		<organization>
-			<name>Instituto Superior Técnico</name>
-			<url>http://www.ist.utl.pt</url>
-		</organization>
+	<organization>
+		<name>Instituto Superior Técnico</name>
+		<url>http://www.ist.utl.pt</url>
+	</organization>
 
-		<organization>
+	<contributors>
+		<contributor>
 			<name>The European Library</name>
 			<url>http://www.theeuropeanlibrary.org</url>
-		</organization>
+		</contributor>
 
-		<organization>
+		<contributor>
 			<name>Europeana</name>
 			<url>http://pro.europeana.eu/</url>
-		</organization>
-	</organizations>
+		</contributor>
+	</contributors>
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -45,6 +45,22 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>europeana</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<includes>
+							<include>oaicat.properties</include>
+						</includes>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
 
 	<!-- Not active repositories -->
 	<!-- <distributionManagement> -->

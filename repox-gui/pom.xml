@@ -13,22 +13,22 @@
 	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
 
-	<organizations>
-		<organization>
-			<name>Instituto Superior Técnico</name>
-			<url>http://www.ist.utl.pt</url>
-		</organization>
+	<organization>
+		<name>Instituto Superior Técnico</name>
+		<url>http://www.ist.utl.pt</url>
+	</organization>
 
-		<organization>
+	<contributors>
+		<contributor>
 			<name>The European Library</name>
 			<url>http://www.theeuropeanlibrary.org</url>
-		</organization>
+		</contributor>
 
-		<organization>
+		<contributor>
 			<name>Europeana</name>
 			<url>http://pro.europeana.eu/</url>
-		</organization>
-	</organizations>
+		</contributor>
+	</contributors>
 
 	<build>
 		<plugins>
