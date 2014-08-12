@@ -13,10 +13,22 @@
 	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
 
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>http://www.ist.utl.pt</url>
-	</organization>
+	<organizations>
+		<organization>
+			<name>Instituto Superior Técnico</name>
+			<url>http://www.ist.utl.pt</url>
+		</organization>
+
+		<organization>
+			<name>The European Library</name>
+			<url>http://www.theeuropeanlibrary.org</url>
+		</organization>
+
+		<organization>
+			<name>Europeana</name>
+			<url>http://pro.europeana.eu/</url>
+		</organization>
+	</organizations>
 
 	<build>
 		<plugins>
@@ -52,31 +64,6 @@
 		</plugins>
 	</build>
 
-	<!-- Not active repositories -->
-	<!-- <distributionManagement> -->
-	<!-- <snapshotRepository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-snapshots</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-snapshot-local</url> -->
-	<!-- </snapshotRepository> -->
-	<!-- <repository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-releases</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
-	<!-- </repository> -->
-	<!-- </distributionManagement> -->
-
-	<repositories>
-		<repository>
-			<id>maven-repositories</id>
-			<url>http://mvnrepository.com</url>
-		</repository>
-		<repository>
-			<id>central OSS Repository</id>
-			<url>https://oss.sonatype.org/content/repositories/releases/</url>
-		</repository>
-	</repositories>
-
 	<profiles>
 		<profile>
 			<id>europeana</id>
@@ -95,6 +82,20 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<!-- Not active repositories -->
+	<!-- <distributionManagement> -->
+	<!-- <snapshotRepository> -->
+	<!-- <id>digmap3</id> -->
+	<!-- <name>digmap3-snapshots</name> -->
+	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-snapshot-local</url> -->
+	<!-- </snapshotRepository> -->
+	<!-- <repository> -->
+	<!-- <id>digmap3</id> -->
+	<!-- <name>digmap3-releases</name> -->
+	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
+	<!-- </repository> -->
+	<!-- </distributionManagement> -->
 
 	<dependencies>
 		<!--REPOX Core Libs -->
@@ -213,6 +214,16 @@
 			<groupId>pt.ist</groupId>
 			<artifactId>xslt-om</artifactId>
 		</dependency>
-
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>maven-repositories</id>
+			<url>http://mvnrepository.com</url>
+		</repository>
+		<repository>
+			<id>central OSS Repository</id>
+			<url>https://oss.sonatype.org/content/repositories/releases/</url>
+		</repository>
+	</repositories>
 </project>

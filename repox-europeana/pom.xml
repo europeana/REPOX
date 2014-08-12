@@ -13,18 +13,34 @@
 	<artifactId>repox-europeana</artifactId>
 	<packaging>jar</packaging>
 	<version>2.0.0</version>
-	<url>http://repox.ist.utl.pt</url>
+
+	<organizations>
+		<organization>
+			<name>Instituto Superior Técnico</name>
+			<url>http://www.ist.utl.pt</url>
+		</organization>
+
+		<organization>
+			<name>The European Library</name>
+			<url>http://www.theeuropeanlibrary.org</url>
+		</organization>
+
+		<organization>
+			<name>Europeana</name>
+			<url>http://pro.europeana.eu/</url>
+		</organization>
+	</organizations>
 
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<finalName>${project.artifactId}</finalName>
-<!-- 		<extensions> -->
-<!-- 			<extension> -->
-<!-- 				<groupId>postgresql</groupId> -->
-<!-- 				<artifactId>postgresql</artifactId> -->
-<!-- 				<version>8.3-603.jdbc4</version> -->
-<!-- 			</extension> -->
-<!-- 		</extensions> -->
+		<!-- <extensions> -->
+		<!-- <extension> -->
+		<!-- <groupId>postgresql</groupId> -->
+		<!-- <artifactId>postgresql</artifactId> -->
+		<!-- <version>8.3-603.jdbc4</version> -->
+		<!-- </extension> -->
+		<!-- </extensions> -->
 		<plugins>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>

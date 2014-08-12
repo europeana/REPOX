@@ -14,6 +14,23 @@
 	<version>1.3.6</version>
 	<packaging>jar</packaging>
 
+	<organizations>
+		<organization>
+			<name>Instituto Superior Técnico</name>
+			<url>http://www.ist.utl.pt</url>
+		</organization>
+
+		<organization>
+			<name>The European Library</name>
+			<url>http://www.theeuropeanlibrary.org</url>
+		</organization>
+
+		<organization>
+			<name>Europeana</name>
+			<url>http://pro.europeana.eu/</url>
+		</organization>
+	</organizations>
+
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<finalName>repoxCore</finalName>
