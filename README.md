@@ -61,3 +61,5 @@ Additionally a database with a username with password is needed in the PostgreSQ
 These information must be added in the `configuration.properties` file mentioned above.  
 
 After the above software is configured the .war file, created by building the <b>repox-parent</b> and located under `/repox-gui/target`, can be moved in the `webapps` directory of tomcat.
+
+After that start tomcat.
