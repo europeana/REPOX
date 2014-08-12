@@ -91,15 +91,6 @@
 					<resource>
 						<directory>src/main/profiles/europeana</directory>
 					</resource>
-					<resource>
-						<directory>src/main/resources</directory>
-						<excludes>
-							<exclude>gui.properties</exclude>
-						</excludes>
-					</resource>
-					<resource>
-						<directory>src/main/profiles/europeana</directory>
-					</resource>
 				</resources>
 			</build>
 		</profile>
@@ -111,7 +102,7 @@
 		<!-- <groupId>repox</groupId> -->
 		<!-- <artifactId>repox-core</artifactId> -->
 		<!-- </dependency> -->
-		
+
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-europeana</artifactId>
