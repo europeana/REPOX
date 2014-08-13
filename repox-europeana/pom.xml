@@ -100,6 +100,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Added version 1.4.01 of xml-apis to overwrite the transitive dependencies 
+			which solves some exceptions thrown in runtime -->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
 		<dependency>
 			<!--todo: a dependency like this should not be necessary -->
 			<!--todo: there is a direct dependency in code to "org.postgresql.Driver.class.getName()" -->
