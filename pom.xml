@@ -5,7 +5,7 @@
 
 	<artifactId>repox-system</artifactId>
 	<groupId>repox</groupId>
-	<version>2.3.5</version>
+	<version>3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>REPOX-SYSTEM</name>
@@ -44,8 +44,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Versions -->
-		<repox:repox-core.version>1.3.6</repox:repox-core.version>
-		<repox:repox-europeana.version>2.0.0</repox:repox-europeana.version>
+		<repox:repox-core.version>3.0-SNAPSHOT</repox:repox-core.version>
+		<repox:repox-europeana.version>3.0-SNAPSHOT</repox:repox-europeana.version>
+		<repox:repox-gui.version>3.0-SNAPSHOT</repox:repox-gui.version>
 		<eu.europeana:definitions.version>1.01</eu.europeana:definitions.version>
 		<postgresql:postgresql.version>9.1-901.jdbc4</postgresql:postgresql.version>
 		<mysql:mysql-connector-java.version>5.1.31</mysql:mysql-connector-java.version>
@@ -139,6 +140,21 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-core</artifactId>
+				<version>${repox:repox-core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-europeana</artifactId>
+				<version>${repox:repox-europeana.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-gui</artifactId>
+				<version>${repox:repox-gui.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>postgresql</groupId>
 				<artifactId>postgresql</artifactId>
@@ -399,16 +415,6 @@
 				<groupId>eu.europeana</groupId>
 				<artifactId>definitions</artifactId>
 				<version>${eu.europeana:definitions.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>repox</groupId>
-				<artifactId>repox-core</artifactId>
-				<version>${repox:repox-core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>repox</groupId>
-				<artifactId>repox-europeana</artifactId>
-				<version>${repox:repox-europeana.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sourceforge.stripes</groupId>

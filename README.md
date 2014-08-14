@@ -33,7 +33,8 @@ Repox consists of 4 maven projects:
 * __Repox Europeana (repox-europeana)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Contains classes for specific implementation of the services for europeana that should be used from the RESTful services in the repox-gui.
 * __Repox Core (repox-core)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Contains the core classes and interfaces for use by other projects. It also contains the OAI-PMH HttpServlet implementation.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Contains the core classes and interfaces for use by other projects. It also contains the OAI-PMH HttpServlet implementation harvester, the OAI-PMH
+server, Z39.50 harvester, HTTP/FTP/Folder file retrievals.
 
 ###Building Repox###
 - - -

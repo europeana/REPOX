@@ -6,12 +6,11 @@
 	<parent>
 		<artifactId>repox-system</artifactId>
 		<groupId>repox</groupId>
-		<version>2.3.5</version>
+		<version>3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>repox-core</artifactId>
-	<version>1.3.6</version>
 	<packaging>jar</packaging>
 
 	<organization>
