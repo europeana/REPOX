@@ -12,6 +12,7 @@
 
 	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
+	<name>repox-gui</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
