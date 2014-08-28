@@ -7,6 +7,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.util.ConfigSingleton;
 
 import javax.xml.transform.Transformer;
@@ -283,5 +285,35 @@ public class MetadataTransformation {
 
         // Transform the source XML to System.out.
         transformer.transform(source, new StreamResult(System.out));
+    }
+    
+    /**
+     * @param encodedIdentifier
+     * @param metadataPrefix
+     * @param dataSource
+     * @param xmlRecordString
+     * @return String of the xml record
+     * @throws DocumentException
+     * @throws TransformerException
+     * @throws NullPointerException
+     */
+    public static String getTransformedRecord(String encodedIdentifier, String metadataPrefix, DataSource dataSource, String xmlRecordString) throws DocumentException, TransformerException, NullPointerException {
+        try {
+            if (metadataPrefix.equals("MarcXchange") && dataSource.getMetadataFormat().equals("ISO2709")) {
+                return xmlRecordString;
+            } else if (!dataSource.getMetadataFormat().equals(metadataPrefix) && !xmlRecordString.isEmpty()) {
+
+                for (MetadataTransformation metadataTransformation : dataSource.getMetadataTransformations().values()) {
+                    if (metadataTransformation.getDestinationFormat().equals(metadataPrefix)) {
+                        DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSource.getId());
+                        xmlRecordString = metadataTransformation.transform(encodedIdentifier, xmlRecordString, dataProviderParent.getName());
+                        return xmlRecordString;
+                    }
+                }
+            }
+            return xmlRecordString;
+        } catch (NullPointerException e) {
+            throw new NullPointerException();
+        }
     }
 }

@@ -1,5 +1,16 @@
 package pt.utl.ist.repox.task;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Date;
+
+import javax.xml.transform.TransformerException;
+
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -8,7 +19,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.oclc.oai.util.OAIUtil;
 import org.xml.sax.SAXException;
 
 import pt.utl.ist.repox.RunnableStoppable;
@@ -16,21 +26,16 @@ import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
-import pt.utl.ist.repox.oai.server.catalog.DataSourceOaiCatalog;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.util.ZipUtil;
+import pt.utl.ist.util.DomUtil;
 import pt.utl.ist.util.InvalidInputException;
-
-import javax.xml.transform.TransformerException;
-
-import java.io.*;
-import java.net.URLEncoder;
-import java.util.Date;
 
 /**
  * Exports all the Records from a Data Source to a specified location of the Filesystem
@@ -324,7 +329,7 @@ public class ExportToFilesystem implements RunnableStoppable {
             } else {
 
                 // to allow export to any XML format
-                String encodedIdentifier = OAIUtil.xmlEncode(identifier);
+                String encodedIdentifier = DomUtil.xmlEncode(identifier);
                 String xmlRecordString = (currentItem.getMetadata() != null ? new String(currentItem.getMetadata(), "UTF-8") : "");
 
                 if (metadataExportFormat != null && !metadataExportFormat.isEmpty()) {
@@ -342,7 +347,7 @@ public class ExportToFilesystem implements RunnableStoppable {
 
                     oaiRecordHeader = oaiRecordHeader + "><identifier>" + encodedIdentifier + "</identifier>" + "<datestamp>" + currentItem.getDatestamp() + "</datestamp>" + "<setSpec>" + urn.getDataSourceId() + "</setSpec></header>";
 
-                    xmlRecordString = DataSourceOaiCatalog.getTransformedRecord(encodedIdentifier, metadataExportFormat, dataSource, recordRepox.getDom().asXML());
+                    xmlRecordString = MetadataTransformation.getTransformedRecord(encodedIdentifier, metadataExportFormat, dataSource, recordRepox.getDom().asXML());
                     if (xmlRecordString.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
                         xmlRecordString = xmlRecordString.substring("<?xml version=\"1.0\" encoding=\"UTF-8\"?>".length());
                     }

@@ -46,6 +46,8 @@
 
 		<!-- Versions -->
 		<repox:repox-core.version>3.0-SNAPSHOT</repox:repox-core.version>
+		<repox:repox-server.version>3.0-SNAPSHOT</repox:repox-server.version>
+		<repox:repox-server-oai.version>3.0-SNAPSHOT</repox:repox-server-oai.version>
 		<repox:repox-europeana.version>3.0-SNAPSHOT</repox:repox-europeana.version>
 		<repox:repox-gui.version>3.0-SNAPSHOT</repox:repox-gui.version>
 		<eu.europeana:definitions.version>1.01</eu.europeana:definitions.version>
@@ -145,6 +147,16 @@
 				<groupId>repox</groupId>
 				<artifactId>repox-core</artifactId>
 				<version>${repox:repox-core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-server</artifactId>
+				<version>${repox:repox-server.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-server-oai</artifactId>
+				<version>${repox:repox-server-oai.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>

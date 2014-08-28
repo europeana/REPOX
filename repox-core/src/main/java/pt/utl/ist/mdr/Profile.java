@@ -21,7 +21,9 @@ import java.net.URLEncoder;
  * Date: 29-01-2011
  * Time: 11:30
  * To change this template use File | Settings | File Templates.
+ * @deprecated
  */
+@Deprecated
 public class Profile {
 
     /*

@@ -12,7 +12,7 @@
 
 	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
-	<name>repox-gui</name>
+	<name>REPOX-GUI</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -108,6 +108,17 @@
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-europeana</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-server-oai</artifactId>
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>repox</groupId> -->
+<!-- 					<artifactId>repox-core</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
 		</dependency>
 
 		<!-- Non existent dependency -->

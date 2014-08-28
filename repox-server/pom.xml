@@ -13,7 +13,7 @@
 
 	<artifactId>repox-server</artifactId>
 	<packaging>pom</packaging>
-	<name>repox-server</name>
+	<name>REPOX-SERVER</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>

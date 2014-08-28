@@ -17,6 +17,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -510,6 +511,42 @@ public class DomUtil {
         buffer.setLength(0);
 
         return answer;
+    }
+    
+    /**
+     * XML encode a string.
+     * 
+     * @param s
+     *            any String
+     * @return the String with &amp;, &lt;, and &gt; encoded for use in XML.
+     */
+    public static String xmlEncode(String s) {
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            switch (c) {
+            case '&':
+                sb.append("&amp;");
+                break;
+            case '<':
+                sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            case '"':
+                sb.append("&quot;");
+                break;
+            case '\'':
+                sb.append("&apos;");
+                break;
+            default:
+                sb.append(c);
+                break;
+            }
+        }
+        return sb.toString();
     }
 
 }
