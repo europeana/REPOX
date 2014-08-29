@@ -440,6 +440,10 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
 
     private Map getRecordsFromDataSet(String from, String until, String set, String metadataPrefix, int offset, boolean fullRecord, DataSource dataSource, String offsetSet, int totalRecordsSize, int maxNumRecords2Return, int originalOffset, int totalSetRecords,
             TransformationResultLogger transformationResultLogger) throws NoItemsMatchException {
+        System.out.println(from);
+        System.out.println(until);
+        log.error("from : " + from);
+        log.error("until : " + until);
         from = (from == null || from.startsWith("0001-01-01") ? null : from.substring(0, 10));
         until = (until == null || until.startsWith("9999-12-31") ? null : until.substring(0, 10));
 

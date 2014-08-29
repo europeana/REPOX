@@ -122,21 +122,23 @@ public abstract class AbstractCatalog {
      */
     public String toFinestFrom(String from) throws BadArgumentException {
         String convertedFrom = "";
-        if (debug) {
-            System.out.println("AbstractCatalog.toFinestFrom: from=" + from);
-            System.out.println("                            target=" + VALID_GRANULARITIES[supportedGranularityOffset]);
-        }
-        if (from.length() > VALID_GRANULARITIES[supportedGranularityOffset].length()) { throw new BadArgumentException(); }
-        if (from.length() != VALID_GRANULARITIES[supportedGranularityOffset].length()) {
-            StringBuffer sb = new StringBuffer(from);
-            if (sb.charAt(sb.length() - 1) == 'Z') sb.setLength(sb.length() - 1);
-
-            sb.append(FROM_GRANULARITIES[supportedGranularityOffset].substring(sb.length()));
-            convertedFrom = sb.toString();
-        }
-
-        if (!isValidGranularity(from)) { throw new BadArgumentException(); }
-
+//        if (debug) {
+//            System.out.println("AbstractCatalog.toFinestFrom: from=" + from);
+//            System.out.println("                            target=" + VALID_GRANULARITIES[supportedGranularityOffset]);
+//        }
+//        if (from.length() > VALID_GRANULARITIES[supportedGranularityOffset].length()) { throw new BadArgumentException(); }
+//        if (from.length() != VALID_GRANULARITIES[supportedGranularityOffset].length()) {
+//            StringBuffer sb = new StringBuffer(from);
+//            if (sb.charAt(sb.length() - 1) == 'Z') sb.setLength(sb.length() - 1);
+//
+//            sb.append(FROM_GRANULARITIES[supportedGranularityOffset].substring(sb.length()));
+//            convertedFrom = sb.toString();
+//        }
+//
+//        if (!isValidGranularity(from)) { throw new BadArgumentException(); }
+//
+//        return convertedFrom;
+        convertedFrom = toFinestUntil(from);
         return convertedFrom;
     }
 
