@@ -1,5 +1,8 @@
 #REPOX#
 
+**CAUTION!**  
+**The information below is subject to change**
+
 ###REPOX - Data Aggregation and Interoperability Manager ###
 - - - 
 REPOX is a framework to manage data spaces. It comprises several channels to import data from data providers, services to transform data between schemas according to user's specified rules, and services to expose the results to the exterior. This tailored version of REPOX aims to provide to all the TEL and Europeana partners a simple solution to import, convert and expose their bibliographic data via OAI-PMH, by the following means:
@@ -56,7 +59,7 @@ For development builds the permutations have been reduced in the file `/repox-gu
 For Repox deployment there is a need of a PostgreSQL database and a servlet container as tomcat.  
 Tested versions are:  
 &nbsp;&nbsp;&nbsp;&nbsp; PostgreSQL 9.1.14  
-&nbsp;&nbsp;&nbsp;&nbsp; Tomcat 6.0.41  
+&nbsp;&nbsp;&nbsp;&nbsp; Tomcat 6.0.41, Tomcat 7.0.55  
 
 Additionally a database with a username with password is needed in the PostgreSQL.  
 These information must be added in the `configuration.properties` file mentioned above.  
