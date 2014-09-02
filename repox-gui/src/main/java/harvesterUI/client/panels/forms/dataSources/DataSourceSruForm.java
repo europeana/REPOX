@@ -1,5 +1,13 @@
 package harvesterUI.client.panels.forms.dataSources;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.core.AppEvents;
+import harvesterUI.client.util.formPanel.EditableFormLayout;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.dataTypes.DataProviderUI;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+import harvesterUI.shared.dataTypes.dataSet.DatasetType;
+
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
@@ -11,13 +19,6 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.user.client.Element;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.core.AppEvents;
-import harvesterUI.client.util.formPanel.EditableFormLayout;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.dataTypes.DataProviderUI;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
-import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 
 /**
  * Created to REPOX.

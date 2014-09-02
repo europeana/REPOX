@@ -1,7 +1,5 @@
 package harvesterUI.server.dataManagement;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.DataManagementService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.util.Util;
@@ -9,12 +7,20 @@ import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataContainer;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class DataManagementServiceImpl extends RemoteServiceServlet implements DataManagementService {
 

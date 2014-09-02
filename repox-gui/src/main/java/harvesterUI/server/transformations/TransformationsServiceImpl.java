@@ -1,7 +1,5 @@
 package harvesterUI.server.transformations;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.transformations.TransformationsService;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
 import harvesterUI.server.util.Util;
@@ -11,7 +9,14 @@ import harvesterUI.shared.mdr.SchemaUI;
 import harvesterUI.shared.mdr.SchemaVersionUI;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
-import org.apache.commons.io.FilenameUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
@@ -19,13 +24,12 @@ import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.FilterConfig;
+import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class TransformationsServiceImpl extends RemoteServiceServlet implements TransformationsService {
 

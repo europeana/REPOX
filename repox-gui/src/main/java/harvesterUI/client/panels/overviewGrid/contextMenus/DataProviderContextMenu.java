@@ -1,5 +1,18 @@
 package harvesterUI.client.panels.overviewGrid.contextMenus;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.core.AppEvents;
+import harvesterUI.client.mvc.views.AppView;
+import harvesterUI.client.panels.dataProviderButtons.CreateDataSetButton;
+import harvesterUI.client.servlets.dataManagement.DPServiceAsync;
+import harvesterUI.client.util.ServerExceptionDialog;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.dataTypes.DataContainer;
+import harvesterUI.shared.dataTypes.DataProviderUI;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
@@ -14,18 +27,6 @@ import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.core.AppEvents;
-import harvesterUI.client.mvc.views.AppView;
-import harvesterUI.client.panels.dataProviderButtons.CreateDataSetButton;
-import harvesterUI.client.servlets.dataManagement.DPServiceAsync;
-import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.dataTypes.DataContainer;
-import harvesterUI.shared.dataTypes.DataProviderUI;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created to REPOX.

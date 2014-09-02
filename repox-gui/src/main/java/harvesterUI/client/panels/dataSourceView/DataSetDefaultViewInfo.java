@@ -1,5 +1,15 @@
 package harvesterUI.client.panels.dataSourceView;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.servlets.RepoxServiceAsync;
+import harvesterUI.client.util.ImageButton;
+import harvesterUI.client.util.ServerExceptionDialog;
+import harvesterUI.client.util.UtilManager;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+import harvesterUI.shared.mdr.TransformationUI;
+
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.Events;
@@ -15,15 +25,6 @@ import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
 import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.servlets.RepoxServiceAsync;
-import harvesterUI.client.util.ImageButton;
-import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.client.util.UtilManager;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
-import harvesterUI.shared.mdr.TransformationUI;
 
 /**
  * Created to Project REPOX

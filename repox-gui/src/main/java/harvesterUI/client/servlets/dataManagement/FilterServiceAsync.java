@@ -1,11 +1,12 @@
 package harvesterUI.client.servlets.dataManagement;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.dataTypes.DataContainer;
 import harvesterUI.shared.filters.FilterAttribute;
 import harvesterUI.shared.filters.FilterQuery;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface FilterServiceAsync {
 

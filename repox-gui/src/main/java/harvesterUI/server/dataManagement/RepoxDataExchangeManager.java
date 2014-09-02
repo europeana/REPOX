@@ -10,9 +10,22 @@ import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.externalServices.ExternalServiceUI;
 import harvesterUI.shared.externalServices.ServiceParameterUI;
-import harvesterUI.shared.mdr.*;
+import harvesterUI.shared.mdr.MdrDataStatistics;
+import harvesterUI.shared.mdr.SchemaMdrDataStatistics;
+import harvesterUI.shared.mdr.SchemaUI;
+import harvesterUI.shared.mdr.SchemaVersionUI;
+import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.tasks.OldTaskUI;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
@@ -37,8 +50,6 @@ import pt.utl.ist.repox.z3950.DataSourceZ3950;
 import pt.utl.ist.repox.z3950.IdListHarvester;
 import pt.utl.ist.repox.z3950.IdSequenceHarvester;
 import pt.utl.ist.repox.z3950.TimestampHarvester;
-
-import java.util.*;
 
 /**
  * Created to REPOX.

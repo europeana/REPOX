@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <!-- property name="location"><value>ZHarvesterContext.properties</value></property -->
+  </bean>
+
+  <!-- ========================= GENERAL DEFINITIONS ========================= -->
+
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename"><value>messages</value></property>
+  </bean>
+
+
+  <!-- ========================= PERSISTENCE DEFINITIONS ========================= -->
+
+  <!-- ========================= BUSINESS DEFINITIONS ========================= -->
+
+  <bean id="OIDRegister" class="org.jzkit.a2j.codec.util.OIDRegister">
+    <constructor-arg index="0"><value>/a2j.properties</value></constructor-arg>
+  </bean>
+
+  <!-- conversion rules -->
+  <bean id="RPNToInternalRules" class="org.jzkit.util.PropsHolder">
+    <constructor-arg index="0"><value>/InternalAttrTypes.properties</value></constructor-arg>
+  </bean>
+
+  <bean id="InternalToType1ConversionRules" class="org.jzkit.z3950.QueryModel.PropsBasedInternalToType1ConversionRules">
+    <constructor-arg index="0"><value>/InternalToType1Rules.properties</value></constructor-arg>
+  </bean>
+
+</beans>

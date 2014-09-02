@@ -1,5 +1,11 @@
 package harvesterUI.client.panels.forms.dataSources;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.panels.forms.FormDialog;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.dataTypes.DataProviderUI;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TabPanelEvent;
@@ -8,11 +14,6 @@ import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.panels.forms.FormDialog;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.dataTypes.DataProviderUI;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 
 /**
  * Created to REPOX.

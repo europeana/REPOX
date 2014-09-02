@@ -7,17 +7,18 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
+import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.dataTypes.DataContainer;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
+
+import java.util.List;
+
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.dataTypes.DataContainer;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
-import harvesterUI.shared.ServerSideException;
-import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
-
-import java.util.List;
 
 @RemoteServiceRelativePath("dataManagementService")
 public interface DataManagementService extends RemoteService {

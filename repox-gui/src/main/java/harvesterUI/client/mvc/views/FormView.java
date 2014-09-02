@@ -7,16 +7,14 @@
  */
 package harvesterUI.client.mvc.views;
 
-import com.extjs.gxt.ui.client.mvc.AppEvent;
-import com.extjs.gxt.ui.client.mvc.Controller;
-import com.extjs.gxt.ui.client.mvc.View;
-import com.extjs.gxt.ui.client.widget.TabPanel;
-import com.google.gwt.user.client.Window;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.panels.dataSourceView.ChooseDataSetDialog;
 import harvesterUI.client.panels.forms.AggregatorForm;
-import harvesterUI.client.panels.forms.dataProviders.*;
+import harvesterUI.client.panels.forms.dataProviders.DataProviderEuropeanaForm;
+import harvesterUI.client.panels.forms.dataProviders.DataProviderForm;
+import harvesterUI.client.panels.forms.dataProviders.DataProviderImportForm;
+import harvesterUI.client.panels.forms.dataProviders.DataProviderLightForm;
 import harvesterUI.client.panels.forms.dataSources.DataSourceForm;
 import harvesterUI.client.panels.forms.dataSources.DataSourceTabPanel;
 import harvesterUI.client.panels.mdr.forms.NewSchemaDialog;
@@ -27,6 +25,12 @@ import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.mdr.SchemaUI;
 import harvesterUI.shared.mdr.TransformationUI;
+
+import com.extjs.gxt.ui.client.mvc.AppEvent;
+import com.extjs.gxt.ui.client.mvc.Controller;
+import com.extjs.gxt.ui.client.mvc.View;
+import com.extjs.gxt.ui.client.widget.TabPanel;
+import com.google.gwt.user.client.Window;
 
 
 public class FormView extends View {

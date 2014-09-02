@@ -1,6 +1,5 @@
 package harvesterUI.server.dataManagement.filters;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.FilterService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.shared.ServerSideException;
@@ -10,6 +9,8 @@ import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.filters.FilterType;
 
 import java.util.List;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class FilterServiceImpl extends RemoteServiceServlet implements FilterService {
 

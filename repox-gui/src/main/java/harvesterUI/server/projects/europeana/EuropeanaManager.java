@@ -1,7 +1,5 @@
 package harvesterUI.server.projects.europeana;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import eu.europeana.definitions.domain.Country;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.DataType;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -32,27 +30,53 @@ import harvesterUI.shared.statistics.StatisticsType;
 import harvesterUI.shared.tasks.OldTaskUI;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
-import org.dom4j.DocumentException;
-import pt.utl.ist.repox.RepoxConfigurationEuropeana;
-import pt.utl.ist.repox.RepoxManagerEuropeana;
-import pt.utl.ist.repox.dataProvider.*;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.statistics.RepoxStatisticsEuropeana;
-import pt.utl.ist.repox.statistics.StatisticsManagerEuropeana;
-import pt.utl.ist.repox.task.OldTask;
-import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
-import pt.utl.ist.repox.util.*;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
-import javax.mail.AuthenticationFailedException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.mail.AuthenticationFailedException;
+
+import org.dom4j.DocumentException;
+
+import pt.utl.ist.repox.dataProvider.Countries;
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.repox.task.OldTask;
+import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.repox.util.RepoxContextUtilDefault;
+import pt.utl.ist.rest.RepoxConfigurationEuropeana;
+import pt.utl.ist.rest.RepoxManagerEuropeana;
+import pt.utl.ist.rest.dataProvider.AggregatorEuropeana;
+import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
+import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
+import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;
+import pt.utl.ist.rest.statistics.RepoxStatisticsEuropeana;
+import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
+import pt.utl.ist.rest.util.EmailUtilEuropeana;
+import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+
+import com.extjs.gxt.ui.client.data.ModelData;
+
+import eu.europeana.definitions.domain.Country;
 
 //import com.google.common.collect.Iterables;
 //import pt.utl.ist.repox.RepoxManagerEuDml;

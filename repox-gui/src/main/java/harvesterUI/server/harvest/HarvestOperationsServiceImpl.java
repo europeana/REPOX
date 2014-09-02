@@ -1,7 +1,5 @@
 package harvesterUI.server.harvest;
 
-import com.extjs.gxt.ui.client.util.DateWrapper;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.harvest.HarvestOperationsService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.filters.FilterManagementUtil;
@@ -14,22 +12,35 @@ import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.tasks.RunningTask;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.task.*;
+import pt.utl.ist.repox.task.DataSourceExportTask;
+import pt.utl.ist.repox.task.DataSourceIngestTask;
+import pt.utl.ist.repox.task.ScheduledTask;
+import pt.utl.ist.repox.task.Task;
+import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.util.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.extjs.gxt.ui.client.util.DateWrapper;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class HarvestOperationsServiceImpl extends RemoteServiceServlet implements HarvestOperationsService {
 

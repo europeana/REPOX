@@ -1,11 +1,12 @@
 package harvesterUI.client.servlets.xmapper;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import pt.ist.mdr.mapping.ui.client.model.MappingScriptProxy;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
  * Created to REPOX.

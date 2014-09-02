@@ -1,7 +1,5 @@
 package harvesterUI.server.projects;
 
-import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.extjs.gxt.ui.client.data.ModelData;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.DataType;
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
@@ -22,7 +20,6 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
 import harvesterUI.shared.tasks.OldTaskUI;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +28,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.data.ModelData;
 
 /**
  * Created to Project REPOX

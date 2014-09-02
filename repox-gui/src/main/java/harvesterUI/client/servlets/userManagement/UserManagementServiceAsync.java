@@ -7,9 +7,6 @@
  */
 package harvesterUI.client.servlets.userManagement;
 
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.UserAuthentication;
 import harvesterUI.shared.servletResponseStates.RepoxServletResponseStates;
@@ -17,6 +14,10 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.users.User;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 //import harvesterUI.client.models.FilterAttributes;
 //import harvesterUI.client.models.MailItem;

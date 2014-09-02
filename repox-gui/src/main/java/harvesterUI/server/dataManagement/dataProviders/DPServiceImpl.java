@@ -1,7 +1,5 @@
 package harvesterUI.server.dataManagement.dataProviders;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.DPService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.shared.ServerSideException;
@@ -9,6 +7,9 @@ import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.SaveDataResponse;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class DPServiceImpl extends RemoteServiceServlet implements DPService {
 

@@ -7,11 +7,6 @@
  */
 package harvesterUI.client.servlets.userManagement;
 
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.UserAuthentication;
@@ -20,6 +15,11 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.users.User;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("userManagementService")
 public interface UserManagementService extends RemoteService {

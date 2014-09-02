@@ -5,13 +5,18 @@ package harvesterUI.server.sru;
 
 import harvesterUI.shared.ProjectType;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -26,6 +31,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
 import org.dom4j.Element;
+
 import pt.utl.ist.repox.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
@@ -34,7 +40,7 @@ import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
-import pt.utl.ist.repox.util.RepoxContextUtilEuropeana;
+import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 /**
  *

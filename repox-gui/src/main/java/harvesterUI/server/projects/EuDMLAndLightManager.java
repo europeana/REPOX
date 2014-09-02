@@ -1,6 +1,5 @@
 package harvesterUI.server.projects;
 
-import com.extjs.gxt.ui.client.data.ModelData;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.DataType;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -29,9 +28,28 @@ import harvesterUI.shared.statistics.StatisticsType;
 import harvesterUI.shared.tasks.OldTaskUI;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.mail.AuthenticationFailedException;
+
 import org.dom4j.DocumentException;
+
 import pt.utl.ist.repox.RepoxConfiguration;
-import pt.utl.ist.repox.dataProvider.*;
+import pt.utl.ist.repox.dataProvider.Countries;
+import pt.utl.ist.repox.dataProvider.DataManager;
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.statistics.RepoxStatisticsDefault;
@@ -42,11 +60,7 @@ import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 
-import javax.mail.AuthenticationFailedException;
-import java.io.File;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.*;
+import com.extjs.gxt.ui.client.data.ModelData;
 
 /**
  * Created to Project REPOX

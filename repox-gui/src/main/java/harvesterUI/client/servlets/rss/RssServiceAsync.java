@@ -7,10 +7,11 @@
  */
 package harvesterUI.client.servlets.rss;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.rss.RssItemUI;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 //import harvesterUI.client.models.FilterAttributes;
 //import harvesterUI.client.models.MailItem;

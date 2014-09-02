@@ -1,21 +1,48 @@
 package harvesterUI.server.dataManagement.dataSets;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.DataSetOperationsService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
-import harvesterUI.shared.dataTypes.*;
+import harvesterUI.shared.dataTypes.DataContainer;
+import harvesterUI.shared.dataTypes.DataProviderUI;
+import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.dataTypes.dataSet.DataSetStatus;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.tasks.OldTaskUI;
-import org.dom4j.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.XPath;
 import org.oclc.oai.harvester2.verb.ListMetadataFormats;
 import org.oclc.oai.harvester2.verb.ListSets;
 import org.xml.sax.SAXParseException;
+
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.LogFilenameComparator;
 import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
@@ -25,13 +52,8 @@ import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.FileUtil;
 
-import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class DataSetOperationsServiceImpl extends RemoteServiceServlet implements DataSetOperationsService {
 

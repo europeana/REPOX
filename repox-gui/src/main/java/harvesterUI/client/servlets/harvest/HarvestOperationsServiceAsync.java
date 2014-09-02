@@ -7,7 +7,6 @@
  */
 package harvesterUI.client.servlets.harvest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
 import harvesterUI.shared.filters.FilterQuery;
@@ -16,6 +15,8 @@ import harvesterUI.shared.tasks.RunningTask;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface HarvestOperationsServiceAsync {
 

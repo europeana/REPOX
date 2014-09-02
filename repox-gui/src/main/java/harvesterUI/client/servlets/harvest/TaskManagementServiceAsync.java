@@ -1,13 +1,14 @@
 package harvesterUI.client.servlets.harvest;
 
-import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface TaskManagementServiceAsync {
 

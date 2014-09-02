@@ -1,5 +1,17 @@
 package harvesterUI.client.panels.statistics;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.servlets.RepoxServiceAsync;
+import harvesterUI.client.util.ServerExceptionDialog;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.statistics.RepoxStatisticsUI;
+import harvesterUI.shared.statistics.StatisticsType;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
@@ -16,17 +28,6 @@ import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.servlets.RepoxServiceAsync;
-import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.statistics.RepoxStatisticsUI;
-import harvesterUI.shared.statistics.StatisticsType;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created to REPOX.

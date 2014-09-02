@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='harvesterui'>
 	<!-- Inherit the core Web Toolkit stuff. -->
-	<inherits name="com.extjs.gxt.ui.GXT" />
 	<inherits name='com.extjs.gxt.themes.Themes' />
 
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<inherits name="harvesterUI.HarvesterUI" />
 
 	<inherits name='com.bradrydzewski.gwt.calendar.Calendar' />
 	<inherits name='com.bradrydzewski.gwt.calendar.theme.google.Google' />
@@ -21,7 +19,7 @@
 	<!--<inherits name='pt.ist.mdr.mapping.ui.MappingUI'/> -->
 	<!--<inherits name='pt.ist.mdr.concept.library.ui.MDRConceptLibrary'/> -->
 	<inherits name='pt.ist.mdr.mapping.ui.svg.MDRMappingSVG' />
-
+	
 	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
 	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 

@@ -1,9 +1,5 @@
 package harvesterUI.server.dataManagement.search;
 
-import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.search.SearchService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -21,6 +17,11 @@ import harvesterUI.shared.tasks.ScheduledTaskUI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class SearchServiceImpl extends RemoteServiceServlet implements SearchService {
 

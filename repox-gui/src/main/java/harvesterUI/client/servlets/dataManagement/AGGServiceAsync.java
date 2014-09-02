@@ -7,11 +7,12 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.dataTypes.AggregatorUI;
 import harvesterUI.shared.dataTypes.SaveDataResponse;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 //import harvesterUI.client.models.FilterAttributes;
 //import harvesterUI.client.models.MailItem;

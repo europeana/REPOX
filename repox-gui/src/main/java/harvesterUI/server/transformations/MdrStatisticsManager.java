@@ -5,6 +5,13 @@ import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
 import harvesterUI.shared.mdr.MdrDataStatistics;
 import harvesterUI.shared.mdr.SchemaMdrDataStatistics;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchema;
@@ -13,8 +20,6 @@ import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.util.ConfigSingleton;
-
-import java.util.*;
 
 /**
  * Created to Project REPOX-EUDML

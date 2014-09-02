@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    <tlib-version>1.0</tlib-version>
+    <short-name>repox</short-name>
+    <uri>http://repox.ist.utl.pt/tlds/repox.tld</uri>
+    
+    <function>
+        <name>getFixedSizeNumber</name>
+        <function-class>pt.utl.ist.repox.util.StringUtil</function-class>
+        <function-signature>java.lang.String getFixedSizeNumber(int, int)</function-signature>
+    </function>
+    <function>
+        <name>encode</name>
+        <function-class>pt.utl.ist.repox.util.StringUtil</function-class>
+        <function-signature>java.lang.String encode(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>digitsMaxNumberOccurences</name>
+        <function-class>pt.utl.ist.repox.web.action.mapMetadata.MapMetadataActionBean</function-class>
+        <function-signature>int digitsMaxNumberOccurences(java.util.List)</function-signature>
+    </function>
+    <function>
+        <name>modificationTime</name>
+        <function-class>pt.utl.ist.repox.util.StringUtil</function-class>
+        <function-signature>java.lang.String getFileModificationTime(java.io.File)</function-signature>
+    </function>
+    <function>
+        <name>oaiMetadataFormats</name>
+        <function-class>pt.utl.ist.repox.oai.DataSourceOai</function-class>
+        <function-signature>java.util.List getOaiMetadataFormats()</function-signature>
+    </function>
+    <function>
+        <name>dataProviderName</name>
+        <function-class>pt.utl.ist.repox.dataProvider.DataManagerEuropeana</function-class>
+        <function-signature>java.lang.String getDataProviderName(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>sanitizeJavascript</name>
+        <function-class>pt.utl.ist.repox.util.StringUtil</function-class>
+        <function-signature>java.lang.String sanitizeJavascript(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>getCountries</name>
+        <function-class>pt.utl.ist.repox.dataProvider.Countries</function-class>
+        <function-signature>java.util.Map getCountries()</function-signature>
+    </function>
+    
+</taglib>

@@ -1,23 +1,34 @@
 package harvesterUI.server.dataManagement.filters;
 
-import com.extjs.gxt.ui.client.util.DateWrapper;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.projects.europeana.EuropeanaManager;
 import harvesterUI.server.userManagement.UserManagementServiceImpl;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
-import harvesterUI.shared.filters.*;
+import harvesterUI.shared.filters.FilterAttribute;
+import harvesterUI.shared.filters.FilterQuery;
+import harvesterUI.shared.filters.FilterQueryLastIngest;
+import harvesterUI.shared.filters.FilterQueryRecords;
+import harvesterUI.shared.filters.FilterType;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
 import harvesterUI.shared.users.UserRole;
-import pt.utl.ist.repox.dataProvider.*;
-import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.rest.dataProvider.AggregatorEuropeana;
+import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
+import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
+
+import com.extjs.gxt.ui.client.util.DateWrapper;
 
 /**
  * Created to project REPOX.

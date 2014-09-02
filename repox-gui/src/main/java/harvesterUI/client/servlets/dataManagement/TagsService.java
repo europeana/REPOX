@@ -7,19 +7,16 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
+import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
+import harvesterUI.shared.servletResponseStates.ResponseState;
+
+import java.util.List;
+
 import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.ServerSideException;
-import harvesterUI.shared.dataTypes.DataContainer;
-import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
-import harvesterUI.shared.filters.FilterAttribute;
-import harvesterUI.shared.filters.FilterQuery;
-import harvesterUI.shared.mdr.TransformationUI;
-import harvesterUI.shared.servletResponseStates.ResponseState;
-
-import java.util.List;
 
 @RemoteServiceRelativePath("tagsService")
 public interface TagsService extends RemoteService {

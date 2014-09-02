@@ -1,11 +1,10 @@
 package harvesterUI.client.servlets.externalServices;
 
-import com.extjs.gxt.ui.client.data.BaseModel;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.externalServices.ExternalServiceUI;
 
 import java.util.List;
-import java.util.Map;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ESManagementServiceAsync {
 

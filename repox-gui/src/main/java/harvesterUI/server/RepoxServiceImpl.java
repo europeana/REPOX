@@ -1,10 +1,9 @@
 package harvesterUI.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.RepoxService;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
-import harvesterUI.server.projects.Light.LightManager;
 import harvesterUI.server.projects.ProjectManager;
+import harvesterUI.server.projects.Light.LightManager;
 import harvesterUI.server.projects.europeana.EuropeanaManager;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ProjectType;
@@ -14,14 +13,6 @@ import harvesterUI.shared.dataTypes.admin.MainConfigurationInfo;
 import harvesterUI.shared.externalServices.ExternalServiceResultUI;
 import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
-import pt.utl.ist.repox.RepoxConfigurationEuropeana;
-import pt.utl.ist.repox.RepoxManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.util.TransformationResultLogger;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -29,6 +20,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+
+import pt.utl.ist.repox.RepoxManager;
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.rest.RepoxConfigurationEuropeana;
+import pt.utl.ist.util.TransformationResultLogger;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxService {
 

@@ -1,15 +1,16 @@
 package harvesterUI.client.mvc.controllers;
 
-import com.extjs.gxt.ui.client.event.EventType;
-import com.extjs.gxt.ui.client.mvc.AppEvent;
-import com.extjs.gxt.ui.client.mvc.Controller;
-import com.google.gwt.user.client.History;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.AggregatorUI;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+
+import com.extjs.gxt.ui.client.event.EventType;
+import com.extjs.gxt.ui.client.mvc.AppEvent;
+import com.extjs.gxt.ui.client.mvc.Controller;
+import com.google.gwt.user.client.History;
 
 /**
  * Created to REPOX.

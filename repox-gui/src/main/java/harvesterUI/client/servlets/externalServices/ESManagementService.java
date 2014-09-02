@@ -7,12 +7,13 @@
  */
 package harvesterUI.client.servlets.externalServices;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.externalServices.ExternalServiceUI;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("esmservice")
 public interface ESManagementService extends RemoteService {

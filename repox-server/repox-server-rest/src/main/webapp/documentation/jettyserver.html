@@ -1,0 +1,88 @@
+<html>
+  <head><title>REPOX Documentation</title></head>
+  <body>
+    <center><a href="index.html">&lt; Back to index</a></center>
+    <h2>Jetty Server</h2>
+	
+	<a href="jettyserver.html#windows">Windows XP/Vista</a>
+	<br /><a href="jettyserver.html#linux">Linux</a>
+
+	<h3 id="windows">Windows XP/Vista</h3>
+	<h4>Running Jetty</h4>
+	Open a new terminal, change directory to the jetty installation path (see the documentation index) and execute:
+	
+	<br /><br /><code>java -jar start.jar etc/jetty.xml</code>
+	
+	<h4>Stopping Jetty</h4>
+	Close the command prompt where jetty was launched
+	
+	<h4>Starting Jetty as a service</h4>
+	First check that you are using an account with administrative permissions. In Windows Vista it is necessary to execute the installer with special administrative permissions. So, a command prompt window with administrator rights is needed. To create one you need to:
+		
+	<br /><br /><code>Go to Start > All Programs > Accessories > then right-click on "Command Prompt" and select "Run as administrator".</code>
+	
+	<br /><br />Open a command prompt, change directory to the jetty installation path (see the documentation index) and execute:
+
+	<br /><br /><code>bin\Jetty-Service.exe --start bin\jetty-service.conf</code>
+	
+	<h4>Stopping Jetty as a service</h4>
+	First check that you are using an account with administrative permissions. In Windows Vista it is necessary to execute the installer with special administrative permissions. So, a command prompt window with administrator rights is needed. To create one you need to:
+		
+	<br /><br /><code>Go to Start > All Programs > Accessories > then right-click on "Command Prompt" and select "Run as administrator".</code>
+	
+	<br /><br />Open a command prompt, change directory to the jetty installation path (see the documentation index) and execute:
+	
+	<br /><br /><code>bin\Jetty-Service.exe --stop bin\jetty-service.conf</code>
+	
+	<h4>Installing Jetty as a service</h4>
+	First check that you are using an account with administrative permissions. In Windows Vista it is necessary to execute the installer with special administrative permissions. So, a command prompt window with administrator rights is needed. To create one you need to:
+		
+	<br /><br /><code>Go to Start > All Programs > Accessories > then right-click on "Command Prompt" and select "Run as administrator".</code>
+	
+	<br /><br />Open a command prompt, change directory to the jetty installation path (see the documentation index) and execute:
+
+	<br /><br /><code>bin\Jetty-Service.exe --install bin\jetty-service.conf</code>
+	
+	<h4>Removing Jetty service</h4>
+	First check that you are using an account with administrative permissions. In Windows Vista it is necessary to execute the installer with special administrative permissions. So, a command prompt window with administrator rights is needed. To create one you need to:
+		
+	<br /><br /><code>Go to Start > All Programs > Accessories > then right-click on "Command Prompt" and select "Run as administrator".</code>
+	
+	<br /><br />Open a command prompt, change directory to the jetty installation path (see the documentation index) and execute:
+	
+	<br /><br /><code>bin\Jetty-Service.exe --remove bin\jetty-service.conf</code>
+
+	<br /><br />
+
+	<h3 id="linux">Linux</h3>
+	
+	<h4>Running Jetty</h4>
+	Open a new terminal, change directory to the jetty installation path (see the documentation index) and execute:
+	
+	<br /><br /><code>java -jar start.jar etc/jetty.xml</code>
+	
+	<h4>Stopping Jetty</h4>
+	Kill the process running it (Ctrl+C) in the terminal where it was launched
+	
+	<h4>Starting Jetty as a service (tested on Ubuntu)</h4>
+	Open a terminal and run with root permissions:
+	
+	<br /><br /><code>/etc/init.d/jetty.sh start</code>
+	
+	<h4>Stopping Jetty as a service (tested on Ubuntu)</h4>
+	Open a terminal and run with root permissions:
+	
+	<br /><br /><code>/etc/init.d/jetty.sh stop</code>
+	
+	<h4>Installing Jetty as a service (tested on Ubuntu)</h4>
+	Open a terminal, change directory to the jetty installation path (see the documentation index) and run with root permissions:
+	
+	<br /><br /><code>bash bin/installService.sh bin</code>
+	
+	<h4>Removing Jetty service (tested on Ubuntu)</h4>
+	Open a terminal, change directory to the jetty installation path (see the documentation index) and run with root permissions:
+	
+	<br /><br /><code>bash bin/uninstallservice.sh</code>
+	
+  </body>
+</html>

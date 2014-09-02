@@ -1,9 +1,5 @@
 package harvesterUI.server.userManagement;
 
-import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.userManagement.UserManagementService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -17,16 +13,7 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
 import harvesterUI.shared.users.UserRole;
-import org.dom4j.*;
-import org.dom4j.io.SAXReader;
-import org.mindrot.jbcrypt.BCrypt;
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
-import pt.utl.ist.repox.util.XmlUtil;
 
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -37,6 +24,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import javax.servlet.http.HttpSession;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+import org.mindrot.jbcrypt.BCrypt;
+
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.repox.util.RepoxContextUtilDefault;
+import pt.utl.ist.repox.util.XmlUtil;
+
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class UserManagementServiceImpl extends RemoteServiceServlet implements UserManagementService {
 

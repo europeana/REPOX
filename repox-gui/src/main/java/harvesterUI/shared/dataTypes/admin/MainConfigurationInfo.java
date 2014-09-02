@@ -1,9 +1,8 @@
 package harvesterUI.shared.dataTypes.admin;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import harvesterUI.shared.ProjectType;
 
-import java.util.List;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Created to Project REPOX

@@ -7,12 +7,13 @@
  */
 package harvesterUI.client.servlets.rss;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.rss.RssItemUI;
 import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.rss.RssItemUI;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("rssService")
 public interface RssService extends RemoteService {

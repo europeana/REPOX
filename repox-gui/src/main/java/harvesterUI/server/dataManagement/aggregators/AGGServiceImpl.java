@@ -1,6 +1,5 @@
 package harvesterUI.server.dataManagement.aggregators;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.AGGService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.shared.ServerSideException;
@@ -8,6 +7,8 @@ import harvesterUI.shared.dataTypes.AggregatorUI;
 import harvesterUI.shared.dataTypes.SaveDataResponse;
 
 import java.util.List;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AGGServiceImpl extends RemoteServiceServlet implements AGGService {
 

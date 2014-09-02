@@ -7,17 +7,18 @@
  */
 package harvesterUI.client.servlets;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.admin.AdminInfo;
 import harvesterUI.shared.dataTypes.admin.MainConfigurationInfo;
 import harvesterUI.shared.externalServices.ExternalServiceResultUI;
+import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
 
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("repoxservice")
 public interface RepoxService extends RemoteService {

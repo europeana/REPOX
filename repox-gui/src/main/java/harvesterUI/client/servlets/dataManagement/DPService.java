@@ -7,14 +7,15 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.*;
+import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.SaveDataResponse;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("dataProvidersService")
 public interface DPService extends RemoteService {

@@ -7,9 +7,8 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import harvesterUI.shared.dataTypes.*;
+import harvesterUI.shared.dataTypes.DataContainer;
+import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.dataTypes.dataSet.DataSetStatus;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
@@ -17,6 +16,9 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 
 import java.util.List;
 import java.util.Map;
+
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 //import harvesterUI.client.models.FilterAttributes;
 //import harvesterUI.client.models.MailItem;

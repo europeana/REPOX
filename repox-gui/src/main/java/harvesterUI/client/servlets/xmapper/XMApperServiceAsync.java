@@ -1,9 +1,10 @@
 package harvesterUI.client.servlets.xmapper;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import pt.ist.mdr.mapping.ui.client.model.MappingScriptProxy;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Created to REPOX.

@@ -14,12 +14,35 @@ import harvesterUI.shared.externalServices.ExternalServiceUI;
 import harvesterUI.shared.externalServices.ServiceParameterUI;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.dom4j.DocumentException;
+
 import pt.utl.ist.repox.RepoxManagerDefault;
-import pt.utl.ist.repox.dataProvider.*;
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.repox.dataProvider.DataSourceContainerDefault;
+import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
-import pt.utl.ist.repox.externalServices.*;
+import pt.utl.ist.repox.externalServices.ExternalRestService;
+import pt.utl.ist.repox.externalServices.ExternalServiceNoMonitor;
+import pt.utl.ist.repox.externalServices.ExternalServiceStates;
+import pt.utl.ist.repox.externalServices.ExternalServiceType;
+import pt.utl.ist.repox.externalServices.ServiceParameter;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.DataSourceOai;
@@ -29,14 +52,6 @@ import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created to REPOX.

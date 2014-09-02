@@ -7,14 +7,15 @@
  */
 package harvesterUI.client.servlets.dataManagement;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataContainer;
 import harvesterUI.shared.filters.FilterAttribute;
-import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.filters.FilterQuery;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("filterService")
 public interface FilterService extends RemoteService {

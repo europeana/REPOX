@@ -1,37 +1,19 @@
 package harvesterUI.server.projects.europeana;
 
-import eu.europeana.repox2sip.models.ProviderType;
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
 import harvesterUI.server.dataManagement.dataSets.Z39FileUpload;
 import harvesterUI.server.projects.Light.LightSaveData;
 import harvesterUI.server.userManagement.UserManagementServiceImpl;
 import harvesterUI.server.util.PagingUtil;
 import harvesterUI.server.util.Util;
-import harvesterUI.shared.*;
+import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataProviderUI;
+import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
-import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
-import org.apache.log4j.Logger;
-import org.dom4j.DocumentException;
-import pt.utl.ist.repox.RepoxManagerEuropeana;
-import pt.utl.ist.repox.dataProvider.*;
-import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
-import pt.utl.ist.repox.externalServices.ExternalRestService;
-import pt.utl.ist.repox.externalServices.ExternalServiceStates;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.oai.DataSourceOai;
-import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.util.FileUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +23,37 @@ import java.sql.SQLException;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
+
+import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.repox.dataProvider.MessageType;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.externalServices.ExternalRestService;
+import pt.utl.ist.repox.externalServices.ExternalServiceStates;
+import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
+import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.rest.RepoxManagerEuropeana;
+import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
+import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
+import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;
+import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import eu.europeana.repox2sip.models.ProviderType;
 
 /**
  * Created to REPOX.

@@ -99,26 +99,25 @@
 	<!-- </distributionManagement> -->
 
 	<dependencies>
-		<!--REPOX Core Libs -->
+		<!-- REPOX Core Libs -->
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-core</artifactId>
+		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>repox</groupId> -->
-		<!-- <artifactId>repox-core</artifactId> -->
+		<!-- <artifactId>repox-europeana</artifactId> -->
 		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>repox</groupId>
-			<artifactId>repox-europeana</artifactId>
+			<artifactId>repox-server-oai</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>repox</groupId>
-			<artifactId>repox-server-oai</artifactId>
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<groupId>repox</groupId> -->
-<!-- 					<artifactId>repox-core</artifactId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
+			<artifactId>repox-server-rest</artifactId>
 		</dependency>
 
 		<!-- Non existent dependency -->
@@ -129,6 +128,10 @@
 		<!--</dependency> -->
 		<!-- Non existent dependency -->
 
+		<dependency>
+			<groupId>eu.europeana</groupId>
+			<artifactId>definitions</artifactId>
+		</dependency>
 		<!--Ext GWT Libs -->
 		<dependency>
 			<groupId>gxt</groupId>

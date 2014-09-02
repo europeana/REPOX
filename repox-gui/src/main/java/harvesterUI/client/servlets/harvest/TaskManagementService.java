@@ -7,17 +7,17 @@
  */
 package harvesterUI.client.servlets.harvest;
 
-import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("taskManagementService")
 public interface TaskManagementService extends RemoteService {

@@ -1,7 +1,5 @@
 package harvesterUI.server.harvest;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.harvest.TaskManagementService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.filters.FilterManagementUtil;
@@ -11,11 +9,25 @@ import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.tasks.OldTaskUI;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.task.ScheduledTask;
 
-import java.util.*;
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.FilterConfig;
+import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class TaskManagementServiceImpl extends RemoteServiceServlet implements TaskManagementService {
 

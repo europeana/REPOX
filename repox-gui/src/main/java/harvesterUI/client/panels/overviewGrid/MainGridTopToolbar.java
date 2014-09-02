@@ -1,5 +1,17 @@
 package harvesterUI.client.panels.overviewGrid;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.core.AppEvents;
+import harvesterUI.client.panels.browse.BrowseFilterPanel;
+import harvesterUI.client.panels.dataProviderButtons.CreateDataProviderButton;
+import harvesterUI.client.servlets.harvest.HarvestOperationsServiceAsync;
+import harvesterUI.client.util.ServerExceptionDialog;
+import harvesterUI.shared.ProjectType;
+import harvesterUI.shared.filters.FilterQuery;
+import harvesterUI.shared.tasks.RunningTask;
+
+import java.util.List;
+
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.data.BasePagingLoadConfig;
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
@@ -16,17 +28,6 @@ import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.core.AppEvents;
-import harvesterUI.client.panels.browse.BrowseFilterPanel;
-import harvesterUI.client.panels.dataProviderButtons.CreateDataProviderButton;
-import harvesterUI.client.servlets.harvest.HarvestOperationsServiceAsync;
-import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.shared.ProjectType;
-import harvesterUI.shared.filters.FilterQuery;
-import harvesterUI.shared.tasks.RunningTask;
-
-import java.util.List;
 
 /**
  * Created to REPOX project.

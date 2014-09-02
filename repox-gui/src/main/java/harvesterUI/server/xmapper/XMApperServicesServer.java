@@ -1,13 +1,18 @@
 package harvesterUI.server.xmapper;
 
-import java.io.*;
-import java.net.URL;
-import java.util.UUID;
-
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.UUID;
+
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.InputSource;
 
@@ -20,13 +25,13 @@ import pt.ist.mdr.schema.xml.support.xsd.XSDSupport;
 import pt.ist.mdr.system.services.admin.AdministrationService;
 import pt.ist.mdr.system.services.admin.Service;
 import pt.ist.xml.mapping.compiler.XSLTCompiler;
+import pt.ist.xml.mapping.impl.MappingFactoryImpl;
+import pt.ist.xml.mapping.impl.MappingModelImpl;
 import pt.ist.xml.mapping.io.MappingResolver;
 import pt.ist.xml.mapping.io.XMLMappingReader;
 import pt.ist.xml.mapping.io.XMLMappingWriter;
 import pt.ist.xml.mapping.spec.MappingFactory;
 import pt.ist.xml.mapping.spec.MappingScript;
-import pt.ist.xml.mapping.impl.*;
-import pt.ist.xml.mapping.impl.MappingModelImpl;
 import pt.ist.xml.mapping.toolset.ToolsetManagerImpl;
 import pt.ist.xml.mapping.toolset.function.XsltFunction;
 import pt.ist.xml.mapping.toolset.library.XsltToolsetLibrary;
@@ -36,8 +41,6 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
-
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Created to REPOX.

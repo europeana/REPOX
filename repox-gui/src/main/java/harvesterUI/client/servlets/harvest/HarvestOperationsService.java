@@ -7,10 +7,8 @@
  */
 package harvesterUI.client.servlets.harvest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.servletResponseStates.ResponseState;
@@ -18,6 +16,9 @@ import harvesterUI.shared.tasks.RunningTask;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("harvestOperationsService")
 public interface HarvestOperationsService extends RemoteService {

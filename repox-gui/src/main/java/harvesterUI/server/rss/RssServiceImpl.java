@@ -1,14 +1,9 @@
 package harvesterUI.server.rss;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 import harvesterUI.client.servlets.rss.RssService;
 import harvesterUI.server.util.Util;
-import harvesterUI.shared.rss.RssItemUI;
 import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.rss.RssItemUI;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +13,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
 
 public class RssServiceImpl extends RemoteServiceServlet implements RssService {
 

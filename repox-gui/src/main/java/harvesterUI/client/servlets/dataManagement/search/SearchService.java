@@ -7,15 +7,7 @@
  */
 package harvesterUI.client.servlets.dataManagement.search;
 
-import com.extjs.gxt.ui.client.data.BaseModel;
-import com.extjs.gxt.ui.client.data.ModelType;
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import harvesterUI.shared.ServerSideException;
-import harvesterUI.shared.dataTypes.AggregatorUI;
-import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.mdr.SchemaTreeUI;
 import harvesterUI.shared.mdr.TransformationUI;
@@ -23,6 +15,11 @@ import harvesterUI.shared.search.BaseSearchResult;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("searchService")
 public interface SearchService extends RemoteService {

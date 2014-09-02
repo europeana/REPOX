@@ -1,13 +1,5 @@
 package harvesterUI.client.panels.overviewGrid;
 
-import com.extjs.gxt.ui.client.Registry;
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
-import com.extjs.gxt.ui.client.event.SelectionChangedListener;
-import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.panels.browse.BrowseFilterPanel;
 import harvesterUI.client.servlets.dataManagement.search.SearchServiceAsync;
@@ -16,6 +8,23 @@ import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.search.BaseSearchResult;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.Registry;
+import com.extjs.gxt.ui.client.data.BaseModel;
+import com.extjs.gxt.ui.client.data.BasePagingLoader;
+import com.extjs.gxt.ui.client.data.LoadEvent;
+import com.extjs.gxt.ui.client.data.Loader;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.extjs.gxt.ui.client.data.PagingLoader;
+import com.extjs.gxt.ui.client.data.RpcProxy;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
+import com.extjs.gxt.ui.client.event.SelectionChangedListener;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Created to REPOX project.

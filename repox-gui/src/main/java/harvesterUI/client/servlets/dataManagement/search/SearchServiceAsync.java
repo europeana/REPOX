@@ -7,9 +7,6 @@
  */
 package harvesterUI.client.servlets.dataManagement.search;
 
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.mdr.SchemaTreeUI;
 import harvesterUI.shared.mdr.TransformationUI;
@@ -17,6 +14,10 @@ import harvesterUI.shared.search.BaseSearchResult;
 import harvesterUI.shared.tasks.ScheduledTaskUI;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 public interface SearchServiceAsync {

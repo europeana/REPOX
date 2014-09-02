@@ -2,21 +2,34 @@ package harvesterUI.server.harvest;
 
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.shared.ServerSideException;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.XmlUtil;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+
+import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.XmlUtil;
 
 /**
  * Created to REPOX Project.

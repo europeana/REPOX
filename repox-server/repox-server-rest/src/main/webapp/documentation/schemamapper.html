@@ -1,0 +1,18 @@
+<html>
+  <head><title>REPOX Documentation</title></head>
+  <body>
+    <center><a href="index.html">&lt; Back to index</a></center>
+    <h2>Schema Mapper</h2>
+
+	Follow the menu link Schema Mapper, and then there are three options to create a transformation to the TEL format, described by their order on the page: submitting a zip file with Records in XML or a single Record XML file; submitting the XSLT Transformation; or Viewing existing Transformations (and editing them if it is possible, it will not be possible if the transformation was not created with Schema Mapper). Some transformations are already provided in the installation. They can be viewed in bottom section "View Schema Map Transformation".
+	
+	<br /><br />The destination transformation must have a root element and a group of child nodes (deeper nodes are not allowed in the current version).  
+
+	<br /><br />To create a mapping from scratch, it is possible to use the section titled Map Schema Visually from Sample. Select an XML Record file or zip with several XML Records that will be used as a sample to extract possible tags. Then it is possible to perform the mapping like described in the previous paragraph. As an example, to map UNIMARC records (in XML: MarcXchange/MarcXML) to TEL, the mapping unimarcToTel can be used. By clicking Edit, it is possible to adapt the connections visually. The tags on the left are the destination tags (by default with oai_dc fields; the tags on the right are the source tags (extracted from a sample file, or a zip file with a group of samples).
+
+	<br /><br />To create a new TEL Tag or Record Tag to be mapped click "New Tag" on the left or right side respectively. It is also possible to create groups of tags (to be mapped from Records), for example to associate an author's first and last name and then map it to a DC TEL tag. To delete a Tag or group click on the bin image next to it (this may be very useful to compact the screen as too many unused tags is confusing and prone to errors).
+
+	<br /><br />To create a connection, click one of the dots from one side and drag to a dot from the other side which corresponds to the same field. To delete a connection, hover the mouse on the dot, and then click the scissors that apperar near it. After submitting, it is possible to see the sample XML, the created transformation file (XSLT) and the result of applying the XMLT to the XML, and if the result is satisfactory, fill the fields and submit the mapping. It is also possible to submit a new XML Record sample to check if the transformation is working correctly (after submitting the mapping). Submitting a new sample is particulary useful when editing an existing mapping that uses an external XML Record sample that may have no relation to the Records that will be used. The mapping can now be used in the Ingest Process creation/edition form (on the field Transformation to TEL).
+
+  </body>
+</html>

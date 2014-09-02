@@ -1,12 +1,13 @@
 package harvesterUI.client.servlets.dataManagement;
 
-import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 
 import java.util.List;
+
+import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface TagsServiceAsync {
 

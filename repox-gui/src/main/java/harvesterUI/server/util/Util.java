@@ -1,15 +1,9 @@
 package harvesterUI.server.util;
 
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
-import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.ServerSideException;
+import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
-import org.apache.log4j.Logger;
-import pt.utl.ist.repox.task.DataSourceExportTask;
-import pt.utl.ist.repox.task.DataSourceIngestTask;
-import pt.utl.ist.repox.task.ScheduledTask;
-import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -18,6 +12,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import pt.utl.ist.repox.task.DataSourceExportTask;
+import pt.utl.ist.repox.task.DataSourceIngestTask;
+import pt.utl.ist.repox.task.ScheduledTask;
+import pt.utl.ist.repox.task.Task;
+import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * Created to REPOX.
