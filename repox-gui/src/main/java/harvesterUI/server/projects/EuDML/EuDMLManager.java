@@ -7,7 +7,7 @@
 //import harvesterUI.server.userManagement.UserManagementServiceImpl;
 //import harvesterUI.server.util.StatisticsUtil;
 //import harvesterUI.server.util.Util;
-//import harvesterUI.shared.ServerSideException;
+//import pt.utl.ist.repox.util.ServerSideException;
 //import harvesterUI.shared.dataTypes.DataProviderUI;
 //import harvesterUI.shared.dataTypes.SaveDataResponse;
 //import harvesterUI.shared.dataTypes.admin.AdminInfo;

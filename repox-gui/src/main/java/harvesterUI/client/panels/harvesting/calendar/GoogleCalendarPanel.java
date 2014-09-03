@@ -1,12 +1,34 @@
 package harvesterUI.client.panels.harvesting.calendar;
 
+import harvesterUI.client.HarvesterUI;
+import harvesterUI.client.mvc.views.AppView;
+import harvesterUI.client.panels.harvesting.dialogs.ScheduleExportDialog;
+import harvesterUI.client.panels.harvesting.dialogs.SchedulePastResume;
+import harvesterUI.client.panels.harvesting.dialogs.ScheduleTaskDialog;
+import harvesterUI.client.servlets.harvest.HarvestOperationsServiceAsync;
+import harvesterUI.client.util.ServerExceptionDialog;
+import harvesterUI.shared.tasks.HarvestTask;
+import harvesterUI.shared.tasks.OldTaskUI;
+import harvesterUI.shared.tasks.ScheduledTaskUI;
+
+import java.util.Date;
+
 import com.bradrydzewski.gwt.calendar.client.Appointment;
 import com.bradrydzewski.gwt.calendar.client.Calendar;
 import com.bradrydzewski.gwt.calendar.client.CalendarSettings;
 import com.bradrydzewski.gwt.calendar.client.CalendarViews;
-import com.bradrydzewski.gwt.calendar.client.event.*;
+import com.bradrydzewski.gwt.calendar.client.event.DateRequestEvent;
+import com.bradrydzewski.gwt.calendar.client.event.DateRequestHandler;
+import com.bradrydzewski.gwt.calendar.client.event.DeleteEvent;
+import com.bradrydzewski.gwt.calendar.client.event.DeleteHandler;
+import com.bradrydzewski.gwt.calendar.client.event.UpdateEvent;
+import com.bradrydzewski.gwt.calendar.client.event.UpdateHandler;
 import com.extjs.gxt.ui.client.Registry;
-import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.DatePickerEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.DateWrapper;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.DatePicker;
@@ -23,20 +45,13 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import harvesterUI.client.HarvesterUI;
-import harvesterUI.client.mvc.views.AppView;
-import harvesterUI.client.panels.harvesting.dialogs.ScheduleExportDialog;
-import harvesterUI.client.panels.harvesting.dialogs.SchedulePastResume;
-import harvesterUI.client.panels.harvesting.dialogs.ScheduleTaskDialog;
-import harvesterUI.client.servlets.harvest.HarvestOperationsServiceAsync;
-import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.shared.tasks.HarvestTask;
-import harvesterUI.shared.tasks.OldTaskUI;
-import harvesterUI.shared.tasks.ScheduledTaskUI;
-
-import java.util.Date;
 
 /**
  * Created to REPOX.

@@ -1,6 +1,4 @@
-package pt.utl.ist.rest.util;
-
-import com.google.gwt.user.client.rpc.IsSerializable;
+package pt.utl.ist.repox.util;
 
 /**
  * Created to REPOX Project.
@@ -8,7 +6,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * Date: 02-02-2012
  * Time: 15:00
  */
-public class ServerSideException extends Exception implements IsSerializable {
+public class ServerSideException extends Exception{
 
     private String message;
 

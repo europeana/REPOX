@@ -11,7 +11,6 @@
 	<inherits name='com.bradrydzewski.gwt.calendar.Calendar' />
 	<inherits name='com.bradrydzewski.gwt.calendar.theme.google.Google' />
 
-
 	<!-- XMApper -->
 	<!-- Local inherits -->
 	<!--<inherits name='pt.ist.svgwt.SVGwt'/> -->
@@ -19,7 +18,7 @@
 	<!--<inherits name='pt.ist.mdr.mapping.ui.MappingUI'/> -->
 	<!--<inherits name='pt.ist.mdr.concept.library.ui.MDRConceptLibrary'/> -->
 	<inherits name='pt.ist.mdr.mapping.ui.svg.MDRMappingSVG' />
-	
+			
 	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
 	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 

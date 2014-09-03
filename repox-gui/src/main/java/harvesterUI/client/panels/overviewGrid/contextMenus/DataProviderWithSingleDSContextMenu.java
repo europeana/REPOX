@@ -22,7 +22,7 @@
 //import harvesterUI.client.panels.harvesting.dialogs.ScheduleTaskDialog;
 //import harvesterUI.client.servlets.dataManagement.DPServiceAsync;
 //import harvesterUI.client.util.ServerExceptionDialog;
-//import harvesterUI.shared.ProjectType;
+//import pt.utl.ist.repox.util.ProjectType;
 //import harvesterUI.shared.dataTypes.DataContainer;
 //import harvesterUI.shared.dataTypes.DataProviderUI;
 //import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;

@@ -1,25 +1,5 @@
 package harvesterUI.client.panels.oaiTest;
 
-import com.extjs.gxt.ui.client.Registry;
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.mvc.Dispatcher;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ToolButton;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.FieldSet;
-import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
-import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Frame;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.servlets.dataManagement.DataSetOperationsServiceAsync;
@@ -32,6 +12,37 @@ import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 
 import java.util.List;
 import java.util.Map;
+
+import com.extjs.gxt.ui.client.Registry;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.event.BoxComponentEvent;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.IconButtonEvent;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.mvc.Dispatcher;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.form.FieldSet;
+import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
+import com.extjs.gxt.ui.client.widget.layout.ColumnLayout;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormLayout;
+import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Frame;
 
 /**
  * Created to REPOX.
