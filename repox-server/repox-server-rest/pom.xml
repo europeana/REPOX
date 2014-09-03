@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>repox-server-rest</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>REPOX-SERVER-REST</name>
 
 	<organization>
@@ -41,17 +41,6 @@
 		<!-- </extension> -->
 		<!-- </extensions> -->
 		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
-				<configuration>
-					<groups>regression</groups>
-					<parallel>true</parallel>
-					<includes>
-					</includes>
-					<forkMode>always</forkMode>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -84,6 +73,24 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>europeana</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<exclude>configuration.properties</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/profiles/europeana</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -148,10 +155,10 @@
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.stripes</groupId>
-			<artifactId>stripes</artifactId>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>net.sourceforge.stripes</groupId> -->
+		<!-- <artifactId>stripes</artifactId> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -256,6 +263,10 @@
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
@@ -293,10 +304,6 @@
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>serializer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>opensymphony</groupId>
-			<artifactId>sitemesh</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>taglibs</groupId>
@@ -388,6 +395,4 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
-
-
 </project>
