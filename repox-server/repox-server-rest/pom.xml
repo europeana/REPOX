@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<artifactId>repox-server</artifactId>
 		<groupId>repox</groupId>
@@ -9,37 +8,14 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+
+
+	<!-- <groupId>MyRest</groupId> -->
 	<artifactId>repox-server-rest</artifactId>
+	<!-- <version>3.0-SNAPSHOT</version> -->
 	<packaging>war</packaging>
-	<name>REPOX-SERVER-REST</name>
-
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>http://www.ist.utl.pt</url>
-	</organization>
-
-	<contributors>
-		<contributor>
-			<name>The European Library</name>
-			<url>http://www.theeuropeanlibrary.org</url>
-		</contributor>
-
-		<contributor>
-			<name>Europeana</name>
-			<url>http://pro.europeana.eu/</url>
-		</contributor>
-	</contributors>
-
 	<build>
-		<defaultGoal>package</defaultGoal>
-		<finalName>${project.artifactId}</finalName>
-		<!-- <extensions> -->
-		<!-- <extension> -->
-		<!-- <groupId>postgresql</groupId> -->
-		<!-- <artifactId>postgresql</artifactId> -->
-		<!-- <version>8.3-603.jdbc4</version> -->
-		<!-- </extension> -->
-		<!-- </extensions> -->
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -47,27 +23,14 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<encoding>ISO-8859-1</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>3.0</version>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
 				<configuration>
-					<components>
-						<component>
-							<name>hbm2ddl</name>
-							<implementation>annotationconfiguration</implementation>
-						</component>
-					</components>
-					<componentProperties>
-						<configurationfile>/src/main/resources/hibernate.cfg.xml</configurationfile>
-						<export>false</export>
-						<outputfilename>create-db.ddl</outputfilename>
-						<format>true</format>
-						<drop>false</drop>
-					</componentProperties>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -93,306 +56,13 @@
 	</profiles>
 
 	<dependencies>
-		<dependency>
-			<groupId>eu.europeana</groupId>
-			<artifactId>definitions</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- Added version 1.4.01 of xml-apis to overwrite the transitive dependencies 
-			which solves some exceptions thrown in runtime -->
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
-		</dependency>
-		<dependency>
-			<!--todo: a dependency like this should not be necessary -->
-			<!--todo: there is a direct dependency in code to "org.postgresql.Driver.class.getName()" -->
-			<!--todo: in AccessPointManagerFactory -->
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<!-- This is a previous version <version>8.3-603.jdbc4</version> -->
-		</dependency>
-		<dependency>
-			<!--todo: a dependency like this should not be necessary -->
-			<!--todo: there is a direct dependency in code to "org.apache.derby.jdbc.EmbeddedDriver.class.getName()" -->
-			<!--todo: in AccessPointManagerFactory -->
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-		</dependency>
-		<dependency>
-			<!--todo: added for class XPathAPI, but this should not be necessary with 
-				java 6 -->
-			<groupId>xalan</groupId>
-			<artifactId>xalan</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.ibm.icu</groupId>
-			<artifactId>icu4j</artifactId>
-		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>net.sourceforge.stripes</groupId> -->
-		<!-- <artifactId>stripes</artifactId> -->
-		<!-- </dependency> -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<!-- This is a previous version <version>1.2.14</version> -->
-		</dependency>
+
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>servlet-api-2.5</artifactId>
+			<artifactId>servlet-api</artifactId>
+			<!-- <version>2.5</version> -->
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<!-- This is a previous version <version>2.0.2</version> -->
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<!-- This is a previous version <version>1.4.1</version> -->
-		</dependency>
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>concurrent</groupId>
-			<artifactId>concurrent</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>servlets.com</groupId>
-			<artifactId>cos</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derbytools</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-acl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<!-- This is a previous version <version>3.0.2.RELEASE</version> -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>xalan</groupId>
-			<artifactId>serializer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>bsf</groupId>
-			<artifactId>bsf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>rhino</groupId>
-			<artifactId>js</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.resource</groupId>
-			<artifactId>connector</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>marc4j</groupId>
-			<artifactId>marc4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jzkit</groupId>
-			<artifactId>a2j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jzkit</groupId>
-			<artifactId>jzkit_core</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.jzkit</groupId>
-			<artifactId>jzkit_z3950_plugin</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon-xpath</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon-dom</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springmodules</groupId>
-			<artifactId>spring-modules-validation</artifactId>
-			<type>jar</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
