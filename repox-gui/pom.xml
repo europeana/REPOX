@@ -84,31 +84,12 @@
 		</profile>
 	</profiles>
 
-	<!-- Not active repositories -->
-	<!-- <distributionManagement> -->
-	<!-- <snapshotRepository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-snapshots</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-snapshot-local</url> -->
-	<!-- </snapshotRepository> -->
-	<!-- <repository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-releases</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
-	<!-- </repository> -->
-	<!-- </distributionManagement> -->
-
 	<dependencies>
 		<!-- REPOX Core Libs -->
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-core</artifactId>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>repox</groupId> -->
-		<!-- <artifactId>repox-europeana</artifactId> -->
-		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>repox</groupId>
@@ -120,18 +101,11 @@
 			<artifactId>repox-server-rest</artifactId>
 		</dependency>
 
-		<!-- Non existent dependency -->
-		<!--<dependency> -->
-		<!--<groupId>repox</groupId> -->
-		<!--<artifactId>repox-eudml</artifactId> -->
-		<!--<version>2.0.0</version> -->
-		<!--</dependency> -->
-		<!-- Non existent dependency -->
-
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>definitions</artifactId>
 		</dependency>
+		
 		<!--Ext GWT Libs -->
 		<dependency>
 			<groupId>gxt</groupId>
