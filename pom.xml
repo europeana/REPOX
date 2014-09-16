@@ -7,9 +7,7 @@
 	<groupId>repox</groupId>
 	<version>3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>REPOX-SYSTEM</name>
-	<url>http://repox.ist.utl.pt/</url>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -20,11 +18,6 @@
 		<contributor>
 			<name>The European Library</name>
 			<url>http://www.theeuropeanlibrary.org</url>
-		</contributor>
-
-		<contributor>
-			<name>Europeana</name>
-			<url>http://pro.europeana.eu/</url>
 		</contributor>
 	</contributors>
 
@@ -37,7 +30,6 @@
 	<modules>
 		<module>repox-core</module>
 		<module>repox-server</module>
-<!-- 		<module>repox-europeana</module> -->
 		<module>repox-gui</module>
 	</modules>
 

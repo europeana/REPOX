@@ -24,11 +24,6 @@
 			<name>The European Library</name>
 			<url>http://www.theeuropeanlibrary.org</url>
 		</contributor>
-
-		<contributor>
-			<name>Europeana</name>
-			<url>http://pro.europeana.eu/</url>
-		</contributor>
 	</contributors>
 
 	<build>

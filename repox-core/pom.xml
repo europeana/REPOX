@@ -24,11 +24,6 @@
 			<name>The European Library</name>
 			<url>http://www.theeuropeanlibrary.org</url>
 		</contributor>
-
-		<contributor>
-			<name>Europeana</name>
-			<url>http://pro.europeana.eu/</url>
-		</contributor>
 	</contributors>
 
 	<build>
@@ -61,33 +56,6 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<!-- Not active repositories -->
-	<!-- <distributionManagement> -->
-	<!-- <snapshotRepository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-snapshots</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-snapshot-local</url> -->
-	<!-- </snapshotRepository> -->
-	<!-- <repository> -->
-	<!-- <id>digmap3</id> -->
-	<!-- <name>digmap3-releases</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
-	<!-- </repository> -->
-	<!-- </distributionManagement> -->
-	<!-- Not active repositories -->
-
-	<!-- <repositories> -->
-	<!-- <repository> -->
-	<!-- <id>europeanalabs</id> -->
-	<!-- <url>http://europeanalabs.eu/artifactory/repo</url> -->
-	<!-- </repository> -->
-	<!-- <repository> -->
-	<!-- <name>gwt-maven-repo</name> -->
-	<!-- <id>gwt-maven-repo</id> -->
-	<!-- <url>http://gwt-maven-repo.googlecode.com/svn/trunk/</url> -->
-	<!-- </repository> -->
-	<!-- </repositories> -->
 
 	<dependencies>
 		<dependency>
