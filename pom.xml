@@ -589,7 +589,7 @@
 	<repositories>
 		<repository>
 			<id>tel.repository</id>
-			<name>Maven Plugin Repository</name>
+			<name>Maven Repository</name>
 			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
 			<layout>default</layout>
 			<snapshots>
@@ -622,14 +622,4 @@
 			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-	<!-- Not active repositories -->
-	<!-- <repositories> -->
-	<!-- <repository> -->
-	<!-- <id>IST</id> -->
-	<!-- <name>IST repository</name> -->
-	<!-- <url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local</url> -->
-	<!-- </repository> -->
-	<!-- </repositories> -->
-	<!-- Not active repositories -->
 </project>

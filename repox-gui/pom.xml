@@ -209,14 +209,14 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>maven-repositories</id>
-			<url>http://mvnrepository.com</url>
-		</repository>
-		<repository>
-			<id>central OSS Repository</id>
-			<url>https://oss.sonatype.org/content/repositories/releases/</url>
-		</repository>
-	</repositories>
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id>maven-repositories</id> -->
+<!-- 			<url>http://mvnrepository.com</url> -->
+<!-- 		</repository> -->
+<!-- 		<repository> -->
+<!-- 			<id>central OSS Repository</id> -->
+<!-- 			<url>https://oss.sonatype.org/content/repositories/releases/</url> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
 </project>
