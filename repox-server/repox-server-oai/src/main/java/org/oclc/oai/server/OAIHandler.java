@@ -10,11 +10,22 @@
  */
 package org.oclc.oai.server;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.oclc.oai.server.catalog.AbstractCatalog;
-import org.oclc.oai.server.verb.OAIInternalServerError;
-import org.oclc.oai.server.verb.ServerVerb;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.SocketException;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -27,13 +38,17 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.SocketException;
-import java.util.*;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPOutputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oclc.oai.server.catalog.AbstractCatalog;
+import org.oclc.oai.server.verb.OAIInternalServerError;
+import org.oclc.oai.server.verb.ServerVerb;
+
+import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.ProjectType;
+import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.repox.util.RepoxContextUtilDefault;
+import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 /**
  * OAIHandler is the primary Servlet for OAICat.
@@ -52,6 +67,7 @@ public class OAIHandler extends HttpServlet {
     /** OAIHandler attributesMap */
     protected Map<String, Map<String, Object>> attributesMap                        = new HashMap<String, Map<String, Object>>();
     private ServletConfig                      initialConfig;
+    public static ProjectType projectType;
 
     /**
      * Get the VERSION number
@@ -76,6 +92,15 @@ public class OAIHandler extends HttpServlet {
         super.init(config);
         this.initialConfig = config;
 
+        Properties propertiesGui = PropertyUtil.loadGuiConfiguration("gui.properties");
+        projectType = ProjectType.valueOf(propertiesGui.getProperty("project.type"));
+
+        if(projectType == ProjectType.LIGHT){
+            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        } 
+        else if(projectType == ProjectType.EUROPEANA){
+            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilEuropeana());
+        }
         try {
             Map<String, Object> attributes = null;
             ServletContext context = getServletContext();

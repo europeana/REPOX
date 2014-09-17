@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>repox-server-oai</display-name>
+  <context-param>
+    <description>
+			The location of the oaicat.properties file containing data pairs used to initialize
+			the OAI repository software.
+		</description>
+    <param-name>properties</param-name>
+    <param-value>oaicat.properties</param-value>
+  </context-param>
+  <servlet>
+    <description>
+			This servlet processes OAI verbs. The initialization parameter names for this servlet
+			are the &quot;servlet path&quot; that will be received by this servlet (after the filename
+			extension is removed). The corresponding value is the name of the action class
+			that will be used to process this request.
+		</description>
+    <servlet-name>OAIHandler</servlet-name>
+    <servlet-class>org.oclc.oai.server.OAIHandler</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OAIHandler</servlet-name>
+    <url-pattern>/OAIHandler</url-pattern>
+  </servlet-mapping>
+</web-app>
