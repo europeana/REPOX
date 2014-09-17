@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>repox-gui</artifactId>
+	<artifactId>repox-gui2</artifactId>
 	<packaging>war</packaging>
-	<name>REPOX-GUI</name>
+	<name>REPOX-GUI2</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
