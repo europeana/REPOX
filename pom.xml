@@ -30,7 +30,7 @@
 	<modules>
 		<module>repox-core</module>
 		<module>repox-server</module>
-		<module>repox-gui2</module>
+		<module>repox-gui</module>
 	</modules>
 
 	<properties>

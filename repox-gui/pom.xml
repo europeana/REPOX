@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>repox-gui2</artifactId>
+	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
-	<name>REPOX-GUI2</name>
+	<name>REPOX-GUI</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -34,6 +34,15 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<!-- <warSourceDirectory>WebContent</warSourceDirectory> -->
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<!-- <failOnMissingWebXml>false</failOnMissingWebXml> -->
 				</configuration>
 			</plugin>
 			<plugin>
