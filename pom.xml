@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<name>REPOX-SYSTEM</name>
 	<artifactId>repox-system</artifactId>
 	<groupId>repox</groupId>
 	<version>3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>REPOX-SYSTEM</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -30,6 +30,7 @@
 	<modules>
 		<module>repox-core</module>
 		<module>repox-server</module>
+		<module>repox-client</module>
 		<module>repox-gui</module>
 	</modules>
 
@@ -43,9 +44,11 @@
 		<repox:repox-server-rest.version>3.0-SNAPSHOT</repox:repox-server-rest.version>
 		<repox:repox-europeana.version>3.0-SNAPSHOT</repox:repox-europeana.version>
 		<repox:repox-gui.version>3.0-SNAPSHOT</repox:repox-gui.version>
+
 		<eu.europeana:definitions.version>1.01</eu.europeana:definitions.version>
 		<postgresql:postgresql.version>9.1-901.jdbc4</postgresql:postgresql.version>
 		<mysql:mysql-connector-java.version>5.1.31</mysql:mysql-connector-java.version>
+		<xml-apis:xml-apis.version>1.4.01</xml-apis:xml-apis.version> <!-- Need this version or else repo-gui fails with AppEngine Error [ java.lang.NoClassDefFoundError: org/w3c/dom/ElementTraversal ] -->
 		<dom4j:dom4j.version>1.6.1</dom4j:dom4j.version>
 		<junit:junit.version>4.11</junit:junit.version>
 		<concurrent:concurrent.version>1.3.4</concurrent:concurrent.version>
@@ -190,8 +193,6 @@
 				<version>${commons-dbcp:commons-dbcp.version}</version>
 			</dependency>
 			<dependency>
-				<!--todo: added for class XPathAPI, but this should not be necessary 
-					with java 6 -->
 				<groupId>xalan</groupId>
 				<artifactId>xalan</artifactId>
 				<version>${xalan:xalan.version}</version>
@@ -202,6 +203,11 @@
 				<version>${commons-lang:commons-lang.version}</version>
 			</dependency>
 			<!--XML Parse Libs -->
+			<dependency>
+				<groupId>xml-apis</groupId>
+				<artifactId>xml-apis</artifactId>
+				<version>${xml-apis:xml-apis.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>dom4j</groupId>
 				<artifactId>dom4j</artifactId>

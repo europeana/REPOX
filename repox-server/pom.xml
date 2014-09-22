@@ -11,9 +11,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>REPOX-SERVER</name>
 	<artifactId>repox-server</artifactId>
 	<packaging>pom</packaging>
-	<name>REPOX-SERVER</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>

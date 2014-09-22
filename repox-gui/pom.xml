@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>REPOX-GUI</name>
 	<artifactId>repox-gui</artifactId>
 	<packaging>war</packaging>
-	<name>REPOX-GUI</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -109,7 +109,7 @@
 			<groupId>eu.europeana</groupId>
 			<artifactId>definitions</artifactId>
 		</dependency>
-		
+
 		<!--Ext GWT Libs -->
 		<dependency>
 			<groupId>gxt</groupId>
@@ -141,6 +141,10 @@
 		</dependency>
 
 		<!--XML Parse Libs -->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
@@ -208,15 +212,4 @@
 			<artifactId>xslt-om</artifactId>
 		</dependency>
 	</dependencies>
-
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>maven-repositories</id> -->
-<!-- 			<url>http://mvnrepository.com</url> -->
-<!-- 		</repository> -->
-<!-- 		<repository> -->
-<!-- 			<id>central OSS Repository</id> -->
-<!-- 			<url>https://oss.sonatype.org/content/repositories/releases/</url> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
 </project>

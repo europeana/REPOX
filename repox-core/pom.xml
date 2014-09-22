@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>REPOX-CORE</name>
 	<artifactId>repox-core</artifactId>
 	<packaging>jar</packaging>
-	<name>REPOX-CORE</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>

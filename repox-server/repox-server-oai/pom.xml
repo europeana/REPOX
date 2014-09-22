@@ -8,9 +8,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
+	<name>REPOX-SERVER-OAI</name>
 	<artifactId>repox-server-oai</artifactId>
 	<packaging>war</packaging>
-	<name>REPOX-SERVER-OAI</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>

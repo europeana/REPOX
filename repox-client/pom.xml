@@ -11,9 +11,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>REPOX-CLIENT</name>
 	<artifactId>repox-client</artifactId>
 	<packaging>pom</packaging>
-	<name>REPOX-CLIENT</name>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -28,6 +28,7 @@
 	</contributors>
 
 	<modules>
+		<module>repox-client-oai</module>
 	</modules>
 
 	<!-- Children will get the below dependencies by default -->
