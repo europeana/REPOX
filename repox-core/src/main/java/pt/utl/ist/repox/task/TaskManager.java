@@ -16,11 +16,11 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
 import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -562,7 +562,7 @@ public class TaskManager implements RunnableStoppable {
         if (configurationFile.exists()) {
             // Backup configuration file
             File backupFile = new File(configurationFile.getParent(), configurationFile.getName() + ".bkp");
-            FileUtil.copyFile(configurationFile, backupFile);
+            FileUtilSecond.copyFile(configurationFile, backupFile);
 
             Iterator<ScheduledTask> iterator = scheduledTasks.iterator();
             while (iterator.hasNext()) {

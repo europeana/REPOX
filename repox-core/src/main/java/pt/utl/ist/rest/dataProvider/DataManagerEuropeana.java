@@ -29,15 +29,15 @@ import pt.utl.ist.repox.oai.DataSourceOai;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
 import pt.utl.ist.repox.task.*;
+import pt.utl.ist.repox.util.CompareDataUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.rest.RepoxConfigurationEuropeana;
 import pt.utl.ist.rest.util.ExternalServiceEuropeanaUtil;
-import pt.utl.ist.util.CompareDataUtil;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -729,7 +729,7 @@ public class DataManagerEuropeana implements DataManager {
                     homepageUrl = "http://" + homepageUrl;
                 }
                 // test if URL is valid
-                if(!FileUtil.checkUrl(homepageUrl)){
+                if(!FileUtilSecond.checkUrl(homepageUrl)){
                     throw new Exception();
                 }
                 newAggregator.setHomePage(new URL(homepageUrl));
@@ -780,7 +780,7 @@ public class DataManagerEuropeana implements DataManager {
                         homepageUrl = "http://" + homepageUrl;
                     }
                     // test if URL is valid
-                    if(!FileUtil.checkUrl(homepageUrl)){
+                    if(!FileUtilSecond.checkUrl(homepageUrl)){
                         throw new Exception();
                     }
                     aggregatorEuropeana.setHomePage(new URL(homepageUrl));
@@ -920,7 +920,7 @@ public class DataManagerEuropeana implements DataManager {
                         url = "http://" + url;
                     }
                     // test if URL is valid
-                    if(!FileUtil.checkUrl(url)){
+                    if(!FileUtilSecond.checkUrl(url)){
                         throw new Exception();
                     }
                     newDataProvider.setHomePage(new URL(url));
@@ -998,7 +998,7 @@ public class DataManagerEuropeana implements DataManager {
                         url = "http://" + url;
                     }
                     // test if URL is valid
-                    if(!FileUtil.checkUrl(url)){
+                    if(!FileUtilSecond.checkUrl(url)){
                         throw new Exception();
                     }
                     newDataProvider.setHomePage(new URL(url));
@@ -1153,7 +1153,7 @@ public class DataManagerEuropeana implements DataManager {
                         url = "http://" + url;
                     }
                     // test if URL is valid
-                    if(!FileUtil.checkUrl(url)){
+                    if(!FileUtilSecond.checkUrl(url)){
                         throw new InvalidArgumentsException(url);
                     }
                     dataProvider.setHomePage(new URL(url));
@@ -1658,7 +1658,7 @@ public class DataManagerEuropeana implements DataManager {
                             !oaiSourceURL.startsWith("https://")) {
                         oaiSourceURL = "http://" + oaiSourceURL;
                     }
-                    if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(oaiSourceURL)){
+                    if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
                         DataSource newDataSource = new DataSourceOai(dataProvider, id, description, schema, namespace, metadataFormat,
                                 oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
@@ -2065,7 +2065,7 @@ public class DataManagerEuropeana implements DataManager {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
 
                 if(dataProvider != null){
-                    if(url.equals("") || !FileUtil.checkUrl(url))
+                    if(url.equals("") || !FileUtilSecond.checkUrl(url))
                         throw new InvalidArgumentsException("url");
 
                     FileRetrieveStrategy retrieveStrategy = new DataSourceHttp(url);
@@ -2280,7 +2280,7 @@ public class DataManagerEuropeana implements DataManager {
                     !oaiSourceURL.startsWith("https://")) {
                 oaiSourceURL = "http://" + oaiSourceURL;
             }
-            if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(oaiSourceURL)){
+            if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if(dataProviderParent != null){
                     if(!(dataSource instanceof DataSourceOai)){

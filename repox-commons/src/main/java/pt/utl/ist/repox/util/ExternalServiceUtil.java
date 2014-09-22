@@ -1,4 +1,4 @@
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import org.dom4j.Document;
 import org.dom4j.Element;

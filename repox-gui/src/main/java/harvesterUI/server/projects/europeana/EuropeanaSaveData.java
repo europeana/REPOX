@@ -44,11 +44,11 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.DataSourceOai;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.rest.RepoxManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
 import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;
-import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -148,7 +148,7 @@ public class EuropeanaSaveData {
                         } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
                             // Check FTP connection
                             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty()) {
-                                if(!FileUtil.checkFtpServer(dataSourceUI.getServer(),"Normal",dataSourceUI.getFolderPath(),
+                                if(!FileUtilSecond.checkFtpServer(dataSourceUI.getServer(),"Normal",dataSourceUI.getFolderPath(),
                                         dataSourceUI.getUser(),dataSourceUI.getPassword())){
                                     saveDataResponse.setResponseState(ResponseState.FTP_CONNECTION_FAILED);
                                     return saveDataResponse;
@@ -333,7 +333,7 @@ public class EuropeanaSaveData {
                             }
                             // Check FTP connection
                             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty()) {
-                                if(!FileUtil.checkFtpServer(dataSourceUI.getServer(), "Normal", dataSourceUI.getFolderPath(),
+                                if(!FileUtilSecond.checkFtpServer(dataSourceUI.getServer(), "Normal", dataSourceUI.getFolderPath(),
                                         dataSourceUI.getUser(), dataSourceUI.getPassword())){
                                     saveDataResponse.setResponseState(ResponseState.FTP_CONNECTION_FAILED);
                                     return saveDataResponse;

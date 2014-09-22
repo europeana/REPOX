@@ -98,11 +98,18 @@
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-server-oai</artifactId>
+			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-server-rest</artifactId>
+			<type>war</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
 		</dependency>
 
 		<dependency>

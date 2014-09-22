@@ -8,7 +8,7 @@ import org.dom4j.DocumentException;
 
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.util.InvalidInputException;
+import pt.utl.ist.repox.util.InvalidInputException;
 
 import java.io.IOException;
 

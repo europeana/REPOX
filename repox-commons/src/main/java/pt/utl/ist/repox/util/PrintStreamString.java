@@ -2,7 +2,7 @@
  * Created on 2007/08/21
  *
  */
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

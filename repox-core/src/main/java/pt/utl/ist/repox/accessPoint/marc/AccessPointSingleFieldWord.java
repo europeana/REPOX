@@ -6,7 +6,7 @@ import pt.utl.ist.marc.xml.MarcXChangeDom4jBuilder;
 import pt.utl.ist.repox.accessPoint.AccessPoint;
 import pt.utl.ist.repox.marc.RecordRepoxMarc;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.util.IndexUtil;
+import pt.utl.ist.repox.util.IndexUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

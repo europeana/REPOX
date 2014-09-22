@@ -9,14 +9,16 @@ package pt.utl.ist.marc.xml;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import pt.utl.ist.marc.Field;
 import pt.utl.ist.marc.Record;
 import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.util.DomUtil;
+import pt.utl.ist.repox.util.DomUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 

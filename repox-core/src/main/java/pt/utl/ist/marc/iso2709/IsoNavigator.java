@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import pt.utl.ist.characters.CharacterConverterI;
 import pt.utl.ist.marc.Record;
-import pt.utl.ist.util.NUtil;
+import pt.utl.ist.repox.util.NUtil;
 import pt.utl.ist.util.structure.Tuple;
 
 import java.io.*;

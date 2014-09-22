@@ -4,9 +4,39 @@
  */
 package pt.utl.ist.repox.dataProvider;
 
-import com.ibm.icu.util.Calendar;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
-import freemarker.template.TemplateException;
+import javax.mail.MessagingException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -22,8 +52,18 @@ import pt.utl.ist.repox.RepoxConfiguration;
 import pt.utl.ist.repox.accessPoint.AccessPoint;
 import pt.utl.ist.repox.accessPoint.AccessPointRecordRepoxFull;
 import pt.utl.ist.repox.accessPoint.AccessPointTimestamp;
-import pt.utl.ist.repox.dataProvider.dataSource.*;
-import pt.utl.ist.repox.externalServices.*;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
+import pt.utl.ist.repox.externalServices.ExternalNoMonitorServiceThread;
+import pt.utl.ist.repox.externalServices.ExternalRestService;
+import pt.utl.ist.repox.externalServices.ExternalRestServiceContainer;
+import pt.utl.ist.repox.externalServices.ExternalRestServiceThread;
+import pt.utl.ist.repox.externalServices.ExternalServiceNoMonitor;
+import pt.utl.ist.repox.externalServices.ExternalServiceStates;
+import pt.utl.ist.repox.externalServices.ServiceParameter;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.reports.LogUtil;
@@ -34,27 +74,15 @@ import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.CompareUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
-import javax.mail.MessagingException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
+import com.ibm.icu.util.Calendar;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import freemarker.template.TemplateException;
 
 /**
  * Represents a Data Source in REPOX. It will be used to harvest records and
@@ -725,7 +753,7 @@ public abstract class DataSource {
         File lastTaskFile = new File(getTasksDir(), LAST_TASK_FILENAME);
         if (lastTaskFile.exists()) {
             File backupFile = new File(lastTaskFile.getParent(), lastTaskFile.getName() + ".bkp");
-            FileUtil.copyFile(lastTaskFile, backupFile);
+            FileUtilSecond.copyFile(lastTaskFile, backupFile);
         }
 
         BufferedWriter writer = null;
@@ -837,7 +865,7 @@ public abstract class DataSource {
      */
     public String getSynchronizationDate(File syncDateFile) {
         if (!syncDateFile.exists()) { return ""; }
-        String dateString = FileUtil.readFile(syncDateFile, 0);
+        String dateString = FileUtilSecond.readFile(syncDateFile, 0);
         try {
             return dateString;
         } catch (Exception e) {
@@ -859,7 +887,7 @@ public abstract class DataSource {
     public int getSampleNumber() {
         File syncDateFile = getSyncDateFile();
         if (!syncDateFile.exists()) { return -1; }
-        String sample = FileUtil.readFile(syncDateFile, 1);
+        String sample = FileUtilSecond.readFile(syncDateFile, 1);
         return Integer.valueOf(sample);
     }
 
@@ -869,7 +897,7 @@ public abstract class DataSource {
      */
     public int getSampleNumber(File syncDateFile) {
         if (!syncDateFile.exists()) { return -1; }
-        String sample = FileUtil.readFile(syncDateFile, 1);
+        String sample = FileUtilSecond.readFile(syncDateFile, 1);
         try {
             return Integer.valueOf(sample);
         } catch (Exception e) {

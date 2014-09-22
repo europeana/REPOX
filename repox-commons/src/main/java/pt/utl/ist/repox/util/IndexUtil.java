@@ -1,4 +1,4 @@
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import java.util.regex.Pattern;
 

@@ -19,9 +19,9 @@ import pt.utl.ist.repox.statistics.RecordCount;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.CompareUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.DateUtil;
 
 import javax.xml.transform.TransformerConfigurationException;
 

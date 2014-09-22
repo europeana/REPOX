@@ -10,13 +10,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
 import pt.utl.ist.marc.Field;
 import pt.utl.ist.marc.Record;
 import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.util.NUtil;
+import pt.utl.ist.repox.util.NUtil;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;

@@ -15,9 +15,9 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.task.Task.Status;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.DateUtil;
 
 import java.io.File;
 import java.io.IOException;

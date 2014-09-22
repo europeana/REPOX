@@ -10,10 +10,10 @@ import org.dom4j.io.SAXReader;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.util.DateUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -3,7 +3,7 @@ package pt.utl.ist.characters;
 import pt.utl.ist.marc.Field;
 import pt.utl.ist.marc.Record;
 import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 
 import java.io.File;
 import java.util.HashMap;
@@ -236,7 +236,7 @@ public class Cp850Converter {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Record r = new Record(FileUtil.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
+        Record r = new Record(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
         System.err.println(r);
 
     } // main

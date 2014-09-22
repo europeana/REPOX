@@ -32,10 +32,10 @@
 	</modules>
 
 	<!-- Children will get the below dependencies by default -->
-	<dependencies>
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-core</artifactId>
-		</dependency>
-	</dependencies>
+<!-- 	<dependencies> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>repox</groupId> -->
+<!-- 			<artifactId>repox-core</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 	</dependencies> -->
 </project>

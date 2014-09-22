@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
 import pt.utl.ist.characters.CharacterConverterI;
 import pt.utl.ist.characters.CharacterConverters;
 import pt.utl.ist.marc.iso2709.ISOHandlerSingleRecord;
@@ -19,7 +20,7 @@ import pt.utl.ist.marc.util.Leader;
 import pt.utl.ist.marc.xml.DomBuilder;
 import pt.utl.ist.marc.xml.MarcXChangeBuilder;
 import pt.utl.ist.marc.xml.RecordBuilderFromMarcXml;
-import pt.utl.ist.util.DomUtil;
+import pt.utl.ist.repox.util.DomUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;

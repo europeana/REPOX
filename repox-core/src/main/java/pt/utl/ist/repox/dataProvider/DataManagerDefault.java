@@ -1,46 +1,83 @@
 package pt.utl.ist.repox.dataProvider;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.dom4j.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import pt.utl.ist.repox.RepoxConfigurationDefault;
 import pt.utl.ist.repox.accessPoint.AccessPoint;
 import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
-import pt.utl.ist.repox.dataProvider.dataSource.*;
-import pt.utl.ist.repox.externalServices.*;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceUtil;
+import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
+import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtract;
+import pt.utl.ist.repox.externalServices.ExternalRestService;
+import pt.utl.ist.repox.externalServices.ExternalServiceNoMonitor;
+import pt.utl.ist.repox.externalServices.ExternalServiceStates;
+import pt.utl.ist.repox.externalServices.ExternalServiceType;
+import pt.utl.ist.repox.externalServices.ServiceParameter;
 import pt.utl.ist.repox.ftp.DataSourceFtp;
 import pt.utl.ist.repox.http.DataSourceHttp;
-import pt.utl.ist.repox.marc.*;
+import pt.utl.ist.repox.marc.CharacterEncoding;
+import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
+import pt.utl.ist.repox.marc.DataSourceFolder;
+import pt.utl.ist.repox.marc.Iso2709FileExtract;
+import pt.utl.ist.repox.marc.MarcXchangeFileExtract;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.DataSourceOai;
 import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
-import pt.utl.ist.repox.task.*;
+import pt.utl.ist.repox.task.DataSourceExportTask;
+import pt.utl.ist.repox.task.DataSourceIngestTask;
+import pt.utl.ist.repox.task.DataSourceTask;
+import pt.utl.ist.repox.task.OldTask;
+import pt.utl.ist.repox.task.ScheduledTask;
+import pt.utl.ist.repox.task.Task;
+import pt.utl.ist.repox.util.CompareDataUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
+import pt.utl.ist.repox.util.ExternalServiceUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.util.CompareDataUtil;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.ExternalServiceUtil;
-import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.repox.z3950.DataSourceZ3950;
+import pt.utl.ist.repox.z3950.HarvestMethod;
+import pt.utl.ist.repox.z3950.IdListHarvester;
+import pt.utl.ist.repox.z3950.IdSequenceHarvester;
+import pt.utl.ist.repox.z3950.Target;
+import pt.utl.ist.repox.z3950.TimestampHarvester;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  */
@@ -998,7 +1035,7 @@ public class DataManagerDefault implements DataManager {
                     if (!oaiSourceURL.startsWith("http://") && !oaiSourceURL.startsWith("https://")) {
                         oaiSourceURL = "http://" + oaiSourceURL;
                     }
-                    if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(oaiSourceURL)) {
+                    if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
                         DataSource newDataSource = new DataSourceOai(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
@@ -1427,7 +1464,7 @@ public class DataManagerDefault implements DataManager {
                         } else if (extractStrategy.getClass() == SimpleFileExtract.class) {
                         }
 
-                        if (url.equals("") || !FileUtil.checkUrl(url)) throw new InvalidArgumentsException("url");
+                        if (url.equals("") || !FileUtilSecond.checkUrl(url)) throw new InvalidArgumentsException("url");
 
                         DataSource newDataSource = new DataSourceDirectoryImporter(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, DataSourceHttp.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, namespaces);
 
@@ -1628,7 +1665,7 @@ public class DataManagerDefault implements DataManager {
             if (!oaiSourceURL.startsWith("http://") && !oaiSourceURL.startsWith("https://")) {
                 oaiSourceURL = "http://" + oaiSourceURL;
             }
-            if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(oaiSourceURL)) {
+            if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if (dataProviderParent != null) {
                     if (!(dataSource instanceof DataSourceOai)) {

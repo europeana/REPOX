@@ -1,10 +1,8 @@
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;

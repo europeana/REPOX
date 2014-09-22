@@ -59,6 +59,16 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-client-oai</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
+		</dependency>
+	
+		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>

@@ -7,12 +7,12 @@ import org.dom4j.Element;
 import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
+import pt.utl.ist.repox.util.InvalidInputException;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.rest.InvalidRequestException;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
-import pt.utl.ist.util.InvalidInputException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;

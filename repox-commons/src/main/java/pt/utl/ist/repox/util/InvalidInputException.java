@@ -2,7 +2,7 @@
  * Created on 2006/12/02
  *
  */
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 /**
  */

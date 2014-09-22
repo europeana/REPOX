@@ -59,6 +59,7 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.rest.RepoxConfigurationEuropeana;
@@ -879,7 +880,7 @@ public class EuropeanaManager extends ProjectManager {
                 url = null;
 
             // Url doesn't exist
-            if(url != null && !pt.utl.ist.util.FileUtil.checkUrl(aggregatorUI.getHomepage())){
+            if(url != null && !FileUtilSecond.checkUrl(aggregatorUI.getHomepage())){
                 saveDataResponse.setResponseState(ResponseState.URL_NOT_EXISTS);
                 return saveDataResponse;
             }

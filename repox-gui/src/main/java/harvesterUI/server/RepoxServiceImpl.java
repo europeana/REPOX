@@ -28,8 +28,8 @@ import org.dom4j.io.SAXReader;
 import pt.utl.ist.repox.RepoxManager;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.repox.util.TransformationResultLogger;
 import pt.utl.ist.rest.RepoxConfigurationEuropeana;
-import pt.utl.ist.util.TransformationResultLogger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

@@ -24,6 +24,7 @@ import org.dom4j.Element;
 import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.server.verb.*;
 import org.oclc.oai.util.OAIUtil;
+
 import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
@@ -36,11 +37,12 @@ import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.InvalidInputException;
+import pt.utl.ist.repox.util.TransformationResultLogger;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.util.InvalidInputException;
-import pt.utl.ist.util.TransformationResultLogger;
 
 import javax.xml.transform.TransformerException;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;

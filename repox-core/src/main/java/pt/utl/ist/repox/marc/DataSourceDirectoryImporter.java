@@ -23,11 +23,11 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.task.Task.Status;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.FileUtil;
 import pt.utl.ist.repox.util.StringUtil;
+import pt.utl.ist.repox.util.TarGz;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.TarGz;
 
 import java.io.*;
 import java.sql.SQLException;

@@ -4,7 +4,7 @@
  * Created on 4 de Janeiro de 2002, 10:44
  */
 
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Document;

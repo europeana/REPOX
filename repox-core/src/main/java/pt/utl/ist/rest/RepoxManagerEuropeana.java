@@ -14,12 +14,12 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
 import pt.utl.ist.rest.util.EmailUtilEuropeana;
 import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
-import pt.utl.ist.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,12 +112,12 @@ public class RepoxManagerEuropeana implements RepoxManager {
 
         File countries = new File(configuration.getXmlConfigPath() + "/" + RepoxContextUtilDefault.COUNTRIES_FILENAME);
         if(!countries.exists()) {
-            FileUtil.createFile("/" + RepoxContextUtilDefault.COUNTRIES_FILENAME, countries);
+            FileUtilSecond.createFile("/" + RepoxContextUtilDefault.COUNTRIES_FILENAME, countries);
         }
 
         File metadataTransformation = new File(configuration.getXmlConfigPath() + "/" + RepoxContextUtilEuropeana.METADATA_TRANSFORMATIONS_FILENAME);
         if(!countries.exists()) {
-            FileUtil.createFile("/" + RepoxContextUtilEuropeana.METADATA_TRANSFORMATIONS_FILENAME, metadataTransformation);
+            FileUtilSecond.createFile("/" + RepoxContextUtilEuropeana.METADATA_TRANSFORMATIONS_FILENAME, metadataTransformation);
         }
 
         File statisticsFile = new File(configuration.getXmlConfigPath(), statisticsFilename);

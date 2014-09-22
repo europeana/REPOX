@@ -4,7 +4,7 @@
  * Created on 29 de Novembro de 2001, 20:40
  */
 
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import java.io.*;
 import java.net.URL;

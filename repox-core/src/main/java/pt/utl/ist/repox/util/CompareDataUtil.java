@@ -1,4 +1,4 @@
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;

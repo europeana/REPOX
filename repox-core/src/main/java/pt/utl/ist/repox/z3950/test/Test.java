@@ -12,6 +12,7 @@ import org.jzkit.search.util.ResultSet.IRResultSetException;
 import org.jzkit.search.util.ResultSet.IRResultSetStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import pt.utl.ist.repox.dataProvider.DataManagerDefault;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -20,8 +21,8 @@ import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
 import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.util.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 

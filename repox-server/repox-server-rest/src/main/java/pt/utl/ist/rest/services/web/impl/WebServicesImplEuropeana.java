@@ -30,6 +30,8 @@ import pt.utl.ist.repox.statistics.RepoxStatistics;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.*;
 import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.util.DateUtil;
+import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.z3950.*;
@@ -37,8 +39,6 @@ import pt.utl.ist.rest.RepoxConfigurationEuropeana;
 import pt.utl.ist.rest.dataProvider.*;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
-import pt.utl.ist.util.DateUtil;
-import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.exceptions.*;
 
 import java.io.*;
@@ -2189,7 +2189,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     Document document = reader.read(logFile);
                     logElement = document.getRootElement();
                 }catch (DocumentException e){
-                    ArrayList<String> logFileContent = FileUtil.readFile(new File(dataSource.getLogsDir(), dataSource.getLogFilenames().get(0)));
+                    ArrayList<String> logFileContent = FileUtilSecond.readFile(new File(dataSource.getLogsDir(), dataSource.getLogFilenames().get(0)));
 
                     logElement = DocumentHelper.createElement("log");
 

@@ -4,7 +4,7 @@
  * Created on 10 de Abril de 2002, 18:35
  */
 
-package pt.utl.ist.util;
+package pt.utl.ist.repox.util;
 
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
  *
  * @author  Nuno Freire
  */
-public class FileUtil {
+public class FileUtilSecond {
 
     /** Creates a new instance of ConfigFiles */
-    public FileUtil() {
+    public FileUtilSecond() {
     }
 
     /**
@@ -305,7 +305,7 @@ public class FileUtil {
             String fullText = "";
 
             try {
-                is = FileUtil.class.getResourceAsStream(inputStr);
+                is = FileUtilSecond.class.getResourceAsStream(inputStr);
                 br = new BufferedReader(new InputStreamReader(is));
                 while (null != (line = br.readLine())) {
                     fullText += line + "\n";
