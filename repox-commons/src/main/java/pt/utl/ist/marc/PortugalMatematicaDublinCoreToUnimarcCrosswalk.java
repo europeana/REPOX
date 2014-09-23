@@ -4,19 +4,19 @@
  */
 package pt.utl.ist.marc;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
-
-import pt.utl.ist.repox.util.DateUtil;
-import pt.utl.ist.repox.util.Dom4jUtil;
-
 import java.io.File;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
+
+import pt.utl.ist.repox.util.Dom4jUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 /**
  */

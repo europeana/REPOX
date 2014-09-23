@@ -3,9 +3,7 @@
  *
  * Created on 29 de Novembro de 2001, 20:40
  */
-package pt.utl.ist.repox.util;
-
-import pt.utl.ist.util.datediff.DateDifference;
+package pt.utl.ist.util.date;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

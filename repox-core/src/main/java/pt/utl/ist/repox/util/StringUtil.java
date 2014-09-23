@@ -3,6 +3,7 @@ package pt.utl.ist.repox.util;
 import org.apache.log4j.Logger;
 
 import pt.utl.ist.repox.reports.LogUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

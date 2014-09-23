@@ -1,4 +1,4 @@
-package pt.utl.ist.util.datediff;
+package pt.utl.ist.util.date;
 
 /**
  * Title: DayOfMonth

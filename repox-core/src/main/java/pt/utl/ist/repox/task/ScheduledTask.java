@@ -1,8 +1,8 @@
 package pt.utl.ist.repox.task;
 
 import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import java.util.*;
 

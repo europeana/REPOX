@@ -10,8 +10,8 @@ import pt.utl.ist.marc.Record;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.marc.RecordRepoxMarc;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.StringUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import java.io.File;
 import java.util.*;

@@ -34,8 +34,8 @@ import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 

@@ -33,7 +33,6 @@ import pt.utl.ist.repox.task.IngestDataSource;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
@@ -41,6 +40,7 @@ import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.rest.dataProvider.*;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
+import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.*;
 
 import java.io.*;

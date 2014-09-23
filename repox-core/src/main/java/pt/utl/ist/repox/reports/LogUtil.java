@@ -8,9 +8,9 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
 
-import pt.utl.ist.repox.util.DateUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import java.io.File;
 import java.io.IOException;
