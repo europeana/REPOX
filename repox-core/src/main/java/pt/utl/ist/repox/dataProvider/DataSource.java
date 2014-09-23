@@ -48,10 +48,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import pt.utl.ist.repox.RepoxConfiguration;
 import pt.utl.ist.repox.accessPoint.AccessPoint;
 import pt.utl.ist.repox.accessPoint.AccessPointRecordRepoxFull;
 import pt.utl.ist.repox.accessPoint.AccessPointTimestamp;
+import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
 import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;

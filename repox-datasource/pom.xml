@@ -27,6 +27,13 @@
 		</contributor>
 	</contributors>
 
+	<dependencies>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
+		</dependency>
+	</dependencies>
+
 	<!-- Children will get the below dependencies by default -->
 	<!-- <dependencies> -->
 	<!-- <dependency> -->

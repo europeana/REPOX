@@ -8,7 +8,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.RepoxConfigurationDefault;
+import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;

@@ -1,7 +1,7 @@
 package pt.utl.ist.repox.accessPoint.database;
 
-import pt.utl.ist.repox.RepoxConfiguration;
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
+import pt.utl.ist.repox.configuration.RepoxConfiguration;
 
 /**
  */

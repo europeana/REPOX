@@ -1,6 +1,7 @@
 package pt.utl.ist.repox;
 
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
+import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.dataSource.TagsManager;
 import pt.utl.ist.repox.externalServices.ExternalRestServicesManager;

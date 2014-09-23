@@ -3,8 +3,8 @@ package pt.utl.ist.repox.util;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.RepoxConfigurationDefault;
 import pt.utl.ist.repox.RepoxManagerDefault;
+import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.*;

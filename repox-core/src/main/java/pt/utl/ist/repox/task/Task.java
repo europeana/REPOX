@@ -3,8 +3,8 @@ package pt.utl.ist.repox.task;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.RunnableStoppable;
 import pt.utl.ist.repox.util.CompareUtil;
+import pt.utl.ist.repox.util.RunnableStoppable;
 import pt.utl.ist.repox.util.TimeUtil;
 
 import java.lang.reflect.InvocationTargetException;

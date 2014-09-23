@@ -29,7 +29,6 @@
 
 	<modules>
 		<module>repox-client-oai</module>
-		<module>repox-client-sru</module>
 	</modules>
 
 	<!-- Children will get the below dependencies by default -->

@@ -1,4 +1,4 @@
-package pt.utl.ist.repox;
+package pt.utl.ist.repox.util;
 
 /**
  */

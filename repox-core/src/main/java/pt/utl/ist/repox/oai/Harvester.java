@@ -8,9 +8,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import pt.utl.ist.repox.RunnableStoppable;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtil;
+import pt.utl.ist.repox.util.RunnableStoppable;
 import pt.utl.ist.repox.util.StringUtil;
 
 import javax.xml.parsers.ParserConfigurationException;

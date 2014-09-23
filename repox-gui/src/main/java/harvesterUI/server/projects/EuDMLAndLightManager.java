@@ -44,7 +44,7 @@ import javax.mail.AuthenticationFailedException;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.RepoxConfiguration;
+import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;

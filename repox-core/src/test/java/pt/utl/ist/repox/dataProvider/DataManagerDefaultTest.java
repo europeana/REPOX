@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.RepoxConfigurationDefault;
+import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;

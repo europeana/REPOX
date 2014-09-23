@@ -3,8 +3,6 @@ package pt.utl.ist.repox.configuration;
 import java.io.IOException;
 import java.util.Properties;
 
-import pt.utl.ist.repox.RepoxConfigurationDefault;
-
 /**
  * Created by IntelliJ IDEA.
  * User: GPedrosa

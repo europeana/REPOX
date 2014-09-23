@@ -1,8 +1,9 @@
 package pt.utl.ist.repox.accessPoint.database;
 
 import org.apache.log4j.Logger;
-import pt.utl.ist.repox.RepoxConfiguration;
+
 import pt.utl.ist.repox.accessPoint.AccessPoint;
+import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.util.sql.SqlUtil;
 

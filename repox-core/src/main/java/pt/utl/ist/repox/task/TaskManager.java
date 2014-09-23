@@ -7,7 +7,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.RunnableStoppable;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -16,6 +15,7 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
+import pt.utl.ist.repox.util.RunnableStoppable;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;

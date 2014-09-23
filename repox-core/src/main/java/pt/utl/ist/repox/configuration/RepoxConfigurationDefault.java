@@ -2,7 +2,7 @@
  * Created on 23/Mar/2006
  *
  */
-package pt.utl.ist.repox;
+package pt.utl.ist.repox.configuration;
 
 import org.apache.commons.io.IOUtils;
 
