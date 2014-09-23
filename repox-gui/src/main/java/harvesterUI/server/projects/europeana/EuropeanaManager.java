@@ -50,6 +50,9 @@ import javax.mail.AuthenticationFailedException;
 
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
+import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
+import pt.utl.ist.repox.configuration.RepoxManagerEuropeana;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
@@ -62,8 +65,6 @@ import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
-import pt.utl.ist.rest.RepoxConfigurationEuropeana;
-import pt.utl.ist.rest.RepoxManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.AggregatorEuropeana;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
@@ -71,7 +72,6 @@ import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;
 import pt.utl.ist.rest.statistics.RepoxStatisticsEuropeana;
 import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
 import pt.utl.ist.rest.util.EmailUtilEuropeana;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 

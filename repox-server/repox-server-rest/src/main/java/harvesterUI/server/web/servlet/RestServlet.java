@@ -18,6 +18,7 @@ import org.dom4j.DocumentException;
 
 import pt.utl.ist.repox.RepoxManager;
 import pt.utl.ist.repox.Urn;
+import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
@@ -30,7 +31,6 @@ import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.impl.WebServicesImplEuropeana;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 public class RestServlet extends HttpServlet {
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RestServlet.class);

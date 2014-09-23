@@ -1,4 +1,9 @@
-package pt.utl.ist.rest;
+package pt.utl.ist.repox.configuration;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -19,12 +24,6 @@ import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
 import pt.utl.ist.rest.util.EmailUtilEuropeana;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 
 /**
  * Created by IntelliJ IDEA.

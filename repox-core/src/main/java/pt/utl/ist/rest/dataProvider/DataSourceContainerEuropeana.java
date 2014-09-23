@@ -6,12 +6,12 @@ import freemarker.template.TemplateException;
 import org.dom4j.Element;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
+import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.rest.RepoxConfigurationEuropeana;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 import javax.mail.MessagingException;
 

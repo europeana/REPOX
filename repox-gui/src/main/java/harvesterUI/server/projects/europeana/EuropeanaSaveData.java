@@ -32,6 +32,7 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.RepoxManagerEuropeana;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -45,7 +46,6 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.DataSourceOai;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.rest.RepoxManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
 import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;

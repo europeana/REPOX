@@ -8,6 +8,7 @@ import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.repox.Urn;
+import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -35,7 +36,6 @@ import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.rest.RepoxConfigurationEuropeana;
 import pt.utl.ist.rest.dataProvider.*;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestUtils;

@@ -1,4 +1,13 @@
-package pt.utl.ist.rest.util;
+package pt.utl.ist.repox.configuration;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -6,13 +15,6 @@ import org.dom4j.DocumentException;
 import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtil;
-import pt.utl.ist.rest.RepoxConfigurationEuropeana;
-import pt.utl.ist.rest.RepoxManagerEuropeana;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.

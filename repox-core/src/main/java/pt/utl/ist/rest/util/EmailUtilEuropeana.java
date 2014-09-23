@@ -5,9 +5,9 @@ import freemarker.template.TemplateException;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.EmailUtil;
-import pt.utl.ist.rest.RepoxConfigurationEuropeana;
 
 import javax.mail.MessagingException;
 

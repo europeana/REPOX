@@ -33,6 +33,7 @@ import javax.xml.soap.SOAPPart;
 import org.dom4j.Element;
 
 import pt.utl.ist.repox.RepoxManager;
+import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
@@ -40,7 +41,6 @@ import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 /**
  *

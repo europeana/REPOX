@@ -1,4 +1,4 @@
-package pt.utl.ist.rest;
+package pt.utl.ist.repox.configuration;
 
 import java.io.IOException;
 import java.util.Properties;

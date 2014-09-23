@@ -44,11 +44,11 @@ import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.server.verb.OAIInternalServerError;
 import org.oclc.oai.server.verb.ServerVerb;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
-import pt.utl.ist.rest.util.RepoxContextUtilEuropeana;
 
 /**
  * OAIHandler is the primary Servlet for OAICat.
