@@ -11,9 +11,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>REPOX-CLIENT</name>
-	<artifactId>repox-client</artifactId>
-	<packaging>pom</packaging>
+	<name>REPOX-DATASOURCE</name>
+	<artifactId>repox-datasource</artifactId>
+	<packaging>jar</packaging>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -27,16 +27,11 @@
 		</contributor>
 	</contributors>
 
-	<modules>
-		<module>repox-client-oai</module>
-		<module>repox-client-sru</module>
-	</modules>
-
 	<!-- Children will get the below dependencies by default -->
-<!-- 	<dependencies> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>repox</groupId> -->
-<!-- 			<artifactId>repox-core</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 	</dependencies> -->
+	<!-- <dependencies> -->
+	<!-- <dependency> -->
+	<!-- <groupId>repox</groupId> -->
+	<!-- <artifactId>repox-core</artifactId> -->
+	<!-- </dependency> -->
+	<!-- </dependencies> -->
 </project>

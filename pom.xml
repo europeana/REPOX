@@ -47,6 +47,7 @@
 
 		<module>repox-commons</module>
 		<module>repox-gui</module>
+		<module>repox-datasource</module>
 	</modules>
 
 	<properties>

@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.utl.ist.repox.dataProvider.*;
 import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
 import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
@@ -13,12 +14,12 @@ import pt.utl.ist.repox.marc.DataSourceFolder;
 import pt.utl.ist.repox.marc.Iso2709FileExtract;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.oai.DataSourceOai;
-import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.CompareUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -5,10 +5,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
-import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;

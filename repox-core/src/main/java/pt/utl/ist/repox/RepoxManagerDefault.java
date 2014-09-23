@@ -2,6 +2,7 @@ package pt.utl.ist.repox;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
+
 import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
 import pt.utl.ist.repox.accessPoint.database.AccessPointManagerFactory;
 import pt.utl.ist.repox.dataProvider.DataManagerDefault;
@@ -13,9 +14,9 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.statistics.StatisticsManagerDefault;
 import pt.utl.ist.repox.task.TaskManager;
-import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.EmailUtil;
 import pt.utl.ist.repox.util.EmailUtilDefault;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

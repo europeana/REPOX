@@ -18,12 +18,12 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.TaskManager;
-import pt.utl.ist.repox.task.exception.IllegalFileFormatException;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
 import pt.utl.ist.rest.util.EmailUtilEuropeana;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 /**
  * Created by IntelliJ IDEA.

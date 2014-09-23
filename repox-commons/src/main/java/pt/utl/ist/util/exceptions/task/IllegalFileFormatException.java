@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.task.exception;
+package pt.utl.ist.util.exceptions.task;
 
 /**
  */
