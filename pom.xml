@@ -41,13 +41,13 @@
 	</developers>
 
 	<modules>
-		<module>repox-core</module>
-		<module>repox-server</module>
-		<module>repox-client</module>
+		<module>core</module>
+		<module>server</module>
+		<module>client</module>
 
-		<module>repox-commons</module>
-		<module>repox-gui</module>
-		<module>repox-resources</module>
+		<module>commons</module>
+		<module>gui</module>
+		<module>resources</module>
 	</modules>
 
 	<properties>

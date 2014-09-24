@@ -28,7 +28,7 @@
 	</contributors>
 
 	<modules>
-		<module>repox-client-oai</module>
+		<module>oai</module>
 	</modules>
 
 	<!-- Children will get the below dependencies by default -->

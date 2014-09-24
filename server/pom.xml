@@ -28,8 +28,8 @@
 	</contributors>
 
 	<modules>
-		<module>repox-server-oai</module>
-		<module>repox-server-rest</module>
+		<module>oai</module>
+		<module>rest</module>
 	</modules>
 
 	<!-- Children will get the below dependencies by default -->
