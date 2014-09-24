@@ -1,5 +1,7 @@
 package pt.utl.ist.repox.util;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtil;
+
 /**
  * Created by IntelliJ IDEA.
  * User: GPedrosa

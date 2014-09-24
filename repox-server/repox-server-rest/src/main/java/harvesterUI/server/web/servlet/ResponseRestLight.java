@@ -4,10 +4,10 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.util.InvalidInputException;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.rest.InvalidRequestException;

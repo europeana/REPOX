@@ -1,6 +1,5 @@
-package pt.utl.ist.repox.util;
+package pt.utl.ist.repox.configuration;
 
-import pt.utl.ist.repox.RepoxManager;
 
 /**
  * Created by IntelliJ IDEA.

@@ -11,11 +11,11 @@ import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 
 import java.util.List;
 
-import pt.utl.ist.repox.RepoxManagerDefault;
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.RepoxManagerDefault;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 
 /**
  * Created to Project REPOX

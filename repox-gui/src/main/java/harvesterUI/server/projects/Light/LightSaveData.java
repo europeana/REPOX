@@ -30,7 +30,7 @@ import java.util.TreeMap;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.RepoxManagerDefault;
+import pt.utl.ist.repox.configuration.RepoxManagerDefault;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;

@@ -7,10 +7,10 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.util.date.DateUtil;

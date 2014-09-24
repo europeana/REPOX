@@ -21,8 +21,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.xml.sax.SAXException;
 
-import pt.utl.ist.repox.Urn;
-import pt.utl.ist.repox.accessPoint.AccessPointsManager;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointsManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
@@ -34,6 +33,7 @@ import pt.utl.ist.repox.util.DomUtil;
 import pt.utl.ist.repox.util.InvalidInputException;
 import pt.utl.ist.repox.util.RunnableStoppable;
 import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.util.ZipUtil;
 

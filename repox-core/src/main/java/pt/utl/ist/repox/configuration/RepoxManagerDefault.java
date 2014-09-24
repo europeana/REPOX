@@ -1,12 +1,10 @@
-package pt.utl.ist.repox;
+package pt.utl.ist.repox.configuration;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.accessPoint.AccessPointManagerFactory;
-import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
-import pt.utl.ist.repox.configuration.RepoxConfiguration;
-import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointManagerFactory;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointsManagerDefault;
 import pt.utl.ist.repox.dataProvider.DataManagerDefault;
 import pt.utl.ist.repox.dataProvider.dataSource.TagsManager;
 import pt.utl.ist.repox.externalServices.ExternalRestServicesManager;

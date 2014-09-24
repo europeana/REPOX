@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.dataProvider.*;
 import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
 import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
@@ -16,7 +17,6 @@ import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.oai.DataSourceOai;
 import pt.utl.ist.repox.util.CompareUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;

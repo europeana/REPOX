@@ -45,6 +45,7 @@ import javax.mail.AuthenticationFailedException;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
@@ -58,7 +59,6 @@ import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 

@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.accessPoint;
+package pt.utl.ist.repox.accessPoint.manager;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -6,7 +6,8 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.Urn;
+import pt.utl.ist.repox.accessPoint.AccessPoint;
+import pt.utl.ist.repox.accessPoint.AccessPointRecordRepoxFull;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
@@ -18,6 +19,7 @@ import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.reports.LogUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.ZipUtil;
 import pt.utl.ist.util.sql.SqlUtil;
 
@@ -33,8 +35,8 @@ import java.util.Date;
  * @author Nuno Freire
  * 
  */
-public class AccessPointsManagerSqlDefault extends AccessPointsManagerDefault {
-    private static final Logger log = Logger.getLogger(AccessPointsManagerSqlDefault.class);
+public class AccessPointsManagerSql extends AccessPointsManagerDefault {
+    private static final Logger log = Logger.getLogger(AccessPointsManagerSql.class);
 
     protected DatabaseAccess    databaseAccess;
 
@@ -43,7 +45,7 @@ public class AccessPointsManagerSqlDefault extends AccessPointsManagerDefault {
      * 
      * @param databaseAccess
      */
-    public AccessPointsManagerSqlDefault(DatabaseAccess databaseAccess) {
+    public AccessPointsManagerSql(DatabaseAccess databaseAccess) {
         this.databaseAccess = databaseAccess;
     }
 

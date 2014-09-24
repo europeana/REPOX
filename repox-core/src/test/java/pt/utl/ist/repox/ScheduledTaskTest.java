@@ -3,11 +3,12 @@ package pt.utl.ist.repox;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.task.DataSourceIngestTask;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

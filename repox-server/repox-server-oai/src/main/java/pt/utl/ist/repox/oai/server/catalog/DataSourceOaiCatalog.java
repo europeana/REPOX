@@ -25,8 +25,7 @@ import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.server.verb.*;
 import org.oclc.oai.util.OAIUtil;
 
-import pt.utl.ist.repox.Urn;
-import pt.utl.ist.repox.accessPoint.AccessPointsManager;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointsManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -39,6 +38,7 @@ import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.InvalidInputException;
 import pt.utl.ist.repox.util.TransformationResultLogger;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
 
 import javax.xml.transform.TransformerException;

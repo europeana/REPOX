@@ -35,10 +35,10 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.mindrot.jbcrypt.BCrypt;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 import pt.utl.ist.repox.util.XmlUtil;
 
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;

@@ -2,8 +2,8 @@ package pt.utl.ist.repox.dataProvider;
 
 import org.apache.log4j.Logger;
 
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.util.ConfigSingleton;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
 
 import java.io.*;
 import java.nio.charset.Charset;

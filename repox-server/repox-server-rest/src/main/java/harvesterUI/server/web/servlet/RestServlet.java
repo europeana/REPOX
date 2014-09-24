@@ -16,16 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.RepoxManager;
-import pt.utl.ist.repox.Urn;
+import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
 import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
+import pt.utl.ist.repox.configuration.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.RepoxContextUtilDefault;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.impl.WebServicesImplEuropeana;

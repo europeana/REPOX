@@ -26,7 +26,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import pt.utl.ist.repox.accessPoint.AccessPoint;
-import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointsManagerDefault;
 import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceUtil;

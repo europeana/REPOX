@@ -8,9 +8,8 @@ import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import pt.utl.ist.repox.Urn;
 import pt.utl.ist.repox.accessPoint.AccessPoint;
-import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
+import pt.utl.ist.repox.accessPoint.manager.AccessPointsManagerDefault;
 import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
@@ -34,6 +33,7 @@ import pt.utl.ist.repox.util.CompareDataUtil;
 import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.rest.util.ExternalServiceEuropeanaUtil;

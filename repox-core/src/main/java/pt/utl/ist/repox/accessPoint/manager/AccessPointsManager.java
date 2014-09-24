@@ -1,11 +1,13 @@
-package pt.utl.ist.repox.accessPoint;
+package pt.utl.ist.repox.accessPoint.manager;
 
 import org.dom4j.DocumentException;
-import pt.utl.ist.repox.Urn;
+
+import pt.utl.ist.repox.accessPoint.AccessPoint;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.repox.util.Urn;
 
 import java.io.File;
 import java.io.IOException;
