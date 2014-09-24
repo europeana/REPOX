@@ -1,7 +1,9 @@
-package pt.utl.ist.repox.accessPoint.database;
+package pt.utl.ist.repox.accessPoint;
 
-import pt.utl.ist.repox.accessPoint.AccessPointsManager;
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
+import pt.utl.ist.repox.database.DatabaseAccessDerby;
+import pt.utl.ist.repox.database.DatabaseAccessMysql;
+import pt.utl.ist.repox.database.DatabaseAccessPostgresql;
 
 /**
  */

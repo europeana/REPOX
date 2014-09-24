@@ -3,8 +3,8 @@ package pt.utl.ist.repox;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.accessPoint.AccessPointManagerFactory;
 import pt.utl.ist.repox.accessPoint.AccessPointsManagerDefault;
-import pt.utl.ist.repox.accessPoint.database.AccessPointManagerFactory;
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
 import pt.utl.ist.repox.dataProvider.DataManagerDefault;

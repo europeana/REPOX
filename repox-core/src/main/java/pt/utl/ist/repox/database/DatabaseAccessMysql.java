@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.accessPoint.database;
+package pt.utl.ist.repox.database;
 
 import org.apache.log4j.Logger;
 
@@ -44,6 +44,7 @@ public class DatabaseAccessMysql implements DatabaseAccess {
 
 			log.info("Database URL connection: " + dbUrl);
 
+			//TODO Why is there the below call?
 			Class.forName(configuration.getDatabaseDriverClassName()).newInstance();
 		}
 		catch (Exception e) {

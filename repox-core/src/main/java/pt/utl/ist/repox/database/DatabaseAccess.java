@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.accessPoint.database;
+package pt.utl.ist.repox.database;
 
 import pt.utl.ist.repox.dataProvider.DataSource;
 

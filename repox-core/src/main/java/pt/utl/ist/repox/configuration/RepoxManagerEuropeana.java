@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.repox.RepoxManager;
+import pt.utl.ist.repox.accessPoint.AccessPointManagerFactory;
 import pt.utl.ist.repox.accessPoint.AccessPointsManager;
-import pt.utl.ist.repox.accessPoint.database.AccessPointManagerFactory;
 import pt.utl.ist.repox.dataProvider.dataSource.TagsManager;
 import pt.utl.ist.repox.externalServices.ExternalRestServicesManager;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;

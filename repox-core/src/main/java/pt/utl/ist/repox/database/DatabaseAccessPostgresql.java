@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.accessPoint.database;
+package pt.utl.ist.repox.database;
 
 import org.apache.log4j.Logger;
 
