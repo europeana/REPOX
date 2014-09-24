@@ -11,8 +11,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>REPOX-DATASOURCE</name>
-	<artifactId>repox-datasource</artifactId>
+	<name>REPOX-RESOURCES</name>
+	<artifactId>repox-resources</artifactId>
 	<packaging>jar</packaging>
 
 	<organization>
@@ -26,19 +26,4 @@
 			<url>http://www.theeuropeanlibrary.org</url>
 		</contributor>
 	</contributors>
-
-	<dependencies>
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-commons</artifactId>
-		</dependency>
-	</dependencies>
-
-	<!-- Children will get the below dependencies by default -->
-	<!-- <dependencies> -->
-	<!-- <dependency> -->
-	<!-- <groupId>repox</groupId> -->
-	<!-- <artifactId>repox-core</artifactId> -->
-	<!-- </dependency> -->
-	<!-- </dependencies> -->
 </project>

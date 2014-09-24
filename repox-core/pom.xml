@@ -67,11 +67,6 @@
 			<groupId>repox</groupId>
 			<artifactId>repox-commons</artifactId>
 		</dependency>
-		
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-datasource</artifactId>
-		</dependency>
 	
 		<dependency>
 			<groupId>postgresql</groupId>

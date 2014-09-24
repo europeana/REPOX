@@ -31,21 +31,21 @@ import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
  * To change this template use File | Settings | File Templates.
  */
 public class RepoxManagerEuropeana implements RepoxManager {
-    private static final Logger log = Logger.getLogger(RepoxManagerEuropeana.class);
-    private static String baseUrn;
+    private static final Logger           log = Logger.getLogger(RepoxManagerEuropeana.class);
+    private static String                 baseUrn;
 
-    private RepoxConfigurationEuropeana configuration;
-    private AccessPointsManager accessPointsManager;
-    private DataManagerEuropeana dataManager;
-    private StatisticsManager statisticsManager;
-    private RecordCountManager recordCountManager;
-    private TaskManager taskManager;
+    private RepoxConfigurationEuropeana   configuration;
+    private AccessPointsManager           accessPointsManager;
+    private DataManagerEuropeana          dataManager;
+    private StatisticsManager             statisticsManager;
+    private RecordCountManager            recordCountManager;
+    private TaskManager                   taskManager;
     private MetadataTransformationManager metadataTransformationManager;
-    private ExternalRestServicesManager externalRestServicesManager;
-    private MetadataSchemaManager metadataSchemaManager;
-    private TagsManager tagsManager;
-    private Thread taskManagerThread;
-    private EmailUtilEuropeana emailClient;
+    private ExternalRestServicesManager   externalRestServicesManager;
+    private MetadataSchemaManager         metadataSchemaManager;
+    private TagsManager                   tagsManager;
+    private Thread                        taskManagerThread;
+    private EmailUtilEuropeana            emailClient;
 
     public RepoxConfigurationEuropeana getConfiguration() {
         return configuration;
@@ -76,8 +76,8 @@ public class RepoxManagerEuropeana implements RepoxManager {
     }
 
     public ExternalRestServicesManager getExternalRestServicesManager() {
-		return externalRestServicesManager;
-	}
+        return externalRestServicesManager;
+    }
 
     public MetadataSchemaManager getMetadataSchemaManager() {
         return metadataSchemaManager;
@@ -99,21 +99,17 @@ public class RepoxManagerEuropeana implements RepoxManager {
         this.emailClient = emailClient;
     }
 
-    public RepoxManagerEuropeana(RepoxConfigurationEuropeana configuration, String dataProvidersFilename, String statisticsFilename,
-                                 String recordCountsFilename, String schedulerFilename, String ongoingTasksFilename,
-                                 String metadataTransformationsFilename, String oldTasksFileName,
-                                 String externalServicesFilename, String metadataSchemasFilename,
-                                 String tagsFilename) throws DocumentException, ParseException, SQLException, IOException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException {
+    public RepoxManagerEuropeana(RepoxConfigurationEuropeana configuration, String dataProvidersFilename, String statisticsFilename, String recordCountsFilename, String schedulerFilename, String ongoingTasksFilename, String metadataTransformationsFilename, String oldTasksFileName,
+                                 String externalServicesFilename, String metadataSchemasFilename, String tagsFilename) throws DocumentException, ParseException, SQLException, IOException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException {
         this.configuration = configuration;
 
-
         File countries = new File(configuration.getXmlConfigPath() + "/" + RepoxContextUtilDefault.COUNTRIES_FILENAME);
-        if(!countries.exists()) {
+        if (!countries.exists()) {
             FileUtilSecond.createFile("/" + RepoxContextUtilDefault.COUNTRIES_FILENAME, countries);
         }
 
         File metadataTransformation = new File(configuration.getXmlConfigPath() + "/" + RepoxContextUtilEuropeana.METADATA_TRANSFORMATIONS_FILENAME);
-        if(!countries.exists()) {
+        if (!countries.exists()) {
             FileUtilSecond.createFile("/" + RepoxContextUtilEuropeana.METADATA_TRANSFORMATIONS_FILENAME, metadataTransformation);
         }
 
@@ -128,7 +124,7 @@ public class RepoxManagerEuropeana implements RepoxManager {
         this.metadataTransformationManager = new MetadataTransformationManager(metadataTransformationsFile, xsltDir);
 
         File externalServicesFile = new File(configuration.getXmlConfigPath(), externalServicesFilename);
-		this.externalRestServicesManager = new ExternalRestServicesManager(externalServicesFile);
+        this.externalRestServicesManager = new ExternalRestServicesManager(externalServicesFile);
 
         File metadataSchemasFile = new File(configuration.getXmlConfigPath(), metadataSchemasFilename);
         this.metadataSchemaManager = new MetadataSchemaManager(metadataSchemasFile);
@@ -141,9 +137,7 @@ public class RepoxManagerEuropeana implements RepoxManager {
 
         File oldTasksFile = new File(configuration.getXmlConfigPath(), oldTasksFileName);
         File defaultExportDir = new File(configuration.getExportDefaultFolder());
-        this.dataManager = new DataManagerEuropeana(dataProvidersFile, this.metadataTransformationManager,
-                this.metadataSchemaManager,
-                repositoryPath, oldTasksFile, defaultExportDir,configuration);
+        this.dataManager = new DataManagerEuropeana(dataProvidersFile, this.metadataTransformationManager, this.metadataSchemaManager, repositoryPath, oldTasksFile, defaultExportDir, configuration);
 
         RepoxManagerEuropeana.baseUrn = configuration.getBaseUrn();
 

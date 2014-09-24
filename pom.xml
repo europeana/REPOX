@@ -47,7 +47,7 @@
 
 		<module>repox-commons</module>
 		<module>repox-gui</module>
-		<module>repox-datasource</module>
+		<module>repox-resources</module>
 	</modules>
 
 	<properties>
@@ -62,7 +62,7 @@
 		<repox:repox-client-oai.version>3.0-SNAPSHOT</repox:repox-client-oai.version>
 
 		<repox:repox-commons.version>3.0-SNAPSHOT</repox:repox-commons.version>
-		<repox:repox-datasource.version>3.0-SNAPSHOT</repox:repox-datasource.version>
+		<repox:repox-resources.version>3.0-SNAPSHOT</repox:repox-resources.version>
 		<repox:repox-gui.version>3.0-SNAPSHOT</repox:repox-gui.version>
 
 		<eu.europeana:definitions.version>1.01</eu.europeana:definitions.version>
@@ -201,8 +201,8 @@
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>
-				<artifactId>repox-datasource</artifactId>
-				<version>${repox:repox-datasource.version}</version>
+				<artifactId>repox-resources</artifactId>
+				<version>${repox:repox-resources.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>
