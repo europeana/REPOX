@@ -25,9 +25,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxConfiguration;
 import pt.utl.ist.repox.configuration.RepoxManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.TransformationResultLogger;
 
@@ -126,7 +126,7 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
             MainConfigurationInfo mainConfigurationInfo = new MainConfigurationInfo(projectType,repositoryFodlerPath);
 
             if(getProjectManager() instanceof EuropeanaManager){
-                String defaultExportFolder = ((RepoxConfigurationEuropeana)RepoxServiceImpl.getRepoxManager().getConfiguration()).getExportDefaultFolder();
+                String defaultExportFolder = ((EuropeanaRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration()).getExportDefaultFolder();
                 mainConfigurationInfo.setDefaultExportFolder(defaultExportFolder);
             }
 

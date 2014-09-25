@@ -6,12 +6,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -45,15 +45,15 @@ public class HarvestHttpTest {
 
     private final int RECORD_COUNT = 2203;
 
-    DataManagerDefault dataManager;
+    DefaultDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceHttp;
 
     @Before
     public void setUp() {
         try {
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
-            dataManager = (DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+            dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             provider = dataManager.createDataProvider(DATA_PROVIDER_ID, "pt", "DP_description");
 

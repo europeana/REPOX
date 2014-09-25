@@ -16,10 +16,10 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceType;
 import pt.utl.ist.repox.externalServices.ServiceParameter;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.XmlUtil;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

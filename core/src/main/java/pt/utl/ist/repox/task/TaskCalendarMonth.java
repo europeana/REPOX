@@ -1,6 +1,6 @@
 package pt.utl.ist.repox.task;
 
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.util.Month;
 
 import java.text.DateFormat;

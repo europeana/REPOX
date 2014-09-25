@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * Created to Project REPOX

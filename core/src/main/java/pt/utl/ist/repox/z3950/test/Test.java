@@ -13,13 +13,13 @@ import org.jzkit.search.util.ResultSet.IRResultSetStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.DataSourceContainerDefault;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
+import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
@@ -105,11 +105,11 @@ public class Test {
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
         DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers);
-        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGenerated(), null);
+        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGeneratedRecordIdPolicy(), null);
 
-        dataSourceContainers.put(dataSourceZ3950.getId(), new DataSourceContainerDefault(dataSourceZ3950));
+        dataSourceContainers.put(dataSourceZ3950.getId(), new DefaultDataSourceContainer(dataSourceZ3950));
 
-        ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(dummyDP);
+        ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(dummyDP);
         dataSourceZ3950.initAccessPoints();
         ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager().initialize(dummyDP.getDataSourceContainers());
 

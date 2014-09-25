@@ -6,12 +6,12 @@ import freemarker.template.TemplateException;
 import org.dom4j.Element;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
-import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxConfiguration;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import javax.mail.MessagingException;
 
@@ -60,14 +60,14 @@ public class DataSourceContainerEuropeana extends DataSourceContainer{
 
     private void sendEmail(Task.Status exitStatus, File logFile) throws MessagingException, TemplateException, IOException {
         String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
-        String smtpPort = ((RepoxConfigurationEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getSmtpPort();
+        String smtpPort = ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getSmtpPort();
         if(smtpServer == null || smtpServer.isEmpty()) {
             return;
         }
 
-        String fromEmail = ((RepoxConfigurationEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getDefaultEmail();
+        String fromEmail = ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getDefaultEmail();
         String recipientsEmail = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getAdministratorEmail();
-        String adminMailPass =  ((RepoxContextUtilEuropeana)ConfigSingleton.getRepoxContextUtil()).getRepoxManager().getConfiguration().getMailPassword();
+        String adminMailPass =  ((EuropeanaRepoxContextUtil)ConfigSingleton.getRepoxContextUtil()).getRepoxManager().getConfiguration().getMailPassword();
         String subject = "REPOX Data Source ingesting finished. Exit status: " + exitStatus.toString();
 
         EmailSender emailSender = new EmailSender();

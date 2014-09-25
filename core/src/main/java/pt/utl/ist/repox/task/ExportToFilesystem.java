@@ -22,13 +22,13 @@ import org.dom4j.io.XMLWriter;
 import org.xml.sax.SAXException;
 
 import pt.utl.ist.repox.accessPoint.manager.AccessPointsManager;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.DomUtil;
 import pt.utl.ist.repox.util.InvalidInputException;
 import pt.utl.ist.repox.util.RunnableStoppable;

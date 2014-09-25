@@ -1,6 +1,6 @@
 package harvesterUI.server.transformations;
 
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -8,6 +8,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;

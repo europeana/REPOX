@@ -15,11 +15,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.task.DataSourceExportTask;
 import pt.utl.ist.repox.task.DataSourceIngestTask;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * Created to REPOX.

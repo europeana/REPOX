@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
@@ -33,7 +34,6 @@ import pt.utl.ist.repox.task.DataSourceIngestTask;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.task.TaskManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;

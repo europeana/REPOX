@@ -30,14 +30,15 @@ import java.util.TreeMap;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.RepoxManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.DataSourceContainerDefault;
+import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceNoMonitor;
 import pt.utl.ist.repox.externalServices.ExternalServiceStates;
@@ -45,8 +46,7 @@ import pt.utl.ist.repox.externalServices.ExternalServiceType;
 import pt.utl.ist.repox.externalServices.ServiceParameter;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.oai.DataSourceOai;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
@@ -112,7 +112,7 @@ public class LightSaveData {
     public static SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException {
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
-            RepoxManagerDefault repoxManagerDefault = (RepoxManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager repoxManagerDefault = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
 
             ResponseState urlStatus = Util.getUrlStatus(dataSourceUI);
             if(urlStatus != null){
@@ -520,9 +520,9 @@ public class LightSaveData {
 
                 String setId = setSpec.replaceAll("[^a-zA-Z_0-9]", "_");
 
-                DataSourceOai dataSourceOai = new DataSourceOai(dataProvider, setId, setDescription,
+                OaiDataSource dataSourceOai = new OaiDataSource(dataProvider, setId, setDescription,
                         dsSchema, dsNamespace, dsMTDFormat,
-                        url, setSpec, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        url, setSpec, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                 HashMap<String, DataSourceContainer> oldDataSourceContainers = dataProvider.getDataSourceContainers();
 
@@ -534,8 +534,8 @@ public class LightSaveData {
                 if (oldDataSourceContainers != null) {
                     for (DataSourceContainer dataSourceContainer : oldDataSourceContainers.values()) {
                         DataSource oldDataSource = dataSourceContainer.getDataSource();
-                        if (oldDataSource instanceof DataSourceOai
-                                && ((DataSourceOai) oldDataSource).isSameDataSource(dataSourceOai)) {
+                        if (oldDataSource instanceof OaiDataSource
+                                && ((OaiDataSource) oldDataSource).isSameDataSource(dataSourceOai)) {
                             isDuplicate = true;
                         }
                     }
@@ -545,7 +545,7 @@ public class LightSaveData {
                     while (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceOai.getId()) != null) {
                         dataSourceOai.setId(dataSourceOai.getId() + "_new");
                     }
-                    DataSourceContainerDefault dataSourceContainer = new DataSourceContainerDefault(dataSourceOai);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSourceOai);
                     dataProvider.getDataSourceContainers().put(dataSourceOai.getId(),dataSourceContainer);
 
                     dataSourceOai.initAccessPoints();

@@ -32,14 +32,14 @@ import javax.xml.soap.SOAPPart;
 
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.repox.configuration.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
-import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.util.PropertyUtil;
 
 /**
@@ -63,10 +63,10 @@ public class SruRecordUpdateServlet extends HttpServlet {
         ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type"));
 
         if(projectType == ProjectType.LIGHT){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         }else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilEuropeana());
+            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         }
         try {
@@ -94,7 +94,7 @@ public class SruRecordUpdateServlet extends HttpServlet {
                 sendSenderFault("Unknown data set: "+dataSetId, resp);
                 return;
             }
-            if(!(dataSource.getDataSource() instanceof DataSourceSruRecordUpdate)) {
+            if(!(dataSource.getDataSource() instanceof SruRecordUpdateDataSource)) {
                 sendSenderFault("SRU record update not allowed for data set: "+dataSetId, resp);
                 return;
             }

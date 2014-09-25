@@ -1,52 +1,86 @@
 package pt.utl.ist.rest.services.web.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.dom4j.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.DataSourceContainerDefault;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
+import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.dataProvider.dataSource.*;
+import pt.utl.ist.repox.dataProvider.dataSource.DataSourceUtil;
+import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
+import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
-import pt.utl.ist.repox.ftp.DataSourceFtp;
-import pt.utl.ist.repox.http.DataSourceHttp;
-import pt.utl.ist.repox.marc.*;
+import pt.utl.ist.repox.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.repox.http.HttpFileRetrieveStrategy;
+import pt.utl.ist.repox.marc.CharacterEncoding;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
+import pt.utl.ist.repox.marc.MarcXchangeFileExtractStrategy;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchema;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.TransformationsFileManager;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
+import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.statistics.RecordCount;
 import pt.utl.ist.repox.statistics.RepoxStatistics;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.IngestDataSource;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
-import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.rest.dataProvider.*;
+import pt.utl.ist.repox.z3950.DataSourceZ3950;
+import pt.utl.ist.repox.z3950.HarvestMethod;
+import pt.utl.ist.repox.z3950.IdListHarvester;
+import pt.utl.ist.repox.z3950.IdSequenceHarvester;
+import pt.utl.ist.repox.z3950.Target;
+import pt.utl.ist.repox.z3950.TimestampHarvester;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.util.date.DateUtil;
-import pt.utl.ist.util.exceptions.*;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.*;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 /**
  */
@@ -178,7 +212,7 @@ public class WebServicesImpl implements WebServices {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         
         try {
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceOai(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceOai(dataProviderId,
                     id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new HashMap<String, MetadataTransformation>(),
                     new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -203,7 +237,7 @@ public class WebServicesImpl implements WebServices {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
 
         try {
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceSruRecordUpdate(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceSruRecordUpdate(dataProviderId,
                     id, description, schema, namespace, metadataFormat, new HashMap<String, MetadataTransformation>(),
                     new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -231,7 +265,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950Timestamp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950Timestamp(dataProviderId,
                     id, description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
@@ -273,7 +307,7 @@ public class WebServicesImpl implements WebServices {
                 xslFile.close();
             }
 
-            DataSource dataSource = ((DataManagerDefault) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
                     id, description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, temporaryFile.getAbsolutePath(), recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
@@ -300,7 +334,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdSequence(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdSequence(dataProviderId,
                     id, description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
@@ -327,7 +361,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFtp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFtp(dataProviderId,
                     id, description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
                     ftpPath, new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
@@ -356,7 +390,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceHttp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceHttp(dataProviderId,
                     id, description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, url,
                     new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
@@ -385,7 +419,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFolder(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFolder(dataProviderId,
                     id, description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
                     new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
@@ -412,14 +446,14 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
             
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
                 
-                if(!(dataSourceOld instanceof DataSourceSruRecordUpdate)){
-                    DataSource newDataSource = new DataSourceSruRecordUpdate(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                if(!(dataSourceOld instanceof SruRecordUpdateDataSource)){
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
                     
@@ -428,7 +462,7 @@ public class WebServicesImpl implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
                     
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     dataSourceOld = newDataSource;
                 }
                 
@@ -447,7 +481,7 @@ public class WebServicesImpl implements WebServices {
                 if(dataSourceOld.getExternalRestServices().size() > 0)
                     externalServices = dataSourceOld.getExternalRestServices();
             }
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceSruRecordUpdate(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceSruRecordUpdate(id, id,
                     description, schema, namespace, metadataFormat, 
                     transformations, externalServices, marcFormat, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -470,14 +504,14 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
 
-                if(!(dataSourceOld instanceof DataSourceOai)){
-                    DataSource newDataSource = new DataSourceOai(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                if(!(dataSourceOld instanceof OaiDataSource)){
+                    DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                            oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
 
@@ -486,7 +520,7 @@ public class WebServicesImpl implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     dataSourceOld = newDataSource;
                 }
 
@@ -499,9 +533,9 @@ public class WebServicesImpl implements WebServices {
                 if(metadataFormat == null)
                     metadataFormat = dataSourceOld.getMetadataFormat();
                 if(oaiSourceURL == null)
-                    oaiSourceURL = ((DataSourceOai)dataSourceOld).getOaiSourceURL();
+                    oaiSourceURL = ((OaiDataSource)dataSourceOld).getOaiSourceURL();
                 if(oaiSet == null)
-                    oaiSet = ((DataSourceOai)dataSourceOld).getOaiSet();
+                    oaiSet = ((OaiDataSource)dataSourceOld).getOaiSet();
                 if(marcFormat == null)
                     marcFormat = dataSourceOld.getMarcFormat();
                 if(dataSourceOld.getMetadataTransformations().size() > 0)
@@ -509,7 +543,7 @@ public class WebServicesImpl implements WebServices {
                 if(dataSourceOld.getExternalRestServices().size() > 0)
                     externalServices = dataSourceOld.getExternalRestServices();
             }
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceOai(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceOai(id, id,
                     description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
                     transformations, externalServices, marcFormat, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -537,7 +571,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
 
@@ -565,7 +599,7 @@ public class WebServicesImpl implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     dataSourceOld = newDataSource;
                 }
 
@@ -596,29 +630,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -631,9 +665,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -669,7 +703,7 @@ public class WebServicesImpl implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerDefault) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
+            DataSource dataSource = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
                     description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -716,7 +750,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -755,7 +789,7 @@ public class WebServicesImpl implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     dataSourceOld = newDataSource;
                 }
 
@@ -784,29 +818,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -819,9 +853,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -857,7 +891,7 @@ public class WebServicesImpl implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdList(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdList(id, id,
                     description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, filePath, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -884,7 +918,7 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -908,7 +942,7 @@ public class WebServicesImpl implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     dataSourceOld = newDataSource;
                 }
 
@@ -937,29 +971,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -972,9 +1006,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1010,7 +1044,7 @@ public class WebServicesImpl implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdSequence(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdSequence(id, id,
                     description, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -1036,38 +1070,38 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
-                if(!(dataSourceOld instanceof DataSourceDirectoryImporter)){
+                if(!(dataSourceOld instanceof DirectoryImporterDataSource)){
                     String accessType;
                     if(user.equals("") && password.equals("")){
-                        accessType = DataSourceFtp.ANONYMOUS;
+                        accessType = FtpFileRetrieveStrategy.ANONYMOUS;
                     }
                     else{
-                        accessType = DataSourceFtp.NORMAL;
+                        accessType = FtpFileRetrieveStrategy.NORMAL;
                     }
 
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceFtp(server, user, password, accessType, ftpPath);
+                    FileRetrieveStrategy retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, accessType, ftpPath);
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset.equals("")){
                                 throw new InvalidArgumentsException("charset");
                             }
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceFtp.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                         newDataSource.setStatus(dataSourceOld.getStatus());
 
@@ -1076,7 +1110,7 @@ public class WebServicesImpl implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1091,40 +1125,40 @@ public class WebServicesImpl implements WebServices {
                     metadataFormat = dataSourceOld.getMetadataFormat();
 
                 if(isoFormat == null && metadataFormat.equals(MetadataFormat.ISO2709.toString())){
-                    if(((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtract) {
-                        Iso2709FileExtract extractStrategy = (Iso2709FileExtract) ((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy();
+                    if(((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtractStrategy) {
+                        Iso2709FileExtractStrategy extractStrategy = (Iso2709FileExtractStrategy) ((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy();
                         isoFormat = extractStrategy.getIsoImplementationClass().toString();
                     }
                     else
                         throw new InvalidArgumentsException("isoFormat is missing");
                 }
-                if(charset == null && ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding() != null)
-                    charset = ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding().toString();
+                if(charset == null && ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding() != null)
+                    charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1137,9 +1171,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1171,15 +1205,15 @@ public class WebServicesImpl implements WebServices {
                 }
 
                 if(recordXPath == null)
-                    recordXPath = ((DataSourceDirectoryImporter)dataSourceOld).getRecordXPath();
+                    recordXPath = ((DirectoryImporterDataSource)dataSourceOld).getRecordXPath();
                 if(server == null)
-                    server = ((DataSourceFtp)((DataSourceDirectoryImporter)dataSourceOld).getRetrieveStrategy()).getServer();
+                    server = ((FtpFileRetrieveStrategy)((DirectoryImporterDataSource)dataSourceOld).getRetrieveStrategy()).getServer();
                 if(user == null)
-                    user = ((DataSourceFtp)((DataSourceDirectoryImporter)dataSourceOld).getRetrieveStrategy()).getUser();
+                    user = ((FtpFileRetrieveStrategy)((DirectoryImporterDataSource)dataSourceOld).getRetrieveStrategy()).getUser();
                 if(password == null)
-                    password = ((DataSourceFtp)((DataSourceDirectoryImporter)dataSourceOld).getRetrieveStrategy()).getPassword();
+                    password = ((FtpFileRetrieveStrategy)((DirectoryImporterDataSource)dataSourceOld).getRetrieveStrategy()).getPassword();
                 if(ftpPath == null)
-                    ftpPath = ((DataSourceFtp)((DataSourceDirectoryImporter)dataSourceOld).getRetrieveStrategy()).getFtpPath();
+                    ftpPath = ((FtpFileRetrieveStrategy)((DirectoryImporterDataSource)dataSourceOld).getRetrieveStrategy()).getFtpPath();
                 if(marcFormat == null)
                     marcFormat = dataSourceOld.getMarcFormat();
                 if(dataSourceOld.getMetadataTransformations().size() > 0)
@@ -1194,7 +1228,7 @@ public class WebServicesImpl implements WebServices {
             if(password == null)
                 password = "";
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFtp(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFtp(id, id,
                     description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
                     ftpPath, transformations, externalServices, marcFormat, false);
@@ -1223,30 +1257,30 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
-                if(!(dataSourceOld instanceof DataSourceDirectoryImporter)){
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceHttp(url);
+                if(!(dataSourceOld instanceof DirectoryImporterDataSource)){
+                    FileRetrieveStrategy retrieveStrategy = new HttpFileRetrieveStrategy(url);
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset.equals("")){
                                 throw new InvalidArgumentsException("charset");
                             }
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceHttp.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                         newDataSource.setStatus(dataSourceOld.getStatus());
 
@@ -1255,7 +1289,7 @@ public class WebServicesImpl implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1270,40 +1304,40 @@ public class WebServicesImpl implements WebServices {
                     metadataFormat = dataSourceOld.getMetadataFormat();
 
                 if(isoFormat == null && metadataFormat.equals(MetadataFormat.ISO2709.toString())){
-                    if(((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtract) {
-                        Iso2709FileExtract extractStrategy = (Iso2709FileExtract) ((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy();
+                    if(((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtractStrategy) {
+                        Iso2709FileExtractStrategy extractStrategy = (Iso2709FileExtractStrategy) ((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy();
                         isoFormat = extractStrategy.getIsoImplementationClass().toString();
                     }
                     else
                         throw new InvalidArgumentsException("isoFormat is missing");
                 }
-                if(charset == null && ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding() != null)
-                    charset = ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding().toString();
+                if(charset == null && ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding() != null)
+                    charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1316,9 +1350,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1349,9 +1383,9 @@ public class WebServicesImpl implements WebServices {
                     namespaces = new TreeMap<String, String>();
                 }
                 if(recordXPath == null)
-                    recordXPath = ((DataSourceDirectoryImporter)dataSourceOld).getRecordXPath();
+                    recordXPath = ((DirectoryImporterDataSource)dataSourceOld).getRecordXPath();
                 if(url == null)
-                    url = ((DataSourceHttp)((DataSourceDirectoryImporter)dataSourceOld).getRetrieveStrategy()).getUrl();;
+                    url = ((HttpFileRetrieveStrategy)((DirectoryImporterDataSource)dataSourceOld).getRetrieveStrategy()).getUrl();;
                 if(marcFormat == null)
                     marcFormat = dataSourceOld.getMarcFormat();
                 if(dataSourceOld.getMetadataTransformations().size() > 0)
@@ -1360,7 +1394,7 @@ public class WebServicesImpl implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceHttp(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceHttp(id, id,
                     description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, url,
                     transformations, externalServices, marcFormat, false);
@@ -1388,29 +1422,29 @@ public class WebServicesImpl implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerDefault dataSourceContainerOld = (DataSourceContainerDefault)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
-                if(!(dataSourceOld instanceof DataSourceDirectoryImporter)){
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceFolder();
+                if(!(dataSourceOld instanceof DirectoryImporterDataSource)){
+                    FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset.equals("")){
                                 throw new InvalidArgumentsException("charset");
                             }
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
                                 retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                         newDataSource.setStatus(dataSourceOld.getStatus());
@@ -1421,7 +1455,7 @@ public class WebServicesImpl implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerDefault(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1436,42 +1470,42 @@ public class WebServicesImpl implements WebServices {
                     metadataFormat = dataSourceOld.getMetadataFormat();
 
                 if(isoFormat == null && metadataFormat.equals(MetadataFormat.ISO2709.toString())){
-                    if(((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtract) {
-                        Iso2709FileExtract extractStrategy = (Iso2709FileExtract) ((DataSourceDirectoryImporter)dataSourceOld).getExtractStrategy();
+                    if(((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy() instanceof Iso2709FileExtractStrategy) {
+                        Iso2709FileExtractStrategy extractStrategy = (Iso2709FileExtractStrategy) ((DirectoryImporterDataSource)dataSourceOld).getExtractStrategy();
                         isoFormat = extractStrategy.getIsoImplementationClass().toString();
                     }
                     else
                         throw new InvalidArgumentsException("isoFormat is missing");
                 }
                 //
-                if(charset == null && ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding() != null)
-                    charset = ((DataSourceDirectoryImporter)dataSourceOld).getCharacterEncoding().toString();
+                if(charset == null && ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding() != null)
+                    charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
                 //
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1484,9 +1518,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1518,9 +1552,9 @@ public class WebServicesImpl implements WebServices {
                 }
 
                 if(recordXPath == null)
-                    recordXPath = ((DataSourceDirectoryImporter)dataSourceOld).getRecordXPath();
+                    recordXPath = ((DirectoryImporterDataSource)dataSourceOld).getRecordXPath();
                 if(sourcesDirPath == null)
-                    sourcesDirPath = ((DataSourceDirectoryImporter)dataSourceOld).getSourcesDirPath();
+                    sourcesDirPath = ((DirectoryImporterDataSource)dataSourceOld).getSourcesDirPath();
                 if(marcFormat == null)
                     marcFormat = dataSourceOld.getMarcFormat();
 
@@ -1531,7 +1565,7 @@ public class WebServicesImpl implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFolder(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFolder(id, id,
                     description, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
                     transformations, externalServices, marcFormat, false);

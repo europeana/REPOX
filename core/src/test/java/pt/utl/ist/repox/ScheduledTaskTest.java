@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.task.DataSourceIngestTask;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -19,7 +19,7 @@ public class ScheduledTaskTest {
 	@Before
 	public void setUp(){
 		try {
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest();
 
 			//id min hour day month weekday taskClass Parameters...

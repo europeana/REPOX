@@ -6,9 +6,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.task.ScheduledTask.Frequency;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class TaskManagerTest {
 	
 	@Before
     public void setUp() throws ClassNotFoundException, IOException, DocumentException, NoSuchMethodException, IllegalFileFormatException, SQLException, ParseException {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
 
         taskManager = ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getTaskManager();
         String dataSourceId = "1";

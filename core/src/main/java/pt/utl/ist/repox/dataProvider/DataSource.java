@@ -49,13 +49,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import pt.utl.ist.repox.accessPoint.AccessPoint;
-import pt.utl.ist.repox.accessPoint.AccessPointRecordRepoxFull;
-import pt.utl.ist.repox.accessPoint.AccessPointTimestamp;
+import pt.utl.ist.repox.accessPoint.RecordRepoxFullAccessPoint;
+import pt.utl.ist.repox.accessPoint.TimestampAccessPoint;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalNoMonitorServiceThread;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
@@ -73,7 +74,6 @@ import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
@@ -784,12 +784,12 @@ public abstract class DataSource {
      */
     public void initAccessPoints() {
         // initialization of the default AccessPoints used internally by REPOX
-        AccessPoint defaultTimestampAP = new AccessPointTimestamp(AccessPoint.PREFIX_INTERNAL_BD + id + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
+        AccessPoint defaultTimestampAP = new TimestampAccessPoint(AccessPoint.PREFIX_INTERNAL_BD + id + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
         defaultTimestampAP.setIndexDeletedRecords(false);
         defaultTimestampAP.setRepoxInternal(true);
         this.accessPoints.put(defaultTimestampAP.getId(), defaultTimestampAP);
 
-        AccessPoint defaultRecordAP = new AccessPointRecordRepoxFull(AccessPoint.PREFIX_INTERNAL_BD + id + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
+        AccessPoint defaultRecordAP = new RecordRepoxFullAccessPoint(AccessPoint.PREFIX_INTERNAL_BD + id + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
         defaultRecordAP.setRepoxInternal(true);
         this.accessPoints.put(defaultRecordAP.getId(), defaultRecordAP);
     }
@@ -1055,10 +1055,10 @@ public abstract class DataSource {
 
             Element recordIdPolicyNode = sourceElement.addElement("recordIdPolicy");
             recordIdPolicyNode.addAttribute("type", getRecordIdPolicy().getClass().getSimpleName());
-            if (getRecordIdPolicy() instanceof IdGenerated) {
-            } else if (getRecordIdPolicy() instanceof IdProvided) {
-            } else if (getRecordIdPolicy() instanceof IdExtracted) {
-                IdExtracted idExtracted = (IdExtracted)getRecordIdPolicy();
+            if (getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy) {
+            } else if (getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
+            } else if (getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy)getRecordIdPolicy();
                 recordIdPolicyNode.addElement("idXpath").setText(idExtracted.getIdentifierXpath());
                 if (idExtracted.getNamespaces() != null && !idExtracted.getNamespaces().isEmpty()) {
                     Element namespacesElement = recordIdPolicyNode.addElement("namespaces");

@@ -7,17 +7,17 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
-import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.statistics.MetadataFormatStatistics;
 import pt.utl.ist.repox.statistics.RepoxStatistics;
 import pt.utl.ist.repox.statistics.StatisticsManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.z3950.DataSourceZ3950;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
@@ -72,23 +72,23 @@ public class StatisticsManagerEuropeana implements StatisticsManager {
             dataProviders++;
 
             for(DataSourceContainer dataSourceContainer : dataProvider.getDataSourceContainers().values()) {
-                if(dataSourceContainer.getDataSource() instanceof DataSourceOai) {
+                if(dataSourceContainer.getDataSource() instanceof OaiDataSource) {
                     dataSourcesOai++;
                 }
                 else if(dataSourceContainer.getDataSource() instanceof DataSourceZ3950) {
                     dataSourcesZ3950++;
                 }
-                else if(dataSourceContainer.getDataSource() instanceof DataSourceDirectoryImporter) {
+                else if(dataSourceContainer.getDataSource() instanceof DirectoryImporterDataSource) {
                     dataSourcesDirectoryImporter++;
                 }
 
-                if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvided) {
+                if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
                     dataSourcesIdProvided++;
                 }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtracted) {
+                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                     dataSourcesIdExtracted++;
                 }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGenerated) {
+                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy) {
                     dataSourcesIdGenerated++;
                 }
                 else {

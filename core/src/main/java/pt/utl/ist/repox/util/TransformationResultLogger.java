@@ -4,6 +4,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;

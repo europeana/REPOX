@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchema;
@@ -19,7 +20,6 @@ import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * Created to Project REPOX-EUDML

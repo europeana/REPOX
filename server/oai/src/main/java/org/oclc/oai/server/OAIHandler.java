@@ -44,9 +44,9 @@ import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.server.verb.OAIInternalServerError;
 import org.oclc.oai.server.verb.ServerVerb;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
 
@@ -96,10 +96,10 @@ public class OAIHandler extends HttpServlet {
         projectType = ProjectType.valueOf(propertiesGui.getProperty("project.type"));
 
         if(projectType == ProjectType.LIGHT){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         } 
         else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilEuropeana());
+            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
         }
         try {
             Map<String, Object> attributes = null;

@@ -13,9 +13,10 @@ import org.jzkit.search.util.ResultSet.IRResultSetException;
 import org.jzkit.search.util.ResultSet.IRResultSetStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import pt.utl.ist.marc.Record;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 

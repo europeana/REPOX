@@ -50,19 +50,19 @@ import javax.mail.AuthenticationFailedException;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
-import pt.utl.ist.repox.configuration.RepoxManagerEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxConfiguration;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxManager;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.rest.dataProvider.AggregatorEuropeana;
@@ -93,7 +93,7 @@ public class EuropeanaManager extends ProjectManager {
     private int filteredDataSize;
 
     public EuropeanaManager() {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilEuropeana());
+        ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
     }
 
     public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType, String username) throws ServerSideException {
@@ -168,7 +168,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public AdminInfo loadAdminFormInfo() throws ServerSideException{
         try{
-            RepoxConfigurationEuropeana configuration = (RepoxConfigurationEuropeana)RepoxServiceImpl.getRepoxManager().getConfiguration();
+            EuropeanaRepoxConfiguration configuration = (EuropeanaRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration();
             AdminInfo adminInfo = new AdminInfo();
             adminInfo.set("repositoryFolder",configuration.getRepositoryPath());
             adminInfo.set("configFilesFolder",configuration.getXmlConfigPath());
@@ -212,7 +212,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public void saveAdminFormInfo(AdminInfo results) throws ServerSideException{
         try{
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(RepoxContextUtilDefault.CONFIG_FILE);
+            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
             properties.setProperty("repository.dir",(String)results.get("repositoryFolder"));
             properties.setProperty("xmlConfig.dir",(String)results.get("configFilesFolder"));
             properties.setProperty("oairequests.dir",(String)results.get("oaiRequestFolder"));
@@ -249,7 +249,7 @@ public class EuropeanaManager extends ProjectManager {
 
             PropertyUtil.saveProperties(oaiProperties, "oaicat.properties");
             reloadOAIProperties(results.getReloadOAIPropertiesUrl());
-            PropertyUtil.saveProperties(properties, RepoxContextUtilDefault.CONFIG_FILE);
+            PropertyUtil.saveProperties(properties, DefaultRepoxContextUtil.CONFIG_FILE);
             ConfigSingleton.getRepoxContextUtil().reloadProperties();
 //            System.out.println("Done save admin");
         }catch (Exception e){
@@ -664,7 +664,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public Boolean dataSourceExport(DataSourceUI dataSourceUI) throws ServerSideException{
         try {
-            RepoxManagerEuropeana repoxManagerEuropeana = (RepoxManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             DataSourceContainer dataSourceContainer = repoxManagerEuropeana.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
 
             DataSource dataSource = dataSourceContainer.getDataSource();
@@ -717,7 +717,7 @@ public class EuropeanaManager extends ProjectManager {
         }
 
         String recordPolicy;
-        if(dataSource.getRecordIdPolicy() instanceof IdExtracted)
+        if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
             recordPolicy = "IdExtracted";
         else
             recordPolicy = "IdGenerated";

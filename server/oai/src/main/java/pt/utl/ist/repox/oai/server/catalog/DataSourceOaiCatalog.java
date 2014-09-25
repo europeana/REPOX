@@ -26,16 +26,16 @@ import org.oclc.oai.server.verb.*;
 import org.oclc.oai.util.OAIUtil;
 
 import pt.utl.ist.repox.accessPoint.manager.AccessPointsManager;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.InvalidInputException;
 import pt.utl.ist.repox.util.TransformationResultLogger;
 import pt.utl.ist.repox.util.Urn;
@@ -507,8 +507,8 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
                         oaiMetadata.append("<" + OAIUtil.getTag("metadata") + ">").append(xmlRecordString).append("</" + OAIUtil.getTag("metadata") + ">");
                     }
                     String oaiProvenance = "";
-                    if (dataSource instanceof DataSourceOai) {
-                        oaiProvenance = getOaiProvenance((DataSourceOai)dataSource, currentItem);
+                    if (dataSource instanceof OaiDataSource) {
+                        oaiProvenance = getOaiProvenance((OaiDataSource)dataSource, currentItem);
                     }
                     StringBuffer oaiRecord = new StringBuffer("<" + OAIUtil.getTag("record") + ">").append(oaiRecordHeader.toString()).append(oaiMetadata.toString()).append(oaiProvenance).append("</" + OAIUtil.getTag("record") + ">");
 
@@ -566,7 +566,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
         return dataSetMap;
     }
 
-    private String getOaiProvenance(DataSourceOai dataSource, OaiItem oaiItem) {
+    private String getOaiProvenance(OaiDataSource dataSource, OaiItem oaiItem) {
         StringBuffer oaiProvenance = new StringBuffer();
         String metadataNamespace = "";
         if (dataSource.getNamespace() != null) metadataNamespace = dataSource.getNamespace();
@@ -689,8 +689,8 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
             String oaiMetadata = (recordRepox.isDeleted() ? "" : "<" + OAIUtil.getTag("metadata") + ">" + xmlRecordString + "</" + OAIUtil.getTag("metadata") + ">");
 
             String oaiProvenance = "";
-            if (dataSource instanceof DataSourceOai) {
-                oaiProvenance = getOaiProvenance((DataSourceOai)dataSource, oaiItem);
+            if (dataSource instanceof OaiDataSource) {
+                oaiProvenance = getOaiProvenance((OaiDataSource)dataSource, oaiItem);
             }
 
             //            String oaiRecord = "<" + OAIUtil.getTag("record") + " xmlns:oai=\"http://www.openarchives.org/OAI/2.0/\">" + oaiRecordHeader + oaiMetadata + oaiProvenance + "</" + OAIUtil.getTag("record") + ">";

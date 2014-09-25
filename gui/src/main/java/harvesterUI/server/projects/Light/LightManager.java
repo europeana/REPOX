@@ -11,11 +11,11 @@ import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 
 import java.util.List;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.configuration.RepoxManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.configuration.DefaultRepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 /**
  * Created to Project REPOX
@@ -27,7 +27,7 @@ public class LightManager extends EuDMLAndLightManager {
 
     public LightManager() {
         super();
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
     }
 
     public SaveDataResponse saveDataProvider(boolean update, DataProviderUI dataProviderUI, int pageSize, String username) throws ServerSideException {
@@ -86,7 +86,7 @@ public class LightManager extends EuDMLAndLightManager {
 
     public Boolean dataSourceExport(DataSourceUI dataSourceUI) throws ServerSideException{
         try {
-            RepoxManagerDefault repoxManagerDefault = (RepoxManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager repoxManagerDefault = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             DataSourceContainer dataSourceContainer = repoxManagerDefault.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
 
             DataSource dataSource = dataSourceContainer.getDataSource();

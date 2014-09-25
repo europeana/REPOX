@@ -2,8 +2,8 @@ package pt.utl.ist.repox.dataProvider;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -27,7 +27,7 @@ public class Countries {
 
     private static void loadCountries() {
         try {
-            String countriesFilename = RepoxContextUtilDefault.COUNTRIES_FILENAME;
+            String countriesFilename = DefaultRepoxContextUtil.COUNTRIES_FILENAME;
             File countriesFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath(), countriesFilename);
 
             countryMap = new LinkedHashMap<String, String>();
@@ -44,7 +44,7 @@ public class Countries {
             }
             reader.close();
         } catch (IOException e) {
-            log.error("Error loading countries from file: " + RepoxContextUtilDefault.COUNTRIES_FILENAME, e);
+            log.error("Error loading countries from file: " + DefaultRepoxContextUtil.COUNTRIES_FILENAME, e);
         }
     }
 

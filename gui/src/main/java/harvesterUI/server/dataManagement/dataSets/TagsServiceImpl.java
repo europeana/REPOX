@@ -10,8 +10,8 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
 import com.extjs.gxt.ui.client.data.FilterPagingLoadConfig;

@@ -8,8 +8,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.configuration.RepoxConfigurationDefault;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
@@ -47,7 +47,7 @@ public class MetadataTransformationManager {
         super();
         this.configurationFile = configurationFile;
         this.xsltDir = xsltDir;
-        this.xmapDir = new File(xsltDir, RepoxConfigurationDefault.METADATA_TRANSFORMATIONS_XMAP_SUBDIR);
+        this.xmapDir = new File(xsltDir, DefaultRepoxConfiguration.METADATA_TRANSFORMATIONS_XMAP_SUBDIR);
         loadMetadataTransformations();
     }
 

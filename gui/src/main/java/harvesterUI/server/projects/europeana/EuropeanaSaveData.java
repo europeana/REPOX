@@ -32,19 +32,19 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.RepoxManagerEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceStates;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.oai.DataSourceOai;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
@@ -67,7 +67,7 @@ public class EuropeanaSaveData {
     public static String deleteDataProviders(List<DataProviderUI> dataProviderUIs) {
         for (DataProviderUI dataProvider : dataProviderUIs) {
             try {
-                RepoxManagerEuropeana repoxManagerEuropeana = (RepoxManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+                EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
                 repoxManagerEuropeana.getDataManager().deleteDataProvider(dataProvider.getId());
             } catch (IOException e) {
                 return MessageType.OTHER.name();
@@ -83,7 +83,7 @@ public class EuropeanaSaveData {
     public static SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
-            RepoxManagerEuropeana repoxManagerEuropeana = (RepoxManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
 
             ResponseState urlStatus = Util.getUrlStatus(dataSourceUI);
             if(urlStatus != null){
@@ -548,7 +548,7 @@ public class EuropeanaSaveData {
     public static String deleteDataSources(List<DataSourceUI> dataSourceUIs) {
         Iterator<DataSourceUI> dataSourceUIIterator = dataSourceUIs.iterator();
         while (dataSourceUIIterator.hasNext()) {
-            RepoxManagerEuropeana repoxManagerEuropeana = (RepoxManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             // todo use result
             try {
                 repoxManagerEuropeana.getDataManager().deleteDataSourceContainer(dataSourceUIIterator.next().getDataSourceSet());
@@ -567,7 +567,7 @@ public class EuropeanaSaveData {
         try {
             String finalExportPath;
             if(exportPath == null) {
-                RepoxManagerEuropeana europeanaManager = (RepoxManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+                EuropeanaRepoxManager europeanaManager = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
                 finalExportPath = europeanaManager.getConfiguration().getExportDefaultFolder();
             } else
                 finalExportPath = exportPath;
@@ -586,9 +586,9 @@ public class EuropeanaSaveData {
 
                 String setId = setSpec.replaceAll("[^a-zA-Z_0-9]", "_");
 
-                DataSourceOai dataSourceOai = new DataSourceOai(dataProviderEuropeana, setId, setDescription,
+                OaiDataSource dataSourceOai = new OaiDataSource(dataProviderEuropeana, setId, setDescription,
                         dsSchema, dsNamespace, dsMTDFormat,
-                        url, setSpec, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        url, setSpec, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                 HashMap<String, DataSourceContainer> oldDataSourceContainers = dataProviderEuropeana.getDataSourceContainers();
 
@@ -600,8 +600,8 @@ public class EuropeanaSaveData {
                 if (oldDataSourceContainers != null) {
                     for (DataSourceContainer dataSourceContainer : oldDataSourceContainers.values()) {
                         DataSource oldDataSource = dataSourceContainer.getDataSource();
-                        if (oldDataSource instanceof DataSourceOai
-                                && ((DataSourceOai) oldDataSource).isSameDataSource(dataSourceOai)) {
+                        if (oldDataSource instanceof OaiDataSource
+                                && ((OaiDataSource) oldDataSource).isSameDataSource(dataSourceOai)) {
                             isDuplicate = true;
                         }
                     }

@@ -25,7 +25,7 @@ import javax.xml.transform.TransformerException;
 import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.util.OAIUtil;
 
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 
 /**
  * This class represents a ListIdentifiers verb on either the server or on the

@@ -5,13 +5,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -32,7 +32,7 @@ public class OldTaskDynamicAddTest {
     private final String SOURCE_METADATA_FORMAT = MetadataFormat.ese.name();
     private final int RECORD_COUNT = 37;
 
-    DataManagerDefault dataManager;
+    DefaultDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceOai;
 
@@ -40,8 +40,8 @@ public class OldTaskDynamicAddTest {
 
     @Before
     public void setUp() {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
-        dataManager = (DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+        dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 //        addDataSet();
     }
 

@@ -13,7 +13,8 @@ package org.oclc.oai.util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import pt.utl.ist.repox.util.ConfigSingleton;
+
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +23,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;

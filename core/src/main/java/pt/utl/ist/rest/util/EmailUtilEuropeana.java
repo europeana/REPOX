@@ -5,8 +5,8 @@ import freemarker.template.TemplateException;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxConfiguration;
 import pt.utl.ist.repox.util.EmailUtil;
 
 import javax.mail.MessagingException;
@@ -27,12 +27,12 @@ public class EmailUtilEuropeana implements EmailUtil{
     public void sendEmail(String fromEmail, String[] recipientsEmail,
                           String subject, String message, File[] attachments, HashMap<String, Object> map) throws IOException, MessagingException, TemplateException {
         String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
-        String smtpPort = ((RepoxConfigurationEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getSmtpPort();
+        String smtpPort = ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getSmtpPort();
         if(smtpServer == null || smtpServer.isEmpty()) {
             return;
         }
 
-        String adminMailPass =  ((RepoxConfigurationEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getMailPassword();
+        String adminMailPass =  ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getMailPassword();
 
         EmailSender emailSender = new EmailSender();
         String pathIngestFile = null;

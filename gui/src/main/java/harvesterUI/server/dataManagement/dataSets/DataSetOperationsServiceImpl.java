@@ -43,13 +43,13 @@ import org.oclc.oai.harvester2.verb.ListMetadataFormats;
 import org.oclc.oai.harvester2.verb.ListSets;
 import org.xml.sax.SAXParseException;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.LogFilenameComparator;
-import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.ScheduledTask;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -259,7 +259,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
                 data.set("hasRunningTask",false);
 
             data.set("recordNum",dataSource.getNumberRecords()[2]);
-            if((dataSource instanceof DataSourceOai || dataSource instanceof DataSourceDirectoryImporter)
+            if((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
                     && dataSource.getStatusString().equals("RUNNING")) {
                 try{
                     data.set("totalRecordNum",dataSource.getTotalRecords2Harvest());

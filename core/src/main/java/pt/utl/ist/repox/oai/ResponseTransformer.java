@@ -32,11 +32,11 @@ import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtil;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.XmlUtil;
@@ -263,7 +263,7 @@ public class ResponseTransformer {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
 
         Date fromDate = null;
         Date untilDate = null;

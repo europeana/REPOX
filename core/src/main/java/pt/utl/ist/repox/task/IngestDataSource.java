@@ -2,8 +2,8 @@ package pt.utl.ist.repox.task;
 
 import org.apache.log4j.Logger;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.RunnableStoppable;
 
 /**

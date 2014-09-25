@@ -3,7 +3,7 @@ package pt.utl.ist.repox.dataProvider;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 
 import java.util.ArrayList;
 import java.util.Collection;

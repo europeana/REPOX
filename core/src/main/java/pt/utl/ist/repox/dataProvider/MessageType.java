@@ -24,6 +24,8 @@ public enum MessageType {
     OTHER;
 
     /**
+     * Return the MessageType of the provided string
+     * 
      * @param string
      * @return the MessageType
      */

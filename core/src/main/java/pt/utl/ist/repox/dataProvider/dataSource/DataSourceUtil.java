@@ -1,7 +1,7 @@
 package pt.utl.ist.repox.dataProvider.dataSource;
 
-import pt.utl.ist.repox.marc.Iso2709FileExtract;
-import pt.utl.ist.repox.marc.MarcXchangeFileExtract;
+import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
+import pt.utl.ist.repox.marc.MarcXchangeFileExtractStrategy;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 
 import java.util.Map;
@@ -21,12 +21,12 @@ public class DataSourceUtil {
      */
     public static RecordIdPolicy createIdPolicy(String recordIdPolicyClass, String identifierXpath, Map<String, String> namespaces) {
         RecordIdPolicy recordIdPolicy = null;
-        if (recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
-            recordIdPolicy = new IdGenerated();
-        } else if (recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
-            recordIdPolicy = new IdProvided();
-        } else if (recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
-            recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
+        if (recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
+            recordIdPolicy = new IdGeneratedRecordIdPolicy();
+        } else if (recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
+            recordIdPolicy = new IdProvidedRecordIdPolicy();
+        } else if (recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
+            recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
         }
         return recordIdPolicy;
     }
@@ -38,11 +38,11 @@ public class DataSourceUtil {
      */
     public static FileExtractStrategy extractStrategyString(String metadataFormat, String isoFormat) {
         if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
-            return new Iso2709FileExtract(isoFormat);
+            return new Iso2709FileExtractStrategy(isoFormat);
         } else if (metadataFormat.equals(MetadataFormat.MarcXchange.toString())) {
-            return new MarcXchangeFileExtract();
+            return new MarcXchangeFileExtractStrategy();
         } else {
-            return new SimpleFileExtract();
+            return new SimpleFileExtractStrategy();
         }
     }
 }

@@ -1,17 +1,20 @@
 package harvesterUI.server.transformations;
 
 import harvesterUI.server.util.Util;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
+
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.metadataTransformation.TransformationsFileManager;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.util.List;
 

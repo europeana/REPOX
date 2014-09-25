@@ -6,17 +6,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.*;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
-import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
-import pt.utl.ist.repox.marc.DataSourceFolder;
-import pt.utl.ist.repox.marc.Iso2709FileExtract;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
@@ -39,31 +39,31 @@ public class TaskFileHelperTest {
 	
 	@Before
     public void setUp() throws ClassNotFoundException, IOException, DocumentException, NoSuchMethodException, IllegalFileFormatException, SQLException, ParseException, AlreadyExistsException {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         taskManager = ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getTaskManager();
         taskManager.stop(); //avoid starting execution of Tasks for testing purposes
 
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
         newDP = new DataProvider("dummyDP", "dummyDP", "pt", "testing purposes only", dataSourceContainers);
 
-        DataSource dataSourceOai = new DataSourceOai(newDP, "dummyDSIngest", "test DS", "schema", "namespace", MetadataFormat.oai_dc.toString(),
-                "http://dummy.oai.rp", "noset", new IdProvided(), null);
-        dataSourceContainers.put(dataSourceOai.getId(), new DataSourceContainerDefault(dataSourceOai));
+        DataSource dataSourceOai = new OaiDataSource(newDP, "dummyDSIngest", "test DS", "schema", "namespace", MetadataFormat.oai_dc.toString(),
+                "http://dummy.oai.rp", "noset", new IdProvidedRecordIdPolicy(), null);
+        dataSourceContainers.put(dataSourceOai.getId(), new DefaultDataSourceContainer(dataSourceOai));
 
         //DataSource dataSourceDImporter = new DataSourceDirectoryImporter(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.oai_dc.toString(),
-        DataSource dataSourceDImporter = new DataSourceDirectoryImporter(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.ese.toString(),
-                new Iso2709FileExtract("pt.utl.ist.marc.iso2709.IteratorIso2709"), new DataSourceFolder(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
-                 "src/test/resources/directoryImportTest", new IdGenerated(), null, null, null);
+        DataSource dataSourceDImporter = new DirectoryImporterDataSource(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.ese.toString(),
+                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
+                 "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
-        dataSourceContainers.put(dataSourceDImporter.getId(), new DataSourceContainerDefault(dataSourceDImporter));
+        dataSourceContainers.put(dataSourceDImporter.getId(), new DefaultDataSourceContainer(dataSourceDImporter));
 
-        DataSource dataSourceDImporter1 = new DataSourceDirectoryImporter(newDP, "dummyDSExport2", "", "", "test DS", MetadataFormat.ISO2709.toString(),
-                new Iso2709FileExtract("pt.utl.ist.marc.iso2709.IteratorIso2709"), new DataSourceFolder(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
-                "src/test/resources/directoryImportTest", new IdGenerated(), null, null, null);
+        DataSource dataSourceDImporter1 = new DirectoryImporterDataSource(newDP, "dummyDSExport2", "", "", "test DS", MetadataFormat.ISO2709.toString(),
+                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
+                "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
-        dataSourceContainers.put(dataSourceDImporter1.getId(), new DataSourceContainerDefault(dataSourceDImporter1));
+        dataSourceContainers.put(dataSourceDImporter1.getId(), new DefaultDataSourceContainer(dataSourceDImporter1));
 
-        ((DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(newDP);
+        ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(newDP);
 
         Calendar now = Calendar.getInstance();
         now.set(Calendar.MILLISECOND, 0); // Because millisecond is not saved to file, not setting this would cause difference after loading

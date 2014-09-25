@@ -12,12 +12,14 @@ package org.oclc.oai.server.verb;
 
 import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.util.OAIUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
+
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+
 import java.util.*;
 
 //import org.xml.sax.SAXException;

@@ -6,21 +6,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.DataSourceContainerDefault;
+import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtract;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
-import pt.utl.ist.repox.marc.DataSourceFolder;
-import pt.utl.ist.repox.marc.Iso2709FileExtract;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.statistics.RecordCount;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
@@ -43,18 +43,18 @@ public class HarvestTest {
     private final String SOURCE_PATH= "src/test/resources/directoryImportTest";
     private final int RECORD_COUNT = 100;
 
-    private DataSourceDirectoryImporter dataSourceDirectoryImporter;
+    private DirectoryImporterDataSource dataSourceDirectoryImporter;
 
     @Before
     public void setUp() {
         try {
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
-            DataManagerDefault dataManager = (DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+            DefaultDataManager dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
             DataProvider newDataProvider = new DataProvider(DATA_PROVIDER_ID, "data provider", "pt", "it's new", dataSourceContainers);
 
-            FileExtractStrategy extractStrategy = new SimpleFileExtract();
+            FileExtractStrategy extractStrategy = new SimpleFileExtractStrategy();
            /* String extractStrategyString = currentDataSourceElement.elementText("fileExtract");
             //FileExtractStrategy extractStrategy = null;
 
@@ -81,7 +81,7 @@ public class HarvestTest {
 
 //            FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(SOURCE_METADATA_FORMAT, "Standard");
 
-            dataSourceDirectoryImporter = new DataSourceDirectoryImporter(
+            dataSourceDirectoryImporter = new DirectoryImporterDataSource(
                     newDataProvider,
                     DATA_SOURCE_ID,
                     DATA_SOURCE_DESCRIPTION,
@@ -89,17 +89,17 @@ public class HarvestTest {
                     SOURCE_NAMESPACE,
                     SOURCE_METADATA_FORMAT,
 //                    new SimpleFileExtract(),
-                    new Iso2709FileExtract("pt.utl.ist.marc.iso2709.IteratorIso2709"),
-                    new DataSourceFolder(),
+                    new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"),
+                    new FolderFileRetrieveStrategy(),
                     null,
                     SOURCE_PATH,
-                    new IdGenerated(),
+                    new IdGeneratedRecordIdPolicy(),
                     new TreeMap<String, MetadataTransformation>(),
                     SOURCE_RECORDXPATH,
                     namespaces);
             dataSourceDirectoryImporter.setCharacterEncoding(CharacterEncoding.UTF_8);
 
-            dataSourceContainers.put(dataSourceDirectoryImporter.getId(), new DataSourceContainerDefault(dataSourceDirectoryImporter));
+            dataSourceContainers.put(dataSourceDirectoryImporter.getId(), new DefaultDataSourceContainer(dataSourceDirectoryImporter));
             dataManager.addDataProvider(newDataProvider);
 
             ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager().initialize(dataSourceContainers);

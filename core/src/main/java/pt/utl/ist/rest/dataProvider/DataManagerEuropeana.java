@@ -9,8 +9,9 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import pt.utl.ist.repox.accessPoint.AccessPoint;
-import pt.utl.ist.repox.accessPoint.manager.AccessPointsManagerDefault;
-import pt.utl.ist.repox.configuration.RepoxConfigurationEuropeana;
+import pt.utl.ist.repox.accessPoint.manager.DefaultAccessPointsManager;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
@@ -18,19 +19,18 @@ import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.*;
 import pt.utl.ist.repox.externalServices.*;
-import pt.utl.ist.repox.ftp.DataSourceFtp;
-import pt.utl.ist.repox.http.DataSourceHttp;
+import pt.utl.ist.repox.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.repox.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.repox.marc.*;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.oai.DataSourceOai;
+import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
+import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.task.*;
 import pt.utl.ist.repox.util.CompareDataUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
@@ -66,13 +66,13 @@ public class DataManagerEuropeana implements DataManager {
 
     private int showSize = 0;
     protected List<Object> allDataList;
-    private RepoxConfigurationEuropeana configuration;
+    private EuropeanaRepoxConfiguration configuration;
 
     public DataManagerEuropeana(File dataFile, MetadataTransformationManager metadataTransformationManager,
                                 MetadataSchemaManager metadataSchemaManager,
                                 File repositoryPath,
                                 File oldTasksFile, File defaultExportDir,
-                                RepoxConfigurationEuropeana configuration) throws DocumentException, IOException, ParseException {
+                                EuropeanaRepoxConfiguration configuration) throws DocumentException, IOException, ParseException {
         super();
         this.configuration = configuration;
         this.dataFile = dataFile;
@@ -316,13 +316,13 @@ public class DataManagerEuropeana implements DataManager {
                     Element recordIdPolicyNode = currentDataSourceElement.element("recordIdPolicy");
                     String recordIdPolicyClass = recordIdPolicyNode.attributeValue("type");
                     RecordIdPolicy recordIdPolicy;
-                    if(recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
-                        recordIdPolicy = new IdGenerated();
+                    if(recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdGeneratedRecordIdPolicy();
                     }
-                    else if(recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
-                        recordIdPolicy = new IdProvided();
+                    else if(recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdProvidedRecordIdPolicy();
                     }
-                    else if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
+                    else if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
                         String identifierXpath = recordIdPolicyNode.element("idXpath").getText();
                         Map<String, String> namespaces = new TreeMap<String, String>();
                         Element namespacesElement = recordIdPolicyNode.element("namespaces");
@@ -333,7 +333,7 @@ public class DataManagerEuropeana implements DataManager {
                                         currentNamespace.elementText("namespaceUri"));
                             }
                         }
-                        recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
+                        recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
                     }
                     else {
                         throw new RuntimeException("Invalid RecordIdPolicy of class " + recordIdPolicyClass);
@@ -356,10 +356,10 @@ public class DataManagerEuropeana implements DataManager {
                     if(dataSourceType.equals("DataSourceOai")) {
                         String oaiSource = currentDataSourceElement.elementText("oai-source");
                         String oaiSet = (currentDataSourceElement.element("oai-set") != null ? currentDataSourceElement.elementText("oai-set") : null);
-                        dataSource = new DataSourceOai(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSource, oaiSet, new IdProvided(), metadataTransformations);
+                        dataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                oaiSource, oaiSet, new IdProvidedRecordIdPolicy(), metadataTransformations);
                     } else if(dataSourceType.equals("DataSourceSruRecordUpdate")) {
-                        dataSource = new DataSourceSruRecordUpdate(dataProvider, id, description, schema, namespace, metadataFormat,
+                        dataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
                                 recordIdPolicy, metadataTransformations);
                     }
                     else if(dataSourceType.equals("DataSourceDirectoryImporter")) {
@@ -374,7 +374,7 @@ public class DataManagerEuropeana implements DataManager {
 
                         FileRetrieveStrategy retrieveStrategy;
                         //FTP
-                        if(retrieveStrategyString != null && retrieveStrategyString.equals(DataSourceFtp.class.getName())){
+                        if(retrieveStrategyString != null && retrieveStrategyString.equals(FtpFileRetrieveStrategy.class.getName())){
 
                             String server = currentRetrieveStrategy.elementText("server");
 
@@ -383,23 +383,23 @@ public class DataManagerEuropeana implements DataManager {
 
                             String idType;
                             if(user != null && password != null){
-                                idType = DataSourceFtp.NORMAL;
+                                idType = FtpFileRetrieveStrategy.NORMAL;
                             }
                             else{
-                                idType = DataSourceFtp.ANONYMOUS;
+                                idType = FtpFileRetrieveStrategy.ANONYMOUS;
                             }
                             String ftpPath = currentRetrieveStrategy.elementText("folderPath");
-                            retrieveStrategy = new DataSourceFtp(server, user, password, idType, ftpPath);
+                            retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, idType, ftpPath);
                         }
                         //HTTP
-                        else if(retrieveStrategyString != null && retrieveStrategyString.equals(DataSourceHttp.class.getName())){
+                        else if(retrieveStrategyString != null && retrieveStrategyString.equals(HttpFileRetrieveStrategy.class.getName())){
 
                             String url = currentRetrieveStrategy.elementText("url");
-                            retrieveStrategy = new DataSourceHttp(url);
+                            retrieveStrategy = new HttpFileRetrieveStrategy(url);
                         }
                         else{
                             //FOLDER
-                            retrieveStrategy = new DataSourceFolder();
+                            retrieveStrategy = new FolderFileRetrieveStrategy();
                         }
 
                         CharacterEncoding characterEncoding = null;
@@ -407,14 +407,14 @@ public class DataManagerEuropeana implements DataManager {
                         Map<String, String> namespaces = null;
                         FileExtractStrategy extractStrategy = null;
 
-                        if(extractStrategyString.equals(Iso2709FileExtract.class.getSimpleName())) {
+                        if(extractStrategyString.equals(Iso2709FileExtractStrategy.class.getSimpleName())) {
                             characterEncoding = CharacterEncoding.get(currentDataSourceElement.attributeValue("characterEncoding"));
                             String isoImplementationClass = currentDataSourceElement.attributeValue("isoImplementationClass");
-                            extractStrategy = new Iso2709FileExtract(isoImplementationClass);
-                        } else if(extractStrategyString.equals(MarcXchangeFileExtract.class.getSimpleName())) {
-                            extractStrategy = new MarcXchangeFileExtract();
-                        } else if(extractStrategyString.equals(SimpleFileExtract.class.getSimpleName())) {
-                            extractStrategy = new SimpleFileExtract();
+                            extractStrategy = new Iso2709FileExtractStrategy(isoImplementationClass);
+                        } else if(extractStrategyString.equals(MarcXchangeFileExtractStrategy.class.getSimpleName())) {
+                            extractStrategy = new MarcXchangeFileExtractStrategy();
+                        } else if(extractStrategyString.equals(SimpleFileExtractStrategy.class.getSimpleName())) {
+                            extractStrategy = new SimpleFileExtractStrategy();
 
                             Element splitRecordsElement = currentDataSourceElement.element("splitRecords");
                             if(splitRecordsElement != null){
@@ -431,7 +431,7 @@ public class DataManagerEuropeana implements DataManager {
                                 }
                             }
                         }
-                        dataSource = new DataSourceDirectoryImporter(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
+                        dataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
                                 retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, metadataTransformations, recordXPath, namespaces);
                     }
                     else if(dataSourceType.equals("DataSourceZ3950")) {
@@ -1535,7 +1535,7 @@ public class DataManagerEuropeana implements DataManager {
         // dataSource.initAccessPoints();
 
         log.info("Updating Data Source with id " + oldDataSourceId + " to id " + newDataSourceId);
-        AccessPointsManagerDefault accessPointsManager = (AccessPointsManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager();
+        DefaultAccessPointsManager accessPointsManager = (DefaultAccessPointsManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager();
 
         //Update Access Points
         AccessPoint defaultTimestampAP = dataSource.getAccessPoints().get(AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
@@ -1614,8 +1614,8 @@ public class DataManagerEuropeana implements DataManager {
 
                 if(dataProvider != null){
 
-                    DataSource newDataSource = new DataSourceSruRecordUpdate(dataProvider, id, description, schema, namespace, metadataFormat,
-                            new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                            new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                     DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
@@ -1659,8 +1659,8 @@ public class DataManagerEuropeana implements DataManager {
                         oaiSourceURL = "http://" + oaiSourceURL;
                     }
                     if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
-                        DataSource newDataSource = new DataSourceOai(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                         DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
@@ -1976,31 +1976,31 @@ public class DataManagerEuropeana implements DataManager {
                 if(dataProvider != null){
                     String accessType;
                     if(user.equals("") && password.equals("")){
-                        accessType = DataSourceFtp.ANONYMOUS;
+                        accessType = FtpFileRetrieveStrategy.ANONYMOUS;
                     }
                     else{
-                        accessType = DataSourceFtp.NORMAL;
+                        accessType = FtpFileRetrieveStrategy.NORMAL;
                     }
 
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceFtp(server, user, password, accessType, ftpPath);
+                    FileRetrieveStrategy retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, accessType, ftpPath);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset == null || charset.equals(""))
                                 throw new InvalidArgumentsException("charset is missing");
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceFtp.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
 
@@ -2068,25 +2068,25 @@ public class DataManagerEuropeana implements DataManager {
                     if(url.equals("") || !FileUtilSecond.checkUrl(url))
                         throw new InvalidArgumentsException("url");
 
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceHttp(url);
+                    FileRetrieveStrategy retrieveStrategy = new HttpFileRetrieveStrategy(url);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset == null || charset.equals(""))
                                 throw new InvalidArgumentsException("charset is missing");
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceHttp.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
 
@@ -2154,24 +2154,24 @@ public class DataManagerEuropeana implements DataManager {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
 
                 if(dataProvider != null){
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceFolder();
+                    FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                     if(recordIdPolicy != null){
                         CharacterEncoding characterEncoding = null;
                         FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoVariant);
-                        if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                        if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                             if(charset == null || charset.equals(""))
                                 throw new InvalidArgumentsException("charset is missing");
                             characterEncoding = CharacterEncoding.get(charset);
                         }
-                        else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                        else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                         }
-                        else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                        else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy,
                                 retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
@@ -2217,9 +2217,9 @@ public class DataManagerEuropeana implements DataManager {
 
             DataProvider dataProviderParent = getDataProviderParent(oldId);
             if(dataProviderParent != null){
-                if(!(dataSource instanceof DataSourceSruRecordUpdate)){
-                    DataSource newDataSource = new DataSourceSruRecordUpdate(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                if(!(dataSource instanceof SruRecordUpdateDataSource)){
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
 
@@ -2283,9 +2283,9 @@ public class DataManagerEuropeana implements DataManager {
             if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if(dataProviderParent != null){
-                    if(!(dataSource instanceof DataSourceOai)){
-                        DataSource newDataSource = new DataSourceOai(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                    if(!(dataSource instanceof OaiDataSource)){
+                        DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 
@@ -2303,8 +2303,8 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setSchema(schema);
                     dataSource.setNamespace(namespace);
                     dataSource.setMetadataFormat(metadataFormat);
-                    ((DataSourceOai)dataSource).setOaiSourceURL(oaiSourceURL);
-                    ((DataSourceOai)dataSource).setOaiSet(oaiSet);
+                    ((OaiDataSource)dataSource).setOaiSourceURL(oaiSourceURL);
+                    ((OaiDataSource)dataSource).setOaiSet(oaiSet);
                     dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setMarcFormat(marcFormat);
@@ -2591,33 +2591,33 @@ public class DataManagerEuropeana implements DataManager {
             if(dataProviderParent != null){
                 String accessType;
                 if(user.equals("") && password.equals("")){
-                    accessType = DataSourceFtp.ANONYMOUS;
+                    accessType = FtpFileRetrieveStrategy.ANONYMOUS;
                 }
                 else{
-                    accessType = DataSourceFtp.NORMAL;
+                    accessType = FtpFileRetrieveStrategy.NORMAL;
                 }
 
-                FileRetrieveStrategy retrieveStrategy = new DataSourceFtp(server, user, password, accessType, ftpPath);
+                FileRetrieveStrategy retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, accessType, ftpPath);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                 if(recordIdPolicy != null){
                     CharacterEncoding characterEncoding = null;
                     FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                    if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                    if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                         if(charset == null || charset.equals("")){
                             throw new InvalidArgumentsException("Charset is missing");
                         }
                         characterEncoding = CharacterEncoding.get(charset);
                     }
-                    else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                    else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                     }
-                    else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                    else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                     }
 
-                    if(!(dataSource instanceof DataSourceDirectoryImporter)){
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceFtp.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                    if(!(dataSource instanceof DirectoryImporterDataSource)){
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
@@ -2637,12 +2637,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setNamespace(namespace);
                     dataSource.setMetadataFormat(metadataFormat);
                     dataSource.setRecordIdPolicy(recordIdPolicy);
-                    ((DataSourceDirectoryImporter)dataSource).setExtractStrategy(extractStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setRetrieveStrategy(retrieveStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setCharacterEncoding(characterEncoding);
-                    ((DataSourceDirectoryImporter)dataSource).setSourcesDirPath(DataSourceFtp.getOutputFtpPath(server, id));
-                    ((DataSourceDirectoryImporter)dataSource).setRecordXPath(recordXPath);
-                    ((DataSourceDirectoryImporter)dataSource).setNamespaces(new HashMap<String, String>());
+                    ((DirectoryImporterDataSource)dataSource).setExtractStrategy(extractStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setRetrieveStrategy(retrieveStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setCharacterEncoding(characterEncoding);
+                    ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(FtpFileRetrieveStrategy.getOutputFtpPath(server, id));
+                    ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
+                    ((DirectoryImporterDataSource)dataSource).setNamespaces(new HashMap<String, String>());
                     dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
@@ -2695,21 +2695,21 @@ public class DataManagerEuropeana implements DataManager {
                 if(recordIdPolicy != null){
                     CharacterEncoding characterEncoding = null;
                     FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                    if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                    if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                         if(charset == null || charset.equals(""))
                             throw new InvalidArgumentsException("charset is missing");
                         characterEncoding = CharacterEncoding.get(charset);
                     }
-                    else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                    else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                     }
-                    else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                    else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                     }
 
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceHttp(url);
+                    FileRetrieveStrategy retrieveStrategy = new HttpFileRetrieveStrategy(url);
 
-                    if(!(dataSource instanceof DataSourceDirectoryImporter)){
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
-                                retrieveStrategy, characterEncoding, DataSourceHttp.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                    if(!(dataSource instanceof DirectoryImporterDataSource)){
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                                retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
@@ -2729,13 +2729,13 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setNamespace(namespace);
                     dataSource.setMetadataFormat(metadataFormat);
                     dataSource.setRecordIdPolicy(recordIdPolicy);
-                    ((DataSourceDirectoryImporter)dataSource).setExtractStrategy(extractStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setRetrieveStrategy(retrieveStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setRetrieveStrategy(new DataSourceHttp(url));
-                    ((DataSourceDirectoryImporter)dataSource).setCharacterEncoding(characterEncoding);
-                    ((DataSourceDirectoryImporter)dataSource).setSourcesDirPath(DataSourceHttp.getOutputHttpPath(url, id));
-                    ((DataSourceDirectoryImporter)dataSource).setRecordXPath(recordXPath);
-                    ((DataSourceDirectoryImporter)dataSource).setNamespaces(new HashMap<String, String>());
+                    ((DirectoryImporterDataSource)dataSource).setExtractStrategy(extractStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setRetrieveStrategy(retrieveStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setRetrieveStrategy(new HttpFileRetrieveStrategy(url));
+                    ((DirectoryImporterDataSource)dataSource).setCharacterEncoding(characterEncoding);
+                    ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(HttpFileRetrieveStrategy.getOutputHttpPath(url, id));
+                    ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
+                    ((DirectoryImporterDataSource)dataSource).setNamespaces(new HashMap<String, String>());
                     dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
@@ -2788,20 +2788,20 @@ public class DataManagerEuropeana implements DataManager {
                 if(recordIdPolicy != null){
                     CharacterEncoding characterEncoding = null;
                     FileExtractStrategy extractStrategy = DataSourceUtil.extractStrategyString(metadataFormat, isoFormat);
-                    if(extractStrategy.getClass() == Iso2709FileExtract.class) {
+                    if(extractStrategy.getClass() == Iso2709FileExtractStrategy.class) {
                         if(charset == null || charset.equals(""))
                             throw new InvalidArgumentsException("charset is missing");
                         characterEncoding = CharacterEncoding.get(charset);
                     }
-                    else if(extractStrategy.getClass() == MarcXchangeFileExtract.class) {
+                    else if(extractStrategy.getClass() == MarcXchangeFileExtractStrategy.class) {
                     }
-                    else if(extractStrategy.getClass() == SimpleFileExtract.class) {
+                    else if(extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                     }
 
-                    FileRetrieveStrategy retrieveStrategy = new DataSourceFolder();
+                    FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
 
-                    if(!(dataSource instanceof DataSourceDirectoryImporter)){
-                        DataSource newDataSource = new DataSourceDirectoryImporter(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
+                    if(!(dataSource instanceof DirectoryImporterDataSource)){
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy,
                                 retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
@@ -2822,12 +2822,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setNamespace(namespace);
                     dataSource.setMetadataFormat(metadataFormat);
                     dataSource.setRecordIdPolicy(recordIdPolicy);
-                    ((DataSourceDirectoryImporter)dataSource).setExtractStrategy(extractStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setRetrieveStrategy(retrieveStrategy);
-                    ((DataSourceDirectoryImporter)dataSource).setCharacterEncoding(characterEncoding);
-                    ((DataSourceDirectoryImporter)dataSource).setSourcesDirPath(sourcesDirPath);
-                    ((DataSourceDirectoryImporter)dataSource).setRecordXPath(recordXPath);
-                    ((DataSourceDirectoryImporter)dataSource).setNamespaces(namespaces);
+                    ((DirectoryImporterDataSource)dataSource).setExtractStrategy(extractStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setRetrieveStrategy(retrieveStrategy);
+                    ((DirectoryImporterDataSource)dataSource).setCharacterEncoding(characterEncoding);
+                    ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(sourcesDirPath);
+                    ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
+                    ((DirectoryImporterDataSource)dataSource).setNamespaces(namespaces);
                     dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
@@ -3110,8 +3110,8 @@ public class DataManagerEuropeana implements DataManager {
             DataSource dataSource = null;
             while (dataSource == null){
                 dataSource= getDataSource(dataSourceId);
-                if(dataSource != null && ((DataSourceDirectoryImporter)dataSource).getRetrieveStrategy() instanceof DataSourceFtp){
-                    return ((DataSourceDirectoryImporter) dataSource).getSourcesDirPath();
+                if(dataSource != null && ((DirectoryImporterDataSource)dataSource).getRetrieveStrategy() instanceof FtpFileRetrieveStrategy){
+                    return ((DirectoryImporterDataSource) dataSource).getSourcesDirPath();
                 }
             }
         } catch (DocumentException e) {

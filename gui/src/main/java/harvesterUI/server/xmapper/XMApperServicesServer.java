@@ -37,8 +37,8 @@ import pt.ist.xml.mapping.toolset.function.XsltFunction;
 import pt.ist.xml.mapping.toolset.library.XsltToolsetLibrary;
 import pt.ist.xslt.io.XsltWriter;
 import pt.ist.xslt.version1.XsltStylesheet;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 

@@ -7,10 +7,10 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.util.date.DateUtil;
@@ -27,7 +27,7 @@ public class DataSourcesMonitor {
     private static final Logger       log                   = Logger.getLogger(DataSourcesMonitor.class);
 
     private static final long         MAX_TEST_TIME         = 120000;                                    // 120 seconds to consider failure
-    private static final long         MIN_WAIT_TIME_MONITOR = 60 * 60 * 2 * 1000;                        // number of milliseconds in 2 hours
+    private static final long         MIN_WAIT_TIME_MONITOR = 2 * 60 * 60 * 1000;                        // number of milliseconds in 2 hours
 
     private static DataSourcesMonitor monitorInstance;
 
@@ -56,7 +56,7 @@ public class DataSourcesMonitor {
     }
 
     private DataSourcesMonitor() {
-        configurationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath(), RepoxContextUtilDefault.DATA_SOURCES_STATE_FILENAME);
+        configurationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath(), DefaultRepoxContextUtil.DATA_SOURCES_STATE_FILENAME);
     }
 
     /**
@@ -68,7 +68,7 @@ public class DataSourcesMonitor {
             try {
                 monitorInstance.loadXML();
             } catch (Exception e) {
-                log.error("Error loading Data Source states from file " + RepoxContextUtilDefault.DATA_SOURCES_STATE_FILENAME, e);
+                log.error("Error loading Data Source states from file " + DefaultRepoxContextUtil.DATA_SOURCES_STATE_FILENAME, e);
             }
         }
         return monitorInstance;

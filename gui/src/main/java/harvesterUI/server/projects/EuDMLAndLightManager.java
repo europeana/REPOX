@@ -44,20 +44,20 @@ import javax.mail.AuthenticationFailedException;
 
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.statistics.RepoxStatisticsDefault;
-import pt.utl.ist.repox.statistics.StatisticsManagerDefault;
+import pt.utl.ist.repox.statistics.DefaultRepoxStatistics;
+import pt.utl.ist.repox.statistics.DefaultStatisticsManager;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -73,7 +73,7 @@ public class EuDMLAndLightManager extends ProjectManager {
     private int filteredDataSize = 0;
 
     public EuDMLAndLightManager() {
-        ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
     }
 
     /*
@@ -82,7 +82,7 @@ public class EuDMLAndLightManager extends ProjectManager {
 
     public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType, String username) throws ServerSideException {
         try {
-            StatisticsManagerDefault manager = (StatisticsManagerDefault) ConfigSingleton.getRepoxContextUtil().
+            DefaultStatisticsManager manager = (DefaultStatisticsManager) ConfigSingleton.getRepoxContextUtil().
                     getRepoxManager().getStatisticsManager();
             User user = UserManagementServiceImpl.getInstance().getUser(username);
             List<String> dpIds;
@@ -91,7 +91,7 @@ public class EuDMLAndLightManager extends ProjectManager {
             else
                 dpIds = null;
 
-            RepoxStatisticsDefault statistics = (RepoxStatisticsDefault)manager.generateStatistics(dpIds);
+            DefaultRepoxStatistics statistics = (DefaultRepoxStatistics)manager.generateStatistics(dpIds);
 
             NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMAN);
             String totalRecords = numberFormat.format(statistics.getRecordsTotal());
@@ -170,7 +170,7 @@ public class EuDMLAndLightManager extends ProjectManager {
 
     public void saveAdminFormInfo(AdminInfo results) throws ServerSideException{
         try{
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(RepoxContextUtilDefault.CONFIG_FILE);
+            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
             properties.setProperty("repository.dir",(String)results.get("repositoryFolder"));
             properties.setProperty("xmlConfig.dir",(String)results.get("configFilesFolder"));
             properties.setProperty("oairequests.dir",(String)results.get("oaiRequestFolder"));
@@ -206,7 +206,7 @@ public class EuDMLAndLightManager extends ProjectManager {
 
             PropertyUtil.saveProperties(oaiProperties, "oaicat.properties");
             reloadOAIProperties(results.getReloadOAIPropertiesUrl());
-            PropertyUtil.saveProperties(properties, RepoxContextUtilDefault.CONFIG_FILE);
+            PropertyUtil.saveProperties(properties, DefaultRepoxContextUtil.CONFIG_FILE);
             ConfigSingleton.getRepoxContextUtil().reloadProperties();
 //            System.out.println("Done save admin");
         }catch (Exception e){
@@ -477,7 +477,7 @@ public class EuDMLAndLightManager extends ProjectManager {
         }
 
         String recordPolicy;
-        if(dataSource.getRecordIdPolicy() instanceof IdExtracted)
+        if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
             recordPolicy = "IdExtracted";
         else
             recordPolicy = "IdGenerated";

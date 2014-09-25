@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.XmlUtil;
 
 import java.io.File;

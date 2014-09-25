@@ -15,13 +15,15 @@ import org.oclc.oai.server.crosswalk.Crosswalk;
 import org.oclc.oai.server.crosswalk.CrosswalkItem;
 import org.oclc.oai.server.crosswalk.Crosswalks;
 import org.oclc.oai.util.OAIUtil;
+
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.oai.server.catalog.DataSourceOaiCatalog;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+
 import java.util.*;
 import java.util.Map.Entry;
 

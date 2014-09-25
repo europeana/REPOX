@@ -6,13 +6,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.accessPoint.manager.AccessPointsManagerDefault;
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.dataProvider.DataManagerDefault;
+import pt.utl.ist.repox.accessPoint.manager.DefaultAccessPointsManager;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -50,15 +50,15 @@ public class HarvestFtpTest {
 
     private final int RECORD_COUNT =1849;
 
-    DataManagerDefault dataManager;
+    DefaultDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceFtp;
 
     @Before
     public void setUp() {
         try {
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
-            dataManager = (DataManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+            dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             provider = dataManager.createDataProvider(DATA_PROVIDER_ID, "pt", "DP_description");
 
@@ -96,7 +96,7 @@ public class HarvestFtpTest {
             File logFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getConfiguration().getTempDir() + "/log.txt");
 
             dataSourceFtp.ingestRecords(logFile, true);
-            AccessPointsManagerDefault accessPointsManager = (AccessPointsManagerDefault)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager();
+            DefaultAccessPointsManager accessPointsManager = (DefaultAccessPointsManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager();
             int[] recordCountLastrowPair = accessPointsManager.getRecordCountLastrowPair(dataSourceFtp, null, null, null);
             int recordCount = recordCountLastrowPair[0];
             Assert.assertEquals(RECORD_COUNT, recordCount);

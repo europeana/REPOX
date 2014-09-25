@@ -7,10 +7,10 @@ import org.jzkit.search.util.ResultSet.IRResultSet;
 import pt.utl.ist.characters.RecordCharactersConverter;
 import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.marc.Record;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.marc.RecordRepoxMarc;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.StringUtil;
 
 import java.io.*;

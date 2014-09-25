@@ -6,6 +6,7 @@ package pt.utl.ist.repox.util;
 
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.util.InvalidInputException;

@@ -35,9 +35,9 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.mindrot.jbcrypt.BCrypt;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 
@@ -513,9 +513,9 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
         try {
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(RepoxContextUtilDefault.CONFIG_FILE);
+            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
             properties.setProperty("firstTimeUser","false");
-            PropertyUtil.saveProperties(properties, RepoxContextUtilDefault.CONFIG_FILE);
+            PropertyUtil.saveProperties(properties, DefaultRepoxContextUtil.CONFIG_FILE);
 
             SAXReader reader = new SAXReader();
             String createRepoxUser = "http://repox.ist.utl.pt/repoxManagementServices/rest/createRegistration?name="+name+
@@ -565,7 +565,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public boolean isFirstTimeRepoxUsed() throws ServerSideException {
         try{
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(RepoxContextUtilDefault.CONFIG_FILE);
+            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
             boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser"));
             if(!isFirstTime){
                 trySendRegistrationFromXML();

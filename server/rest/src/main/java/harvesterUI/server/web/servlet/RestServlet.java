@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.RepoxContextUtilDefault;
-import pt.utl.ist.repox.configuration.RepoxContextUtilEuropeana;
+import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.repox.configuration.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
-import pt.utl.ist.repox.util.ConfigSingleton;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.Urn;
@@ -53,10 +53,10 @@ public class RestServlet extends HttpServlet {
         projectType = ProjectType.valueOf(properties.getProperty("project.type"));
 
         if(projectType == ProjectType.LIGHT){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilDefault());
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         } else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new RepoxContextUtilEuropeana());
+            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         }
     }
@@ -415,7 +415,7 @@ public class RestServlet extends HttpServlet {
         else {
             DataSource dataSource = repoxManager.getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
 
-            if(dataSource.getRecordIdPolicy() instanceof IdProvided
+            if(dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy
                     && !validateRecordId(restRequest, out, recordIdParameter)) {
                 RestUtils.writeInvalidRequest(restRequest.getFullRequestURI(),
                         "recordId parameter is mandatory for this operation: " + operationParameter,

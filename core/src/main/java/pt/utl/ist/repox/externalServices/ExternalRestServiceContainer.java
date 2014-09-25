@@ -2,9 +2,9 @@ package pt.utl.ist.repox.externalServices;
 
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import java.io.File;
 import java.io.IOException;

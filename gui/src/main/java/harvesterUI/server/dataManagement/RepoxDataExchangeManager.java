@@ -26,26 +26,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ServiceParameter;
-import pt.utl.ist.repox.ftp.DataSourceFtp;
-import pt.utl.ist.repox.http.DataSourceHttp;
+import pt.utl.ist.repox.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.repox.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.marc.DataSourceDirectoryImporter;
-import pt.utl.ist.repox.marc.DataSourceFolder;
+import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
+import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchema;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.oai.DataSourceOai;
-import pt.utl.ist.repox.sru.DataSourceSruRecordUpdate;
+import pt.utl.ist.repox.oai.OaiDataSource;
+import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.ScheduledTask;
-import pt.utl.ist.repox.util.ConfigSingleton;
 import pt.utl.ist.repox.z3950.DataSourceZ3950;
 import pt.utl.ist.repox.z3950.IdListHarvester;
 import pt.utl.ist.repox.z3950.IdSequenceHarvester;
@@ -60,23 +60,23 @@ import pt.utl.ist.repox.z3950.TimestampHarvester;
 public class RepoxDataExchangeManager {
 
     public static void parseDataSourceSubType(DataSourceUI dataSourceUI, DataSource dataSource) {
-        if(dataSource instanceof DataSourceOai) {
+        if(dataSource instanceof OaiDataSource) {
             dataSourceUI.setIngest("OAI-PMH " + dataSourceUI.getSourceMDFormat());
-            DataSourceOai dataSourceOai = (DataSourceOai) dataSource;
+            OaiDataSource dataSourceOai = (OaiDataSource) dataSource;
             dataSourceUI.setOaiSource(dataSourceOai.getOaiSourceURL());
             dataSourceUI.setOaiSet(dataSourceOai.getOaiSet());
         }
-        else if(dataSource instanceof DataSourceSruRecordUpdate) {
+        else if(dataSource instanceof SruRecordUpdateDataSource) {
             dataSourceUI.setIngest("SRU " + dataSourceUI.getSourceMDFormat());
-        }else if(dataSource instanceof DataSourceDirectoryImporter) {
+        }else if(dataSource instanceof DirectoryImporterDataSource) {
             dataSourceUI.setIngest("Folder " + dataSourceUI.getSourceMDFormat());
-            DataSourceDirectoryImporter dataSourceDirectoryImporter = (DataSourceDirectoryImporter) dataSource;
-            if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof DataSourceFolder) {
+            DirectoryImporterDataSource dataSourceDirectoryImporter = (DirectoryImporterDataSource) dataSource;
+            if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FolderFileRetrieveStrategy) {
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
                 dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.marc.DataSourceFolder");
             }
-            else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof DataSourceFtp) {
-                DataSourceFtp dataSourceFtp = (DataSourceFtp) dataSourceDirectoryImporter.getRetrieveStrategy();
+            else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
+                FtpFileRetrieveStrategy dataSourceFtp = (FtpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setServer(dataSourceFtp.getServer());
                 dataSourceUI.setUser(dataSourceFtp.getUser());
                 dataSourceUI.setPassword(dataSourceFtp.getPassword());
@@ -84,8 +84,8 @@ public class RepoxDataExchangeManager {
                 dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceFtp");
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
-            else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof DataSourceHttp) {
-                DataSourceHttp dataSourceHttp = (DataSourceHttp) dataSourceDirectoryImporter.getRetrieveStrategy();
+            else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof HttpFileRetrieveStrategy) {
+                HttpFileRetrieveStrategy dataSourceHttp = (HttpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setHttpURL(dataSourceHttp.getUrl());
                 dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceHttp");
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
@@ -101,8 +101,8 @@ public class RepoxDataExchangeManager {
         else if(dataSource instanceof DataSourceZ3950) {
             dataSourceUI.setIngest("Z3950 " + dataSourceUI.getSourceMDFormat());
             DataSourceZ3950 dataSourceZ3950 = (DataSourceZ3950) dataSource;
-            if(dataSourceZ3950.getRecordIdPolicy() instanceof IdExtracted) {
-                IdExtracted idExtracted = (IdExtracted) dataSource.getRecordIdPolicy();
+            if(dataSourceZ3950.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSource.getRecordIdPolicy();
                 dataSourceUI.setIdXPath(idExtracted.getIdentifierXpath());
                 Map<String,String> namespaces = idExtracted.getNamespaces();
                 Iterator iterator=namespaces.entrySet().iterator();
@@ -213,7 +213,7 @@ public class RepoxDataExchangeManager {
             String[] counts = dataSource.getNumberRecords();
             newDataSourceUI.setRecords(counts[2]);
             newDataSourceUI.setDeletedRecords(counts[1]);
-            if((dataSource instanceof DataSourceOai || dataSource instanceof DataSourceDirectoryImporter)
+            if((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
                     && dataSource.getStatusString().equals("RUNNING")) {
                 try{
                     newDataSourceUI.setTotalRecords(dataSource.getTotalRecords2Harvest());
@@ -293,9 +293,9 @@ public class RepoxDataExchangeManager {
         return results;
     }
 
-    private static void loadIdExtractedInfo(DataSourceDirectoryImporter dataSourceDirectoryImporter, DataSource dataSource, DataSourceUI dataSourceUI){
-        if(dataSourceDirectoryImporter.getRecordIdPolicy() instanceof IdExtracted) {
-            IdExtracted idExtracted = (IdExtracted) dataSource.getRecordIdPolicy();
+    private static void loadIdExtractedInfo(DirectoryImporterDataSource dataSourceDirectoryImporter, DataSource dataSource, DataSourceUI dataSourceUI){
+        if(dataSourceDirectoryImporter.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+            IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSource.getRecordIdPolicy();
             dataSourceUI.setIdXPath(idExtracted.getIdentifierXpath());
             dataSourceUI.setRecordIdPolicy("IdExtracted");
             Map<String,String> namespaces = idExtracted.getNamespaces();

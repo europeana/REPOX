@@ -7,9 +7,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 
+import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.util.ConfigSingleton;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
