@@ -28,6 +28,7 @@ public class CompareDataUtil {
     }
 
     /**
+     * Comparator for Data Providers
      */
     public static class DPComparator implements java.util.Comparator<DataProvider> {
         @Override
@@ -45,6 +46,7 @@ public class CompareDataUtil {
     }
 
     /**
+     * Comparator for Data Sources
      */
     public static class DSComparator implements java.util.Comparator<DataSourceContainer> {
         @Override

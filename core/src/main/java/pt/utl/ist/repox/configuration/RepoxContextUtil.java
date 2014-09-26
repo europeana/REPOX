@@ -10,16 +10,16 @@ package pt.utl.ist.repox.configuration;
  */
 public interface RepoxContextUtil {
     /** RepoxContextUtil CONFIG_FILE */
-    public static final String CONFIG_FILE      = "configuration.properties";
+    String CONFIG_FILE      = "configuration.properties";
     /** RepoxContextUtil TEST_CONFIG_FILE */
-    public static final String TEST_CONFIG_FILE = "Test-configuration.properties";
+    String TEST_CONFIG_FILE = "Test-configuration.properties";
 
     @SuppressWarnings("javadoc")
-    public RepoxManager getRepoxManager();
+    RepoxManager getRepoxManager();
 
     @SuppressWarnings("javadoc")
-    public RepoxManager getRepoxManagerTest();
+    RepoxManager getRepoxManagerTest();
 
     @SuppressWarnings("javadoc")
-    public void reloadProperties();
+    void reloadProperties();
 }

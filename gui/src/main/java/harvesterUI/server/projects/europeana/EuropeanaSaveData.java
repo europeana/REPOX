@@ -39,16 +39,16 @@ import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceStates;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.OaiDataSource;
+import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
+import pt.utl.ist.repox.rest.dataProvider.DefualtDataProvider;
+import pt.utl.ist.repox.rest.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
-import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
-import pt.utl.ist.rest.dataProvider.DataSourceContainerEuropeana;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -476,7 +476,7 @@ public class EuropeanaSaveData {
 
     public static SaveDataResponse saveDataProvider(boolean update, DataProviderUI dataProviderUI, int pageSize, String username) throws ServerSideException {
 
-        DataManagerEuropeana europeanaManager = (DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
+        DefaultDataManager europeanaManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
         //String dpId;
         String homepage = dataProviderUI.getHomepage();
         URL url = null;
@@ -500,7 +500,7 @@ public class EuropeanaSaveData {
         }
 
         if(update) {
-            DataProviderEuropeana dataProvider = (DataProviderEuropeana)europeanaManager.getDataProvider(dataProviderUI.getId());
+            DefualtDataProvider dataProvider = (DefualtDataProvider)europeanaManager.getDataProvider(dataProviderUI.getId());
             if(dataProvider != null) {
                 dataProvider.setCountry(dataProviderUI.getCountry());
                 dataProvider.setName(dataProviderUI.getName());
@@ -510,7 +510,7 @@ public class EuropeanaSaveData {
                 dataProvider.setHomePage(url);
 
                 try {
-                    dataProvider = (DataProviderEuropeana)europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
+                    dataProvider = (DefualtDataProvider)europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
                             dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType());
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
@@ -575,8 +575,8 @@ public class EuropeanaSaveData {
             List<String> sets = map.get("sets");
             List<String> setNames = map.get("setNames");
 
-            DataManagerEuropeana europeanaManager = (DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
-            DataProviderEuropeana dataProviderEuropeana = (DataProviderEuropeana)europeanaManager.getDataProvider(dataProviderID);
+            DefaultDataManager europeanaManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
+            DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider)europeanaManager.getDataProvider(dataProviderID);
 
             for (int i=0; i<sets.size(); i++) {
                 String setSpec = sets.get(i);
@@ -588,7 +588,7 @@ public class EuropeanaSaveData {
 
                 OaiDataSource dataSourceOai = new OaiDataSource(dataProviderEuropeana, setId, setDescription,
                         dsSchema, dsNamespace, dsMTDFormat,
-                        url, setSpec, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        url, setSpec, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                 HashMap<String, DataSourceContainer> oldDataSourceContainers = dataProviderEuropeana.getDataSourceContainers();
 
@@ -614,7 +614,7 @@ public class EuropeanaSaveData {
 
                     dataSourceOai.initAccessPoints();
 
-                    DataSourceContainerEuropeana dataSourceContainerE = new DataSourceContainerEuropeana(dataSourceOai,
+                    DefaultDataSourceContainer dataSourceContainerE = new DefaultDataSourceContainer(dataSourceOai,
                             setNameCode,setName,finalExportPath);
                     dataProviderEuropeana.getDataSourceContainers().put(dataSourceOai.getId(),dataSourceContainerE);
                 }

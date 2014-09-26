@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.dataProvider;
+package pt.utl.ist.repox.rest.dataProvider;
 
 import eu.europeana.core.util.web.EmailSender;
 import freemarker.template.TemplateException;
@@ -28,7 +28,7 @@ import java.util.Properties;
  * Time: 17:32
  * To change this template use File | Settings | File Templates.
  */
-public class DataSourceContainerEuropeana extends DataSourceContainer{
+public class DefaultDataSourceContainer extends DataSourceContainer{
     protected String nameCode;
     protected String name;
 //    protected String exportPath;
@@ -109,20 +109,21 @@ public class DataSourceContainerEuropeana extends DataSourceContainer{
     }
 
     /**
-     * DataSourceContainerEuropeana
+     * DefaultDataSourceContainer
+     * 
      * @param dataSource
      * @param nameCode
      * @param name
      * @param exportPath
      */
-    public DataSourceContainerEuropeana(DataSource dataSource, String nameCode, String name, String exportPath) {
+    public DefaultDataSourceContainer(DataSource dataSource, String nameCode, String name, String exportPath) {
         this.dataSource = dataSource;
         this.nameCode = (nameCode != null ? nameCode : "");
         this.name = (name != null ? name : "");
 //        this.exportPath = (exportPath != null ? exportPath : "");
     }
 
-    public DataSourceContainerEuropeana() {
+    public DefaultDataSourceContainer() {
     }
 
 

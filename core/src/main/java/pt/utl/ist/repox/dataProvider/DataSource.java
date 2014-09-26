@@ -54,9 +54,9 @@ import pt.utl.ist.repox.accessPoint.TimestampAccessPoint;
 import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.RepoxConfiguration;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalNoMonitorServiceThread;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
@@ -1055,10 +1055,10 @@ public abstract class DataSource {
 
             Element recordIdPolicyNode = sourceElement.addElement("recordIdPolicy");
             recordIdPolicyNode.addAttribute("type", getRecordIdPolicy().getClass().getSimpleName());
-            if (getRecordIdPolicy() instanceof IdGenerated) {
-            } else if (getRecordIdPolicy() instanceof IdProvided) {
-            } else if (getRecordIdPolicy() instanceof IdExtracted) {
-                IdExtracted idExtracted = (IdExtracted)getRecordIdPolicy();
+            if (getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy) {
+            } else if (getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
+            } else if (getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy)getRecordIdPolicy();
                 recordIdPolicyNode.addElement("idXpath").setText(idExtracted.getIdentifierXpath());
                 if (idExtracted.getNamespaces() != null && !idExtracted.getNamespaces().isEmpty()) {
                     Element namespacesElement = recordIdPolicyNode.addElement("namespaces");

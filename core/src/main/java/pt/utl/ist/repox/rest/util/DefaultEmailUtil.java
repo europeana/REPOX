@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.util;
+package pt.utl.ist.repox.rest.util;
 
 import eu.europeana.core.util.web.EmailSender;
 import freemarker.template.TemplateException;
@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 
-public class EmailUtilEuropeana implements EmailUtil{
+public class DefaultEmailUtil implements EmailUtil{
 
     public void sendEmail(String fromEmail, String[] recipientsEmail,
                           String subject, String message, File[] attachments, HashMap<String, Object> map) throws IOException, MessagingException, TemplateException {

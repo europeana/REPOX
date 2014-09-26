@@ -16,7 +16,7 @@ public interface FileExtractStrategy {
         /**
          * @param record
          */
-        public void handleRecord(RecordRepox record);
+        void handleRecord(RecordRepox record);
     }
 
     /**
@@ -25,7 +25,7 @@ public interface FileExtractStrategy {
      * 
      * @return boolean
      */
-    public abstract boolean isXmlExclusive();
+    boolean isXmlExclusive();
 
     /**
      * Returns an Iterator of records.
@@ -36,5 +36,5 @@ public interface FileExtractStrategy {
      * @param logFile 
      * @throws Exception 
      */
-    public abstract void iterateRecords(RecordHandler recordHandler, DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) throws Exception;
+    void iterateRecords(RecordHandler recordHandler, DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) throws Exception;
 }

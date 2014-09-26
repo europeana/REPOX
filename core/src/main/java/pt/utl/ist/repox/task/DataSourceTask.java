@@ -3,11 +3,11 @@ package pt.utl.ist.repox.task;
 /**
  */
 public interface DataSourceTask {
-    public String getTaskId();
+    String getTaskId();
 
-    public void setTaskId(String taskId);
+    void setTaskId(String taskId);
 
-    public String getDataSourceId();
+    String getDataSourceId();
 
-    public void setDataSourceId(String dataSourceId);
+    void setDataSourceId(String dataSourceId);
 }

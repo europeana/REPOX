@@ -33,9 +33,9 @@ import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceUtil;
 import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
@@ -68,7 +68,7 @@ import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.z3950.DataSourceZ3950;
-import pt.utl.ist.repox.z3950.HarvestMethod;
+import pt.utl.ist.repox.z3950.Harvester;
 import pt.utl.ist.repox.z3950.IdListHarvester;
 import pt.utl.ist.repox.z3950.IdSequenceHarvester;
 import pt.utl.ist.repox.z3950.Target;
@@ -284,11 +284,11 @@ public class DefaultDataManager implements DataManager {
                     Element recordIdPolicyNode = currentDataSourceElement.element("recordIdPolicy");
                     String recordIdPolicyClass = recordIdPolicyNode.attributeValue("type");
                     RecordIdPolicy recordIdPolicy = null;
-                    if (recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
-                        recordIdPolicy = new IdGenerated();
-                    } else if (recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
-                        recordIdPolicy = new IdProvided();
-                    } else if (recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
+                    if (recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdGeneratedRecordIdPolicy();
+                    } else if (recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdProvidedRecordIdPolicy();
+                    } else if (recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
                         String identifierXpath = recordIdPolicyNode.element("idXpath").getText();
                         Map<String, String> namespaces = new TreeMap<String, String>();
                         Element namespacesElement = recordIdPolicyNode.element("namespaces");
@@ -299,7 +299,7 @@ public class DefaultDataManager implements DataManager {
                             }
                         }
 
-                        recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
+                        recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
                     } else {
                         throw new RuntimeException("Invalid RecordIdPolicy of class " + recordIdPolicyClass);
                     }
@@ -332,7 +332,7 @@ public class DefaultDataManager implements DataManager {
                     if (dataSourceType.equals("DataSourceOai")) {
                         String oaiSource = currentDataSourceElement.elementText("oai-source");
                         String oaiSet = (currentDataSourceElement.element("oai-set") != null ? currentDataSourceElement.elementText("oai-set") : null);
-                        dataSource = new OaiDataSource(provider, id, description, schema, namespace, metadataFormat, oaiSource, oaiSet, new IdProvided(), metadataTransformations);
+                        dataSource = new OaiDataSource(provider, id, description, schema, namespace, metadataFormat, oaiSource, oaiSet, new IdProvidedRecordIdPolicy(), metadataTransformations);
                     } else if (dataSourceType.equals("DataSourceSruRecordUpdate")) {
                         dataSource = new SruRecordUpdateDataSource(provider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
                     } else if (dataSourceType.equals("DataSourceDirectoryImporter")) {
@@ -414,7 +414,7 @@ public class DefaultDataManager implements DataManager {
 
                         Target target = new Target(targetAddress, targetPort, targetDatabase, targetUser, targetPassword, targetCharacterEncoding, targetRecordSyntax);
 
-                        HarvestMethod harvestMethod = null;
+                        Harvester harvestMethod = null;
 
                         String harvestMethodString = currentDataSourceElement.elementText("harvestMethod");
 
@@ -1036,7 +1036,7 @@ public class DefaultDataManager implements DataManager {
                         oaiSourceURL = "http://" + oaiSourceURL;
                     }
                     if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
-                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                         newDataSource.initAccessPoints();
@@ -1085,7 +1085,7 @@ public class DefaultDataManager implements DataManager {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
                 if (dataProvider != null) {
-                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat, new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat, new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
                     newDataSource.initAccessPoints();
@@ -1151,7 +1151,7 @@ public class DefaultDataManager implements DataManager {
 
                     File newFile = IdListHarvester.getIdListFilePermanent();
 
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     if (!newFile.getParentFile().getAbsolutePath().equalsIgnoreCase(new File(filePath).getParentFile().getAbsolutePath())) {
                         FileUtils.copyFile(new File(filePath), newFile);
                         harvestMethod = new IdListHarvester(target, newFile);
@@ -1226,7 +1226,7 @@ public class DefaultDataManager implements DataManager {
                     CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     try {
                         harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                     } catch (ParseException e) {
@@ -1301,7 +1301,7 @@ public class DefaultDataManager implements DataManager {
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                     Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                    HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                    Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -1598,7 +1598,7 @@ public class DefaultDataManager implements DataManager {
             DataProvider dataProviderParent = getDataProviderParent(oldId);
             if (dataProviderParent != null) {
                 if (!(dataSource instanceof OaiDataSource)) {
-                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
 
@@ -1669,7 +1669,7 @@ public class DefaultDataManager implements DataManager {
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if (dataProviderParent != null) {
                     if (!(dataSource instanceof OaiDataSource)) {
-                        DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                        DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 
@@ -1752,7 +1752,7 @@ public class DefaultDataManager implements DataManager {
                 CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                 Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                HarvestMethod harvestMethod;
+                Harvester harvestMethod;
                 try {
                     harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                 } catch (ParseException e) {
@@ -1854,7 +1854,7 @@ public class DefaultDataManager implements DataManager {
                 } else {
                     file = ((IdListHarvester)((DataSourceZ3950)dataSource).getHarvestMethod()).getIdListFile();
                 }
-                HarvestMethod harvestMethod = new IdListHarvester(target, file);
+                Harvester harvestMethod = new IdListHarvester(target, file);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -1938,7 +1938,7 @@ public class DefaultDataManager implements DataManager {
                 Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                 Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 

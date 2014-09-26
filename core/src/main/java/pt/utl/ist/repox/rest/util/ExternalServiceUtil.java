@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.util;
+package pt.utl.ist.repox.rest.util;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 27-09-2012
  * Time: 18:43
  */
-public class ExternalServiceEuropeanaUtil {
+public class ExternalServiceUtil {
 
     public static void replaceAllExternalServices(Document document, String oaiServerUrl) {
         List<Node> aggregators = document.getRootElement().selectNodes("//repox-data/aggregator");

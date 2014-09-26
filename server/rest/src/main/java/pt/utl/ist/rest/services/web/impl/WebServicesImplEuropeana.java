@@ -25,6 +25,7 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.TransformationsFileManager;
 import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.reports.LogUtil;
+import pt.utl.ist.repox.rest.dataProvider.*;
 import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.statistics.RecordCount;
 import pt.utl.ist.repox.statistics.RepoxStatistics;
@@ -35,7 +36,6 @@ import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.rest.dataProvider.*;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.util.date.DateUtil;
@@ -72,10 +72,10 @@ public class WebServicesImplEuropeana implements WebServices {
 
 
     public void writeAggregators(OutputStream out) throws DocumentException, IOException {
-        List<AggregatorEuropeana> aggregatorsEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregatorsEuropeana();
+        List<Aggregator> aggregatorsEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregators();
 
         Element aggregatorsElement = DocumentHelper.createElement("aggregators");
-        for (AggregatorEuropeana currentAggregator : aggregatorsEuropeana) {
+        for (Aggregator currentAggregator : aggregatorsEuropeana) {
             Element currentAggregatorElement = currentAggregator.createElement(false);
             aggregatorsElement.add(currentAggregatorElement);
         }
@@ -85,7 +85,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void createAggregator(OutputStream out, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
+            Aggregator aggregatorEuropeana = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
             RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
         } catch (InvalidArgumentsException e) {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
@@ -98,7 +98,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void updateAggregator(OutputStream out, String id, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
+            Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
             RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Aggregator: id \"" + id + "\" was not found.");
@@ -112,7 +112,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void deleteAggregator(OutputStream out, String aggregatorId) throws DocumentException, IOException {
         try {
-            ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).deleteAggregator(aggregatorId);
+            ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).deleteAggregator(aggregatorId);
             Element currentAggregatorElement = DocumentHelper.createElement("success");
             currentAggregatorElement.setText("Aggregator with id \"" + aggregatorId + "\" was successfully deleted.");
             RestUtils.writeRestResponse(out, currentAggregatorElement);
@@ -123,7 +123,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void getAggregator(OutputStream out, String aggregatorId) throws DocumentException, IOException {
         try {
-            AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+            Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
             if(aggregatorEuropeana != null){
                 Element aggregatorsElement = aggregatorEuropeana.createElement(false);
                 RestUtils.writeRestResponse(out, aggregatorsElement);
@@ -153,7 +153,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
 
     public void writeDataProviders(OutputStream out, String aggregatorId) throws DocumentException, IOException {
-        AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
 
         Element dataProvidersElement = DocumentHelper.createElement("dataProviders");
 
@@ -173,7 +173,7 @@ public class WebServicesImplEuropeana implements WebServices {
     public void createDataProvider(OutputStream out, String aggregatorId, String name, String country, String description,
                                    String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
                     name, country, description, nameCode, url, dataSetType);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
         } catch (ObjectNotFoundException e) {
@@ -204,7 +204,7 @@ public class WebServicesImplEuropeana implements WebServices {
         }
         else{
             try {
-                dataProvider = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
+                dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
                         dataProviderId, name, country, description, nameCode, url, dataSetType);
                 RestUtils.writeRestResponse(out, dataProvider.createElement(false));
             } catch (ObjectNotFoundException e) {
@@ -232,7 +232,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void updateDataProvider(OutputStream out, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(id,
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(id,
                     name, country, description, nameCode, url, dataSetType);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
         } catch (ObjectNotFoundException e) {
@@ -274,7 +274,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
     public void moveDataProvider(OutputStream out, String dataProviderId, String newAggregatorId) throws DocumentException, IOException {
         try {
-            ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).moveDataProvider(newAggregatorId, dataProviderId);
+            ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).moveDataProvider(newAggregatorId, dataProviderId);
             Element currentDataProviderElement = DocumentHelper.createElement("success");
             currentDataProviderElement.setText("Data Provider with id \"" + dataProviderId + "\" was successfully moved to Aggregator " + newAggregatorId + ".");
             RestUtils.writeRestResponse(out, currentDataProviderElement);
@@ -348,7 +348,7 @@ public class WebServicesImplEuropeana implements WebServices {
             if(exportPath.isEmpty())
                 exportPath = ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
             
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceOai(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceOai(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -379,7 +379,7 @@ public class WebServicesImplEuropeana implements WebServices {
             if(exportPath.isEmpty())
                 exportPath = ((EuropeanaRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceSruRecordUpdate(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceSruRecordUpdate(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
@@ -417,7 +417,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950Timestamp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950Timestamp(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
@@ -472,7 +472,7 @@ public class WebServicesImplEuropeana implements WebServices {
                 xslFile.close();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, temporaryFile.getAbsolutePath(), recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
@@ -514,7 +514,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdSequence(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdSequence(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
@@ -557,7 +557,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFtp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFtp(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
                     ftpPath, new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
@@ -595,7 +595,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceHttp(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceHttp(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces,recordXPath, url,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
@@ -634,7 +634,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFolder(dataProviderId,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFolder(dataProviderId,
                     id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
                     new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
@@ -665,14 +665,14 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
             
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
                 
                 if(!(dataSourceOld instanceof SruRecordUpdateDataSource)){
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
                     
@@ -681,7 +681,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
                     
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
                 
@@ -707,7 +707,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
             
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceSruRecordUpdate(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceSruRecordUpdate(id, id,
                     description, nameCode, name, exportPath, schema, namespace, metadataFormat,
                     transformations, externalServices, marcFormat,
                     false);
@@ -730,14 +730,14 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
 
                 if(!(dataSourceOld instanceof OaiDataSource)){
                     DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                            oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
 
@@ -746,7 +746,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
@@ -776,7 +776,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceOai(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceOai(id, id,
                     description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
                     transformations, externalServices, marcFormat,
                     false);
@@ -813,7 +813,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
@@ -823,7 +823,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     try{
                         harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                     }
@@ -843,7 +843,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
@@ -879,29 +879,29 @@ public class WebServicesImplEuropeana implements WebServices {
                     charset = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -914,9 +914,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -952,7 +952,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
                     description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -1009,7 +1009,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
@@ -1035,7 +1035,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     else{
                         file = ((IdListHarvester)((DataSourceZ3950) dataSourceOld).getHarvestMethod()).getIdListFile();
                     }
-                    HarvestMethod harvestMethod = new IdListHarvester(target, file);
+                    Harvester harvestMethod = new IdListHarvester(target, file);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -1049,7 +1049,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
@@ -1083,29 +1083,29 @@ public class WebServicesImplEuropeana implements WebServices {
                     filePath = (((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getIdListFile().getAbsolutePath());
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1118,9 +1118,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1156,7 +1156,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdList(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdList(id, id,
                     description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, filePath, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -1194,7 +1194,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
@@ -1205,7 +1205,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                     Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                    HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                    Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -1219,7 +1219,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
@@ -1253,29 +1253,29 @@ public class WebServicesImplEuropeana implements WebServices {
                     maximumIdString = String.valueOf(((IdSequenceHarvester) ((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getMaximumId());
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1288,9 +1288,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1326,7 +1326,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdSequence(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdSequence(id, id,
                     description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
@@ -1360,7 +1360,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
@@ -1401,7 +1401,7 @@ public class WebServicesImplEuropeana implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1433,29 +1433,29 @@ public class WebServicesImplEuropeana implements WebServices {
                     charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1468,9 +1468,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1525,7 +1525,7 @@ public class WebServicesImplEuropeana implements WebServices {
             if(password == null)
                 password = "";
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFtp(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFtp(id, id,
                     description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
                     ftpPath, transformations, externalServices, marcFormat, false);
@@ -1561,7 +1561,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
@@ -1594,7 +1594,7 @@ public class WebServicesImplEuropeana implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1626,29 +1626,29 @@ public class WebServicesImplEuropeana implements WebServices {
                     charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1661,9 +1661,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1706,7 +1706,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceHttp(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceHttp(id, id,
                     description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, url,
                     transformations, externalServices, marcFormat, false);
@@ -1741,7 +1741,7 @@ public class WebServicesImplEuropeana implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DataSourceContainerEuropeana dataSourceContainerOld = (DataSourceContainerEuropeana)(((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -1774,7 +1774,7 @@ public class WebServicesImplEuropeana implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DataSourceContainerEuropeana(newDataSource,nameCode,name,exportPath));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
@@ -1808,29 +1808,29 @@ public class WebServicesImplEuropeana implements WebServices {
                 //
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1843,9 +1843,9 @@ public class WebServicesImplEuropeana implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1888,7 +1888,7 @@ public class WebServicesImplEuropeana implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFolder(id, id,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFolder(id, id,
                     description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
                     transformations, externalServices, marcFormat, false);
@@ -2219,7 +2219,7 @@ public class WebServicesImplEuropeana implements WebServices {
 
 
     public void getRecord(OutputStream out, Urn recordUrn) throws IOException, DocumentException, SQLException {
-        Node detachedRecordNode = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getRecord(recordUrn);
+        Node detachedRecordNode = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getRecord(recordUrn);
 
         Element recordResultElement = DocumentHelper.createElement("recordResult");
         recordResultElement.addAttribute("urn", recordUrn.toString());
@@ -2228,7 +2228,7 @@ public class WebServicesImplEuropeana implements WebServices {
     }
 
     public void saveRecord(OutputStream out, String recordId, String dataSourceId, String recordString) throws IOException, DocumentException {
-        MessageType returnMessage = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).saveRecord(recordId, dataSourceId, recordString);
+        MessageType returnMessage = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).saveRecord(recordId, dataSourceId, recordString);
         if(returnMessage == MessageType.OK){
             Element successElement = DocumentHelper.createElement("success");
             successElement.setText("Record with id " + recordId + " saved successfully");

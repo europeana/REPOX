@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.z3950.test;
+package pt.utl.ist.repox.z3950;
 
 import org.dom4j.DocumentException;
 import org.jzkit.search.provider.iface.IRQuery;
@@ -18,7 +18,7 @@ import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.util.date.DateUtil;
@@ -74,7 +74,7 @@ public class Test {
      * @param harvestType
      * @return HarvestMethod depending of harvestType
      */
-    public HarvestMethod getHarvestMethod(HarvestType harvestType) {
+    public Harvester getHarvestMethod(HarvestType harvestType) {
         switch (harvestType) {
         case timestamp:
             return new TimestampHarvester(target, earliestTimestamp);
@@ -100,12 +100,12 @@ public class Test {
      * @throws ParseException
      * @throws AlreadyExistsException
      */
-    public DataSourceZ3950 createDummyDataSource(HarvestMethod harvestMethod) throws IOException, DocumentException, SQLException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException, ParseException, AlreadyExistsException {
+    public DataSourceZ3950 createDummyDataSource(Harvester harvestMethod) throws IOException, DocumentException, SQLException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException, ParseException, AlreadyExistsException {
 
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
         DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers);
-        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGenerated(), null);
+        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGeneratedRecordIdPolicy(), null);
 
         dataSourceContainers.put(dataSourceZ3950.getId(), new DefaultDataSourceContainer(dataSourceZ3950));
 

@@ -272,7 +272,7 @@ public class ResponseTransformer {
 
         File logFile = new File("c:\\log.txt");
 
-        Harvester harvester = new Harvester(sourceUrl, sourceSet, fromDate, untilDate, "oai_dc", logFile, -1);
+        OaiHarvester harvester = new OaiHarvester(sourceUrl, sourceSet, fromDate, untilDate, "oai_dc", logFile, -1);
 
         harvester.run();
 

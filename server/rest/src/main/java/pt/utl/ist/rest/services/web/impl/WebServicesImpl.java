@@ -35,9 +35,9 @@ import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceUtil;
 import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.repox.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
@@ -68,7 +68,7 @@ import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.z3950.DataSourceZ3950;
-import pt.utl.ist.repox.z3950.HarvestMethod;
+import pt.utl.ist.repox.z3950.Harvester;
 import pt.utl.ist.repox.z3950.IdListHarvester;
 import pt.utl.ist.repox.z3950.IdSequenceHarvester;
 import pt.utl.ist.repox.z3950.Target;
@@ -453,7 +453,7 @@ public class WebServicesImpl implements WebServices {
                 
                 if(!(dataSourceOld instanceof SruRecordUpdateDataSource)){
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
                     
@@ -511,7 +511,7 @@ public class WebServicesImpl implements WebServices {
 
                 if(!(dataSourceOld instanceof OaiDataSource)){
                     DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                            oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSourceOld.getAccessPoints());
                     newDataSource.setStatus(dataSourceOld.getStatus());
 
@@ -579,7 +579,7 @@ public class WebServicesImpl implements WebServices {
                     CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     try{
                         harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                     }
@@ -630,29 +630,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -665,9 +665,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -775,7 +775,7 @@ public class WebServicesImpl implements WebServices {
                     else{
                         file = ((IdListHarvester)((DataSourceZ3950) dataSourceOld).getHarvestMethod()).getIdListFile();
                     }
-                    HarvestMethod harvestMethod = new IdListHarvester(target, file);
+                    Harvester harvestMethod = new IdListHarvester(target, file);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -818,29 +818,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -853,9 +853,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -928,7 +928,7 @@ public class WebServicesImpl implements WebServices {
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                     Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                    HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                    Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -971,29 +971,29 @@ public class WebServicesImpl implements WebServices {
 
                 // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1006,9 +1006,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1136,29 +1136,29 @@ public class WebServicesImpl implements WebServices {
                     charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1171,9 +1171,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1315,29 +1315,29 @@ public class WebServicesImpl implements WebServices {
                     charset = ((DirectoryImporterDataSource)dataSourceOld).getCharacterEncoding().toString();
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1350,9 +1350,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {
@@ -1483,29 +1483,29 @@ public class WebServicesImpl implements WebServices {
                 //
 
                 if(recordIdPolicyClass == null){
-                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtracted)
-                        recordIdPolicyClass = IdExtracted.class.getSimpleName();
-                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGenerated)
-                        recordIdPolicyClass = IdGenerated.class.getSimpleName();
+                    if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+                        recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
+                    else if(dataSourceOld.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy)
+                        recordIdPolicyClass = IdGeneratedRecordIdPolicy.class.getSimpleName();
                 }
 
-                if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())){
-                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())){
+                    if(idXpath == null && dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         idXpath = idExtracted.getIdentifierXpath();
                     }
                     if(idXpath == null)
                         throw new InvalidArgumentsException("idXpath is missing");
 
                     if(namespacePrefix == null && namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
                         namespaces = idExtracted.getNamespaces();
                     }
                     else if(namespacePrefix == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespaceUri
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String prefix : idExtracted.getNamespaces().keySet()) {
@@ -1518,9 +1518,9 @@ public class WebServicesImpl implements WebServices {
                             throw new InvalidArgumentsException("namespacePrefix is missing");
                     }
                     else if(namespaceUri == null &&
-                            dataSourceOld.getRecordIdPolicy() instanceof IdExtracted) {
+                            dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                         // update to new namespacePrefix
-                        IdExtracted idExtracted = (IdExtracted) dataSourceOld.getRecordIdPolicy();
+                        IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSourceOld.getRecordIdPolicy();
 
                         if(idExtracted.getNamespaces() != null && idExtracted.getNamespaces().size() > 0) {
                             for(String uri : idExtracted.getNamespaces().values()) {

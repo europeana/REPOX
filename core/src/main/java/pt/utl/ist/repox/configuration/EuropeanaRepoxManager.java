@@ -14,13 +14,13 @@ import pt.utl.ist.repox.dataProvider.dataSource.TagsManager;
 import pt.utl.ist.repox.externalServices.ExternalRestServicesManager;
 import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
+import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
+import pt.utl.ist.repox.rest.statistics.DefaultStatisticsManager;
+import pt.utl.ist.repox.rest.util.DefaultEmailUtil;
 import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
-import pt.utl.ist.rest.statistics.StatisticsManagerEuropeana;
-import pt.utl.ist.rest.util.EmailUtilEuropeana;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 /**
@@ -36,7 +36,7 @@ public class EuropeanaRepoxManager implements RepoxManager {
 
     private EuropeanaRepoxConfiguration   configuration;
     private AccessPointsManager           accessPointsManager;
-    private DataManagerEuropeana          dataManager;
+    private DefaultDataManager          dataManager;
     private StatisticsManager             statisticsManager;
     private RecordCountManager            recordCountManager;
     private TaskManager                   taskManager;
@@ -45,7 +45,7 @@ public class EuropeanaRepoxManager implements RepoxManager {
     private MetadataSchemaManager         metadataSchemaManager;
     private TagsManager                   tagsManager;
     private Thread                        taskManagerThread;
-    private EmailUtilEuropeana            emailClient;
+    private DefaultEmailUtil            emailClient;
 
     public EuropeanaRepoxConfiguration getConfiguration() {
         return configuration;
@@ -55,7 +55,7 @@ public class EuropeanaRepoxManager implements RepoxManager {
         return accessPointsManager;
     }
 
-    public DataManagerEuropeana getDataManager() {
+    public DefaultDataManager getDataManager() {
         return dataManager;
     }
 
@@ -91,11 +91,11 @@ public class EuropeanaRepoxManager implements RepoxManager {
         return taskManagerThread;
     }
 
-    public EmailUtilEuropeana getEmailClient() {
+    public DefaultEmailUtil getEmailClient() {
         return emailClient;
     }
 
-    public void setEmailClient(EmailUtilEuropeana emailClient) {
+    public void setEmailClient(DefaultEmailUtil emailClient) {
         this.emailClient = emailClient;
     }
 
@@ -114,7 +114,7 @@ public class EuropeanaRepoxManager implements RepoxManager {
         }
 
         File statisticsFile = new File(configuration.getXmlConfigPath(), statisticsFilename);
-        this.statisticsManager = new StatisticsManagerEuropeana(statisticsFile);
+        this.statisticsManager = new DefaultStatisticsManager(statisticsFile);
 
         File countsFile = new File(configuration.getXmlConfigPath(), recordCountsFilename);
         this.recordCountManager = new RecordCountManager(countsFile);
@@ -137,14 +137,14 @@ public class EuropeanaRepoxManager implements RepoxManager {
 
         File oldTasksFile = new File(configuration.getXmlConfigPath(), oldTasksFileName);
         File defaultExportDir = new File(configuration.getExportDefaultFolder());
-        this.dataManager = new DataManagerEuropeana(dataProvidersFile, this.metadataTransformationManager, this.metadataSchemaManager, repositoryPath, oldTasksFile, defaultExportDir, configuration);
+        this.dataManager = new DefaultDataManager(dataProvidersFile, this.metadataTransformationManager, this.metadataSchemaManager, repositoryPath, oldTasksFile, defaultExportDir, configuration);
 
         EuropeanaRepoxManager.baseUrn = configuration.getBaseUrn();
 
         this.accessPointsManager = AccessPointManagerFactory.getInstance(configuration);
         accessPointsManager.initialize(dataManager.loadDataSourceContainers());
 
-        this.emailClient = new EmailUtilEuropeana();
+        this.emailClient = new DefaultEmailUtil();
 
         File scheduledTasksFile = new File(configuration.getXmlConfigPath(), schedulerFilename);
         File ongoingTasksFile = new File(configuration.getXmlConfigPath(), ongoingTasksFilename);

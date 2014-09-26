@@ -1,11 +1,11 @@
-package pt.utl.ist.rest.statistics;
+package pt.utl.ist.repox.rest.statistics;
 
 import java.util.Map;
 
 import pt.utl.ist.repox.statistics.MetadataFormatStatistics;
 import pt.utl.ist.repox.statistics.RepoxStatistics;
 
-public class RepoxStatisticsEuropeana extends RepoxStatistics {
+public class DefaultRepoxStatistics extends RepoxStatistics {
 
     private int aggregators;
 
@@ -17,7 +17,7 @@ public class RepoxStatisticsEuropeana extends RepoxStatistics {
         this.aggregators = aggregators;
     }
 
-    public RepoxStatisticsEuropeana(int dataSourcesIdExtracted, int dataSourcesIdGenerated, int dataSourcesIdProvided,
+    public DefaultRepoxStatistics(int dataSourcesIdExtracted, int dataSourcesIdGenerated, int dataSourcesIdProvided,
                                     int aggregators, int dataProviders, int dataSourcesOai, int dataSourcesZ3950, int dataSourcesDirectoryImporter,
                                     Map<String, MetadataFormatStatistics> dataSourcesMetadataFormats, float recordsAvgDataSource, float recordsAvgDataProvider,
                                     Map<String, Integer> countriesRecords, int recordsTotal) {

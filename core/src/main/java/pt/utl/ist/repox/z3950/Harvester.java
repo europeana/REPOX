@@ -13,7 +13,7 @@ import java.util.Iterator;
  * @see IdListHarvester
  * @see IdSequenceHarvester
  */
-public interface HarvestMethod {
+public interface Harvester {
 
     /**
      * Startup processing and gathers required resources.

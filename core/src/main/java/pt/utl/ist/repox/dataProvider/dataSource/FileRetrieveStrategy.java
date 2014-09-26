@@ -9,5 +9,5 @@ public interface FileRetrieveStrategy {
      * @param dataSourceId 
      * @return path of files
      */
-    public abstract boolean retrieveFiles(String dataSourceId);
+    boolean retrieveFiles(String dataSourceId);
 }

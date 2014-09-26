@@ -24,9 +24,9 @@ import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.rest.dataProvider.AggregatorEuropeana;
-import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
-import pt.utl.ist.rest.dataProvider.DataProviderEuropeana;
+import pt.utl.ist.repox.rest.dataProvider.Aggregator;
+import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
+import pt.utl.ist.repox.rest.dataProvider.DefualtDataProvider;
 
 import com.extjs.gxt.ui.client.util.DateWrapper;
 
@@ -99,7 +99,7 @@ public class FilterManagementUtil {
             deleteDataProviderFromList(dataProvider, dataToRemove);
 
         if(RepoxServiceImpl.getProjectManager() instanceof EuropeanaManager){
-            DataProviderEuropeana dataProviderEuropeana = (DataProviderEuropeana) dataProvider;
+            DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider) dataProvider;
             result = isSameDPType(dataProviderEuropeana.getDataSetType().name(), filterQuery);
             if(result != null && !result)
                 deleteDataProviderFromList(dataProvider, dataToRemove);
@@ -300,7 +300,7 @@ public class FilterManagementUtil {
             DataProvider dataProvider = RepoxServiceImpl.getRepoxManager().getDataManager().getDataProviderParent(currentDataSource.getId());
 
             if(RepoxServiceImpl.getProjectManager() instanceof EuropeanaManager){
-                AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana) RepoxServiceImpl.getRepoxManager().
+                Aggregator aggregatorEuropeana = ((DefaultDataManager) RepoxServiceImpl.getRepoxManager().
                         getDataManager()).getAggregatorParent(dataProvider.getId());
 
                 addDataObjectToList(dataToRemove,aggregatorEuropeana);
@@ -384,7 +384,7 @@ public class FilterManagementUtil {
         Iterator<Object> iterator = filteredData.iterator();
         while (iterator.hasNext()){
             Object model = iterator.next();
-            if((model instanceof DataProvider || model instanceof AggregatorEuropeana) && noDPFilters){
+            if((model instanceof DataProvider || model instanceof Aggregator) && noDPFilters){
                 iterator.remove();
             }
         }
@@ -408,7 +408,7 @@ public class FilterManagementUtil {
 
     protected void deleteDataProviderAggregator(DataProvider dataProvider, List<Object> dataToRemove){
         try {
-            AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana) RepoxServiceImpl.getRepoxManager().
+            Aggregator aggregatorEuropeana = ((DefaultDataManager) RepoxServiceImpl.getRepoxManager().
                     getDataManager()).getAggregatorParent(dataProvider.getId());
             dataToRemove.add(aggregatorEuropeana);
         } catch (ServerSideException e) {

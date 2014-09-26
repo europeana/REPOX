@@ -20,5 +20,5 @@ public interface RecordIdPolicy {
      * @return RecordRepox
      * @throws Exception
      */
-    public abstract RecordRepox createRecordRepox(Element recordElement, String recordId, boolean forceId, boolean isDeleted) throws Exception;
+    RecordRepox createRecordRepox(Element recordElement, String recordId, boolean forceId, boolean isDeleted) throws Exception;
 }

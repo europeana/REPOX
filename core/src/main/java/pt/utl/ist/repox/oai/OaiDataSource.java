@@ -135,8 +135,8 @@ public class OaiDataSource extends DataSource {
 
         Task.Status ingestStatus = Task.Status.OK;
 
-        Harvester harvester = new Harvester(oaiSourceURL, oaiSet, null, null, metadataFormat, logFile, maxRecord4Sample);
-        String outputDirPath = Harvester.getOutputDirPath(oaiSourceURL, oaiSet);
+        OaiHarvester harvester = new OaiHarvester(oaiSourceURL, oaiSet, null, null, metadataFormat, logFile, maxRecord4Sample);
+        String outputDirPath = OaiHarvester.getOutputDirPath(oaiSourceURL, oaiSet);
         File ingestResumptionFile = new File(outputDirPath, "ingestResumption.txt");
 
         Date startIngestTime = new Date();
@@ -346,7 +346,7 @@ public class OaiDataSource extends DataSource {
     public void cleanUp() throws IOException, DocumentException {
         super.cleanUp();
 
-        String outputDirPath = Harvester.getOutputDirPath(oaiSourceURL, oaiSet);
+        String outputDirPath = OaiHarvester.getOutputDirPath(oaiSourceURL, oaiSet);
         File outputDir = new File(outputDirPath);
 
         if (outputDir.exists()) {

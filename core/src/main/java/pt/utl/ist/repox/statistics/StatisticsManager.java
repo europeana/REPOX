@@ -17,12 +17,12 @@ public interface StatisticsManager {
      * @throws DocumentException
      * @throws SQLException
      */
-    public RepoxStatistics generateStatistics(List<String> dataProviderIds) throws IOException, DocumentException, SQLException;
+    RepoxStatistics generateStatistics(List<String> dataProviderIds) throws IOException, DocumentException, SQLException;
 
     /**
      * @param repoxStatistics
      * @return Document
      * @throws IOException
      */
-    public Document getStatisticsReport(RepoxStatistics repoxStatistics) throws IOException;
+    Document getStatisticsReport(RepoxStatistics repoxStatistics) throws IOException;
 }

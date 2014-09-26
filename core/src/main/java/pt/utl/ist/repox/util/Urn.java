@@ -1,7 +1,3 @@
-/*
- * Created on 15/Mar/2006
- *
- */
 package pt.utl.ist.repox.util;
 
 import org.dom4j.DocumentException;

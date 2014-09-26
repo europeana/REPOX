@@ -33,6 +33,7 @@ public class TransformationResultLogger {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param dataSetId
      * @param transformationId
      */
@@ -91,6 +92,8 @@ public class TransformationResultLogger {
     }
 
     /**
+     * Encode spaces to underscores
+     * 
      * @param transformationId
      * @return encoded String
      */

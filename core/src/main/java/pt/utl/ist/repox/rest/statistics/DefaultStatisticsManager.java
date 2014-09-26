@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.statistics;
+package pt.utl.ist.repox.rest.statistics;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -10,17 +10,17 @@ import org.dom4j.Element;
 import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
 import pt.utl.ist.repox.oai.OaiDataSource;
+import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.statistics.MetadataFormatStatistics;
 import pt.utl.ist.repox.statistics.RepoxStatistics;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.z3950.DataSourceZ3950;
-import pt.utl.ist.rest.dataProvider.DataManagerEuropeana;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class StatisticsManagerEuropeana implements StatisticsManager {
-    private static final Logger log = Logger.getLogger(StatisticsManagerEuropeana.class);
+public class DefaultStatisticsManager implements StatisticsManager {
+    private static final Logger log = Logger.getLogger(DefaultStatisticsManager.class);
 
     private File configurationFile;
 
@@ -43,7 +43,7 @@ public class StatisticsManagerEuropeana implements StatisticsManager {
         this.configurationFile = configurationFile;
     }
 
-    public StatisticsManagerEuropeana(File configurationFile) {
+    public DefaultStatisticsManager(File configurationFile) {
         super();
         this.configurationFile = configurationFile;
     }
@@ -82,13 +82,13 @@ public class StatisticsManagerEuropeana implements StatisticsManager {
                     dataSourcesDirectoryImporter++;
                 }
 
-                if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvided) {
+                if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
                     dataSourcesIdProvided++;
                 }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtracted) {
+                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                     dataSourcesIdExtracted++;
                 }
-                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGenerated) {
+                else if(dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy) {
                     dataSourcesIdGenerated++;
                 }
                 else {
@@ -132,27 +132,27 @@ public class StatisticsManagerEuropeana implements StatisticsManager {
         float recordsAvgDataSource = (dataSourcesTotal == 0 ? 0 : (float) recordsTotal / (float) dataSourcesTotal);
         float recordsAvgDataProvider = (allDataProviders.size() == 0 ? 0 : (float) recordsTotal / (float) allDataProviders.size());
 
-        return new RepoxStatisticsEuropeana(dataSourcesIdExtracted, dataSourcesIdGenerated, dataSourcesIdProvided,
-                ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregatorsEuropeana().size(),
+        return new DefaultRepoxStatistics(dataSourcesIdExtracted, dataSourcesIdGenerated, dataSourcesIdProvided,
+                ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregators().size(),
                 dataProviders, dataSourcesOai, dataSourcesZ3950, dataSourcesDirectoryImporter, dataSourcesMetadataFormats, recordsAvgDataSource,
                 recordsAvgDataProvider, countriesRecords, recordsTotal);
     }
 
     public synchronized Document getStatisticsReport(RepoxStatistics repoxStatistics) throws IOException {
-        RepoxStatisticsEuropeana repoxStatisticsEuropeana = (RepoxStatisticsEuropeana)repoxStatistics;
+        DefaultRepoxStatistics dRepoxStatistics = (DefaultRepoxStatistics)repoxStatistics;
         Document document = DocumentHelper.createDocument();
 
         Element rootNode = document.addElement("repox-statistics");
-        rootNode.addAttribute("generationDate", DateFormatUtils.format(repoxStatisticsEuropeana.getGenerationDate(), TimeUtil.LONG_DATE_FORMAT_TIMEZONE));
+        rootNode.addAttribute("generationDate", DateFormatUtils.format(dRepoxStatistics.getGenerationDate(), TimeUtil.LONG_DATE_FORMAT_TIMEZONE));
 
-        rootNode.addElement("dataSourcesIdExtracted").setText(String.valueOf(repoxStatisticsEuropeana.getDataSourcesIdExtracted()));
-        rootNode.addElement("dataSourcesIdGenerated").setText(String.valueOf(repoxStatisticsEuropeana.getDataSourcesIdGenerated()));
-        rootNode.addElement("dataSourcesIdProvided").setText(String.valueOf(repoxStatisticsEuropeana.getDataSourcesIdProvided()));
-        rootNode.addElement("aggregators").setText(String.valueOf(repoxStatisticsEuropeana.getAggregators()));
-        rootNode.addElement("dataProviders").setText(String.valueOf(repoxStatisticsEuropeana.getDataProviders()));
-        rootNode.addElement("dataSourcesOai").setText(String.valueOf(repoxStatisticsEuropeana.getDataSourcesOai()));
+        rootNode.addElement("dataSourcesIdExtracted").setText(String.valueOf(dRepoxStatistics.getDataSourcesIdExtracted()));
+        rootNode.addElement("dataSourcesIdGenerated").setText(String.valueOf(dRepoxStatistics.getDataSourcesIdGenerated()));
+        rootNode.addElement("dataSourcesIdProvided").setText(String.valueOf(dRepoxStatistics.getDataSourcesIdProvided()));
+        rootNode.addElement("aggregators").setText(String.valueOf(dRepoxStatistics.getAggregators()));
+        rootNode.addElement("dataProviders").setText(String.valueOf(dRepoxStatistics.getDataProviders()));
+        rootNode.addElement("dataSourcesOai").setText(String.valueOf(dRepoxStatistics.getDataSourcesOai()));
         rootNode.addElement("dataSourcesZ3950").setText(String.valueOf(repoxStatistics.getDataSourcesZ3950()));
-        rootNode.addElement("dataSourcesDirectoryImporter").setText(String.valueOf(repoxStatisticsEuropeana.getDataSourcesDirectoryImporter()));
+        rootNode.addElement("dataSourcesDirectoryImporter").setText(String.valueOf(dRepoxStatistics.getDataSourcesDirectoryImporter()));
         if(repoxStatistics.getDataSourcesMetadataFormats() != null && !repoxStatistics.getDataSourcesMetadataFormats().isEmpty()) {
             Element dataSourcesMetadataFormatsElement = rootNode.addElement("dataSourcesMetadataFormats");
             for (Entry<String, MetadataFormatStatistics> currentFormat : repoxStatistics.getDataSourcesMetadataFormats().entrySet()) {
@@ -163,17 +163,17 @@ public class StatisticsManagerEuropeana implements StatisticsManager {
             }
         }
 
-        rootNode.addElement("recordsAvgDataSource").setText(String.valueOf(repoxStatisticsEuropeana.getRecordsAvgDataSource()));
-        rootNode.addElement("recordsAvgDataProvider").setText(String.valueOf(repoxStatisticsEuropeana.getRecordsAvgDataProvider()));
+        rootNode.addElement("recordsAvgDataSource").setText(String.valueOf(dRepoxStatistics.getRecordsAvgDataSource()));
+        rootNode.addElement("recordsAvgDataProvider").setText(String.valueOf(dRepoxStatistics.getRecordsAvgDataProvider()));
         Element countriesRecordsElement = rootNode.addElement("countriesRecords");
-        if(repoxStatisticsEuropeana.getCountriesRecords() != null && !repoxStatisticsEuropeana.getCountriesRecords().isEmpty()) {
-            for (Entry<String, Integer> currentCountry : repoxStatisticsEuropeana.getCountriesRecords().entrySet()) {
+        if(dRepoxStatistics.getCountriesRecords() != null && !dRepoxStatistics.getCountriesRecords().isEmpty()) {
+            for (Entry<String, Integer> currentCountry : dRepoxStatistics.getCountriesRecords().entrySet()) {
                 Element currentCR = countriesRecordsElement.addElement("countryRecords");
                 currentCR.addAttribute("country", currentCountry.getKey());
                 currentCR.addElement("records").setText(currentCountry.getValue().toString());
             }
         }
-        rootNode.addElement("recordsTotal").setText(String.valueOf(repoxStatisticsEuropeana.getRecordsTotal()));
+        rootNode.addElement("recordsTotal").setText(String.valueOf(dRepoxStatistics.getRecordsTotal()));
 
         return document;
     }

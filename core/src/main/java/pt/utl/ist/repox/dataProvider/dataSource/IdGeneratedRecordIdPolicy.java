@@ -9,13 +9,13 @@ import java.util.UUID;
 
 /**
  */
-public class IdGenerated implements RecordIdPolicy {
-    private static final Logger log = Logger.getLogger(IdGenerated.class);
+public class IdGeneratedRecordIdPolicy implements RecordIdPolicy {
+    private static final Logger log = Logger.getLogger(IdGeneratedRecordIdPolicy.class);
 
     /**
      * Creates a new instance of this class.
      */
-    public IdGenerated() {
+    public IdGeneratedRecordIdPolicy() {
         super();
     }
 

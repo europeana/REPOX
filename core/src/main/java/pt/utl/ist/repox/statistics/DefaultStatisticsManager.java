@@ -10,9 +10,9 @@ import org.dom4j.Element;
 import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
 import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.TimeUtil;
@@ -84,11 +84,11 @@ public class DefaultStatisticsManager implements StatisticsManager {
                     dataSourcesDirectoryImporter++;
                 }
 
-                if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvided) {
+                if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
                     dataSourcesIdProvided++;
-                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtracted) {
+                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
                     dataSourcesIdExtracted++;
-                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGenerated) {
+                } else if (dataSourceContainer.getDataSource().getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy) {
                     dataSourcesIdGenerated++;
                 } else {
                     throw new RuntimeException("DataSource of unsupported class:" + dataSourceContainer.getDataSource().getClass().getName());

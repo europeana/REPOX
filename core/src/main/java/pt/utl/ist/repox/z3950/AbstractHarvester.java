@@ -26,7 +26,7 @@ import java.text.ParseException;
 
 /**
  */
-public abstract class AbstractHarvester implements HarvestMethod {
+public abstract class AbstractHarvester implements Harvester {
     /**
      * Logger for this class
      */

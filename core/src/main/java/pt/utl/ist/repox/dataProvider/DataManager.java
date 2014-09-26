@@ -22,67 +22,67 @@ import java.util.List;
  */
 public interface DataManager {
 
-    public void saveData() throws IOException, DocumentException;
+    void saveData() throws IOException, DocumentException;
 
-    public DataProvider createDataProvider(String name, String country, String description) throws IOException, AlreadyExistsException;
+    DataProvider createDataProvider(String name, String country, String description) throws IOException, AlreadyExistsException;
 
-    public DataProvider updateDataProvider(String id, String name, String country, String description) throws ObjectNotFoundException, IOException;
+    DataProvider updateDataProvider(String id, String name, String country, String description) throws ObjectNotFoundException, IOException;
 
-    public DataProvider updateDataProvider(DataProvider dataProvider, String dataProviderId) throws IOException, ObjectNotFoundException;
+    DataProvider updateDataProvider(DataProvider dataProvider, String dataProviderId) throws IOException, ObjectNotFoundException;
 
-    public void deleteDataProvider(String dataProviderId) throws IOException, ObjectNotFoundException;
+    void deleteDataProvider(String dataProviderId) throws IOException, ObjectNotFoundException;
 
-    public List<DataProvider> getDataProviders() throws DocumentException, IOException;
+    List<DataProvider> getDataProviders() throws DocumentException, IOException;
 
-    public DataProvider getDataProvider(String dataProviderId);
+    DataProvider getDataProvider(String dataProviderId);
 
-    public DataProvider getDataProviderParent(String dataSourceId) ;
+    DataProvider getDataProviderParent(String dataSourceId) ;
 
-    public List<DataProvider> loadDataProvidersFromFile(File file2Read, File repositoryPath) throws DocumentException, IOException, ParseException;
+    List<DataProvider> loadDataProvidersFromFile(File file2Read, File repositoryPath) throws DocumentException, IOException, ParseException;
 
-    public MessageType addDataSourceContainer(DataSourceContainer dataSourceContainer, String dataProviderId);
+    MessageType addDataSourceContainer(DataSourceContainer dataSourceContainer, String dataProviderId);
 
-    public MessageType updateDataSourceContainer(DataSourceContainer dataSourceContainer, String oldDataSourceId);
+    MessageType updateDataSourceContainer(DataSourceContainer dataSourceContainer, String oldDataSourceId);
 
-    public boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException;
+    boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException;
 
-    public void setDataSetSampleState(boolean isSample, DataSource dataSource);
+    void setDataSetSampleState(boolean isSample, DataSource dataSource);
 
-    public void deleteDataSourceContainer(String dataSourceId) throws IOException, ObjectNotFoundException;
+    void deleteDataSourceContainer(String dataSourceId) throws IOException, ObjectNotFoundException;
 
-    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException, ObjectNotFoundException, AlreadyExistsException;
+    void startIngestDataSource(String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException, ObjectNotFoundException, AlreadyExistsException;
 
-    public void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException, ObjectNotFoundException, ClassNotFoundException, ParseException;
+    void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException, ObjectNotFoundException, ClassNotFoundException, ParseException;
 
-    public void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException;
+    void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException;
 
-    public DataSourceContainer getDataSourceContainer(String dataSourceId) throws DocumentException, IOException;
+    DataSourceContainer getDataSourceContainer(String dataSourceId) throws DocumentException, IOException;
 
-    public MessageType importDataProviders(File file2read, File repoPath);
+    MessageType importDataProviders(File file2read, File repoPath);
 
-    public MessageType removeTransformationFromDataSource(String transformationId);
+    MessageType removeTransformationFromDataSource(String transformationId);
 
-    //public void updateDataSourceId(String oldDataSourceId, String newDataSourceId)  throws IOException, DocumentException, SQLException;
+    //void updateDataSourceId(String oldDataSourceId, String newDataSourceId)  throws IOException, DocumentException, SQLException;
 
-    //public void updateDataSource(DataSource dataSource) throws IOException, DocumentException;
+    //void updateDataSource(DataSource dataSource) throws IOException, DocumentException;
 
-    //public void deleteDataSource(String dataSourceId) throws DocumentException, IOException;
+    //void deleteDataSource(String dataSourceId) throws DocumentException, IOException;
 
-    public boolean isIdValid(String id);
+    boolean isIdValid(String id);
 
-    public HashMap<String, DataSourceContainer> loadDataSourceContainers() throws DocumentException, IOException;
+    HashMap<String, DataSourceContainer> loadDataSourceContainers() throws DocumentException, IOException;
 
-    public MetadataTransformationManager getMetadataTransformationManager();
+    MetadataTransformationManager getMetadataTransformationManager();
 
-    public void saveOldTask(OldTask oldTask);
+    void saveOldTask(OldTask oldTask);
 
-    public void removeOldTasks(String dataSourceId);
+    void removeOldTasks(String dataSourceId);
 
-    public void removeLogsAndOldTasks(String dataSourceId) throws IOException, DocumentException;
+    void removeLogsAndOldTasks(String dataSourceId) throws IOException, DocumentException;
 
-    public String getDirPathFtp(String dataSourceId);
+    String getDirPathFtp(String dataSourceId);
 
-    public List<Object> getAllDataList();
+    List<Object> getAllDataList();
 
-    public int getShowSize();
+    int getShowSize();
 }

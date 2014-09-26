@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.dataProvider;
+package pt.utl.ist.repox.rest.dataProvider;
 
 import eu.europeana.repox2sip.models.ProviderType;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
  * Time: 13:27
  * To change this template use File | Settings | File Templates.
  */
-public class DataProviderEuropeana extends DataProvider{
+public class DefualtDataProvider extends DataProvider{
     private String nameCode;
     private URL homePage;
     private ProviderType dataSetType;
@@ -75,8 +75,8 @@ public class DataProviderEuropeana extends DataProvider{
 
         if(writeDataSources &&  this.getDataSourceContainers() != null){
             for (DataSourceContainer dataSourceContainer : this.getDataSourceContainers().values()) {
-                DataSourceContainerEuropeana dataSourceContainerEuropeana = (DataSourceContainerEuropeana) dataSourceContainer;
-                dataProviderElement.add(dataSourceContainerEuropeana.createElement());
+                DefaultDataSourceContainer dDataSourceContainerEuropeana = (DefaultDataSourceContainer) dataSourceContainer;
+                dataProviderElement.add(dDataSourceContainerEuropeana.createElement());
             }
         }
 
@@ -97,13 +97,13 @@ public class DataProviderEuropeana extends DataProvider{
      * @param homePage
      * @param dataSetType
      */
-    public DataProviderEuropeana(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, URL homePage, ProviderType dataSetType) {
+    public DefualtDataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, URL homePage, ProviderType dataSetType) {
         super(id, name, country, description, dataSourceContainers);
         this.nameCode = nameCode;
         this.homePage = homePage;
         this.dataSetType = dataSetType;
     }
 
-    public DataProviderEuropeana() {
+    public DefualtDataProvider() {
     }
 }

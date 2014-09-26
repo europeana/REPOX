@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.dataProvider;
+package pt.utl.ist.repox.rest.dataProvider;
 
 import eu.europeana.repox2sip.models.ProviderType;
 
@@ -28,6 +28,7 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.repox.rest.util.ExternalServiceUtil;
 import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.task.*;
 import pt.utl.ist.repox.util.CompareDataUtil;
@@ -36,7 +37,6 @@ import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.rest.util.ExternalServiceEuropeanaUtil;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
@@ -53,22 +53,22 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class DataManagerEuropeana implements DataManager {
-    private static final Logger log = Logger.getLogger(DataManagerEuropeana.class);
+public class DefaultDataManager implements DataManager {
+    private static final Logger log = Logger.getLogger(DefaultDataManager.class);
     private static final String ID_REGULAR_EXPRESSION = "[a-zA-Z_0-9]*";
     protected static final int ID_MAX_SIZE = 160;
 
     protected File dataFile;
     protected MetadataTransformationManager metadataTransformationManager;
     protected MetadataSchemaManager metadataSchemaManager;
-    protected List<AggregatorEuropeana> aggregatorsEuropeana;
+    protected List<Aggregator> aggregators;
     protected File oldTasksFile;
 
     private int showSize = 0;
     protected List<Object> allDataList;
     private EuropeanaRepoxConfiguration configuration;
 
-    public DataManagerEuropeana(File dataFile, MetadataTransformationManager metadataTransformationManager,
+    public DefaultDataManager(File dataFile, MetadataTransformationManager metadataTransformationManager,
                                 MetadataSchemaManager metadataSchemaManager,
                                 File repositoryPath,
                                 File oldTasksFile, File defaultExportDir,
@@ -79,7 +79,7 @@ public class DataManagerEuropeana implements DataManager {
         this.metadataTransformationManager = metadataTransformationManager;
         this.metadataSchemaManager = metadataSchemaManager;
         this.oldTasksFile = oldTasksFile;
-        loadAggregatorsEuropeana(repositoryPath, defaultExportDir);
+        loadAggregators(repositoryPath, defaultExportDir);
         loadAllDataList();
         if(!this.dataFile.exists()) {
             try {
@@ -94,13 +94,13 @@ public class DataManagerEuropeana implements DataManager {
     private void loadAllDataList(){
         showSize = 0;
         allDataList = new ArrayList<Object>();
-        Collections.sort(aggregatorsEuropeana, new AggregatorComparator());
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            allDataList.add(aggregatorEuropeana);
+        Collections.sort(aggregators, new AggregatorComparator());
+        for (Aggregator aggregator : aggregators) {
+            allDataList.add(aggregator);
             showSize++;
-            if(aggregatorEuropeana.getDataProviders() != null) {
-                Collections.sort(aggregatorEuropeana.getDataProviders(), new CompareDataUtil.DPComparator());
-                for(DataProvider dataProvider : aggregatorEuropeana.getDataProviders()){
+            if(aggregator.getDataProviders() != null) {
+                Collections.sort(aggregator.getDataProviders(), new CompareDataUtil.DPComparator());
+                for(DataProvider dataProvider : aggregator.getDataProviders()){
                     allDataList.add(dataProvider);
                     showSize++;
                     if(dataProvider.getDataSourceContainers() != null) {
@@ -118,8 +118,8 @@ public class DataManagerEuropeana implements DataManager {
         }
     }
 
-    private class AggregatorComparator implements java.util.Comparator<AggregatorEuropeana>{
-        public int compare(AggregatorEuropeana agg1, AggregatorEuropeana agg2){
+    private class AggregatorComparator implements java.util.Comparator<Aggregator>{
+        public int compare(Aggregator agg1, Aggregator agg2){
             String str1 = agg1.getName().toUpperCase();
             String str2 = agg2.getName().toUpperCase();
 
@@ -155,8 +155,8 @@ public class DataManagerEuropeana implements DataManager {
         Document document = DocumentHelper.createDocument();
         Element rootNode = document.addElement("repox-data");
 
-        for(AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            rootNode.add(aggregatorEuropeana.createElement(true));
+        for(Aggregator aggregator : aggregators) {
+            rootNode.add(aggregator.createElement(true));
         }
 
         // backup file
@@ -174,12 +174,12 @@ public class DataManagerEuropeana implements DataManager {
      * @throws DocumentException
      * @throws IOException
      */
-    protected synchronized void loadAggregatorsEuropeana(File repositoryPath, File defaultExportDir) throws DocumentException, IOException, ParseException {
-        aggregatorsEuropeana = new ArrayList<AggregatorEuropeana>();
+    protected synchronized void loadAggregators(File repositoryPath, File defaultExportDir) throws DocumentException, IOException, ParseException {
+        aggregators = new ArrayList<Aggregator>();
         if(!dataFile.exists()) {
             return;
         }
-        aggregatorsEuropeana = loadAggregatorsEuropeana(dataFile, repositoryPath, defaultExportDir);
+        aggregators = loadAggregators(dataFile, repositoryPath, defaultExportDir);
     }
 
 
@@ -189,41 +189,41 @@ public class DataManagerEuropeana implements DataManager {
      * @param repositoryPath
      * @throws DocumentException
      * @throws IOException
-     * @return List<AggregatorEuropeana>
+     * @return List<Aggregator>
      */
-    public synchronized List<AggregatorEuropeana> loadAggregatorsEuropeana(File file2Read, File repositoryPath,
+    public synchronized List<Aggregator> loadAggregators(File file2Read, File repositoryPath,
                                                                            File defaultExportDir) throws DocumentException, IOException, ParseException {
-        List<AggregatorEuropeana> aggregatorsEuropeanaLoaded = new ArrayList<AggregatorEuropeana>();
+        List<Aggregator> aggregatorsLoaded = new ArrayList<Aggregator>();
 
         SAXReader reader = new SAXReader();
         Document document = reader.read(file2Read);
 
         if(configuration != null && configuration.getCurrentServerOAIUrl() != null){
-            ExternalServiceEuropeanaUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
+            ExternalServiceUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
             XmlUtil.writePrettyPrint(dataFile,document);
         }
 
         Element root = document.getRootElement();
 
         for (Iterator aggIterator = root.elementIterator("aggregator"); aggIterator.hasNext();) {
-            // read aggregatorEuropeana from XML file
+            // read aggregator from XML file
             Element currentElementAgg = (Element) aggIterator.next();
 
-            AggregatorEuropeana aggregatorEuropeana = new AggregatorEuropeana();
-            aggregatorEuropeana.setId(currentElementAgg.attributeValue("id"));
+            Aggregator aggregator = new Aggregator();
+            aggregator.setId(currentElementAgg.attributeValue("id"));
 
             if(currentElementAgg.element("url") != null){
-                aggregatorEuropeana.setHomePage(new URL(currentElementAgg.elementText("url")));
+                aggregator.setHomePage(new URL(currentElementAgg.elementText("url")));
             }
             if(currentElementAgg.element("name") != null){
-                aggregatorEuropeana.setName(currentElementAgg.elementText("name"));
+                aggregator.setName(currentElementAgg.elementText("name"));
             }
             if(currentElementAgg.element("nameCode") != null){
-                aggregatorEuropeana.setNameCode(currentElementAgg.elementText("nameCode"));
+                aggregator.setNameCode(currentElementAgg.elementText("nameCode"));
             }
 
             for (Iterator provIterator = currentElementAgg.elementIterator("provider"); provIterator.hasNext();) {
-                // read providers inside the aggregatorEuropeana
+                // read providers inside the aggregator
                 Element currentElementProv = (Element) provIterator.next();
 
                 String providerId = currentElementProv.attributeValue("id");
@@ -255,11 +255,11 @@ public class DataManagerEuropeana implements DataManager {
 
                 HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-                DataProviderEuropeana dataProvider = new DataProviderEuropeana(providerId, providerName, providerCountry,
+                DefualtDataProvider dataProvider = new DefualtDataProvider(providerId, providerName, providerCountry,
                         providerDescription, dataSourceContainers, providerNameCode, providerHomePage, ProviderType.get(providerType));
 
                 for (Iterator dataSIterator = currentElementProv.elementIterator("source"); dataSIterator.hasNext();) {
-                    // read data sources inside the aggregatorEuropeana
+                    // read data sources inside the aggregator
                     Element currentDataSourceElement = (Element) dataSIterator.next();
 
                     String id = currentDataSourceElement.attributeValue("id");
@@ -316,13 +316,13 @@ public class DataManagerEuropeana implements DataManager {
                     Element recordIdPolicyNode = currentDataSourceElement.element("recordIdPolicy");
                     String recordIdPolicyClass = recordIdPolicyNode.attributeValue("type");
                     RecordIdPolicy recordIdPolicy;
-                    if(recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
-                        recordIdPolicy = new IdGenerated();
+                    if(recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdGeneratedRecordIdPolicy();
                     }
-                    else if(recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
-                        recordIdPolicy = new IdProvided();
+                    else if(recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
+                        recordIdPolicy = new IdProvidedRecordIdPolicy();
                     }
-                    else if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
+                    else if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
                         String identifierXpath = recordIdPolicyNode.element("idXpath").getText();
                         Map<String, String> namespaces = new TreeMap<String, String>();
                         Element namespacesElement = recordIdPolicyNode.element("namespaces");
@@ -333,7 +333,7 @@ public class DataManagerEuropeana implements DataManager {
                                         currentNamespace.elementText("namespaceUri"));
                             }
                         }
-                        recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
+                        recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
                     }
                     else {
                         throw new RuntimeException("Invalid RecordIdPolicy of class " + recordIdPolicyClass);
@@ -357,7 +357,7 @@ public class DataManagerEuropeana implements DataManager {
                         String oaiSource = currentDataSourceElement.elementText("oai-source");
                         String oaiSet = (currentDataSourceElement.element("oai-set") != null ? currentDataSourceElement.elementText("oai-set") : null);
                         dataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSource, oaiSet, new IdProvided(), metadataTransformations);
+                                oaiSource, oaiSet, new IdProvidedRecordIdPolicy(), metadataTransformations);
                     } else if(dataSourceType.equals("DataSourceSruRecordUpdate")) {
                         dataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
                                 recordIdPolicy, metadataTransformations);
@@ -447,7 +447,7 @@ public class DataManagerEuropeana implements DataManager {
                         Target target = new Target(targetAddress, targetPort, targetDatabase, targetUser, targetPassword,
                                 targetCharacterEncoding, targetRecordSyntax);
 
-                        HarvestMethod harvestMethod = null;
+                        Harvester harvestMethod = null;
 
                         String harvestMethodString = currentDataSourceElement.elementText("harvestMethod");
 
@@ -598,8 +598,8 @@ public class DataManagerEuropeana implements DataManager {
 
                         loadDataSourceTags(currentDataSourceElement,dataSource);
 
-                        // Create DataSourceContainerEuropeana
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource,
+                        // Create DataSourceContainer
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource,
                                 dataSourceContainerNameCode, dataSourceContainerName, "");
 
                         // export path
@@ -624,23 +624,23 @@ public class DataManagerEuropeana implements DataManager {
 
                         dataSource.setIsSample(isSample);
 
-                        dataProvider.getDataSourceContainers().put(dataSource.getId(), dataSourceContainerEuropeana);
+                        dataProvider.getDataSourceContainers().put(dataSource.getId(), dataSourceContainer);
                     }
                 }
-                aggregatorEuropeana.addDataProvider(dataProvider);
+                aggregator.addDataProvider(dataProvider);
             }
-            aggregatorsEuropeanaLoaded.add(aggregatorEuropeana);
+            aggregatorsLoaded.add(aggregator);
         }
         //save new dataProviders.xml format
-        if(aggregatorsEuropeana != null && aggregatorsEuropeana.size() > 0){
-            aggregatorsEuropeana.addAll(aggregatorsEuropeanaLoaded);
+        if(aggregators != null && aggregators.size() > 0){
+            aggregators.addAll(aggregatorsLoaded);
         }
         else{
-            aggregatorsEuropeana = aggregatorsEuropeanaLoaded;
+            aggregators = aggregatorsLoaded;
         }
         saveData();
 
-        return aggregatorsEuropeanaLoaded;
+        return aggregatorsLoaded;
     }
 
     protected void loadDataSourceTags(Element currentDataSourceElement, DataSource dataSource){
@@ -721,8 +721,8 @@ public class DataManagerEuropeana implements DataManager {
      * @throws DocumentException
      * @return MessageType
      */
-    public AggregatorEuropeana createAggregator(String name, String nameCode, String homepageUrl) throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
-        AggregatorEuropeana newAggregator = new AggregatorEuropeana();
+    public Aggregator createAggregator(String name, String nameCode, String homepageUrl) throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
+        Aggregator newAggregator = new Aggregator();
         if(homepageUrl != null && !homepageUrl.equals("")){
             try{
                 if (!homepageUrl.startsWith("http://") && !homepageUrl.startsWith("https://")) {
@@ -740,10 +740,10 @@ public class DataManagerEuropeana implements DataManager {
         }
         newAggregator.setName(name);
         newAggregator.setNameCode(nameCode);
-        newAggregator.setId(AggregatorEuropeana.generateId(newAggregator.getName()));
+        newAggregator.setId(Aggregator.generateId(newAggregator.getName()));
 
-        if(!checkIfAggregatorExists(aggregatorsEuropeana, newAggregator)){
-            aggregatorsEuropeana.add(newAggregator);
+        if(!checkIfAggregatorExists(aggregators, newAggregator)){
+            aggregators.add(newAggregator);
             saveData();
             return newAggregator;
         }
@@ -762,17 +762,17 @@ public class DataManagerEuropeana implements DataManager {
      * @throws DocumentException
      * @return MessageType
      */
-    public AggregatorEuropeana updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws IOException, DocumentException, ObjectNotFoundException, InvalidArgumentsException {
-        AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(oldAggregatorId);
+    public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws IOException, DocumentException, ObjectNotFoundException, InvalidArgumentsException {
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(oldAggregatorId);
 
-        if(aggregatorEuropeana != null){
+        if(aggregator != null){
             // only not null fields are updated
 
             if(name != null)
-                aggregatorEuropeana.setName(name);
+                aggregator.setName(name);
 
             if(nameCode != null)
-                aggregatorEuropeana.setNameCode(nameCode);
+                aggregator.setNameCode(nameCode);
 
             if(homepageUrl != null && !homepageUrl.equals("")){
                 try{
@@ -783,7 +783,7 @@ public class DataManagerEuropeana implements DataManager {
                     if(!FileUtilSecond.checkUrl(homepageUrl)){
                         throw new Exception();
                     }
-                    aggregatorEuropeana.setHomePage(new URL(homepageUrl));
+                    aggregator.setHomePage(new URL(homepageUrl));
                 }
                 catch (Exception e){
                     throw new InvalidArgumentsException(homepageUrl);
@@ -793,15 +793,15 @@ public class DataManagerEuropeana implements DataManager {
                 aggregatorEuropeana.setHomePage(null);
             }*/
 
-            for (AggregatorEuropeana actualAggregatorEuropeana : aggregatorsEuropeana) {
-                if(actualAggregatorEuropeana.getId().equals(oldAggregatorId)){
-                    aggregatorsEuropeana.remove(actualAggregatorEuropeana);
+            for (Aggregator actualAggregator : aggregators) {
+                if(actualAggregator.getId().equals(oldAggregatorId)){
+                    aggregators.remove(actualAggregator);
                     break;
                 }
             }
-            aggregatorsEuropeana.add(aggregatorEuropeana);
+            aggregators.add(aggregator);
             saveData();
-            return aggregatorEuropeana;
+            return aggregator;
         }
         else{
             throw new ObjectNotFoundException(oldAggregatorId);
@@ -816,13 +816,13 @@ public class DataManagerEuropeana implements DataManager {
      * @return MessageType
      */
     public void deleteAggregator(String aggregatorId) throws IOException, DocumentException, ObjectNotFoundException {
-        AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
 
-        if(aggregatorEuropeana != null){
-            for (AggregatorEuropeana actualAggregatorEuropeana : aggregatorsEuropeana) {
-                if(actualAggregatorEuropeana.getId().equals(aggregatorId)) {
+        if(aggregator != null){
+            for (Aggregator actualAggregator : aggregators) {
+                if(actualAggregator.getId().equals(aggregatorId)) {
 
-                    Iterator iteratorDP = actualAggregatorEuropeana.getDataProviders().iterator();
+                    Iterator iteratorDP = actualAggregator.getDataProviders().iterator();
                     while(iteratorDP.hasNext()) {
                         DataProvider dataProvider = (DataProvider)iteratorDP.next();
 
@@ -839,7 +839,7 @@ public class DataManagerEuropeana implements DataManager {
                         // remove dataProvider from dataProvider's list
                         iteratorDP.remove();
                     }
-                    aggregatorsEuropeana.remove(actualAggregatorEuropeana);
+                    aggregators.remove(actualAggregator);
                     saveData();
                     return;
                 }
@@ -852,14 +852,14 @@ public class DataManagerEuropeana implements DataManager {
     /**
      *
      * @param aggregatorId
-     * @return Gets the AggregatorEuropeana with aggregatorId from the configuration file if it exists or null otherwise.
+     * @return Gets the Aggregator with aggregatorId from the configuration file if it exists or null otherwise.
      * @throws DocumentException
      * @throws IOException
      */
-    public AggregatorEuropeana getAggregator(String aggregatorId) {
-        for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-            if (currentAggregatorEuropeana.getId().equals(aggregatorId)) {
-                return currentAggregatorEuropeana;
+    public Aggregator getAggregator(String aggregatorId) {
+        for (Aggregator currentAggregator : aggregators) {
+            if (currentAggregator.getId().equals(aggregatorId)) {
+                return currentAggregator;
             }
         }
         return null;
@@ -867,22 +867,22 @@ public class DataManagerEuropeana implements DataManager {
 
     /**
      * Check if a specific aggregator already exists in REPOX (use name and nameCode attributes)
-     * @param aggregatorsEuropeana
-     * @param aggregator
+     * @param aggregators
+     * @param aggregatorToCheck
      * @return boolean
      */
-    private boolean checkIfAggregatorExists(List<AggregatorEuropeana> aggregatorsEuropeana, AggregatorEuropeana aggregator){
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            if(aggregator.getName().equalsIgnoreCase(aggregatorEuropeana.getName()))
-                if(aggregator.getNameCode() != null && aggregatorEuropeana.getNameCode() != null)
-                    if(aggregator.getNameCode().equalsIgnoreCase(aggregatorEuropeana.getNameCode()))
+    private boolean checkIfAggregatorExists(List<Aggregator> aggregators, Aggregator aggregatorToCheck){
+        for (Aggregator aggregator : aggregators) {
+            if(aggregatorToCheck.getName().equalsIgnoreCase(aggregator.getName()))
+                if(aggregatorToCheck.getNameCode() != null && aggregator.getNameCode() != null)
+                    if(aggregatorToCheck.getNameCode().equalsIgnoreCase(aggregator.getNameCode()))
                         return true;
         }
         return false;
     }
 
-    public synchronized List<AggregatorEuropeana> getAggregatorsEuropeana() throws DocumentException, IOException {
-        return Collections.unmodifiableList(aggregatorsEuropeana);
+    public synchronized List<Aggregator> getAggregators() throws DocumentException, IOException {
+        return Collections.unmodifiableList(aggregators);
     }
 
 
@@ -905,10 +905,10 @@ public class DataManagerEuropeana implements DataManager {
      * @return MessageType
      */
     public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
-        AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
 
-        if(aggregatorEuropeana != null){
-            DataProviderEuropeana newDataProvider = new DataProviderEuropeana();
+        if(aggregator != null){
+            DefualtDataProvider newDataProvider = new DefualtDataProvider();
             newDataProvider.setName(name);
             newDataProvider.setCountry(country);
             newDataProvider.setDescription(description);
@@ -939,7 +939,7 @@ public class DataManagerEuropeana implements DataManager {
             newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
 
             if(nameCode != null &&
-                    (DataProviderEuropeana)getDataProvider(nameCode) == null){
+                    (DefualtDataProvider)getDataProvider(nameCode) == null){
                 // asked by TEL (but first checks if the dataProvider with that specific ID does not exist
                 newDataProvider.setId(nameCode);
             }
@@ -948,12 +948,12 @@ public class DataManagerEuropeana implements DataManager {
             }
 
 
-            for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-                if(currentAggregatorEuropeana.getId().equals(aggregatorId)){
+            for (Aggregator currentAggregator : aggregators) {
+                if(currentAggregator.getId().equals(aggregatorId)){
                     if(checkIfDataProviderExists(aggregatorId, newDataProvider)){
                         throw new AlreadyExistsException(aggregatorId);
                     }
-                    currentAggregatorEuropeana.addDataProvider(newDataProvider);
+                    currentAggregator.addDataProvider(newDataProvider);
                     break;
                 }
             }
@@ -983,10 +983,10 @@ public class DataManagerEuropeana implements DataManager {
      * @throws InvalidArgumentsException
      */
     public DataProvider createDataProvider(String aggregatorId, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
-        AggregatorEuropeana aggregatorEuropeana = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
 
-        if(aggregatorEuropeana != null){
-            DataProviderEuropeana newDataProvider = new DataProviderEuropeana();
+        if(aggregator != null){
+            DefualtDataProvider newDataProvider = new DefualtDataProvider();
             newDataProvider.setName(name);
             newDataProvider.setCountry(country);
             newDataProvider.setDescription(description);
@@ -1018,12 +1018,12 @@ public class DataManagerEuropeana implements DataManager {
             newDataProvider.setId(id);
 
 
-            for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-                if(currentAggregatorEuropeana.getId().equals(aggregatorId)){
+            for (Aggregator currentAggregator : aggregators) {
+                if(currentAggregator.getId().equals(aggregatorId)){
                     if(checkIfDataProviderExists(aggregatorId, newDataProvider)){
                         throw new AlreadyExistsException(aggregatorId);
                     }
-                    currentAggregatorEuropeana.addDataProvider(newDataProvider);
+                    currentAggregator.addDataProvider(newDataProvider);
                     break;
                 }
             }
@@ -1037,17 +1037,17 @@ public class DataManagerEuropeana implements DataManager {
 
 
     public boolean moveDataProvider(String newAggregatorId, String idDataProvider2Move) throws IOException {
-        DataProviderEuropeana dataProvider = (DataProviderEuropeana)getDataProvider(idDataProvider2Move);
-        AggregatorEuropeana aggregatorEuropeanaParent = getAggregatorParent(dataProvider.getId());
+        DefualtDataProvider dataProvider = (DefualtDataProvider)getDataProvider(idDataProvider2Move);
+        Aggregator aggregatorParent = getAggregatorParent(dataProvider.getId());
 
-        if(aggregatorEuropeanaParent.getId().equals(newAggregatorId)){
+        if(aggregatorParent.getId().equals(newAggregatorId)){
             return false;
         }
 
-        for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-            if(currentAggregatorEuropeana.getId().equals(newAggregatorId)){
-                currentAggregatorEuropeana.addDataProvider(dataProvider);
-                aggregatorEuropeanaParent.getDataProviders().remove(dataProvider);
+        for (Aggregator currentAggregator : aggregators) {
+            if(currentAggregator.getId().equals(newAggregatorId)){
+                currentAggregator.addDataProvider(dataProvider);
+                aggregatorParent.getDataProviders().remove(dataProvider);
 
                 saveData();
 
@@ -1059,14 +1059,14 @@ public class DataManagerEuropeana implements DataManager {
 
     public boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(idDataSource2Move);
-        DataProviderEuropeana dataProviderParent = (DataProviderEuropeana)getDataProviderParent(dataSourceContainer.getDataSource().getId());
+        DefualtDataProvider dataProviderParent = (DefualtDataProvider)getDataProviderParent(dataSourceContainer.getDataSource().getId());
 
         if(dataProviderParent.getId().equals(newDataProviderID)){
             return false;
         }
 
-        for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProviderEuropeana currentDataProvider : currentAggregatorEuropeana.getDataProviders()) {
+        for (Aggregator currentAggregator : aggregators) {
+            for (DefualtDataProvider currentDataProvider : currentAggregator.getDataProviders()) {
                 if(currentDataProvider.getId().equals(newDataProviderID)){
                     currentDataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(),dataSourceContainer);
                     dataProviderParent.getDataSourceContainers().remove(dataSourceContainer.getDataSource().getId());
@@ -1133,7 +1133,7 @@ public class DataManagerEuropeana implements DataManager {
      * @return MessageType
      */
     public DataProvider updateDataProvider(String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, InvalidArgumentsException, IOException {
-        DataProviderEuropeana dataProvider = (DataProviderEuropeana)getDataProvider(id);
+        DefualtDataProvider dataProvider = (DefualtDataProvider)getDataProvider(id);
 
         if(dataProvider != null){
             // only not null fields are updated
@@ -1187,11 +1187,11 @@ public class DataManagerEuropeana implements DataManager {
      * @return MessageType
      */
     public synchronized void deleteDataProvider(String dataProviderId) throws ObjectNotFoundException, IOException {
-        DataProviderEuropeana dataProvider2Delete = (DataProviderEuropeana)getDataProvider(dataProviderId);
+        DefualtDataProvider dataProvider2Delete = (DefualtDataProvider)getDataProvider(dataProviderId);
 
         if(dataProvider2Delete != null){
 
-            for (AggregatorEuropeana currentAggregator : aggregatorsEuropeana) {
+            for (Aggregator currentAggregator : aggregators) {
 
                 Iterator iteratorDP = currentAggregator.getDataProviders().iterator();
                 while(iteratorDP.hasNext()) {
@@ -1227,17 +1227,17 @@ public class DataManagerEuropeana implements DataManager {
 
 
     public DataProvider updateDataProvider(DataProvider dataProvider, String oldDataProviderId) throws IOException, ObjectNotFoundException {
-        DataProviderEuropeana dataProviderEuropeana = (DataProviderEuropeana)dataProvider;
-        AggregatorEuropeana aggregatorEuropeanaParent = getAggregatorParent(dataProviderEuropeana.getId());
+        DefualtDataProvider defaultDataProvider = (DefualtDataProvider)dataProvider;
+        Aggregator aggregatorParent = getAggregatorParent(defaultDataProvider.getId());
 
-        for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-            if(currentAggregatorEuropeana.getId().equals(aggregatorEuropeanaParent.getId())){
-                Iterator<DataProviderEuropeana> iteratorDataProvider = currentAggregatorEuropeana.getDataProviders().iterator();
+        for (Aggregator currentAggregator : aggregators) {
+            if(currentAggregator.getId().equals(aggregatorParent.getId())){
+                Iterator<DefualtDataProvider> iteratorDataProvider = currentAggregator.getDataProviders().iterator();
                 while (iteratorDataProvider.hasNext()) {
                     DataProvider currentDataProvider = iteratorDataProvider.next();
                     if(currentDataProvider.getId().equals(oldDataProviderId)) {
                         iteratorDataProvider.remove();
-                        currentAggregatorEuropeana.getDataProviders().add(dataProviderEuropeana);
+                        currentAggregator.getDataProviders().add(defaultDataProvider);
                         saveData();
                         return dataProvider;
                     }
@@ -1256,10 +1256,10 @@ public class DataManagerEuropeana implements DataManager {
      * @return boolean
      */
     private boolean checkIfDataProviderExists(String aggregatorId, DataProvider dataProvider){
-        for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-            if(currentAggregatorEuropeana.getId().equals(aggregatorId)){
-                for (DataProviderEuropeana currentDataProviderEuropeana : currentAggregatorEuropeana.getDataProviders()) {
-                    if(currentDataProviderEuropeana.getId().equals(dataProvider.getId())){
+        for (Aggregator currentAggregator : aggregators) {
+            if(currentAggregator.getId().equals(aggregatorId)){
+                for (DefualtDataProvider currentDataProvider : currentAggregator.getDataProviders()) {
+                    if(currentDataProvider.getId().equals(dataProvider.getId())){
                         return true;
                     }
                 }
@@ -1272,17 +1272,17 @@ public class DataManagerEuropeana implements DataManager {
 
     public List<DataProvider> getDataProviders() throws DocumentException, IOException {
         List<DataProvider> dataProvidersList = new ArrayList<DataProvider>();
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            dataProvidersList.addAll(aggregatorEuropeana.getDataProviders());
+        for (Aggregator aggregator : aggregators) {
+            dataProvidersList.addAll(aggregator.getDataProviders());
         }
         return dataProvidersList;
     }
 
     public DataProvider getDataProvider(String dataProviderId) {
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProviderEuropeana dataProviderEuropeana : aggregatorEuropeana.getDataProviders()) {
-                if(dataProviderEuropeana.getId().equals(dataProviderId)){
-                    return dataProviderEuropeana;
+        for (Aggregator aggregator : aggregators) {
+            for (DefualtDataProvider dataProvider : aggregator.getDataProviders()) {
+                if(dataProvider.getId().equals(dataProviderId)){
+                    return dataProvider;
                 }
             }
         }
@@ -1296,11 +1296,11 @@ public class DataManagerEuropeana implements DataManager {
      * @return DataProvider
      */
     public DataProvider getDataProvider(String aggregatorId, String name){
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            if(aggregatorEuropeana.getId().equals(aggregatorId)){
-                for (DataProviderEuropeana dataProviderEuropeana : aggregatorEuropeana.getDataProviders()) {
-                    if(dataProviderEuropeana.getName().equals(name))
-                        return dataProviderEuropeana;
+        for (Aggregator aggregator : aggregators) {
+            if(aggregator.getId().equals(aggregatorId)){
+                for (DefualtDataProvider dataProvider : aggregator.getDataProviders()) {
+                    if(dataProvider.getName().equals(name))
+                        return dataProvider;
                 }
             }
         }
@@ -1308,11 +1308,11 @@ public class DataManagerEuropeana implements DataManager {
     }
 
     public DataProvider getDataProviderParent(String dataSourceId) {
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProviderEuropeana dataProviderEuropeana : aggregatorEuropeana.getDataProviders()) {
-                DataSourceContainer dataSourceContainer = dataProviderEuropeana.getDataSourceContainers().get(dataSourceId);
+        for (Aggregator aggregator : aggregators) {
+            for (DefualtDataProvider dataProvider : aggregator.getDataProviders()) {
+                DataSourceContainer dataSourceContainer = dataProvider.getDataSourceContainers().get(dataSourceId);
                 if(dataSourceContainer != null){
-                    return dataProviderEuropeana;
+                    return dataProvider;
                 }
             }
         }
@@ -1320,11 +1320,11 @@ public class DataManagerEuropeana implements DataManager {
     }
 
 
-    public AggregatorEuropeana getAggregatorParent(String dataProviderId) {
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProviderEuropeana dataProviderEuropeana : aggregatorEuropeana.getDataProviders()) {
-                if(dataProviderEuropeana.getId().equals(dataProviderId)){
-                    return aggregatorEuropeana;
+    public Aggregator getAggregatorParent(String dataProviderId) {
+        for (Aggregator aggregator : aggregators) {
+            for (DefualtDataProvider dataProvider : aggregator.getDataProviders()) {
+                if(dataProvider.getId().equals(dataProviderId)){
+                    return aggregator;
                 }
             }
         }
@@ -1345,8 +1345,8 @@ public class DataManagerEuropeana implements DataManager {
      */
     public MessageType addDataSourceContainer(DataSourceContainer dataSourceContainer, String dataProviderId) {
         try{
-            for (AggregatorEuropeana currentAggregatorEuropeana : aggregatorsEuropeana) {
-                for (DataProvider dataProvider : currentAggregatorEuropeana.getDataProviders()) {
+            for (Aggregator currentAggregator : aggregators) {
+                for (DataProvider dataProvider : currentAggregator.getDataProviders()) {
                     if(dataProvider.getId().equals(dataProviderId)){
                         dataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(), dataSourceContainer);
                         // todo add dataSource to databases
@@ -1368,10 +1368,10 @@ public class DataManagerEuropeana implements DataManager {
         if(dataProviderParent == null)
             throw new ObjectNotFoundException(dataSourceId);
 
-        DataSourceContainerEuropeana dataSourceContainerEuropeana = (DataSourceContainerEuropeana)dataProviderParent.getDataSourceContainers().get(dataSourceId);
+        DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)dataProviderParent.getDataSourceContainers().get(dataSourceId);
 
-        if(dataSourceContainerEuropeana != null){
-            DataSource currentDataSource = dataSourceContainerEuropeana.getDataSource();
+        if(dataSourceContainer != null){
+            DataSource currentDataSource = dataSourceContainer.getDataSource();
             boolean successfulDeletion = true;
             log.info("Deleting Data Source with id " + dataSourceId);
 
@@ -1449,8 +1449,8 @@ public class DataManagerEuropeana implements DataManager {
     public HashMap<String, DataSourceContainer> loadDataSourceContainers() throws DocumentException, IOException {
         HashMap<String, DataSourceContainer> allDataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-        for (AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProvider dataProvider : aggregatorEuropeana.getDataProviders()) {
+        for (Aggregator aggregator : aggregators) {
+            for (DataProvider dataProvider : aggregator.getDataProviders()) {
                 allDataSourceContainers.putAll(dataProvider.getDataSourceContainers());
             }
         }
@@ -1463,8 +1463,8 @@ public class DataManagerEuropeana implements DataManager {
     public void deleteDataSourceContainer(String dataSourceId) throws IOException, ObjectNotFoundException {
         deleteDataSource(dataSourceId);
 
-        for(AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProvider currentDataProvider : aggregatorEuropeana.getDataProviders()) {
+        for(Aggregator aggregator : aggregators) {
+            for (DataProvider currentDataProvider : aggregator.getDataProviders()) {
                 DataSourceContainer dataSourceContainer = currentDataProvider.getDataSourceContainers().get(dataSourceId);
 
                 if(dataSourceContainer != null){
@@ -1476,8 +1476,8 @@ public class DataManagerEuropeana implements DataManager {
     }
 
     public DataSourceContainer getDataSourceContainer(String dataSourceId) throws DocumentException, IOException {
-        for(AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProvider currentDataProvider : aggregatorEuropeana.getDataProviders()) {
+        for(Aggregator aggregator : aggregators) {
+            for (DataProvider currentDataProvider : aggregator.getDataProviders()) {
                 if(currentDataProvider.getDataSourceContainers() != null && currentDataProvider.getDataSourceContainers().size() > 0) {
                     DataSourceContainer dataSourceContainer = currentDataProvider.getDataSourceContainers().get(dataSourceId);
                     if (dataSourceContainer != null) {
@@ -1492,8 +1492,8 @@ public class DataManagerEuropeana implements DataManager {
 
     public MessageType updateDataSourceContainer(DataSourceContainer dataSourceContainer, String oldDataSourceId) {
         try {
-            for(AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-                for (DataProvider currentDataProvider : aggregatorEuropeana.getDataProviders()) {
+            for(Aggregator aggregator : aggregators) {
+                for (DataProvider currentDataProvider : aggregator.getDataProviders()) {
                     DataSourceContainer currentDataSourceContainer = currentDataProvider.getDataSourceContainers().get(oldDataSourceId);
 
                     if(currentDataSourceContainer != null){
@@ -1575,8 +1575,8 @@ public class DataManagerEuropeana implements DataManager {
      * @throws IOException
      */
     protected synchronized DataSource getDataSource(String dataSourceId) throws DocumentException, IOException {
-        for(AggregatorEuropeana aggregatorEuropeana : aggregatorsEuropeana) {
-            for (DataProvider currentDataProvider : aggregatorEuropeana.getDataProviders()) {
+        for(Aggregator aggregator : aggregators) {
+            for (DataProvider currentDataProvider : aggregator.getDataProviders()) {
                 DataSource dataSource = currentDataProvider.getDataSource(dataSourceId);
                 if (dataSource != null) {
                     return dataSource;
@@ -1615,10 +1615,10 @@ public class DataManagerEuropeana implements DataManager {
                 if(dataProvider != null){
 
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                            new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                            new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
@@ -1660,10 +1660,10 @@ public class DataManagerEuropeana implements DataManager {
                     }
                     if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
                         DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         newDataSource.initAccessPoints();
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
@@ -1736,7 +1736,7 @@ public class DataManagerEuropeana implements DataManager {
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                     File newFile = IdListHarvester.getIdListFilePermanent();
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     if(!newFile.getParentFile().getAbsolutePath().equalsIgnoreCase(new File(filePath).getParentFile().getAbsolutePath())){
                         FileUtils.copyFile(new File(filePath), newFile);
                         harvestMethod = new IdListHarvester(target, newFile);
@@ -1752,8 +1752,8 @@ public class DataManagerEuropeana implements DataManager {
 
                     newDataSource.setExportDir(exportPath);
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
@@ -1820,7 +1820,7 @@ public class DataManagerEuropeana implements DataManager {
                     CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                    HarvestMethod harvestMethod;
+                    Harvester harvestMethod;
                     try{
                         harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                     }
@@ -1836,8 +1836,8 @@ public class DataManagerEuropeana implements DataManager {
 
                     newDataSource.setExportDir(exportPath);
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
@@ -1905,7 +1905,7 @@ public class DataManagerEuropeana implements DataManager {
                     Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                     Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                    HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                    Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -1914,8 +1914,8 @@ public class DataManagerEuropeana implements DataManager {
 
                     newDataSource.setExportDir(exportPath);
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
@@ -2004,8 +2004,8 @@ public class DataManagerEuropeana implements DataManager {
 
                         newDataSource.setExportDir(exportPath);
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         newDataSource.initAccessPoints();
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
@@ -2090,8 +2090,8 @@ public class DataManagerEuropeana implements DataManager {
 
                         newDataSource.setExportDir(exportPath);
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         newDataSource.initAccessPoints();
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
@@ -2176,8 +2176,8 @@ public class DataManagerEuropeana implements DataManager {
 
                         newDataSource.setExportDir(exportPath);
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         newDataSource.initAccessPoints();
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
@@ -2209,9 +2209,9 @@ public class DataManagerEuropeana implements DataManager {
                                                       String metadataFormat,
                                                       Map<String, MetadataTransformation> metadataTransformations,
                                                       List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2219,7 +2219,7 @@ public class DataManagerEuropeana implements DataManager {
             if(dataProviderParent != null){
                 if(!(dataSource instanceof SruRecordUpdateDataSource)){
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
 
@@ -2227,8 +2227,8 @@ public class DataManagerEuropeana implements DataManager {
                     newDataSource.setOldTasksList(dataSource.getOldTasksList());
                     newDataSource.setTags(dataSource.getTags());
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     dataSource = newDataSource;
                 }
 
@@ -2244,12 +2244,12 @@ public class DataManagerEuropeana implements DataManager {
                 dataSource.setExportDir(exportPath);
 
                 if(!id.equals(oldId)){
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                    updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                    updateDataSourceContainer(dataSourceContainer, oldId);
                 }
                 else{
-                    dataSourceContainer.setName(name);
-                    dataSourceContainer.setNameCode(nameCode);
+                    oldDataSourceContainer.setName(name);
+                    oldDataSourceContainer.setNameCode(nameCode);
 //                            dataSourceContainer.setExportPath(exportPath);
                 }
                 updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2269,9 +2269,9 @@ public class DataManagerEuropeana implements DataManager {
                                           String metadataFormat, String oaiSourceURL, String oaiSet,
                                           Map<String, MetadataTransformation> metadataTransformations,
                                           List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2285,7 +2285,7 @@ public class DataManagerEuropeana implements DataManager {
                 if(dataProviderParent != null){
                     if(!(dataSource instanceof OaiDataSource)){
                         DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
+                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 
@@ -2293,8 +2293,8 @@ public class DataManagerEuropeana implements DataManager {
                         newDataSource.setOldTasksList(dataSource.getOldTasksList());
                         newDataSource.setTags(dataSource.getTags());
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         dataSource = newDataSource;
                     }
 
@@ -2312,12 +2312,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setExportDir(exportPath);
 
                     if(!id.equals(oldId)){
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                        updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                        updateDataSourceContainer(dataSourceContainer, oldId);
                     }
                     else{
-                        dataSourceContainer.setName(name);
-                        dataSourceContainer.setNameCode(nameCode);
+                        oldDataSourceContainer.setName(name);
+                        oldDataSourceContainer.setNameCode(nameCode);
 //                            dataSourceContainer.setExportPath(exportPath);
                     }
                     updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2343,9 +2343,9 @@ public class DataManagerEuropeana implements DataManager {
                                                      String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
                                                      Map<String, MetadataTransformation> metadataTransformations,
                                                      List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException, ParseException, ObjectNotFoundException, IncompatibleInstanceException, InvalidArgumentsException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2356,7 +2356,7 @@ public class DataManagerEuropeana implements DataManager {
                 CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(charset);
                 Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
-                HarvestMethod harvestMethod;
+                Harvester harvestMethod;
                 try{
                     harvestMethod = new TimestampHarvester(target, DateUtil.string2Date(earliestTimestampString, "yyyyMMdd"));
                 }
@@ -2377,8 +2377,8 @@ public class DataManagerEuropeana implements DataManager {
                     newDataSource.setOldTasksList(dataSource.getOldTasksList());
                     newDataSource.setTags(dataSource.getTags());
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     dataSource = newDataSource;
                 }
 
@@ -2393,12 +2393,12 @@ public class DataManagerEuropeana implements DataManager {
                 dataSource.setExportDir(exportPath);
 
                 if(!id.equals(oldId)){
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                    updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                    updateDataSourceContainer(dataSourceContainer, oldId);
                 }
                 else{
-                    dataSourceContainer.setName(name);
-                    dataSourceContainer.setNameCode(nameCode);
+                    oldDataSourceContainer.setName(name);
+                    oldDataSourceContainer.setNameCode(nameCode);
 //                        dataSourceContainer.setExportPath(exportPath);
                 }
                 updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2419,9 +2419,9 @@ public class DataManagerEuropeana implements DataManager {
                                                   String charset, String filePath, String recordIdPolicyClass, String idXpath,
                                                   Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations,
                                                   List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException, ParseException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2448,7 +2448,7 @@ public class DataManagerEuropeana implements DataManager {
                 else{
                     file = ((IdListHarvester)((DataSourceZ3950) dataSource).getHarvestMethod()).getIdListFile();
                 }
-                HarvestMethod harvestMethod = new IdListHarvester(target, file);
+                Harvester harvestMethod = new IdListHarvester(target, file);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -2463,8 +2463,8 @@ public class DataManagerEuropeana implements DataManager {
                     newDataSource.setOldTasksList(dataSource.getOldTasksList());
                     newDataSource.setTags(dataSource.getTags());
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     dataSource = newDataSource;
                 }
 
@@ -2479,12 +2479,12 @@ public class DataManagerEuropeana implements DataManager {
                 dataSource.setExportDir(exportPath);
 
                 if(!id.equals(oldId)){
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                    updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                    updateDataSourceContainer(dataSourceContainer, oldId);
                 }
                 else{
-                    dataSourceContainer.setName(name);
-                    dataSourceContainer.setNameCode(nameCode);
+                    oldDataSourceContainer.setName(name);
+                    oldDataSourceContainer.setNameCode(nameCode);
 //                        dataSourceContainer.setExportPath(exportPath);
                 }
                 updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2506,9 +2506,9 @@ public class DataManagerEuropeana implements DataManager {
                                                       String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
                                                       Map<String, MetadataTransformation> metadataTransformations,
                                                       List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException, ParseException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2520,7 +2520,7 @@ public class DataManagerEuropeana implements DataManager {
                 Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                 Long maximumId = (maximumIdString != null && !maximumIdString.isEmpty() ? Long.valueOf(maximumIdString) : null);
-                HarvestMethod harvestMethod = new IdSequenceHarvester(target, maximumId);
+                Harvester harvestMethod = new IdSequenceHarvester(target, maximumId);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -2535,8 +2535,8 @@ public class DataManagerEuropeana implements DataManager {
                     newDataSource.setOldTasksList(dataSource.getOldTasksList());
                     newDataSource.setTags(dataSource.getTags());
 
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     dataSource = newDataSource;
                 }
 
@@ -2551,12 +2551,12 @@ public class DataManagerEuropeana implements DataManager {
                 dataSource.setExportDir(exportPath);
 
                 if(!id.equals(oldId)){
-                    DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                    updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                    updateDataSourceContainer(dataSourceContainer, oldId);
                 }
                 else{
-                    dataSourceContainer.setName(name);
-                    dataSourceContainer.setNameCode(nameCode);
+                    oldDataSourceContainer.setName(name);
+                    oldDataSourceContainer.setNameCode(nameCode);
 //                        dataSourceContainer.setExportPath(exportPath);
                 }
                 updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2578,9 +2578,9 @@ public class DataManagerEuropeana implements DataManager {
                                           String server, String user, String password, String ftpPath,
                                           Map<String, MetadataTransformation> metadataTransformations,
                                           List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2626,8 +2626,8 @@ public class DataManagerEuropeana implements DataManager {
                         newDataSource.setOldTasksList(dataSource.getOldTasksList());
                         newDataSource.setTags(dataSource.getTags());
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         dataSource = newDataSource;
                     }
 
@@ -2649,12 +2649,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setMarcFormat(marcFormat);
 
                     if(!id.equals(oldId)){
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                        updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                        updateDataSourceContainer(dataSourceContainer, oldId);
                     }
                     else{
-                        dataSourceContainer.setName(name);
-                        dataSourceContainer.setNameCode(nameCode);
+                        oldDataSourceContainer.setName(name);
+                        oldDataSourceContainer.setNameCode(nameCode);
 //                            dataSourceContainer.setExportPath(exportPath);
                     }
                     updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2679,9 +2679,9 @@ public class DataManagerEuropeana implements DataManager {
                                            Map<String, String> namespaces, String recordXPath,
                                            String url, Map<String, MetadataTransformation> metadataTransformations,
                                            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2718,8 +2718,8 @@ public class DataManagerEuropeana implements DataManager {
                         newDataSource.setOldTasksList(dataSource.getOldTasksList());
                         newDataSource.setTags(dataSource.getTags());
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         dataSource = newDataSource;
                     }
 
@@ -2742,12 +2742,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setMarcFormat(marcFormat);
 
                     if(!id.equals(oldId)){
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                        updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                        updateDataSourceContainer(dataSourceContainer, oldId);
                     }
                     else{
-                        dataSourceContainer.setName(name);
-                        dataSourceContainer.setNameCode(nameCode);
+                        oldDataSourceContainer.setName(name);
+                        oldDataSourceContainer.setNameCode(nameCode);
 //                            dataSourceContainer.setExportPath(exportPath);
                     }
                     updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2772,9 +2772,9 @@ public class DataManagerEuropeana implements DataManager {
                                              Map<String, String> namespaces, String recordXPath,
                                              String sourcesDirPath, Map<String, MetadataTransformation> metadataTransformations,
                                              List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws IOException, DocumentException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
-        DataSourceContainerEuropeana dataSourceContainer = (DataSourceContainerEuropeana)getDataSourceContainer(oldId);
-        if(dataSourceContainer != null){
-            DataSource dataSource = dataSourceContainer.getDataSource();
+        DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
+        if(oldDataSourceContainer != null){
+            DataSource dataSource = oldDataSourceContainer.getDataSource();
             if(!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
@@ -2811,8 +2811,8 @@ public class DataManagerEuropeana implements DataManager {
                         newDataSource.setOldTasksList(dataSource.getOldTasksList());
                         newDataSource.setTags(dataSource.getTags());
 
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                         dataSource = newDataSource;
                     }
 
@@ -2834,12 +2834,12 @@ public class DataManagerEuropeana implements DataManager {
                     dataSource.setMarcFormat(marcFormat);
 
                     if(!id.equals(oldId)){
-                        DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(dataSource, nameCode, name, exportPath);
-                        updateDataSourceContainer(dataSourceContainerEuropeana, oldId);
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, nameCode, name, exportPath);
+                        updateDataSourceContainer(dataSourceContainer, oldId);
                     }
                     else{
-                        dataSourceContainer.setName(name);
-                        dataSourceContainer.setNameCode(nameCode);
+                        oldDataSourceContainer.setName(name);
+                        oldDataSourceContainer.setNameCode(nameCode);
 //                            dataSourceContainer.setExportPath(exportPath);
                     }
                     updateDataProvider(dataProviderParent, dataProviderParent.getId());
@@ -2951,9 +2951,9 @@ public class DataManagerEuropeana implements DataManager {
      * @throws ObjectNotFoundException
      */
     public void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException {
-        DataSourceContainerEuropeana dataSourceContainerEuropeana = (DataSourceContainerEuropeana)getDataSourceContainer(dataSourceId);
-        if(dataSourceContainerEuropeana != null){
-            DataSource dataSource = dataSourceContainerEuropeana.getDataSource();
+        DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(dataSourceId);
+        if(dataSourceContainer != null){
+            DataSource dataSource = dataSourceContainer.getDataSource();
             File exportDir = new File(dataSource.getExportDir().getAbsolutePath());
             FileUtils.forceMkdir(exportDir);
 

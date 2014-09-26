@@ -23,8 +23,8 @@ import java.util.*;
 
 /**
  */
-public class Harvester implements RunnableStoppable {
-    private static final Logger log                        = Logger.getLogger(Harvester.class);
+public class OaiHarvester implements RunnableStoppable {
+    private static final Logger log                        = Logger.getLogger(OaiHarvester.class);
     private static final int    SIZE_HTTP_PROTOCOL         = 7;                                // http://
     private static final int    MAX_OAI_VERB_RETRIES       = 3;
     private static final String SERVERS_FILENAME           = "servers.txt";                    //tab separated file with the servers
@@ -147,7 +147,7 @@ public class Harvester implements RunnableStoppable {
      * @param maxRecord4Sample
      * @throws javax.xml.transform.TransformerConfigurationException
      */
-    public Harvester(String sourceUrl, String sourceSet, Date fromDate, Date untilDate, String metadataFormat, File logFile, int maxRecord4Sample) throws TransformerConfigurationException {
+    public OaiHarvester(String sourceUrl, String sourceSet, Date fromDate, Date untilDate, String metadataFormat, File logFile, int maxRecord4Sample) throws TransformerConfigurationException {
         super();
 
         SimpleDateFormat format = new SimpleDateFormat(OAI_DATE_FORMAT);
@@ -483,7 +483,7 @@ public class Harvester implements RunnableStoppable {
         //		sources.put("http://broker10.fcla.edu/cgi/b/broker20/broker20", "palmmfof:mapflbib");
         //		sources.put("http://vacani.icc.cat/cgi-bin/oai.exe", "catalunya");
 
-        Harvester harvester = new Harvester(sourceUrl, sourceSet, fromDate, untilDate, "ese", null, maxRecord4Sample);
+        OaiHarvester harvester = new OaiHarvester(sourceUrl, sourceSet, fromDate, untilDate, "ese", null, maxRecord4Sample);
         harvester.run();
 
     }

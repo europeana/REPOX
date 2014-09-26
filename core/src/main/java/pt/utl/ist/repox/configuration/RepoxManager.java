@@ -20,27 +20,27 @@ import pt.utl.ist.repox.util.EmailUtil;
  */
 public interface RepoxManager {
 
-    public RepoxConfiguration getConfiguration();
+    RepoxConfiguration getConfiguration();
 
-	public AccessPointsManager getAccessPointsManager();
+	AccessPointsManager getAccessPointsManager();
 
-	public DataManager getDataManager();
+	DataManager getDataManager();
 
-	public RecordCountManager getRecordCountManager();
+	RecordCountManager getRecordCountManager();
 
-	public StatisticsManager getStatisticsManager();
+	StatisticsManager getStatisticsManager();
 
-	public TaskManager getTaskManager();
+	TaskManager getTaskManager();
 
-	public MetadataTransformationManager getMetadataTransformationManager();
+	MetadataTransformationManager getMetadataTransformationManager();
 
-	public ExternalRestServicesManager getExternalRestServicesManager();
+	ExternalRestServicesManager getExternalRestServicesManager();
 
-	public MetadataSchemaManager getMetadataSchemaManager();
+	MetadataSchemaManager getMetadataSchemaManager();
 
-	public TagsManager getTagsManager();
+	TagsManager getTagsManager();
 
-	public Thread getTaskManagerThread();
+	Thread getTaskManagerThread();
 
-    public EmailUtil getEmailClient();
+    EmailUtil getEmailClient();
 }

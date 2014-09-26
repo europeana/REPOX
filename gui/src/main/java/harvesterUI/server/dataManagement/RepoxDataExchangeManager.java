@@ -31,7 +31,7 @@ import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ServiceParameter;
 import pt.utl.ist.repox.ftp.FtpFileRetrieveStrategy;
@@ -101,8 +101,8 @@ public class RepoxDataExchangeManager {
         else if(dataSource instanceof DataSourceZ3950) {
             dataSourceUI.setIngest("Z3950 " + dataSourceUI.getSourceMDFormat());
             DataSourceZ3950 dataSourceZ3950 = (DataSourceZ3950) dataSource;
-            if(dataSourceZ3950.getRecordIdPolicy() instanceof IdExtracted) {
-                IdExtracted idExtracted = (IdExtracted) dataSource.getRecordIdPolicy();
+            if(dataSourceZ3950.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+                IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSource.getRecordIdPolicy();
                 dataSourceUI.setIdXPath(idExtracted.getIdentifierXpath());
                 Map<String,String> namespaces = idExtracted.getNamespaces();
                 Iterator iterator=namespaces.entrySet().iterator();
@@ -294,8 +294,8 @@ public class RepoxDataExchangeManager {
     }
 
     private static void loadIdExtractedInfo(DirectoryImporterDataSource dataSourceDirectoryImporter, DataSource dataSource, DataSourceUI dataSourceUI){
-        if(dataSourceDirectoryImporter.getRecordIdPolicy() instanceof IdExtracted) {
-            IdExtracted idExtracted = (IdExtracted) dataSource.getRecordIdPolicy();
+        if(dataSourceDirectoryImporter.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
+            IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSource.getRecordIdPolicy();
             dataSourceUI.setIdXPath(idExtracted.getIdentifierXpath());
             dataSourceUI.setRecordIdPolicy("IdExtracted");
             Map<String,String> namespaces = idExtracted.getNamespaces();

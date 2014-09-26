@@ -52,12 +52,12 @@ import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.statistics.DefaultRepoxStatistics;
 import pt.utl.ist.repox.statistics.DefaultStatisticsManager;
 import pt.utl.ist.repox.task.OldTask;
-import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
+import pt.utl.ist.repox.task.OldTaskReviewer;
 import pt.utl.ist.repox.util.PropertyUtil;
 
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -477,7 +477,7 @@ public class EuDMLAndLightManager extends ProjectManager {
         }
 
         String recordPolicy;
-        if(dataSource.getRecordIdPolicy() instanceof IdExtracted)
+        if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
             recordPolicy = "IdExtracted";
         else
             recordPolicy = "IdGenerated";

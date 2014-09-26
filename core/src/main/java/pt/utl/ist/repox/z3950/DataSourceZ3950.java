@@ -29,15 +29,15 @@ import java.util.*;
 public class DataSourceZ3950 extends DataSource {
     private static final Logger log = Logger.getLogger(DataSourceZ3950.class);
 
-    private HarvestMethod       harvestMethod;
+    private Harvester       harvestMethod;
 
     @SuppressWarnings("javadoc")
-    public HarvestMethod getHarvestMethod() {
+    public Harvester getHarvestMethod() {
         return harvestMethod;
     }
 
     @SuppressWarnings("javadoc")
-    public void setHarvestMethod(HarvestMethod harvestMethod) {
+    public void setHarvestMethod(Harvester harvestMethod) {
         this.harvestMethod = harvestMethod;
     }
 
@@ -60,7 +60,7 @@ public class DataSourceZ3950 extends DataSource {
      * @param recordIdPolicy
      * @param metadataTransformations
      */
-    public DataSourceZ3950(DataProvider dataProvider, String id, String description, String schema, String namespace, HarvestMethod harvestMethod, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
+    public DataSourceZ3950(DataProvider dataProvider, String id, String description, String schema, String namespace, Harvester harvestMethod, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
         super(dataProvider, id, description, schema, namespace, MetadataFormat.MarcXchange.toString(), recordIdPolicy, metadataTransformations);
         this.harvestMethod = harvestMethod;
 
@@ -219,7 +219,7 @@ public class DataSourceZ3950 extends DataSource {
     public Element addSpecificInfo(Element sourceElement) {
         sourceElement.addAttribute("type", "DataSourceZ3950");
 
-        HarvestMethod harvestMethod = getHarvestMethod();
+        Harvester harvestMethod = getHarvestMethod();
         Target target = harvestMethod.getTarget();
         Element targetElement = sourceElement.addElement("target");
         targetElement.addElement("address").setText(target.getAddress());
