@@ -11,8 +11,8 @@ import pt.utl.ist.repox.accessPoint.RecordRepoxFullAccessPoint;
 import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.database.DatabaseAccess;
 import pt.utl.ist.repox.oai.OaiListResponse;
 import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
@@ -435,7 +435,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             /* DELETE old indexes */
             // If Data Source has ids extracted or is IdProvided, the ids are extracted from the records and need
             // to be deleted before being inserted again (for performance: it's faster than updating)
-            if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy/*
+            if (dataSource.getRecordIdPolicy() instanceof IdExtracted || dataSource.getRecordIdPolicy() instanceof IdProvided/*
                                                                                                                               * ||
                                                                                                                               * dataSource
                                                                                                                               * instanceof

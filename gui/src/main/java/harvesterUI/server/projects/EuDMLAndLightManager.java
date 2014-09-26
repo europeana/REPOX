@@ -52,7 +52,7 @@ import pt.utl.ist.repox.dataProvider.DataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.statistics.DefaultRepoxStatistics;
 import pt.utl.ist.repox.statistics.DefaultStatisticsManager;
@@ -477,7 +477,7 @@ public class EuDMLAndLightManager extends ProjectManager {
         }
 
         String recordPolicy;
-        if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+        if(dataSource.getRecordIdPolicy() instanceof IdExtracted)
             recordPolicy = "IdExtracted";
         else
             recordPolicy = "IdGenerated";

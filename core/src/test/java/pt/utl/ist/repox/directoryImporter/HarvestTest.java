@@ -13,7 +13,7 @@ import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.FileExtractStrategy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
 import pt.utl.ist.repox.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
@@ -93,7 +93,7 @@ public class HarvestTest {
                     new FolderFileRetrieveStrategy(),
                     null,
                     SOURCE_PATH,
-                    new IdGeneratedRecordIdPolicy(),
+                    new IdGenerated(),
                     new TreeMap<String, MetadataTransformation>(),
                     SOURCE_RECORDXPATH,
                     namespaces);

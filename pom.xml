@@ -43,7 +43,7 @@
 	<modules>
 		<module>core</module>
 		<module>server</module>
-		<module>client</module>
+<!-- 		<module>client</module> -->
 
 		<module>commons</module>
 		<module>gui</module>
@@ -58,8 +58,8 @@
 		<repox:repox-server.version>3.0-SNAPSHOT</repox:repox-server.version>
 		<repox:repox-server-oai.version>3.0-SNAPSHOT</repox:repox-server-oai.version>
 		<repox:repox-server-rest.version>3.0-SNAPSHOT</repox:repox-server-rest.version>
-		<repox:repox-client.version>3.0-SNAPSHOT</repox:repox-client.version>
-		<repox:repox-client-oai.version>3.0-SNAPSHOT</repox:repox-client-oai.version>
+<!-- 		<repox:repox-client.version>3.0-SNAPSHOT</repox:repox-client.version> -->
+<!-- 		<repox:repox-client-oai.version>3.0-SNAPSHOT</repox:repox-client-oai.version> -->
 
 		<repox:repox-commons.version>3.0-SNAPSHOT</repox:repox-commons.version>
 		<repox:repox-resources.version>3.0-SNAPSHOT</repox:repox-resources.version>
@@ -184,16 +184,16 @@
 				<version>${repox:repox-server-rest.version}</version>
 				<type>war</type>
 			</dependency>
-			<dependency>
-				<groupId>repox</groupId>
-				<artifactId>repox-client</artifactId>
-				<version>${repox:repox-client.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>repox</groupId>
-				<artifactId>repox-client-oai</artifactId>
-				<version>${repox:repox-client-oai.version}</version>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>repox</groupId> -->
+<!-- 				<artifactId>repox-client</artifactId> -->
+<!-- 				<version>${repox:repox-client.version}</version> -->
+<!-- 			</dependency> -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>repox</groupId> -->
+<!-- 				<artifactId>repox-client-oai</artifactId> -->
+<!-- 				<version>${repox:repox-client-oai.version}</version> -->
+<!-- 			</dependency> -->
 			<dependency>
 				<groupId>repox</groupId>
 				<artifactId>repox-commons</artifactId>

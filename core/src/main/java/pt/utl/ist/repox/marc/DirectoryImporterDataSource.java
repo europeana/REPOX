@@ -173,7 +173,7 @@ public class DirectoryImporterDataSource extends DataSource {
         }
 
         // Remove all records from IdGenerated because there is no version management or it is a full ingest
-        if (this.getRecordIdPolicy() instanceof IdGeneratedRecordIdPolicy || fullIngest) {
+        if (this.getRecordIdPolicy() instanceof IdGenerated || fullIngest) {
             boolean successfulDeletion = emptyRecords();
 
             if (!successfulDeletion) {

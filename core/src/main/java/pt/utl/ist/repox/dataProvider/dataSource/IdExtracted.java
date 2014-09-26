@@ -17,8 +17,8 @@ import java.util.Set;
 
 /**
  */
-public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
-    private static final Logger log = Logger.getLogger(IdExtractedRecordIdPolicy.class);
+public class IdExtracted implements RecordIdPolicy {
+    private static final Logger log = Logger.getLogger(IdExtracted.class);
 
     private Map<String, String> namespaces;
     private String              identifierXpath;                          //private String identifierXpath = "/record/identifier"; OAI-DC
@@ -58,7 +58,7 @@ public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     /**
      * Creates a new instance of this class.
      */
-    public IdExtractedRecordIdPolicy() {
+    public IdExtracted() {
         super();
         namespaces = new HashMap<String, String>();
     }
@@ -69,7 +69,7 @@ public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
      * @param identifierXpath
      * @param namespaces
      */
-    public IdExtractedRecordIdPolicy(String identifierXpath, Map<String, String> namespaces) {
+    public IdExtracted(String identifierXpath, Map<String, String> namespaces) {
         super();
         this.identifierXpath = identifierXpath;
         this.namespaces = namespaces;
@@ -107,7 +107,7 @@ public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     public boolean equals(Object obj) {
         if (!this.getClass().equals(obj.getClass())) { return false; }
 
-        IdExtractedRecordIdPolicy mSIdExtracted = (IdExtractedRecordIdPolicy)obj;
+        IdExtracted mSIdExtracted = (IdExtracted)obj;
 
         if (CompareUtil.compareObjectsAndNull(this.identifierXpath, mSIdExtracted.getIdentifierXpath()) && this.equalsNamespaces(mSIdExtracted.getNamespaces())) {
             return true;

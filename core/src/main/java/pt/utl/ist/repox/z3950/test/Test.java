@@ -18,7 +18,7 @@ import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
 import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.z3950.*;
 import pt.utl.ist.util.date.DateUtil;
@@ -105,7 +105,7 @@ public class Test {
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
         DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers);
-        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGeneratedRecordIdPolicy(), null);
+        DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGenerated(), null);
 
         dataSourceContainers.put(dataSourceZ3950.getId(), new DefaultDataSourceContainer(dataSourceZ3950));
 

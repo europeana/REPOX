@@ -59,7 +59,7 @@ import pt.utl.ist.repox.dataProvider.Countries;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdExtracted;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.oldTasks.OldTaskReviewer;
@@ -717,7 +717,7 @@ public class EuropeanaManager extends ProjectManager {
         }
 
         String recordPolicy;
-        if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
+        if(dataSource.getRecordIdPolicy() instanceof IdExtracted)
             recordPolicy = "IdExtracted";
         else
             recordPolicy = "IdGenerated";

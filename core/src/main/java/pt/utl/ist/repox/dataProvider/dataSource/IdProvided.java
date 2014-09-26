@@ -7,7 +7,7 @@ import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
 
 /**
  */
-public class IdProvidedRecordIdPolicy implements RecordIdPolicy {
+public class IdProvided implements RecordIdPolicy {
 	@Override
     public RecordRepox createRecordRepox(Element recordElement, String recordId, boolean forceId, boolean isDeleted) {
 		return new RecordRepoxExternalId(recordElement, recordId, isDeleted);

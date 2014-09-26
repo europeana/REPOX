@@ -39,7 +39,7 @@ import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceStates;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
@@ -588,7 +588,7 @@ public class EuropeanaSaveData {
 
                 OaiDataSource dataSourceOai = new OaiDataSource(dataProviderEuropeana, setId, setDescription,
                         dsSchema, dsNamespace, dsMTDFormat,
-                        url, setSpec, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                        url, setSpec, new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
                 HashMap<String, DataSourceContainer> oldDataSourceContainers = dataProviderEuropeana.getDataSourceContainers();
 

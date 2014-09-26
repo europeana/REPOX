@@ -22,7 +22,7 @@ import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.repox.configuration.RepoxManager;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.Urn;
@@ -415,7 +415,7 @@ public class RestServlet extends HttpServlet {
         else {
             DataSource dataSource = repoxManager.getDataManager().getDataSourceContainer(dataSourceId).getDataSource();
 
-            if(dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy
+            if(dataSource.getRecordIdPolicy() instanceof IdProvided
                     && !validateRecordId(restRequest, out, recordIdParameter)) {
                 RestUtils.writeInvalidRequest(restRequest.getFullRequestURI(),
                         "recordId parameter is mandatory for this operation: " + operationParameter,

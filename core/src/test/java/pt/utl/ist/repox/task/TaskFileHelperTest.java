@@ -9,8 +9,8 @@ import org.junit.Test;
 import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.dataProvider.*;
-import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdGenerated;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
 import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
@@ -47,19 +47,19 @@ public class TaskFileHelperTest {
         newDP = new DataProvider("dummyDP", "dummyDP", "pt", "testing purposes only", dataSourceContainers);
 
         DataSource dataSourceOai = new OaiDataSource(newDP, "dummyDSIngest", "test DS", "schema", "namespace", MetadataFormat.oai_dc.toString(),
-                "http://dummy.oai.rp", "noset", new IdProvidedRecordIdPolicy(), null);
+                "http://dummy.oai.rp", "noset", new IdProvided(), null);
         dataSourceContainers.put(dataSourceOai.getId(), new DefaultDataSourceContainer(dataSourceOai));
 
         //DataSource dataSourceDImporter = new DataSourceDirectoryImporter(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.oai_dc.toString(),
         DataSource dataSourceDImporter = new DirectoryImporterDataSource(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.ese.toString(),
                 new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
-                 "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
+                 "src/test/resources/directoryImportTest", new IdGenerated(), null, null, null);
 
         dataSourceContainers.put(dataSourceDImporter.getId(), new DefaultDataSourceContainer(dataSourceDImporter));
 
         DataSource dataSourceDImporter1 = new DirectoryImporterDataSource(newDP, "dummyDSExport2", "", "", "test DS", MetadataFormat.ISO2709.toString(),
                 new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
-                "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
+                "src/test/resources/directoryImportTest", new IdGenerated(), null, null, null);
 
         dataSourceContainers.put(dataSourceDImporter1.getId(), new DefaultDataSourceContainer(dataSourceDImporter1));
 

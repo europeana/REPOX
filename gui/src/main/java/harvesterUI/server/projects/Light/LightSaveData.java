@@ -38,7 +38,7 @@ import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.MessageType;
 import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.repox.dataProvider.dataSource.IdProvided;
 import pt.utl.ist.repox.externalServices.ExternalRestService;
 import pt.utl.ist.repox.externalServices.ExternalServiceNoMonitor;
 import pt.utl.ist.repox.externalServices.ExternalServiceStates;
@@ -522,7 +522,7 @@ public class LightSaveData {
 
                 OaiDataSource dataSourceOai = new OaiDataSource(dataProvider, setId, setDescription,
                         dsSchema, dsNamespace, dsMTDFormat,
-                        url, setSpec, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                        url, setSpec, new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
                 HashMap<String, DataSourceContainer> oldDataSourceContainers = dataProvider.getDataSourceContainers();
 

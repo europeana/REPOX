@@ -316,13 +316,13 @@ public class DataManagerEuropeana implements DataManager {
                     Element recordIdPolicyNode = currentDataSourceElement.element("recordIdPolicy");
                     String recordIdPolicyClass = recordIdPolicyNode.attributeValue("type");
                     RecordIdPolicy recordIdPolicy;
-                    if(recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
-                        recordIdPolicy = new IdGeneratedRecordIdPolicy();
+                    if(recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
+                        recordIdPolicy = new IdGenerated();
                     }
-                    else if(recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
-                        recordIdPolicy = new IdProvidedRecordIdPolicy();
+                    else if(recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
+                        recordIdPolicy = new IdProvided();
                     }
-                    else if(recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
+                    else if(recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
                         String identifierXpath = recordIdPolicyNode.element("idXpath").getText();
                         Map<String, String> namespaces = new TreeMap<String, String>();
                         Element namespacesElement = recordIdPolicyNode.element("namespaces");
@@ -333,7 +333,7 @@ public class DataManagerEuropeana implements DataManager {
                                         currentNamespace.elementText("namespaceUri"));
                             }
                         }
-                        recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
+                        recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
                     }
                     else {
                         throw new RuntimeException("Invalid RecordIdPolicy of class " + recordIdPolicyClass);
@@ -357,7 +357,7 @@ public class DataManagerEuropeana implements DataManager {
                         String oaiSource = currentDataSourceElement.elementText("oai-source");
                         String oaiSet = (currentDataSourceElement.element("oai-set") != null ? currentDataSourceElement.elementText("oai-set") : null);
                         dataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSource, oaiSet, new IdProvidedRecordIdPolicy(), metadataTransformations);
+                                oaiSource, oaiSet, new IdProvided(), metadataTransformations);
                     } else if(dataSourceType.equals("DataSourceSruRecordUpdate")) {
                         dataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
                                 recordIdPolicy, metadataTransformations);
@@ -1615,7 +1615,7 @@ public class DataManagerEuropeana implements DataManager {
                 if(dataProvider != null){
 
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                            new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                            new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
                     DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
@@ -1660,7 +1660,7 @@ public class DataManagerEuropeana implements DataManager {
                     }
                     if(new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)){
                         DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
 
                         DataSourceContainerEuropeana dataSourceContainerEuropeana = new DataSourceContainerEuropeana(newDataSource, nameCode, name, exportPath);
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainerEuropeana);
@@ -2219,7 +2219,7 @@ public class DataManagerEuropeana implements DataManager {
             if(dataProviderParent != null){
                 if(!(dataSource instanceof SruRecordUpdateDataSource)){
                     DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                            new IdGenerated(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
 
@@ -2285,7 +2285,7 @@ public class DataManagerEuropeana implements DataManager {
                 if(dataProviderParent != null){
                     if(!(dataSource instanceof OaiDataSource)){
                         DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                                oaiSourceURL, oaiSet, new IdProvided(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 

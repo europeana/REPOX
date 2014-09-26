@@ -21,12 +21,12 @@ public class DataSourceUtil {
      */
     public static RecordIdPolicy createIdPolicy(String recordIdPolicyClass, String identifierXpath, Map<String, String> namespaces) {
         RecordIdPolicy recordIdPolicy = null;
-        if (recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
-            recordIdPolicy = new IdGeneratedRecordIdPolicy();
-        } else if (recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
-            recordIdPolicy = new IdProvidedRecordIdPolicy();
-        } else if (recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
-            recordIdPolicy = new IdExtractedRecordIdPolicy(identifierXpath, namespaces);
+        if (recordIdPolicyClass.equals(IdGenerated.class.getSimpleName())) {
+            recordIdPolicy = new IdGenerated();
+        } else if (recordIdPolicyClass.equals(IdProvided.class.getSimpleName())) {
+            recordIdPolicy = new IdProvided();
+        } else if (recordIdPolicyClass.equals(IdExtracted.class.getSimpleName())) {
+            recordIdPolicy = new IdExtracted(identifierXpath, namespaces);
         }
         return recordIdPolicy;
     }
