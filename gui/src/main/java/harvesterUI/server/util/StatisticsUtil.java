@@ -1,6 +1,6 @@
 package harvesterUI.server.util;
 
-import pt.utl.ist.repox.statistics.MetadataFormatStatistics;
+import pt.utl.ist.statistics.MetadataFormatStatistics;
 
 import java.util.HashMap;
 import java.util.Map;

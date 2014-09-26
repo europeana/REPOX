@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.repox.util.exceptions.SameStylesheetTransformationException;
 

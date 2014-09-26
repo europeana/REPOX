@@ -2,9 +2,9 @@ package pt.utl.ist.rest.services.web;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.metadataSchemas.MetadataSchemaVersion;
-import pt.utl.ist.repox.util.Urn;
+import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
+import pt.utl.ist.util.Urn;
 
 import java.io.IOException;
 import java.io.InputStream;

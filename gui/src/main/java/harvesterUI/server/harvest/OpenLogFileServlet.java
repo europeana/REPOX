@@ -27,8 +27,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.dataProvider.DataSource;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.repox.util.XmlUtil;
 
 /**

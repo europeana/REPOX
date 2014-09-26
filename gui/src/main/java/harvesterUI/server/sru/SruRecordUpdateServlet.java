@@ -32,15 +32,15 @@ import javax.xml.soap.SOAPPart;
 
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
-import pt.utl.ist.repox.configuration.RepoxManager;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
+import pt.utl.ist.configuration.RepoxManager;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
-import pt.utl.ist.repox.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.sru.SruRecordUpdateDataSource;
 
 /**
  *

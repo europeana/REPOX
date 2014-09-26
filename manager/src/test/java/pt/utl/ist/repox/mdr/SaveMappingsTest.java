@@ -7,10 +7,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.util.exceptions.*;
 import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 

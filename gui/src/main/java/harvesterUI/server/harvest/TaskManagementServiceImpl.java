@@ -17,9 +17,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.task.ScheduledTask;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.task.ScheduledTask;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;

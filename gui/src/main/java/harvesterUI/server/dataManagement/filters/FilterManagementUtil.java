@@ -19,14 +19,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.DataSourceTag;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.rest.dataProvider.Aggregator;
-import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
-import pt.utl.ist.repox.rest.dataProvider.DefualtDataProvider;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.rest.dataProvider.Aggregator;
+import pt.utl.ist.rest.dataProvider.DefaultDataManager;
+import pt.utl.ist.rest.dataProvider.DefualtDataProvider;
 
 import com.extjs.gxt.ui.client.util.DateWrapper;
 

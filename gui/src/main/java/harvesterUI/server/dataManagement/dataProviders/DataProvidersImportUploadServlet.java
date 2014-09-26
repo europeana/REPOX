@@ -8,7 +8,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.ConfigSingleton;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

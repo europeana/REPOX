@@ -7,8 +7,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.metadataTransformation.TransformationsFileManager;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.metadataTransformation.TransformationsFileManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

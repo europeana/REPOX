@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.utl.ist.repox.metadataTransformation.Xslt2StylesheetCache;
+import pt.utl.ist.metadataTransformation.Xslt2StylesheetCache;
 import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 import javax.xml.transform.Templates;

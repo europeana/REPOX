@@ -35,9 +35,9 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.mindrot.jbcrypt.BCrypt;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.dataProvider.DataProvider;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.repox.util.XmlUtil;
 

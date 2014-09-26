@@ -44,21 +44,21 @@ import javax.mail.AuthenticationFailedException;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.configuration.RepoxConfiguration;
-import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.dataProvider.Countries;
-import pt.utl.ist.repox.dataProvider.DataManager;
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.dataProvider.dataSource.IdExtractedRecordIdPolicy;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.statistics.DefaultRepoxStatistics;
-import pt.utl.ist.repox.statistics.DefaultStatisticsManager;
-import pt.utl.ist.repox.task.OldTask;
-import pt.utl.ist.repox.task.OldTaskReviewer;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.configuration.RepoxConfiguration;
+import pt.utl.ist.dataProvider.Countries;
+import pt.utl.ist.dataProvider.DataManager;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.statistics.DefaultRepoxStatistics;
+import pt.utl.ist.statistics.DefaultStatisticsManager;
+import pt.utl.ist.task.OldTask;
+import pt.utl.ist.task.OldTaskReviewer;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 

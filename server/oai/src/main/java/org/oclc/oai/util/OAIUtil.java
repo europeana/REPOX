@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.ConfigSingleton;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

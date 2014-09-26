@@ -29,7 +29,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.ModelData;

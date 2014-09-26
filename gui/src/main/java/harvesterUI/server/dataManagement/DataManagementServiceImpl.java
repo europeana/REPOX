@@ -11,9 +11,9 @@ import harvesterUI.shared.dataTypes.dataSet.SimpleDataSetInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;

@@ -1,6 +1,6 @@
 package harvesterUI.server.transformations;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.ConfigSingleton;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

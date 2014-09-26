@@ -43,14 +43,14 @@ import org.oclc.oai.harvester2.verb.ListMetadataFormats;
 import org.oclc.oai.harvester2.verb.ListSets;
 import org.xml.sax.SAXParseException;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.LogFilenameComparator;
-import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
-import pt.utl.ist.repox.oai.OaiDataSource;
-import pt.utl.ist.repox.task.OldTask;
-import pt.utl.ist.repox.task.ScheduledTask;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.LogFilenameComparator;
+import pt.utl.ist.marc.DirectoryImporterDataSource;
+import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.repox.util.FileUtilSecond;
+import pt.utl.ist.task.OldTask;
+import pt.utl.ist.task.ScheduledTask;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

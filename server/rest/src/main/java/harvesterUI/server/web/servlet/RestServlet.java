@@ -16,21 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.configuration.EuropeanaRepoxContextUtil;
-import pt.utl.ist.repox.configuration.RepoxManager;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.MessageType;
-import pt.utl.ist.repox.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
+import pt.utl.ist.configuration.RepoxManager;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.repox.util.ProjectType;
 import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.impl.WebServicesImplEuropeana;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
+import pt.utl.ist.util.Urn;
 
 public class RestServlet extends HttpServlet {
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RestServlet.class);

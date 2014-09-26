@@ -25,21 +25,21 @@ import org.oclc.oai.server.catalog.AbstractCatalog;
 import org.oclc.oai.server.verb.*;
 import org.oclc.oai.util.OAIUtil;
 
-import pt.utl.ist.repox.accessPoint.manager.AccessPointsManager;
-import pt.utl.ist.repox.configuration.ConfigSingleton;
-import pt.utl.ist.repox.dataProvider.DataProvider;
-import pt.utl.ist.repox.dataProvider.DataSource;
-import pt.utl.ist.repox.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.metadataSchemas.MetadataSchemaManager;
-import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.oai.OaiDataSource;
-import pt.utl.ist.repox.oai.OaiListResponse;
-import pt.utl.ist.repox.oai.OaiListResponse.OaiItem;
+import pt.utl.ist.accessPoint.manager.AccessPointsManager;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.oai.OaiDataSource;
+import pt.utl.ist.oai.OaiListResponse;
+import pt.utl.ist.oai.OaiListResponse.OaiItem;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.util.InvalidInputException;
-import pt.utl.ist.repox.util.TransformationResultLogger;
-import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.TransformationResultLogger;
+import pt.utl.ist.util.Urn;
 
 import javax.xml.transform.TransformerException;
 

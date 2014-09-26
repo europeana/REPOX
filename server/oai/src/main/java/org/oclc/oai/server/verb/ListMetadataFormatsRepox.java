@@ -16,7 +16,7 @@ import org.oclc.oai.server.crosswalk.CrosswalkItem;
 import org.oclc.oai.server.crosswalk.Crosswalks;
 import org.oclc.oai.util.OAIUtil;
 
-import pt.utl.ist.repox.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.repox.oai.server.catalog.DataSourceOaiCatalog;
 
 import javax.servlet.http.HttpServletRequest;
