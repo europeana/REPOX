@@ -13,7 +13,7 @@ import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.util.date.DateUtil;
+import pt.utl.ist.repox.util.date.DateUtil;
 
 import java.io.File;
 import java.io.IOException;

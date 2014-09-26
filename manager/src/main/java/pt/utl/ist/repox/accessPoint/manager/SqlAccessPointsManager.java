@@ -21,7 +21,7 @@ import pt.utl.ist.repox.reports.LogUtil;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.ZipUtil;
-import pt.utl.ist.util.sql.SqlUtil;
+import pt.utl.ist.repox.util.sql.SqlUtil;
 
 import java.io.File;
 import java.io.IOException;

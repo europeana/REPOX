@@ -21,7 +21,7 @@ import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.util.CompareUtil;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.date.DateUtil;
+import pt.utl.ist.repox.util.date.DateUtil;
 
 import javax.xml.transform.TransformerConfigurationException;
 

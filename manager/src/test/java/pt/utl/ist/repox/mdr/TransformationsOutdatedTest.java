@@ -4,11 +4,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.utl.ist.repox.metadataTransformation.Xslt2StylesheetCache;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerException;
+
 import java.io.File;
 import java.io.IOException;
 

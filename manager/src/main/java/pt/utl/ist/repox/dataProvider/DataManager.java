@@ -1,11 +1,12 @@
 package pt.utl.ist.repox.dataProvider;
 
 import org.dom4j.DocumentException;
+
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.Task;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;

@@ -49,10 +49,10 @@ import pt.utl.ist.repox.rest.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.rest.dataProvider.DefualtDataProvider;
 import pt.utl.ist.repox.rest.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.IncompatibleInstanceException;
+import pt.utl.ist.repox.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 import eu.europeana.repox2sip.models.ProviderType;
 
 /**

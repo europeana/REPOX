@@ -21,8 +21,8 @@ import pt.utl.ist.repox.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.statistics.RecordCount;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

@@ -13,10 +13,10 @@ import pt.utl.ist.repox.dataProvider.DefaultDataManager;
 import pt.utl.ist.repox.dataProvider.DataProvider;
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

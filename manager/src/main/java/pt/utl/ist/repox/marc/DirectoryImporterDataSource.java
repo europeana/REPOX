@@ -16,6 +16,7 @@ import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.dataProvider.dataSource.*;
 import pt.utl.ist.repox.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.repox.http.HttpFileRetrieveStrategy;
+import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.recordPackage.RecordRepox;
 import pt.utl.ist.repox.reports.LogUtil;
@@ -27,7 +28,7 @@ import pt.utl.ist.repox.util.FileUtil;
 import pt.utl.ist.repox.util.StringUtil;
 import pt.utl.ist.repox.util.TarGz;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.date.DateUtil;
+import pt.utl.ist.repox.util.date.DateUtil;
 
 import java.io.*;
 import java.sql.SQLException;

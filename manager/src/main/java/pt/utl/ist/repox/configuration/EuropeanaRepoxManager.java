@@ -21,7 +21,7 @@ import pt.utl.ist.repox.statistics.RecordCountManager;
 import pt.utl.ist.repox.statistics.StatisticsManager;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 /**
  * Created by IntelliJ IDEA.

@@ -35,9 +35,9 @@ import pt.utl.ist.repox.task.ScheduledTask;
 import pt.utl.ist.repox.task.Task;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.util.date.DateUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.date.DateUtil;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 import com.extjs.gxt.ui.client.util.DateWrapper;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

@@ -11,8 +11,8 @@ import pt.utl.ist.repox.configuration.ConfigSingleton;
 import pt.utl.ist.repox.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.util.exceptions.*;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.*;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;

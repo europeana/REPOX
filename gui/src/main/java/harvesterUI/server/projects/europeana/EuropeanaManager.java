@@ -72,8 +72,8 @@ import pt.utl.ist.repox.task.OldTask;
 import pt.utl.ist.repox.task.OldTaskReviewer;
 import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 

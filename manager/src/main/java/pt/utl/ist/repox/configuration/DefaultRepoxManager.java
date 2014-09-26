@@ -16,7 +16,7 @@ import pt.utl.ist.repox.statistics.DefaultStatisticsManager;
 import pt.utl.ist.repox.task.TaskManager;
 import pt.utl.ist.repox.util.EmailUtil;
 import pt.utl.ist.repox.util.DefaultEmailUtil;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

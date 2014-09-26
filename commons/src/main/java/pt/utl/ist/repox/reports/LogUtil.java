@@ -10,7 +10,7 @@ import org.dom4j.tree.DefaultElement;
 
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.util.date.DateUtil;
+import pt.utl.ist.repox.util.date.DateUtil;
 
 import java.io.File;
 import java.io.IOException;

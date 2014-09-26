@@ -48,10 +48,10 @@ import pt.utl.ist.repox.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.repox.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.FileUtilSecond;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.IncompatibleInstanceException;
+import pt.utl.ist.repox.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 
 /**
  * Created to REPOX.

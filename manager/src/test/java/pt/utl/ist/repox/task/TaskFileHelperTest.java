@@ -17,9 +17,9 @@ import pt.utl.ist.repox.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.repox.metadataTransformation.MetadataFormat;
 import pt.utl.ist.repox.oai.OaiDataSource;
 import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -10,6 +10,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+
 import pt.utl.ist.repox.dataProvider.DataSource;
 import pt.utl.ist.repox.marc.CharacterEncoding;
 import pt.utl.ist.repox.marc.DirectoryImporterDataSource;
@@ -19,6 +20,7 @@ import pt.utl.ist.repox.util.StringUtil;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 

@@ -20,11 +20,11 @@ import pt.utl.ist.repox.dataProvider.DataSourceContainer;
 import pt.utl.ist.repox.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.repox.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.repox.marc.CharacterEncoding;
+import pt.utl.ist.repox.util.date.DateUtil;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.util.date.DateUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.BufferedReader;
 import java.io.File;

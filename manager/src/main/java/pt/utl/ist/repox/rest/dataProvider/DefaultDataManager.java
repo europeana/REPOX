@@ -36,12 +36,12 @@ import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.repox.util.TimeUtil;
 import pt.utl.ist.repox.util.Urn;
 import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.repox.util.date.DateUtil;
+import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.repox.util.exceptions.IncompatibleInstanceException;
+import pt.utl.ist.repox.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.repox.z3950.*;
-import pt.utl.ist.util.date.DateUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
