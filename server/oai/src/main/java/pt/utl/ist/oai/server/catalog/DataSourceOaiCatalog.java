@@ -15,7 +15,7 @@
  *The Initial Developer of the Original Code is Jeff Young.
  *Portions created by Diogo Mena Reis
  */
-package pt.utl.ist.repox.oai.server.catalog;
+package pt.utl.ist.oai.server.catalog;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;

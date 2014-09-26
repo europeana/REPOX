@@ -1,4 +1,4 @@
-package pt.utl.ist.repox.oai.server.catalog;
+package pt.utl.ist.oai.server.catalog;
 
 import java.util.Comparator;
 
