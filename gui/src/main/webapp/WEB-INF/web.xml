@@ -249,7 +249,7 @@
 	<!-- Servlet REST -->
 	<servlet>
 		<servlet-name>rest</servlet-name>
-		<servlet-class>harvesterUI.server.web.servlet.RestServlet</servlet-class>
+		<servlet-class>pt.utl.ist.rest.RestServlet</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 	

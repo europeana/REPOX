@@ -1,4 +1,4 @@
-package eu.europeana.core.util.web;
+package pt.utl.ist.deprecated.util;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Borys Omelayenko <borys.omelayenko@kb.nl>
  */
 
-public class EmailSender {
+public class EmailSender2 {
     private static final String TEMPLATE_NAME_AFFIX_TEXT = ".txt.ftl";
     private static final String TEMPLATE_NAME_AFFIX_HTML = ".html.ftl";
     private Logger log = Logger.getLogger(getClass());

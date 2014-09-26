@@ -1,4 +1,4 @@
-package harvesterUI.server.web.servlet;
+package pt.utl.ist.rest;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;

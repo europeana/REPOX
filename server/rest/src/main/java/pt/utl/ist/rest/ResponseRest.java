@@ -1,11 +1,11 @@
-package harvesterUI.server.web.servlet;
+package pt.utl.ist.rest;
 
 import org.dom4j.DocumentException;
 
+import pt.utl.ist.rest.services.web.DefaultWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
-import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
-import pt.utl.ist.rest.services.web.rest.InvalidRequestException;
 import pt.utl.ist.util.InvalidInputException;
+import pt.utl.ist.util.exceptions.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

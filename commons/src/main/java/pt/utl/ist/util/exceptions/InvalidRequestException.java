@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.services.web.rest;
+package pt.utl.ist.util.exceptions;
 
 /**
  */

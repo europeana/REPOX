@@ -5,6 +5,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import pt.utl.ist.util.XmlUtil;
+import pt.utl.ist.util.exceptions.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 

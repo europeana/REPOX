@@ -1,4 +1,4 @@
-package pt.utl.ist.rest.services.web.impl;
+package pt.utl.ist.rest.services.web;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.*;

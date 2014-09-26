@@ -1,3 +1,4 @@
+package pt.utl.ist.rest;
 //package harvesterUI.server.web.servlet;
 //
 //import org.dom4j.DocumentException;

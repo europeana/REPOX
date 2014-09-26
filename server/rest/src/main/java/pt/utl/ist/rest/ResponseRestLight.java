@@ -1,4 +1,4 @@
-package harvesterUI.server.web.servlet;
+package pt.utl.ist.rest;
 
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -6,13 +6,13 @@ import org.dom4j.Element;
 
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
+import pt.utl.ist.rest.services.web.DefaultWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
-import pt.utl.ist.rest.services.web.impl.WebServicesImplEuropeana;
-import pt.utl.ist.rest.services.web.rest.InvalidRequestException;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.InvalidRequestException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +28,13 @@ import java.util.List;
  * Created with IntelliJ IDEA.
  * User: Gilberto Pedrosa
  * Date: 14-12-2012
- * Time: 22:01
+ * Time: 21:53
  * To change this template use File | Settings | File Templates.
  */
-public class ResponseRestEuropeana extends ResponseOperations implements ResponseRest {
-    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServicesEuropeana) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
+public class ResponseRestLight extends ResponseOperations implements ResponseRest {
+    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServicesLight) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
 
-        WebServicesImplEuropeana webServices = (WebServicesImplEuropeana)webServicesEuropeana;
+        DefaultWebServices webServices = (DefaultWebServices)webServicesLight;
 
         RestRequest restRequest = RestUtils.processRequest(RestServlet.BASE_URI, request);
         response.setContentType("text/xml");
@@ -42,6 +42,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
 
         webServices.setRequestURI(request.getRequestURL().toString());
 
+        // Mappings
         if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals("removeMapping")) {
             String id = restRequest.getRequestParameters().get("id");
@@ -138,148 +139,36 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                 && restRequest.getUriHierarchy().get(0).equals("listSchemas")) {
             webServices.listMetadataSchemas(out);
         }
-        // aggregators
-        else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
-                && restRequest.getUriHierarchy().get(0).equals(RestServlet.AGGREGATORS_URL_NAME)) {
-            if(restRequest.getUriHierarchy().size() == 1) {
-                //list all available data providers operations
-                Element rootElement = getAggregatorOperationList(restRequest);
-                RestUtils.writeRestResponse(out, rootElement);
-            }
-            else { // operation over an Aggregator
-                if(restRequest.getUriHierarchy().size() == 2) {
-
-                    if(restRequest.getUriHierarchy().get(1).equals("list")) {
-                        webServices.writeAggregators(out);
-                    }
-                    else if(restRequest.getUriHierarchy().get(1).equals("create")) {
-                        String name = restRequest.getRequestParameters().get("name");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String homepage = restRequest.getRequestParameters().get("homepage");
-
-                        if(name != null && !name.isEmpty()){
-                            webServices.createAggregator(out, name, nameCode, homepage);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
-                                    "Aggregator: invalid arguments. Syntax: /rest/aggregators/create?name=NAME" +
-                                    "&nameCode=NAME_CODE&homepage=HOMEPAGE [mandatory fields: name]");
-                        }
-                    }
-                    else if(restRequest.getUriHierarchy().get(1).equals("update")) {
-                        String id = restRequest.getRequestParameters().get("id");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String homepage = restRequest.getRequestParameters().get("homepage");
-
-                        if(id != null && !id.isEmpty()){
-                            webServices.updateAggregator(out, id, name, nameCode, homepage);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating" +
-                                    "Aggregator: invalid arguments. Syntax: /rest/aggregators/update?id=ID" +
-                                    "&name=NAME&nameCode=NAME_CODE&homepage=HOMEPAGE [mandatory field: id]");
-                        }
-
-                        /*if(id != null && !id.isEmpty() &&
-                                name != null && !name.isEmpty()){
-                            webServices.updateAggregator(out, id, name, nameCode, homepage);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating" +
-                                    "Aggregator: invalid arguments. Syntax: /rest/aggregators/update?id=ID" +
-                                    "&name=NAME&nameCode=NAME_CODE&homepage=HOMEPAGE [mandatory fields: id, name]");
-                        }*/
-                    }
-                    else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
-                        String id = restRequest.getRequestParameters().get("id");
-                        if(id != null && !id.isEmpty()){
-                            webServices.deleteAggregator(out, id);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting " +
-                                    "Aggregator: invalid arguments. Syntax: /rest/aggregators/delete?id=ID" +
-                                    " [mandatory field: id]");
-                        }
-                    }
-                    else if(restRequest.getUriHierarchy().get(1).equals("getAggregator")) {
-                        String id = restRequest.getRequestParameters().get("id");
-                        if(id != null && !id.isEmpty()){
-                            webServices.getAggregator(out, id);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving " +
-                                    "Aggregator: invalid arguments. Syntax: /rest/aggregators/getAggregator?id=ID" +
-                                    " [mandatory field: id]");
-                        }
-                    }
-                }
-                else {
-                    RestUtils.writeInvalidRequest(restRequest.getFullRequestURI(), out);
-                }
-            }
-
-        }
         // data providers
         else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals(RestServlet.DPROVIDERS_URL_NAME)) {
 
             if(restRequest.getUriHierarchy().size() == 1) {
                 //list all available data providers operations
-                Element rootElement = getDataProviderOperationListEuropeana(restRequest);
+                Element rootElement = getDataProviderOperationListLight(restRequest);
                 RestUtils.writeRestResponse(out, rootElement);
             }
             else { // operation over a Data Provider
                 if(restRequest.getUriHierarchy().size() == 2) {
+
                     if(restRequest.getUriHierarchy().get(1).equals("list")) {
-                        if(restRequest.getRequestParameters().size() == 0) {
-                            webServices.writeDataProviders(out);
-                        }
-                        else{
-                            String aggregatorId = restRequest.getRequestParameters().get("aggregatorId");
-                            if (restRequest.getRequestParameters().size() == 1 &&
-                                    aggregatorId != null && !aggregatorId.isEmpty()) {
-                                webServices.writeDataProviders(out, aggregatorId);
-                            }
-                            else{
-                                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing" +
-                                        " Data Provider: invalid arguments." +
-                                        "Syntax: /rest/dataProviders/list?aggregatorId=AGGREGATOR_ID");
-                            }
-                        }
+                        webServices.writeDataProviders(out);
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("create")) {
-                        String aggregatorId = restRequest.getRequestParameters().get("aggregatorId");
                         String name = restRequest.getRequestParameters().get("name");
                         String country = restRequest.getRequestParameters().get("country");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String url = restRequest.getRequestParameters().get("url");
-                        String dataSetType = restRequest.getRequestParameters().get("dataSetType");
-                        String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
 
-                        if(aggregatorId != null && !aggregatorId.isEmpty() &&
-                                name != null && !name.isEmpty() &&
-                                country != null && !country.isEmpty() &&
-                                dataSetType != null && !dataSetType.isEmpty()){
-
-                            if(dataProviderId == null || dataProviderId.isEmpty()){
-                                webServices.createDataProvider(out, aggregatorId, name, country, description, nameCode,
-                                        url, dataSetType);
-                            }
-                            else{
-                                webServices.createDataProvider(out, aggregatorId, dataProviderId, name, country,
-                                        description, nameCode, url, dataSetType);
-                            }
+                        if(name != null && !name.isEmpty() &&
+                                country != null && !country.isEmpty()){
+                            webServices.createDataProvider(out, name, country, description);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
                                     "Data Provider: invalid arguments." +
-                                    "Syntax: /rest/dataProviders/create?aggregatorId=AGGREGATOR_ID" +
-                                    "&dataProviderId=DATA_PROVIDER_ID&name=NAME" +
-                                    "&description=DESCRIPTION&country=2_LETTERS_COUNTRY&nameCode=NAME_CODE" +
-                                    "&url=URL&dataSetType=DATA_SET_TYPE [mandatory fields: aggregatorId, name, " +
-                                    "country, dataSetType]");
+                                    "Syntax: /rest/dataProviders/create?name=NAME" +
+                                    "&description=DESCRIPTION&country=2_LETTERS_COUNTRY [mandatory fields: name, " +
+                                    "country]");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("update")) {
@@ -287,35 +176,18 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String name = restRequest.getRequestParameters().get("name");
                         String country = restRequest.getRequestParameters().get("country");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String url = restRequest.getRequestParameters().get("url");
-                        String dataSetType = restRequest.getRequestParameters().get("dataSetType");
 
-                        if(id != null && !id.isEmpty()){
-                            webServices.updateDataProvider(out, id, name, country, description, nameCode, url,
-                                    dataSetType);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating Data" +
-                                    "Provider: invalid arguments. Syntax: /rest/dataProviders/update?id=ID" +
-                                    "&name=NAME&description=DESCRIPTION&country=2_LETTERS_COUNTRY&nameCode=NAME_CODE" +
-                                    "&url=URL&dataSetType=DATA_SET_TYPE [mandatory field: id]");
-                        }
-
-                        /*if(id != null && !id.isEmpty() &&
+                        if(id != null && !id.isEmpty() &&
                                 name != null && !name.isEmpty() &&
-                                country != null && !country.isEmpty() &&
-                                dataSetType != null && !dataSetType.isEmpty()){
-                            webServices.updateDataProvider(out, id, name, country, description, nameCode, url,
-                                    dataSetType);
+                                country != null && !country.isEmpty()){
+                            webServices.updateDataProvider(out, id, name, country, description);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/update?id=ID" +
-                                    "&name=NAME&description=DESCRIPTION&country=2_LETTERS_COUNTRY&nameCode=NAME_CODE" +
-                                    "&url=URL&dataSetType=DATA_SET_TYPE [mandatory fields: " +
-                                    "id, name, country, dataSetType]");
-                        }*/
+                                    "&name=NAME&description=DESCRIPTION&country=2_LETTERS_COUNTRY [mandatory fields: " +
+                                    "id, name, country]");
+                        }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
                         String id = restRequest.getRequestParameters().get("id");
@@ -325,7 +197,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/delete?id=ID [mandatory " +
-                                    "field: id");
+                                    "field: id]");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("getDataProvider")) {
@@ -336,22 +208,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/getDataProvider?id=ID [mandatory " +
-                                    "field: id");
-                        }
-                    }
-                    else if(restRequest.getUriHierarchy().get(1).equals("move")) {
-                        String idDataProvider = restRequest.getRequestParameters().get("idDataProvider");
-                        String idNewAggr = restRequest.getRequestParameters().get("idNewAggr");
-
-                        if(idDataProvider != null && !idDataProvider.isEmpty() &&
-                                idNewAggr != null && !idNewAggr.isEmpty()){
-                            webServices.moveDataProvider(out, idDataProvider, idNewAggr);
-                        }
-                        else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error moving Data" +
-                                    "Provider: invalid arguments. Syntax: /rest/dataProviders/move?idDataProvider=" +
-                                    "ID_DATA_PROVIVER&idNewAggr=ID_NEW_AGGREGATOR [mandatory fields: " +
-                                    "idDataProvider, idNewAggr]");
+                                    "field: id]");
                         }
                     }
                 }
@@ -371,6 +228,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
             }
             else { // operation over a Data Source
                 if(restRequest.getUriHierarchy().size() == 2) {
+
                     if(restRequest.getUriHierarchy().get(1).equals("list")){
                         if(restRequest.getRequestParameters().size() == 0) {
                             webServices.writeDataSources(out);
@@ -383,25 +241,53 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                             }
                             else{
                                 webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing the" +
-                                        "Data Sources: invalid arguments." +
+                                        "Data Source: invalid arguments." +
                                         "Syntax: /rest/dataSources/list?dataProviderId=DATA_PROVIDER_ID");
                             }
+                        }
+                    }
+                    else if(restRequest.getUriHierarchy().get(1).equals("createSruRecordUpdate")) {
+                        String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
+                        String id = restRequest.getRequestParameters().get("id");
+                        String description = restRequest.getRequestParameters().get("description");
+                        String schema = restRequest.getRequestParameters().get("schema");
+                        String namespace = restRequest.getRequestParameters().get("namespace");
+                        String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
+                        
+                        // optionals
+                        String marcFormat = restRequest.getRequestParameters().get("marcFormat");
+                        
+                        if(dataProviderId != null && !dataProviderId.isEmpty() &&
+                                id != null && !id.isEmpty() &&
+                                description != null && !description.isEmpty() &&
+                                schema != null && !schema.isEmpty() &&
+                                namespace != null && !namespace.isEmpty() &&
+                                metadataFormat != null && !metadataFormat.isEmpty() ){
+                            
+                            webServices.createDataSourceSruRecordUpdate(out, dataProviderId, id, description, schema, namespace,
+                                    metadataFormat, (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                        }
+                        else{
+                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
+                                    "Syntax: /rest/dataSources/createOai?dataProviderId=DATA_PROVIDER_ID" +
+                                    "&id=DATA_SOURCE_ID&description=DESCRIPTION&schema=SCHEMA&namespace=NAMESPACE" +
+                                    "&metadataFormat=METADATA_FORMAT&oaiURL=URL_OAI_SERVER&oaiSet=OAI_SET [Mandatory" +
+                                    " fields: dataProviderId, id, description, schema, namespace, metadataFormat, " +
+                                    "oaiURL]. If metadataFormat=MarcXchange the field marcFormat (optional) can be filled with one " +
+                            "of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("createOai")) {
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
                         String oaiURL = restRequest.getRequestParameters().get("oaiURL");
-                        String oaiSet = restRequest.getRequestParameters().get("oaiSet");
 
                         // optionals
+                        String oaiSet = restRequest.getRequestParameters().get("oaiSet");
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(dataProviderId != null && !dataProviderId.isEmpty() &&
@@ -412,28 +298,23 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 oaiURL != null && !oaiURL.isEmpty()){
 
-                            webServices.createDataSourceOai(out, dataProviderId, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, oaiURL,
-                                    !oaiSet.isEmpty() ? oaiSet : null, (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                            webServices.createDataSourceOai(out, dataProviderId, id, description, schema, namespace,
+                                    metadataFormat, oaiURL, !oaiSet.isEmpty() ? oaiSet : null, (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createOai?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION&schema=SCHEMA&namespace=NAMESPACE" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
-                                    "&metadataFormat=METADATA_FORMAT&oaiURL=URL_OAI_SERVER&oaiSet=OAI_SET" +
-                                    " [Mandatory fields: dataProviderId, id, description, schema, namespace, metadataFormat, " +
-                                    "oaiURL]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
-                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "&metadataFormat=METADATA_FORMAT&oaiURL=URL_OAI_SERVER&oaiSet=OAI_SET [Mandatory" +
+                                    " fields: dataProviderId, id, description, schema, namespace, metadataFormat, " +
+                                    "oaiURL]. If metadataFormat=MarcXchange the field marcFormat (optional) can be filled with one " +
+                                    "of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("createZ3950Timestamp")) {
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String address = restRequest.getRequestParameters().get("address");
@@ -462,17 +343,15 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 earliestTimestamp != null && !earliestTimestamp.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty()){
 
-                            webServices.createDataSourceZ3950Timestamp(out, dataProviderId, id, description, nameCode,
-                                    name, exportPath, schema, namespace, address, port, database, user, password,
-                                    recordSyntax, charset, earliestTimestamp, recordIdPolicy, idXpath, namespacePrefix,
-                                    namespaceUri);
+                            webServices.createDataSourceZ3950Timestamp(out, dataProviderId, id, description, schema,
+                                    namespace, address, port, database, user, password, recordSyntax, charset,
+                                    earliestTimestamp, recordIdPolicy, idXpath, namespacePrefix, namespaceUri);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createZ3950Timestamp?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&address=ADDRESS&port=PORT&database=DATABASE&user=USER&password=PASSWORD" +
                                     "&recordSyntax=RECORDS_SYNTAX&charset=CHARSET&earliestTimestamp=DATE(YYYYMMDD)" +
@@ -481,16 +360,13 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                     "dataProviderId, id, description, schema, namespace, address, port, database, " +
                                     "recordSyntax, charset, earliestTimestamp, recordIdPolicy (if " +
                                     "recordIdPolicy=IdExtracted the fields idXpath, namespacePrefix and namespaceUri " +
-                                    "are mandatory)]");
+                                    "are mandatory)].");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("createZ3950IdSequence")) {
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String address = restRequest.getRequestParameters().get("address");
@@ -519,10 +395,9 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 maximumId != null && !maximumId.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty()){
 
-                            webServices.createDataSourceZ3950IdSequence(out, dataProviderId, id, description, nameCode,
-                                    name, exportPath, schema, namespace, address, port, database, user, password,
-                                    recordSyntax, charset, maximumId, recordIdPolicy, idXpath, namespacePrefix,
-                                    namespaceUri);
+                            webServices.createDataSourceZ3950IdSequence(out, dataProviderId, id, description, schema,
+                                    namespace, address, port, database, user, password, recordSyntax, charset,
+                                    maximumId, recordIdPolicy, idXpath, namespacePrefix, namespaceUri);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
@@ -543,9 +418,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -571,46 +443,37 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
-                                        (idXpath != null && !idXpath.isEmpty() &&
-                                                namespacePrefix != null && !namespacePrefix.isEmpty() &&
-                                                namespaceUri != null && !namespaceUri.isEmpty())) &&
                                 server != null && !server.isEmpty() &&
                                 ftpPath != null && !ftpPath.isEmpty()){
 
-                            webServices.createDataSourceFtp(out, dataProviderId, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
-                                    idXpath, namespacePrefix, namespaceUri, recordXPath, server, (user != null && !user.isEmpty()) ? user : "",
-                                    (password != null && !password.isEmpty()) ? password : "",
-                                    ftpPath,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                            webServices.createDataSourceFtp(out, dataProviderId, id, description, schema, namespace,
+                                    metadataFormat, isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix,
+                                    namespaceUri, recordXPath, server, (user != null && !user.isEmpty()) ? user : "",
+                                    (password != null && !password.isEmpty()) ? password : "", ftpPath,
+                                    (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createFtp?dataProviderId=DATA_PROVIDER_ID&" +
                                     "id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
                                     "&recordXPath=RECORDS_XPATH&server=SERVER&user=USER&password=PASSWORD" +
-                                    "&ftpPath=FTP_PATH [Mandatory fields: " +
-                                    "dataProviderId, id, description, schema, namespace, metadataFormat, recordIdPolicy, " +
-                                    "server, ftpPath (Note: if recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)]. If metadataFormat=MarcXchange the " +
-                                    "field marcFormat (optional) can be filled with one of the following values: MARC21, " +
-                                    "UNIMARC, Ibermarc or danMARC2.");
+                                    "&ftpPath=FTP_PATH [Mandatory fields: dataProviderId, id, description, schema, " +
+                                    "namespace, metadataFormat, recordIdPolicy, server, ftpPath (Note: if" +
+                                    "recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix and namespaceUri " +
+                                    "are mandatory and if metadataFormat=ISO2709 the fields isoFormat and charset " +
+                                    "are mandatory. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("createHttp")) {
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -633,42 +496,32 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
-                                        (idXpath != null && !idXpath.isEmpty() &&
-                                                namespacePrefix != null && !namespacePrefix.isEmpty() &&
-                                                namespaceUri != null && !namespaceUri.isEmpty())) &&
                                 url != null && !url.isEmpty()){
 
-                            webServices.createDataSourceHttp(out, dataProviderId, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
-                                    idXpath, namespacePrefix, namespaceUri, recordXPath, url,
-                                    (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                            webServices.createDataSourceHttp(out, dataProviderId, id, description, schema, namespace,
+                                    metadataFormat, isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix,
+                                    namespaceUri, recordXPath, url,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createHttp?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
-                                    "&recordXPath=RECORDS_XPATH&url=URL [Mandatory fields: " +
-                                    "dataProviderId, id, description, schema, namespace, metadataFormat, recordIdPolicy, " +
-                                    "url (Note: if recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)].  If metadataFormat=MarcXchange " +
-                                    "the field marcFormat (optional) can be filled with one of the following values: " +
-                                    "MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "&recordXPath=RECORDS_XPATH&url=URL [Mandatory fields: dataProviderId, id, " +
+                                    "description, schema, namespace, metadataFormat, recordIdPolicy, url (Note: if" +
+                                    "recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix and namespaceUri " +
+                                    "are mandatory and if metadataFormat=ISO2709 the fields isoFormat and charset " +
+                                    "are mandatory)]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("createFolder")) {
                         String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -691,15 +544,11 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
-                                        (idXpath != null && !idXpath.isEmpty() &&
-                                                namespacePrefix != null && !namespacePrefix.isEmpty() &&
-                                                namespaceUri != null && !namespaceUri.isEmpty())) &&
                                 folder != null && !folder.isEmpty()){
 
-                            webServices.createDataSourceFolder(out, dataProviderId, id, description, nameCode,
-                                    name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
-                                    recordIdPolicy, idXpath, namespacePrefix, namespaceUri, recordXPath, folder,
+                            webServices.createDataSourceFolder(out, dataProviderId, id, description, schema, namespace,
+                                    metadataFormat, isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix,
+                                    namespaceUri, recordXPath, folder,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
@@ -707,56 +556,75 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createFolder?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
                                     "&recordXPath=RECORDS_XPATH&folder=FOLDER_PATH [Mandatory fields: " +
                                     "dataProviderId, id, description, schema, namespace, metadataFormat, recordIdPolicy, " +
-                                    "folder (Note: if recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)].  If metadataFormat=MarcXchange " +
-                                    "the field marcFormat (optional) can be filled with one of the following values: " +
-                                    "MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "folder(Note: if recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix, " +
+                                    "and namespaceUri are also mandatory and if metadataFormat=ISO2709 the fields " +
+                                    "isoFormat and charset are also mandatory]. If metadataFormat=MarcXchange the field " +
+                                    "marcFormat (optional) can be filled with one of the following values: MARC21, " +
+                                    "UNIMARC, Ibermarc or danMARC2.");
+                        }
+                    }
+                    else if(restRequest.getUriHierarchy().get(1).equals("updateSruRecordUpdate")) {
+                        String id = restRequest.getRequestParameters().get("id");
+                        String description = restRequest.getRequestParameters().get("description");
+                        String schema = restRequest.getRequestParameters().get("schema");
+                        String namespace = restRequest.getRequestParameters().get("namespace");
+                        String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
+                        
+                        // optionals
+                        String marcFormat = restRequest.getRequestParameters().get("marcFormat");
+                        
+                        
+                        if(id != null && !id.isEmpty()){
+                            webServices.updateDataSourceSruRecordUpdate(out, id, description, schema, namespace, metadataFormat,
+                                            (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                        }
+                        else{
+                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the OAI" +
+                                    "Data Source: invalid arguments." +
+                                    "Syntax: /rest/dataSources/updateOai?id=DATA_SOURCE_ID&description=DESCRIPTION" +
+                                    "&schema=SCHEMA&namespace=NAMESPACE" +
+                                    "&metadataFormat=METADATA_FORMAT&oaiURL=URL_OAI_SERVER&oaiSet=OAI_SET " +
+                                    "[Mandatory fields: id]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                            "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("updateOai")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
                         String oaiURL = restRequest.getRequestParameters().get("oaiURL");
                         String oaiSet = restRequest.getRequestParameters().get("oaiSet");
+
+                        // optionals
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
+
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceOai(out, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, oaiURL,
-                                    (oaiSet != null &&!oaiSet.isEmpty()) ? oaiSet : null,
+                            webServices.updateDataSourceOai(out, id, description, schema, namespace, metadataFormat,
+                                    oaiURL, !oaiSet.isEmpty() ? oaiSet : null,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the OAI" +
                                     "Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateOai?id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&oaiURL=URL_OAI_SERVER&oaiSet=OAI_SET " +
-                                    "[Mandatory field: id]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "[Mandatory fields: id]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
                                     "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("updateZ3950Timestamp")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String address = restRequest.getRequestParameters().get("address");
@@ -773,17 +641,14 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String namespaceUri = restRequest.getRequestParameters().get("namespaceUri");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceZ3950Timestamp(out, id, description, nameCode,
-                                    name, exportPath, schema, namespace, address, port, database, user, password,
-                                    recordSyntax, charset, earliestTimestamp, recordIdPolicy, idXpath, namespacePrefix,
-                                    namespaceUri);
+                            webServices.updateDataSourceZ3950Timestamp(out, id, description, schema, namespace, address,
+                                    port, database, user, password, recordSyntax, charset, earliestTimestamp,
+                                    recordIdPolicy, idXpath, namespacePrefix, namespaceUri);
                         }
-
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the" +
                                     "Z39.50 Data Source with Time Stamp: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateZ3950Timestamp?id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&address=ADDRESS&port=PORT&database=DATABASE&user=USER&password=PASSWORD" +
                                     "&recordSyntax=RECORDS_SYNTAX&charset=CHARSET&earliestTimestamp=DATE(YYYYMMDD)" +
@@ -796,9 +661,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                     else if(restRequest.getUriHierarchy().get(1).equals("updateZ3950IdSequence")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String address = restRequest.getRequestParameters().get("address");
@@ -815,16 +677,14 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String namespaceUri = restRequest.getRequestParameters().get("namespaceUri");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceZ3950IdSequence(out, id, description, nameCode,
-                                    name, exportPath, schema, namespace, address, port, database, user, password,
-                                    recordSyntax, charset, maximumId, recordIdPolicy, idXpath, namespacePrefix,
-                                    namespaceUri);
+                            webServices.updateDataSourceZ3950IdSequence(out, id, description, schema, namespace,
+                                    address, port, database, user, password, recordSyntax, charset, maximumId,
+                                    recordIdPolicy, idXpath, namespacePrefix, namespaceUri);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Z39.50" +
                                     "Data Source with ID Sequence: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateZ3950IdSequence?id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&address=ADDRESS&port=PORT&database=DATABASE&user=USER&password=PASSWORD" +
                                     "&recordSyntax=RECORDS_SYNTAX&charset=CHARSET&maximumId=MAXIMUM_ID" +
@@ -837,9 +697,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                     else if(restRequest.getUriHierarchy().get(1).equals("updateFtp")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -854,39 +711,34 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String user = restRequest.getRequestParameters().get("user");
                         String password = restRequest.getRequestParameters().get("password");
                         String ftpPath = restRequest.getRequestParameters().get("ftpPath");
+
+                        // optionals
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceFtp(out, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
-                                    idXpath, namespacePrefix, namespaceUri, recordXPath, server, user, password,
-                                    /*(user != null && !user.isEmpty()) ? user : "",
-                                    (password != null && !password.isEmpty()) ? password : "",*/
+                            webServices.updateDataSourceFtp(out, id, description, schema, namespace, metadataFormat,
+                                    isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix, namespaceUri,
+                                    recordXPath, server, (user != null && !user.isEmpty()) ? user : "",
+                                    (password != null && !password.isEmpty()) ? password : "",
                                     ftpPath,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the FTP Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateFtp?dataProviderId=id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
                                     "&recordXPath=RECORDS_XPATH&server=SERVER&user=USER&password=PASSWORD" +
-                                    "&ftpPath=FTP_PATH [Mandatory field: " +
-                                    "id (Note: if recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)].  If metadataFormat=MarcXchange " +
-                                    "the field marcFormat (optional) can be filled with one of the following values: " +
-                                    "MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "&ftpPath=FTP_PATH [Mandatory field: id (Note: if recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix and namespaceUri " +
+                                    "are mandatory and if metadataFormat=ISO2709 the fields isoFormat and charset " +
+                                    "are mandatory). If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("updateHttp")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -898,36 +750,32 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String namespaceUri = restRequest.getRequestParameters().get("namespaceUri");
                         String recordXPath = restRequest.getRequestParameters().get("recordXPath");
                         String url = restRequest.getRequestParameters().get("url");
+
+                        // optionals
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceHttp(out, id, description, nameCode, name,
-                                    exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
-                                    idXpath, namespacePrefix, namespaceUri, recordXPath, url,
-                                    (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                            webServices.updateDataSourceHttp(out, id, description, schema, namespace, metadataFormat,
+                                    isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix, namespaceUri,
+                                    recordXPath, url,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the HTTP Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateHttp?id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
-                                    "&recordXPath=RECORDS_XPATH&url=URL [Mandatory field: (Note: if " +
-                                    "recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)]. If metadataFormat=MarcXchange " +
-                                    "the field marcFormat (optional) can be filled with one of the following values: " +
-                                    "MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "&recordXPath=RECORDS_XPATH&url=URL [Mandatory field: id (Note: if" +
+                                    "recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix and namespaceUri " +
+                                    "are mandatory and if metadataFormat=ISO2709 the fields isoFormat and charset " +
+                                    "are mandatory)]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("updateFolder")) {
                         String id = restRequest.getRequestParameters().get("id");
                         String description = restRequest.getRequestParameters().get("description");
-                        String nameCode = restRequest.getRequestParameters().get("nameCode");
-                        String name = restRequest.getRequestParameters().get("name");
-                        String exportPath = restRequest.getRequestParameters().get("exportPath");
                         String schema = restRequest.getRequestParameters().get("schema");
                         String namespace = restRequest.getRequestParameters().get("namespace");
                         String metadataFormat = restRequest.getRequestParameters().get("metadataFormat");
@@ -944,25 +792,22 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceFolder(out, id, description, nameCode,
-                                    name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
-                                    recordIdPolicy, idXpath, namespacePrefix, namespaceUri, recordXPath, folder,
-                                    (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
+                            webServices.updateDataSourceFolder(out, id, description, schema, namespace, metadataFormat,
+                                    isoFormat, charset, recordIdPolicy, idXpath, namespacePrefix, namespaceUri, recordXPath,
+                                    folder,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Folder Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateFolder?id=DATA_SOURCE_ID&description=DESCRIPTION" +
-                                    "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&metadataFormat=METADATA_FORMAT&isoFormat=ISO_FORMAT" +
                                     "&charset=CHAR_SET&recordIdPolicy=RECORD_ID_POLICY&idXpath=ID_XPATH" +
                                     "&namespacePrefix=NAMESPACE_PREFIX&namespaceUri=NAMESPACE_URI" +
-                                    "&recordXPath=RECORDS_XPATH&folder=FOLDER_PATH [Mandatory field: " +
-                                    "id (Note: if recordIdPolicy=IdExtracted the fields: idXpath," +
-                                    "namespacePrefix and namespaceUri are mandatory and if metadataFormat=ISO2709 " +
-                                    "the fields isoFormat and charset are mandatory)]. If metadataFormat=MarcXchange " +
-                                    "the field marcFormat (optional) can be filled with one of the following values: " +
-                                    "MARC21, UNIMARC, Ibermarc or danMARC2.");
+                                    "&recordXPath=RECORDS_XPATH&folder=FOLDER_PATH [Mandatory fields: id (Note: if" +
+                                    "recordIdPolicy=IdExtracted the fields: idXpath, namespacePrefix and namespaceUri " +
+                                    "are mandatory and if metadataFormat=ISO2709 the fields isoFormat and charset " +
+                                    "are mandatory)]. If metadataFormat=MarcXchange the field marcFormat (optional) can " +
+                                    "be filled with one of the following values: MARC21, UNIMARC, Ibermarc or danMARC2.");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
@@ -994,8 +839,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error counting records from" +
-                                    " Data Source: invalid arguments. Syntax: /rest/dataSources/countRecords?id=ID " +
-                                    "[Mandatory field: id]");
+                                    " Data Source: invalid arguments. Syntax: /rest/dataSources/countRecords?id=ID");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("lastIngestionDate")) {
@@ -1043,7 +887,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         String frequency = restRequest.getRequestParameters().get("frequency");
                         String xmonths = restRequest.getRequestParameters().get("xmonths");
                         String fullIngest = restRequest.getRequestParameters().get("fullIngest");
-
                         if(id != null && !id.isEmpty() &&
                                 firstRunDate != null && !firstRunDate.isEmpty() &&
                                 firstRunHour != null && !firstRunHour.isEmpty() &&
@@ -1062,7 +905,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                                     "frequency, xmonths, fullIngest]");
                         }
                     }
-
                     else if(restRequest.getUriHierarchy().get(1).equals("scheduleList")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
@@ -1070,11 +912,10 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
-                                    "Source ingestion schedule: invalid arguments. Syntax: /rest/dataSources/" +
-                                    "scheduleList?id=ID [Mandatory field: id]");
+                                    "Source ingestion schedule: invalid arguments. Syntax: /rest/dataSources/scheduleList?id=ID " +
+                                    "[Mandatory field: id]");
                         }
                     }
-
                     else if(restRequest.getUriHierarchy().get(1).equals("harvestStatus")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
@@ -1140,58 +981,49 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
             else { // operation over a Data Source
                 if(restRequest.getUriHierarchy().size() == 2) {
                     if(restRequest.getUriHierarchy().get(1).equals("getRecord")){
-                        String recordId = restRequest.getRequestParameters().get("recordId");
-                        if(recordId != null && !recordId.isEmpty()){
-                            webServices.getRecord(out, new Urn(recordId));
+                        if(restRequest.getRequestParameters().get("recordId") != null){
+                            webServices.getRecord(out, new Urn(restRequest.getRequestParameters().get("recordId")));
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
-                                    "Source log: invalid arguments. Syntax: /rest/records/getRecord?recordId=RECORD_ID" +
-                                    " [Mandatory field: recordId]");
+                                    "Source log: invalid arguments. Syntax: /rest/records/getRecord?recordId=RECORD_ID");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("saveRecord")){
-                        String recordId = restRequest.getRequestParameters().get("recordId");
-                        String dataSourceId = restRequest.getRequestParameters().get("dataSourceId");
-                        String recordString = restRequest.getRequestParameters().get("recordString");
-                        if(recordId != null && !recordId.isEmpty() &&
-                                dataSourceId != null && !dataSourceId.isEmpty() &&
-                                recordString != null && !recordString.isEmpty()){
+                        if(restRequest.getRequestParameters().get("recordId") != null &&
+                                restRequest.getRequestParameters().get("dataSourceId") != null &&
+                                restRequest.getRequestParameters().get("recordString") != null){
 
-                            webServices.saveRecord(out, recordId, dataSourceId, recordString);
+                            webServices.saveRecord(out, restRequest.getRequestParameters().get("recordId"),
+                                    restRequest.getRequestParameters().get("dataSourceId"),
+                                    restRequest.getRequestParameters().get("recordString"));
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error saving record:" +
                                     "invalid arguments. Syntax: /rest/records/saveRecord?recordId=RECORD_ID" +
-                                    "&dataSourceId=DATA_SOURCE_ID&recordString=RECORD_STRING [Mandatory fields: " +
-                                    "recordId, dataSourceId, recordString]");
+                                    "&dataSourceId=DATA_SOURCE_ID&recordString=RECORD_STRING");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("deleteRecord")){
-                        String recordId = restRequest.getRequestParameters().get("recordId");
-                        if(recordId != null && !recordId.isEmpty()){
-                            webServices.deleteRecord(out, recordId);
+                        if(restRequest.getRequestParameters().get("recordId") != null){
+                            webServices.deleteRecord(out, restRequest.getRequestParameters().get("recordId"));
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting record:" +
-                                    "invalid arguments. Syntax: /rest/records/deleteRecord?recordId=RECORD_ID " +
-                                    "[Mandatory field: recordId]");
+                                    "invalid arguments. Syntax: /rest/records/deleteRecord?recordId=RECORD_ID");
                         }
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("eraseRecord")){
-                        String recordId = restRequest.getRequestParameters().get("recordId");
-                        if(recordId != null && !recordId.isEmpty()){
-                            webServices.eraseRecord(out, recordId);
+                        if(restRequest.getRequestParameters().get("recordId") != null){
+                            webServices.eraseRecord(out, restRequest.getRequestParameters().get("recordId"));
                         }
                         else{
                             webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error erasing record:" +
-                                    "invalid arguments. Syntax: /rest/records/eraseRecord?recordId=RECORD_ID " +
-                                    "[Mandatory field: recordId]");
+                                    "invalid arguments. Syntax: /rest/records/eraseRecord?recordId=RECORD_ID");
                         }
                     }
                 }
             }
-
         }
         else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals(RestServlet.STATISTICS_URL_NAME)){
@@ -1215,11 +1047,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
             // list operations
             Element rootElement = DocumentHelper.createElement("repoxOperationsList");
 
-            Element aggregatorOperations = getOperationElement("aggregatorOperationsList",
-                    "Retrieve the list of the available operations over Aggregators",
-                    restRequest,
-                    "/rest/aggregators");
-
             Element dataProviderOperations = getOperationElement("dataProviderOperationsList",
                     "Retrieve the list of the available operations over Data Providers",
                     restRequest,
@@ -1240,7 +1067,6 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
                     restRequest,
                     "/rest/statistics");
 
-            rootElement.add(aggregatorOperations);
             rootElement.add(dataProviderOperations);
             rootElement.add(dataSourceOperations);
             rootElement.add(recordsOperations);
@@ -1248,5 +1074,7 @@ public class ResponseRestEuropeana extends ResponseOperations implements Respons
 
             RestUtils.writeRestResponse(out, rootElement);
         }
+
+
     }
 }
