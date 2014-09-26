@@ -41,7 +41,7 @@
 	</developers>
 
 	<modules>
-		<module>core</module>
+		<module>manager</module>
 		<module>server</module>
 <!-- 		<module>client</module> -->
 
@@ -54,7 +54,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Versions -->
-		<repox:repox-core.version>3.0-SNAPSHOT</repox:repox-core.version>
+		<repox:repox-manager.version>3.0-SNAPSHOT</repox:repox-manager.version>
 		<repox:repox-server.version>3.0-SNAPSHOT</repox:repox-server.version>
 		<repox:repox-server-oai.version>3.0-SNAPSHOT</repox:repox-server-oai.version>
 		<repox:repox-server-rest.version>3.0-SNAPSHOT</repox:repox-server-rest.version>
@@ -164,8 +164,8 @@
 			<!-- REPOX VERISONS -->
 			<dependency>
 				<groupId>repox</groupId>
-				<artifactId>repox-core</artifactId>
-				<version>${repox:repox-core.version}</version>
+				<artifactId>repox-manager</artifactId>
+				<version>${repox:repox-manager.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>

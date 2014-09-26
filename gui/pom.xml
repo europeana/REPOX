@@ -92,7 +92,7 @@
 		<!-- REPOX Core Libs -->
 		<dependency>
 			<groupId>repox</groupId>
-			<artifactId>repox-core</artifactId>
+			<artifactId>repox-manager</artifactId>
 		</dependency>
 
 		<dependency>

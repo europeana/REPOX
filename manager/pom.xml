@@ -10,8 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>REPOX-CORE</name>
-	<artifactId>repox-core</artifactId>
+	<name>REPOX-MANAGER</name>
+	<artifactId>repox-manager</artifactId>
 	<packaging>jar</packaging>
 
 	<organization>
