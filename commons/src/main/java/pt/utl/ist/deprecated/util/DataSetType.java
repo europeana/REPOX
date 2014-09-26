@@ -1,3 +1,4 @@
+package pt.utl.ist.deprecated.util;
 ///*
 // * Copyright 2007 EDL FOUNDATION
 // *

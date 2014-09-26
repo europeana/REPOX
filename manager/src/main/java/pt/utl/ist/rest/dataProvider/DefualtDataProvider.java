@@ -1,12 +1,11 @@
 package pt.utl.ist.rest.dataProvider;
 
-import eu.europeana.repox2sip.models.ProviderType;
-
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.util.ProviderType;
 
 import java.net.URL;
 import java.util.HashMap;

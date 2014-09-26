@@ -13,56 +13,55 @@
  limitations under the License.
  */
 
-package org.oclc.oai.harvester2.verb;
+package org.oclc.oai.harvester.verb;
 
-import org.xml.sax.SAXException;
+import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.IOException;
+
+import org.xml.sax.SAXException;
 
 /**
- * This class represents an GetRecord response on either the server or on the
+ * This class represents an Identify response on either the server or on the
  * client
  * 
  * @author Jeffrey A. Young, OCLC Online Computer Library Center
  */
-public class GetRecord extends HarvesterVerb {
+public class Identify extends HarvesterVerb {
     /**
      * Mock object constructor (for unit testing purposes)
      */
-    public GetRecord() {
+    public Identify() {
         super();
     }
 
     /**
-     * Client-side GetRecord verb constructor
+     * Client-side Identify verb constructor
      * 
      * @param baseURL
      *            the baseURL of the server to be queried
-     * @param identifier
-     * @param metadataPrefix
      * @throws IOException
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws TransformerException
      */
-    public GetRecord(String baseURL, String identifier, String metadataPrefix) throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        super(baseURL + "?verb=GetRecord&identifier=" + identifier + "&metadataPrefix=" + metadataPrefix);
+    public Identify(String baseURL) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        super(baseURL + "?verb=Identify");
     }
 
     /**
-     * Get the oai:identifier from the oai:header
+     * Get the oai:protocolVersion value from the Identify response
      * 
-     * @return the oai:identifier as a String
+     * @return the oai:protocolVersion value
      * @throws TransformerException
      * @throws NoSuchFieldException
      */
-    public String getIdentifier() throws TransformerException, NoSuchFieldException {
+    public String getProtocolVersion() throws TransformerException, NoSuchFieldException {
         if (SCHEMA_LOCATION_V2_0.equals(getSchemaLocation())) {
-            return getSingleString("/oai20:OAI-PMH/oai20:GetRecord/oai20:record/oai20:header/oai20:identifier");
-        } else if (SCHEMA_LOCATION_V1_1_GET_RECORD.equals(getSchemaLocation())) {
-            return getSingleString("/oai11_GetRecord:GetRecord/oai11_GetRecord:record/oai11_GetRecord:header/oai11_GetRecord:identifier");
+            return getSingleString("/oai20:OAI-PMH/oai20:Identify/oai20:protocolVersion");
+        } else if (SCHEMA_LOCATION_V1_1_IDENTIFY.equals(getSchemaLocation())) {
+            return getSingleString("/oai11_Identify:Identify/oai11_Identify:protocolVersion");
         } else {
             throw new NoSuchFieldException(getSchemaLocation());
         }

@@ -39,8 +39,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.XPath;
-import org.oclc.oai.harvester2.verb.ListMetadataFormats;
-import org.oclc.oai.harvester2.verb.ListSets;
+import org.oclc.oai.harvester.verb.ListMetadataFormats;
+import org.oclc.oai.harvester.verb.ListSets;
 import org.xml.sax.SAXParseException;
 
 import pt.utl.ist.configuration.ConfigSingleton;

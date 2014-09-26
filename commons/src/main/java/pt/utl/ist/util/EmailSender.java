@@ -1,4 +1,4 @@
-package eu.europeana.core.util.web;
+package pt.utl.ist.util;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;

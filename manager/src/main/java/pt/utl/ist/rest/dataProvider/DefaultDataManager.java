@@ -1,7 +1,5 @@
 package pt.utl.ist.rest.dataProvider;
 
-import eu.europeana.repox2sip.models.ProviderType;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.*;
@@ -33,6 +31,7 @@ import pt.utl.ist.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.task.*;
 import pt.utl.ist.util.CompareDataUtil;
 import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.XmlUtil;

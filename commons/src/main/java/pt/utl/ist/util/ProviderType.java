@@ -19,7 +19,7 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.europeana.repox2sip.models;
+package pt.utl.ist.util;
 
 /**
  * @author Nicola Aloia   <nicola.aloia@isti.cnr.it>

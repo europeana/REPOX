@@ -13,18 +13,19 @@
  limitations under the License.
  */
 
-package org.oclc.oai.harvester2.app;
+package org.oclc.oai.harvester.app;
 
-import org.oclc.oai.harvester2.verb.Identify;
-import org.oclc.oai.harvester2.verb.ListMetadataFormats;
-import org.oclc.oai.harvester2.verb.ListRecords;
-import org.oclc.oai.harvester2.verb.ListSets;
+import org.oclc.oai.harvester.verb.Identify;
+import org.oclc.oai.harvester.verb.ListMetadataFormats;
+import org.oclc.oai.harvester.verb.ListRecords;
+import org.oclc.oai.harvester.verb.ListSets;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

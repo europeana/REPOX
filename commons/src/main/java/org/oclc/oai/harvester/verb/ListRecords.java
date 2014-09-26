@@ -13,7 +13,7 @@
  limitations under the License.
  */
 
-package org.oclc.oai.harvester2.verb;
+package org.oclc.oai.harvester.verb;
 
 import org.xml.sax.SAXException;
 

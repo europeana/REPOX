@@ -1,6 +1,5 @@
 package pt.utl.ist.rest.dataProvider;
 
-import eu.europeana.core.util.web.EmailSender;
 import freemarker.template.TemplateException;
 
 import org.dom4j.Element;
@@ -12,6 +11,7 @@ import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.EmailSender;
 
 import javax.mail.MessagingException;
 

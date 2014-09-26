@@ -1,12 +1,12 @@
 package pt.utl.ist.rest.util;
 
-import eu.europeana.core.util.web.EmailSender;
 import freemarker.template.TemplateException;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.EuropeanaRepoxConfiguration;
+import pt.utl.ist.util.EmailSender;
 import pt.utl.ist.util.EmailUtil;
 
 import javax.mail.MessagingException;

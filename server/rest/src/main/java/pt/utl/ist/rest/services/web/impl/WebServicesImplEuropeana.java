@@ -1,7 +1,5 @@
 package pt.utl.ist.rest.services.web.impl;
 
-import eu.europeana.repox2sip.models.ProviderType;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.*;
@@ -34,6 +32,7 @@ import pt.utl.ist.statistics.RepoxStatistics;
 import pt.utl.ist.statistics.StatisticsManager;
 import pt.utl.ist.task.*;
 import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;

@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.oclc.oai.harvester2.verb.ListIdentifiers;
+import org.oclc.oai.harvester.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
 
 import pt.utl.ist.configuration.ConfigSingleton;
