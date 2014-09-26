@@ -17,14 +17,11 @@ import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.util.*;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

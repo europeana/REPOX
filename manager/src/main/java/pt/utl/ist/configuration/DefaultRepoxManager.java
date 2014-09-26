@@ -10,13 +10,13 @@ import pt.utl.ist.dataProvider.dataSource.TagsManager;
 import pt.utl.ist.externalServices.ExternalRestServicesManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.util.EmailUtil;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.statistics.DefaultStatisticsManager;
 import pt.utl.ist.statistics.RecordCountManager;
 import pt.utl.ist.statistics.StatisticsManager;
 import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.util.DefaultEmailUtil;
+import pt.utl.ist.util.EmailUtil;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

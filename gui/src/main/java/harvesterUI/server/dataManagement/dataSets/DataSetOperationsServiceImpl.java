@@ -48,9 +48,9 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.LogFilenameComparator;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.repox.util.FileUtilSecond;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.ScheduledTask;
+import pt.utl.ist.util.FileUtilSecond;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

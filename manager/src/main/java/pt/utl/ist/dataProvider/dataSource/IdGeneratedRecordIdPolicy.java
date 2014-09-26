@@ -2,8 +2,9 @@ package pt.utl.ist.dataProvider.dataSource;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
+
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordRepoxExternalId;
 
 import java.util.UUID;
 

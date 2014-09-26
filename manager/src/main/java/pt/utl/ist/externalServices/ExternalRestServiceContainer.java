@@ -4,7 +4,7 @@ import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.reports.LogUtil;
+import pt.utl.ist.reports.LogUtil;
 
 import java.io.File;
 import java.io.IOException;

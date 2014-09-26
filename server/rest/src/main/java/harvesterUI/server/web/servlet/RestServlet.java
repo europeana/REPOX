@@ -23,13 +23,13 @@ import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
-import pt.utl.ist.repox.util.ProjectType;
-import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.impl.WebServicesImpl;
 import pt.utl.ist.rest.services.web.impl.WebServicesImplEuropeana;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
+import pt.utl.ist.util.ProjectType;
+import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.Urn;
 
 public class RestServlet extends HttpServlet {

@@ -1,6 +1,6 @@
 package pt.utl.ist.accessPoint;
 
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordRepox;
 
 import java.util.*;
 

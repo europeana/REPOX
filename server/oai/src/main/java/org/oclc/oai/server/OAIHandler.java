@@ -47,8 +47,8 @@ import org.oclc.oai.server.verb.ServerVerb;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
-import pt.utl.ist.repox.util.ProjectType;
-import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.util.ProjectType;
+import pt.utl.ist.util.PropertyUtil;
 
 /**
  * OAIHandler is the primary Servlet for OAICat.

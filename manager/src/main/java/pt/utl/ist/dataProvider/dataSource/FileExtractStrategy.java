@@ -1,8 +1,8 @@
 package pt.utl.ist.dataProvider.dataSource;
 
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.recordPackage.RecordRepox;
 
 import java.io.File;
 

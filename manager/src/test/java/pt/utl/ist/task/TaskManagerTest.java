@@ -8,11 +8,11 @@ import org.junit.Test;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.task.ScheduledTask.Frequency;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;

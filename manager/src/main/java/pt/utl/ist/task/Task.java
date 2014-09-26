@@ -3,9 +3,9 @@ package pt.utl.ist.task;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.RunnableStoppable;
-import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.util.CompareUtil;
+import pt.utl.ist.util.RunnableStoppable;
+import pt.utl.ist.util.TimeUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;

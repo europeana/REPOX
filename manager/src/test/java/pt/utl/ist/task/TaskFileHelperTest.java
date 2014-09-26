@@ -16,16 +16,16 @@ import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.task.DataSourceExportTask;
 import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.task.TaskFileHelper;
 import pt.utl.ist.task.TaskManager;
+import pt.utl.ist.util.CompareUtil;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -58,13 +58,13 @@ public class TaskFileHelperTest {
 
         //DataSource dataSourceDImporter = new DataSourceDirectoryImporter(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.oai_dc.toString(),
         DataSource dataSourceDImporter = new DirectoryImporterDataSource(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.ese.toString(),
-                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
+                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.marc.CharacterEncoding.UTF_8,
                  "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
         dataSourceContainers.put(dataSourceDImporter.getId(), new DefaultDataSourceContainer(dataSourceDImporter));
 
         DataSource dataSourceDImporter1 = new DirectoryImporterDataSource(newDP, "dummyDSExport2", "", "", "test DS", MetadataFormat.ISO2709.toString(),
-                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.repox.marc.CharacterEncoding.UTF_8,
+                new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.marc.CharacterEncoding.UTF_8,
                 "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
         dataSourceContainers.put(dataSourceDImporter1.getId(), new DefaultDataSourceContainer(dataSourceDImporter1));

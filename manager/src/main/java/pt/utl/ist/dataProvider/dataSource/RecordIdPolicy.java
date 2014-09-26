@@ -1,7 +1,8 @@
 package pt.utl.ist.dataProvider.dataSource;
 
 import org.dom4j.Element;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+
+import pt.utl.ist.recordPackage.RecordRepox;
 
 /**
  */

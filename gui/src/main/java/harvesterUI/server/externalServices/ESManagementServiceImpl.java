@@ -20,7 +20,7 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.externalServices.ExternalRestService;
 import pt.utl.ist.externalServices.ExternalServiceType;
 import pt.utl.ist.externalServices.ServiceParameter;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.XmlUtil;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

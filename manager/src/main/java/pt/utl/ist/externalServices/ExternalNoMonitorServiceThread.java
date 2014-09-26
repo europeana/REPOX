@@ -1,7 +1,8 @@
 package pt.utl.ist.externalServices;
 
 import org.apache.log4j.Logger;
-import pt.utl.ist.repox.util.StringUtil;
+
+import pt.utl.ist.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -12,11 +12,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
-import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.recordPackage.RecordSAXParser;
-import pt.utl.ist.repox.util.StringUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordSAXParser;
+import pt.utl.ist.util.StringUtil;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;

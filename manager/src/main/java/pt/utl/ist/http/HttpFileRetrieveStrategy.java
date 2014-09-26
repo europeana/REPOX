@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.repox.util.FileUtil;
+import pt.utl.ist.util.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

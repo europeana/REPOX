@@ -37,10 +37,10 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
-import pt.utl.ist.repox.util.PropertyUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordRepoxExternalId;
 import pt.utl.ist.sru.SruRecordUpdateDataSource;
+import pt.utl.ist.util.PropertyUtil;
 
 /**
  *

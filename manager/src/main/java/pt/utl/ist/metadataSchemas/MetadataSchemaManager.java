@@ -5,7 +5,7 @@ import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.dataProvider.MessageType;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;

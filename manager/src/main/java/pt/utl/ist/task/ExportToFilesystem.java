@@ -28,14 +28,14 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiListResponse;
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.DomUtil;
-import pt.utl.ist.repox.util.InvalidInputException;
-import pt.utl.ist.repox.util.RunnableStoppable;
-import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.repox.util.ZipUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.DomUtil;
+import pt.utl.ist.util.InvalidInputException;
+import pt.utl.ist.util.RunnableStoppable;
+import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.XmlUtil;
+import pt.utl.ist.util.ZipUtil;
 
 /**
  * Exports all the Records from a Data Source to a specified location of the Filesystem

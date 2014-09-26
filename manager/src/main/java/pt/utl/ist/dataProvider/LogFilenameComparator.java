@@ -1,7 +1,7 @@
 package pt.utl.ist.dataProvider;
 
-import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.repox.util.date.DateUtil;
+import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import java.text.ParseException;
 import java.util.Comparator;

@@ -3,10 +3,10 @@ package pt.utl.ist.dataProvider;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;

@@ -4,8 +4,8 @@
  */
 package pt.utl.ist.accessPoint;
 
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.IndexUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.IndexUtil;
 
 import java.util.Collection;
 import java.util.List;

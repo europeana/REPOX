@@ -35,11 +35,11 @@ import org.dom4j.io.SAXReader;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.util.FileUtil;
-import pt.utl.ist.repox.util.StringUtil;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.reports.LogUtil;
+import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.util.StringUtil;
+import pt.utl.ist.util.XmlUtil;
 
 /**
  */

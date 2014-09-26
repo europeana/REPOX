@@ -1,7 +1,7 @@
 package pt.utl.ist.z3950;
 
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordRepox;
 
 import java.io.File;
 import java.util.Iterator;

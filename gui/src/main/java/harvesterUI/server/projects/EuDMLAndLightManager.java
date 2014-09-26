@@ -54,11 +54,11 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.util.PropertyUtil;
 import pt.utl.ist.statistics.DefaultRepoxStatistics;
 import pt.utl.ist.statistics.DefaultStatisticsManager;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.OldTaskReviewer;
+import pt.utl.ist.util.PropertyUtil;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 

@@ -5,10 +5,10 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.XPath;
 
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.recordPackage.RecordRepoxExternalId;
-import pt.utl.ist.repox.recordPackage.RecordRepoxXpathId;
-import pt.utl.ist.repox.util.CompareUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.recordPackage.RecordRepoxExternalId;
+import pt.utl.ist.recordPackage.RecordRepoxXpathId;
+import pt.utl.ist.util.CompareUtil;
 
 import java.util.HashMap;
 import java.util.Map;

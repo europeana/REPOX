@@ -3,9 +3,11 @@ package pt.utl.ist.rest.services.web.rest;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import pt.utl.ist.repox.util.XmlUtil;
+
+import pt.utl.ist.util.XmlUtil;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;

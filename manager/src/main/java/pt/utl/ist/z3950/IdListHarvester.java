@@ -4,14 +4,14 @@ import org.apache.log4j.Logger;
 import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.ResultSet.IRResultSet;
 
+import pt.utl.ist.characters.RecordCharactersConverter;
+import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.marc.Record;
 import pt.utl.ist.marc.RecordRepoxMarc;
-import pt.utl.ist.repox.characters.RecordCharactersConverter;
-import pt.utl.ist.repox.characters.UnderCode32Remover;
-import pt.utl.ist.repox.marc.Record;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.StringUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.StringUtil;
 
 import java.io.*;
 import java.util.*;

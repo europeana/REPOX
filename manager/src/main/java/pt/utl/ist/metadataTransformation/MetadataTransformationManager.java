@@ -10,9 +10,9 @@ import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxConfiguration;
-import pt.utl.ist.repox.util.XmlUtil;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.SameStylesheetTransformationException;
+import pt.utl.ist.util.XmlUtil;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;

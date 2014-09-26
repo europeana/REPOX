@@ -39,8 +39,8 @@ import pt.ist.xslt.io.XsltWriter;
 import pt.ist.xslt.version1.XsltStylesheet;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.SameStylesheetTransformationException;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 /**
  * Created to REPOX.

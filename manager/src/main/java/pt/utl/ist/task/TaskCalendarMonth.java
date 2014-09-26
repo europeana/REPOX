@@ -1,7 +1,7 @@
 package pt.utl.ist.task;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.repox.util.Month;
+import pt.utl.ist.util.Month;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

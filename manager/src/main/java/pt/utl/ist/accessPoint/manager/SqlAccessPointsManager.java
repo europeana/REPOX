@@ -16,12 +16,12 @@ import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.database.DatabaseAccess;
 import pt.utl.ist.oai.OaiListResponse;
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.repox.util.ZipUtil;
-import pt.utl.ist.repox.util.sql.SqlUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.reports.LogUtil;
+import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.ZipUtil;
+import pt.utl.ist.util.sql.SqlUtil;
 
 import java.io.File;
 import java.io.IOException;

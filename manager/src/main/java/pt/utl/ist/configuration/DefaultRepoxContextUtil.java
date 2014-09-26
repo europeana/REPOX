@@ -3,8 +3,8 @@ package pt.utl.ist.configuration;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
+import pt.utl.ist.util.PropertyUtil;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.*;
 import java.sql.SQLException;

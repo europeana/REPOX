@@ -23,7 +23,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.XmlUtil;
 
 /**
  * Created to REPOX Project.

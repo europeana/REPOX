@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.util.RunnableStoppable;
+import pt.utl.ist.util.RunnableStoppable;
 
 /**
  * Ingest records from Data Source to REPOX

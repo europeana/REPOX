@@ -2,7 +2,7 @@ package pt.utl.ist.z3950;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.repox.marc.CharacterEncoding;
+import pt.utl.ist.marc.CharacterEncoding;
 
 import java.util.Properties;
 

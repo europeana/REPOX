@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import pt.utl.ist.accessPoint.AccessPoint;
 import pt.utl.ist.configuration.RepoxConfiguration;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.util.sql.SqlUtil;
+import pt.utl.ist.util.sql.SqlUtil;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

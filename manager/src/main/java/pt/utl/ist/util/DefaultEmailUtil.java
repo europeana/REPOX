@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMultipart;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.repox.util.EmailUtil;
+import pt.utl.ist.util.EmailUtil;
 
 import java.io.*;
 import java.util.Date;

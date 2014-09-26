@@ -1,6 +1,6 @@
 package pt.utl.ist.task;
 
-import pt.utl.ist.repox.util.CompareUtil;
+import pt.utl.ist.util.CompareUtil;
 
 import java.util.Calendar;
 

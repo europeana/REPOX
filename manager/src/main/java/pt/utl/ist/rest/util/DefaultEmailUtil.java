@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.EuropeanaRepoxConfiguration;
-import pt.utl.ist.repox.util.EmailUtil;
+import pt.utl.ist.util.EmailUtil;
 
 import javax.mail.MessagingException;
 

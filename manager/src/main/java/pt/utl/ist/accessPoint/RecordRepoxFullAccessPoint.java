@@ -1,7 +1,8 @@
 package pt.utl.ist.accessPoint;
 
 import org.apache.log4j.Logger;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+
+import pt.utl.ist.recordPackage.RecordRepox;
 
 import java.util.ArrayList;
 import java.util.Collection;

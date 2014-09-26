@@ -13,8 +13,8 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.oai.OaiListResponse;
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
 
 import java.io.File;

@@ -9,9 +9,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.repox.util.FileUtil;
-import pt.utl.ist.repox.util.RunnableStoppable;
-import pt.utl.ist.repox.util.StringUtil;
+import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.util.RunnableStoppable;
+import pt.utl.ist.util.StringUtil;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;

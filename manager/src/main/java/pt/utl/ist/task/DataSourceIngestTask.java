@@ -1,7 +1,8 @@
 package pt.utl.ist.task;
 
 import org.dom4j.DocumentException;
-import pt.utl.ist.repox.util.CompareUtil;
+
+import pt.utl.ist.util.CompareUtil;
 
 import java.io.IOException;
 import java.util.Calendar;

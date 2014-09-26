@@ -14,14 +14,14 @@ import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.reports.LogUtil;
-import pt.utl.ist.repox.util.CompareUtil;
-import pt.utl.ist.repox.util.StringUtil;
-import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.repox.util.date.DateUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.statistics.RecordCount;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.CompareUtil;
+import pt.utl.ist.util.StringUtil;
+import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.date.DateUtil;
 
 import javax.xml.transform.TransformerConfigurationException;
 

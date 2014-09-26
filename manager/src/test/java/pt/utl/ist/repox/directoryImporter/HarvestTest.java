@@ -15,14 +15,14 @@ import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
+import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.repox.util.exceptions.task.IllegalFileFormatException;
 import pt.utl.ist.statistics.RecordCount;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 import java.io.File;
 import java.io.IOException;

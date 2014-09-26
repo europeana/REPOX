@@ -7,10 +7,10 @@ package pt.utl.ist.marc;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-import pt.utl.ist.repox.marc.Record;
-import pt.utl.ist.repox.marc.util.RecordComparer;
-import pt.utl.ist.repox.marc.xml.MarcXChangeDom4jBuilder;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
+import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.util.RecordComparer;
+import pt.utl.ist.marc.xml.MarcXChangeDom4jBuilder;
+import pt.utl.ist.recordPackage.RecordRepox;
 
 import java.io.*;
 import java.util.HashSet;

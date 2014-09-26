@@ -38,8 +38,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.repox.util.PropertyUtil;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.PropertyUtil;
+import pt.utl.ist.util.XmlUtil;
 
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;

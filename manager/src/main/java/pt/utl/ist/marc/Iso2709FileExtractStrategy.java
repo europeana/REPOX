@@ -6,18 +6,18 @@ package pt.utl.ist.marc;
 
 import org.apache.log4j.Logger;
 
+import pt.utl.ist.characters.RecordCharactersConverter;
+import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
-import pt.utl.ist.repox.characters.RecordCharactersConverter;
-import pt.utl.ist.repox.characters.UnderCode32Remover;
-import pt.utl.ist.repox.marc.CharacterEncoding;
-import pt.utl.ist.repox.marc.Record;
-import pt.utl.ist.repox.marc.iso2709.IsoNavigator;
-import pt.utl.ist.repox.marc.iso2709.IteratorIso2709;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.StringUtil;
-import pt.utl.ist.repox.util.TimeUtil;
+import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.iso2709.IsoNavigator;
+import pt.utl.ist.marc.iso2709.IteratorIso2709;
+import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.StringUtil;
+import pt.utl.ist.util.TimeUtil;
 
 import java.io.File;
 import java.util.ArrayList;

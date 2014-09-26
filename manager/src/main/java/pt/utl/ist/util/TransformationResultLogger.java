@@ -5,7 +5,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;

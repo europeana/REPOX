@@ -29,7 +29,7 @@ import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.XmlUtil;
 
 /**
  * Created to REPOX Project.

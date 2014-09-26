@@ -7,8 +7,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import pt.utl.ist.repox.util.XmlUtil;
 import pt.utl.ist.task.TaskFactory.TaskType;
+import pt.utl.ist.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;

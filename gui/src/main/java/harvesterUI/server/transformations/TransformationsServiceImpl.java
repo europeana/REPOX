@@ -21,8 +21,8 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.repox.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.repox.util.exceptions.SameStylesheetTransformationException;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
 import com.extjs.gxt.ui.client.data.FilterConfig;

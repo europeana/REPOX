@@ -5,7 +5,7 @@ import org.dom4j.DocumentException;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.repox.util.InvalidInputException;
+import pt.utl.ist.util.InvalidInputException;
 
 import java.io.IOException;
 

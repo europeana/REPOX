@@ -4,7 +4,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
-import pt.utl.ist.repox.util.StringUtil;
+
+import pt.utl.ist.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -15,10 +15,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.repox.marc.Record;
-import pt.utl.ist.repox.util.StringUtil;
-import pt.utl.ist.repox.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.marc.Record;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.StringUtil;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;

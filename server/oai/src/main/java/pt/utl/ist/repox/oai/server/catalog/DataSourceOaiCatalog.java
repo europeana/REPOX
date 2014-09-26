@@ -35,11 +35,11 @@ import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.oai.OaiListResponse;
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
-import pt.utl.ist.repox.recordPackage.RecordRepox;
-import pt.utl.ist.repox.util.InvalidInputException;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.TransformationResultLogger;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.XmlUtil;
 
 import javax.xml.transform.TransformerException;
 

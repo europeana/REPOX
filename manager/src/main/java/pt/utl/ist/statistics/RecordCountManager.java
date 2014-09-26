@@ -10,8 +10,8 @@ import org.dom4j.io.SAXReader;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.repox.util.TimeUtil;
-import pt.utl.ist.repox.util.XmlUtil;
+import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.XmlUtil;
 
 import java.io.File;
 import java.io.IOException;
