@@ -203,6 +203,8 @@
 				<groupId>repox</groupId>
 				<artifactId>repox-resources</artifactId>
 				<version>${repox:repox-resources.version}</version>
+				<classifier>resources</classifier>
+				<type>zip</type>
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>

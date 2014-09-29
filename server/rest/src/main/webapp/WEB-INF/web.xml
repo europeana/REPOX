@@ -7,7 +7,7 @@
 	<display-name>repox-server-rest</display-name>
 	<servlet>
 		<servlet-name>rest</servlet-name>
-		<servlet-class>harvesterUI.server.web.servlet.RestServlet</servlet-class>
+		<servlet-class>pt.utl.ist.rest.RestServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>rest</servlet-name>

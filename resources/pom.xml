@@ -13,7 +13,7 @@
 
 	<name>REPOX-RESOURCES</name>
 	<artifactId>repox-resources</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<organization>
 		<name>Instituto Superior Técnico</name>
@@ -26,4 +26,27 @@
 			<url>http://www.theeuropeanlibrary.org</url>
 		</contributor>
 	</contributors>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make shared resources</id>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/resources.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
