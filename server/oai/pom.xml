@@ -78,7 +78,7 @@
 			</plugin>
 		</plugins>
 
-		<!-- Boilerplate code for bypassing maving errors that are produced from 
+		<!-- Boilerplate code for bypassing maven errors(bugs) that are produced from 
 			exlipse for phases and goals -->
 		<pluginManagement>
 			<plugins>
@@ -120,24 +120,45 @@
 		</pluginManagement>
 	</build>
 
-<!-- 	<profiles> -->
-<!-- 		<profile> -->
-<!-- 			<id>europeana</id> -->
-<!-- 			<build> -->
-<!-- 				<resources> -->
-<!-- 					<resource> -->
-<!-- 						<directory>src/main/resources</directory> -->
-<!-- 						<excludes> -->
-<!-- 							<exclude>configuration.properties</exclude> -->
-<!-- 						</excludes> -->
-<!-- 					</resource> -->
-<!-- 					<resource> -->
-<!-- 						<directory>src/main/profiles/europeana</directory> -->
-<!-- 					</resource> -->
-<!-- 				</resources> -->
-<!-- 			</build> -->
-<!-- 		</profile> -->
-<!-- 	</profiles> -->
+	<profiles>
+	<!-- The development profile is only used while development and what it 
+		really does is copy the needed property files from the classes folder to 
+		the default maven resources folder so it can be deployed in eclipse for testing -->
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>src/main/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>configuration.properties</include>
+												<include>gui.properties</include>
+												<include>oaicat.properties</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
