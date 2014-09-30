@@ -15,18 +15,6 @@
 	<artifactId>repox-server</artifactId>
 	<packaging>pom</packaging>
 
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>http://www.ist.utl.pt</url>
-	</organization>
-
-	<contributors>
-		<contributor>
-			<name>The European Library</name>
-			<url>http://www.theeuropeanlibrary.org</url>
-		</contributor>
-	</contributors>
-
 	<modules>
 		<module>oai</module>
 		<module>rest</module>

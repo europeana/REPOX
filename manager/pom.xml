@@ -14,18 +14,6 @@
 	<artifactId>repox-manager</artifactId>
 	<packaging>jar</packaging>
 
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>http://www.ist.utl.pt</url>
-	</organization>
-
-	<contributors>
-		<contributor>
-			<name>The European Library</name>
-			<url>http://www.theeuropeanlibrary.org</url>
-		</contributor>
-	</contributors>
-
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<finalName>repoxCore</finalName>
@@ -38,31 +26,18 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>europeana</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-						<includes>
-							<include>oaicat.properties</include>
-						</includes>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-	</profiles>
-
-	<dependencies>
-<!-- 		<dependency> -->
-<!-- 			<groupId>repox</groupId> -->
-<!-- 			<artifactId>repox-client-oai</artifactId> -->
-<!-- 		</dependency> -->
-		
+	<dependencies>		
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-commons</artifactId>

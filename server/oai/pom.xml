@@ -12,18 +12,6 @@
 	<artifactId>repox-server-oai</artifactId>
 	<packaging>war</packaging>
 
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>http://www.ist.utl.pt</url>
-	</organization>
-
-	<contributors>
-		<contributor>
-			<name>The European Library</name>
-			<url>http://www.theeuropeanlibrary.org</url>
-		</contributor>
-	</contributors>
-
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 
@@ -38,6 +26,14 @@
 		</resources>
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -66,20 +62,22 @@
 						</goals>
 						<phase>generate-resources</phase>
 						<configuration>
+							<!-- Use as much as needed to be specific or else it will unpack dependencies 
+								that are not needed...also scope,type,classifier etc -->
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 							<includeArtifacIds>repox-resources</includeArtifacIds>
 							<includeGroupIds>${project.groupId}</includeGroupIds>
+							<includeClassifiers>resources</includeClassifiers>
+							<includeTypes>zip</includeTypes>
 							<excludeTransitive>true</excludeTransitive>
-							<!-- use as much as needed to be specific...also scope,type,classifier 
-								etc -->
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 
-		<!-- Boilerplate code for bypassing maven errors(bugs) that are produced from 
-			exlipse for phases and goals -->
+		<!-- Boilerplate code for bypassing maven errors(bugs) that are produced 
+			from exlipse for phases and goals -->
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
@@ -121,11 +119,12 @@
 	</build>
 
 	<profiles>
-	<!-- The development profile is only used while development and what it 
-		really does is copy the needed property files from the classes folder to 
-		the default maven resources folder so it can be deployed in eclipse for testing -->
+		<!-- The development profile is only used while development and what it 
+			really does is copy the needed property files from the classes folder to 
+			the default maven resources folder so it can be deployed in an IDE(ex. eclipse) 
+			for testing -->
 		<profile>
-			<id>dev</id>
+			<id>copy-resources</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -154,6 +153,33 @@
 								</configuration>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Use the below profile to clean resources folder the copy-resources 
+			was used before -->
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.5</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>configuration.properties</include>
+										<include>gui.properties</include>
+										<include>oaicat.properties</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

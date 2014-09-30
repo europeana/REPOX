@@ -29,6 +29,14 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
@@ -66,24 +74,136 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-shared-resources</id>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<!-- Use as much as needed to be specific or else it will unpack dependencies 
+								that are not needed...also scope,type,classifier etc -->
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+							<includeArtifacIds>repox-resources</includeArtifacIds>
+							<includeGroupIds>${project.groupId}</includeGroupIds>
+							<includeClassifiers>resources</includeClassifiers>
+							<includeTypes>zip</includeTypes>
+							<excludeTransitive>true</excludeTransitive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<!-- Boilerplate code for bypassing maven(bugs) errors that are produced 
+			from exlipse for phases and goals -->
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.0,)
+										</versionRange>
+										<goals>
+											<goal>
+												unpack-dependencies
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>
+		<!-- The development profile is only used while development and what it 
+			really does is copy the needed property files from the classes folder to 
+			the default maven resources folder so it can be deployed in an IDE(ex. eclipse) 
+			for testing -->
 		<profile>
-			<id>europeana</id>
+			<id>copy-resources</id>
 			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-						<excludes>
-							<exclude>configuration.properties</exclude>
-						</excludes>
-					</resource>
-					<resource>
-						<directory>src/main/profiles/europeana</directory>
-					</resource>
-				</resources>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>src/main/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>configuration.properties</include>
+												<include>gui.properties</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Use the below profile to clean resources folder the copy-resources 
+			was used before -->
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.5</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>configuration.properties</include>
+										<include>gui.properties</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+				</plugins>
 			</build>
 		</profile>
 	</profiles>
@@ -106,10 +226,19 @@
 			<artifactId>repox-server-rest</artifactId>
 			<type>war</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-commons</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-resources</artifactId>
+			<classifier>resources</classifier>
+			<type>zip</type>
+			<!-- Make sure this isn't included on any classpath -->
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -35,7 +35,7 @@
 			<organization>The European Library</organization>
 			<organizationUrl>http://www.theeuropeanlibrary.org</organizationUrl>
 			<roles>
-				<role>Developer</role>
+				<role>Software Developer</role>
 			</roles>
 		</developer>
 	</developers>
@@ -43,7 +43,7 @@
 	<modules>
 		<module>manager</module>
 		<module>server</module>
-<!-- 		<module>client</module> -->
+		<!-- <module>client</module> -->
 
 		<module>commons</module>
 		<module>gui</module>
@@ -51,6 +51,8 @@
 	</modules>
 
 	<properties>
+	<!-- Skip tests by default -->
+		<skipTests>true</skipTests>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Versions -->
@@ -58,8 +60,8 @@
 		<repox:repox-server.version>3.0-SNAPSHOT</repox:repox-server.version>
 		<repox:repox-server-oai.version>3.0-SNAPSHOT</repox:repox-server-oai.version>
 		<repox:repox-server-rest.version>3.0-SNAPSHOT</repox:repox-server-rest.version>
-<!-- 		<repox:repox-client.version>3.0-SNAPSHOT</repox:repox-client.version> -->
-<!-- 		<repox:repox-client-oai.version>3.0-SNAPSHOT</repox:repox-client-oai.version> -->
+		<!-- <repox:repox-client.version>3.0-SNAPSHOT</repox:repox-client.version> -->
+		<!-- <repox:repox-client-oai.version>3.0-SNAPSHOT</repox:repox-client-oai.version> -->
 
 		<repox:repox-commons.version>3.0-SNAPSHOT</repox:repox-commons.version>
 		<repox:repox-resources.version>3.0-SNAPSHOT</repox:repox-resources.version>
@@ -184,16 +186,16 @@
 				<version>${repox:repox-server-rest.version}</version>
 				<type>war</type>
 			</dependency>
-<!-- 			<dependency> -->
-<!-- 				<groupId>repox</groupId> -->
-<!-- 				<artifactId>repox-client</artifactId> -->
-<!-- 				<version>${repox:repox-client.version}</version> -->
-<!-- 			</dependency> -->
-<!-- 			<dependency> -->
-<!-- 				<groupId>repox</groupId> -->
-<!-- 				<artifactId>repox-client-oai</artifactId> -->
-<!-- 				<version>${repox:repox-client-oai.version}</version> -->
-<!-- 			</dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>repox</groupId> -->
+			<!-- <artifactId>repox-client</artifactId> -->
+			<!-- <version>${repox:repox-client.version}</version> -->
+			<!-- </dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>repox</groupId> -->
+			<!-- <artifactId>repox-client-oai</artifactId> -->
+			<!-- <version>${repox:repox-client-oai.version}</version> -->
+			<!-- </dependency> -->
 			<dependency>
 				<groupId>repox</groupId>
 				<artifactId>repox-commons</artifactId>
