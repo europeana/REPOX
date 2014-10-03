@@ -4,13 +4,13 @@
  * Created on 14 de Janeiro de 2003, 11:40
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
 import org.w3c.dom.Document;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.marc.xml.DomBuilder;
 import pt.utl.ist.marc.xml.RecordBuilderFromMarcXml;
 
@@ -88,9 +88,9 @@ public class InsertPontuationVisitor {
     /**
      * @param rec
      */
-    public static void insertPontuation(Record rec) {
+    public static void insertPontuation(MarcRecord rec) {
         for (Object o : rec.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             PontuationDefinition rd = (PontuationDefinition)fields.get(fld.getTagAsString());
             insertPontuation(fld, rd);
         }
@@ -101,7 +101,7 @@ public class InsertPontuationVisitor {
      * @return Document
      */
     public static Document insertPontuation(Document doc) {
-        Record rec = new RecordBuilderFromMarcXml().parseDom(doc);
+        MarcRecord rec = new RecordBuilderFromMarcXml().parseDom(doc);
         insertPontuation(rec);
         return DomBuilder.record2Dom(rec);
     }
@@ -110,12 +110,12 @@ public class InsertPontuationVisitor {
      * @param fld
      * @param rd
      */
-    protected static void insertPontuation(Field fld, PontuationDefinition rd) {
-        Subfield before = null;
-        Subfield now = null;
+    protected static void insertPontuation(MarcField fld, PontuationDefinition rd) {
+        MarcSubfield before = null;
+        MarcSubfield now = null;
         for (Object o : fld.getSubfields()) {
             before = now;
-            now = (Subfield)o;
+            now = (MarcSubfield)o;
             if (before != null) {
                 String sep = "; ";
                 if (rd != null) {

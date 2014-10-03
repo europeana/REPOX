@@ -4,10 +4,10 @@
  * Created on 17 de Maio de 2003, 0:13
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
 
 /**
  * 
@@ -25,8 +25,8 @@ public class AuthorityUtil {
      * @param rec
      * @return int
      */
-    public static int findAuthorityType(Record rec) {
-        Field mainHeading = getAuthorityMainHeading(rec);
+    public static int findAuthorityType(MarcRecord rec) {
+        MarcField mainHeading = getAuthorityMainHeading(rec);
         if (mainHeading == null) return AT_UNKNOWN;
         int tag200 = mainHeading.getTag();
         //String sistema=MarcUtil.getSingleFieldValue("152",'b',rec);
@@ -41,9 +41,9 @@ public class AuthorityUtil {
      * @param rec
      * @return Field
      */
-    public static Field getAuthorityMainHeading(Record rec) {
+    public static MarcField getAuthorityMainHeading(MarcRecord rec) {
         for (Object o : rec.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             if (fld.getTag() >= 200 && fld.getTag() < 300) { return fld; }
         }
         return null;

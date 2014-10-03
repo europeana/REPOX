@@ -3,10 +3,10 @@ package pt.utl.ist.marc.iso2709;
 import org.apache.log4j.Logger;
 
 import pt.utl.ist.characters.CharacterConverterI;
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
+import pt.utl.ist.util.marc.Leader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,9 @@ class ISOHandler implements MARCHandler {
     private static final Logger log           = Logger.getLogger(ISOHandler.class);
 
     CharacterConverterI         charConverter = null;
-    protected Record            rec;
-    private Field               dataField;
-    public List<Record>         records;
+    protected MarcRecord            rec;
+    private MarcField               dataField;
+    public List<MarcRecord>         records;
 
     public ISOHandler() {
     }
@@ -28,7 +28,7 @@ class ISOHandler implements MARCHandler {
 
     @Override
     public void startTape() {
-        records = new ArrayList<Record>();
+        records = new ArrayList<MarcRecord>();
     }
 
     @Override
@@ -37,7 +37,7 @@ class ISOHandler implements MARCHandler {
 
     @Override
     public void startRecord(Leader leader) {
-        rec = new Record();
+        rec = new MarcRecord();
         rec.setLeader(getString(leader.getSerializedForm()));
     }
 
@@ -48,7 +48,7 @@ class ISOHandler implements MARCHandler {
 
     @Override
     public void controlField(String tag, String chars) {
-        Field fld = rec.addField(Integer.parseInt(tag));
+        MarcField fld = rec.addField(Integer.parseInt(tag));
         fld.setValue(getString(chars));
         if (tag.equals("001")) {
             try {
@@ -79,7 +79,7 @@ class ISOHandler implements MARCHandler {
 
     @Override
     public void subfield(char code, String chars) {
-        Subfield sfld = new Subfield(code, getString(chars));
+        MarcSubfield sfld = new MarcSubfield(code, getString(chars));
         dataField.getSubfields().add(sfld);
     }
 

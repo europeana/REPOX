@@ -4,7 +4,7 @@
  */
 package pt.utl.ist.marc.xml;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 
 /**
  */
@@ -16,7 +16,7 @@ public abstract class MarcSaxParserClient {
      * @param rec
      * @throws Exception
      */
-    public void nextRecord(Record rec) throws Exception {
+    public void nextRecord(MarcRecord rec) throws Exception {
         processRecord(rec);
         counter++;
     }
@@ -36,5 +36,5 @@ public abstract class MarcSaxParserClient {
      * @param rec
      * @throws Exception
      */
-    protected abstract void processRecord(Record rec) throws Exception;
+    protected abstract void processRecord(MarcRecord rec) throws Exception;
 }

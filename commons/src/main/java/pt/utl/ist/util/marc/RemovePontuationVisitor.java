@@ -4,13 +4,13 @@
  * Created on 14 de Janeiro de 2003, 11:40
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
 import org.w3c.dom.Document;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.marc.xml.DomBuilder;
 import pt.utl.ist.marc.xml.RecordBuilderFromMarcXml;
 import pt.utl.ist.util.structure.MapOfLists;
@@ -147,9 +147,9 @@ public class RemovePontuationVisitor {
     /**
      * @param rec
      */
-    public static void removePontuation(Record rec){
+    public static void removePontuation(MarcRecord rec){
         for (Object o : rec.getFields()) {
-            Field fld = (Field) o;
+            MarcField fld = (MarcField) o;
             RemoverDefinition rd = (RemoverDefinition) fields.get(fld.getTagAsString());
             if (rd != null) {
                 removePontuation(fld, rd);
@@ -160,16 +160,16 @@ public class RemovePontuationVisitor {
     /**
      * @param rec
      */
-    public static void removePontuationAndBicos(Record rec){
+    public static void removePontuationAndBicos(MarcRecord rec){
         for (Object o : rec.getFields()) {
-            Field fld = (Field) o;
+            MarcField fld = (MarcField) o;
             RemoverDefinition rd = (RemoverDefinition) fields.get(fld.getTagAsString());
             if (rd != null) {
                 removePontuation(fld, rd);
             }
 
             if (fld.getTag() == 200) {
-                Subfield sfa = fld.getSingleSubfield('a');
+                MarcSubfield sfa = fld.getSingleSubfield('a');
                 if (sfa != null) {
                     Matcher m = bicosPattern.matcher(sfa.getValue());
                     if (m.find()) {
@@ -192,7 +192,7 @@ public class RemovePontuationVisitor {
      * @return Document
      */
     public static Document removePontuation(Document doc){
-        Record rec=new RecordBuilderFromMarcXml().parseDom(doc);
+        MarcRecord rec=new RecordBuilderFromMarcXml().parseDom(doc);
         removePontuation(rec);
         return DomBuilder.record2Dom(rec);
     }       
@@ -201,12 +201,12 @@ public class RemovePontuationVisitor {
      * @param fld
      * @param rd
      */
-    protected static void removePontuation(Field fld, RemoverDefinition rd){
-        Subfield before=null;
-        Subfield now=null;
+    protected static void removePontuation(MarcField fld, RemoverDefinition rd){
+        MarcSubfield before=null;
+        MarcSubfield now=null;
         for (Object o : fld.getSubfields()) {
             before = now;
-            now = (Subfield) o;
+            now = (MarcSubfield) o;
             List<String> regExps = rd.in.get(String.valueOf(now.getCode()));
             if (regExps != null) {
                 for (String regExp : regExps)
@@ -230,7 +230,7 @@ public class RemovePontuationVisitor {
      * @param sf
      * @param regExp
      */
-    protected static void removePontuation(Subfield sf, String regExp){
+    protected static void removePontuation(MarcSubfield sf, String regExp){
         String value=sf.getValue();
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(value);
@@ -275,9 +275,9 @@ public class RemovePontuationVisitor {
     /**
      * @param rec
      */
-    public static void removeAllPontuation(Record rec){
+    public static void removeAllPontuation(MarcRecord rec){
         for (Object o : rec.getFields()) {
-            Field fld = (Field) o;
+            MarcField fld = (MarcField) o;
             removeAllPontuation(fld);
         }        
     }    
@@ -285,8 +285,8 @@ public class RemovePontuationVisitor {
     /**
      * @param fld
      */
-    public static void removeAllPontuation(Field fld){
-        for(Subfield sf: fld.getSubfields()) {
+    public static void removeAllPontuation(MarcField fld){
+        for(MarcSubfield sf: fld.getSubfields()) {
         	Matcher m=pontuationAtStartPattern.matcher(sf.getValue());
         	if(m.find())
         		sf.setValue(m.replaceFirst(""));
@@ -311,8 +311,8 @@ public class RemovePontuationVisitor {
      * @param args
      */
     public static void main(String[] args){
-        Record rec=new Record();
-        Field f=rec.addField(225);
+        MarcRecord rec=new MarcRecord();
+        MarcField f=rec.addField(225);
         f.addSubfield('f',"sdfsdfdsf)");
         System.err.println(rec);
         RemovePontuationVisitor.removePontuation(rec);

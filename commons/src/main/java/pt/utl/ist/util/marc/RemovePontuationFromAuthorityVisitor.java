@@ -4,13 +4,13 @@
  * Created on 14 de Janeiro de 2003, 11:40
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
 import org.w3c.dom.Document;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.marc.xml.DomBuilder;
 import pt.utl.ist.marc.xml.RecordBuilderFromMarcXml;
 
@@ -92,9 +92,9 @@ public class RemovePontuationFromAuthorityVisitor {
     /**
      * @param rec
      */
-    public static void removePontuation(Record rec) {
+    public static void removePontuation(MarcRecord rec) {
         for (Object o : rec.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             RemoverDefinition rd = (RemoverDefinition)fields.get(fld.getTagAsString());
             if (rd != null) {
                 removePontuation(fld, rd);
@@ -107,7 +107,7 @@ public class RemovePontuationFromAuthorityVisitor {
      * @return Document
      */
     public static Document removePontuation(Document doc) {
-        Record rec = new RecordBuilderFromMarcXml().parseDom(doc);
+        MarcRecord rec = new RecordBuilderFromMarcXml().parseDom(doc);
         removePontuation(rec);
         return DomBuilder.record2Dom(rec);
     }
@@ -116,12 +116,12 @@ public class RemovePontuationFromAuthorityVisitor {
      * @param fld
      * @param rd
      */
-    protected static void removePontuation(Field fld, RemoverDefinition rd) {
-        Subfield before = null;
-        Subfield now = null;
+    protected static void removePontuation(MarcField fld, RemoverDefinition rd) {
+        MarcSubfield before = null;
+        MarcSubfield now = null;
         for (Object o : fld.getSubfields()) {
             before = now;
-            now = (Subfield)o;
+            now = (MarcSubfield)o;
             String regExp = (String)rd.in.get(String.valueOf(now.getCode()));
             if (regExp != null) {
                 removePontuation(now, regExp);
@@ -137,7 +137,7 @@ public class RemovePontuationFromAuthorityVisitor {
      * @param sf
      * @param regExp
      */
-    protected static void removePontuation(Subfield sf, String regExp) {
+    protected static void removePontuation(MarcSubfield sf, String regExp) {
         String value = sf.getValue();
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(value);

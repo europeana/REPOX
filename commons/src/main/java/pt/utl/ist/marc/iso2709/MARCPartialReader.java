@@ -24,9 +24,9 @@ package pt.utl.ist.marc.iso2709;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.marc.iso2709.datatype.IllegalIdentifierException;
-import pt.utl.ist.marc.iso2709.datatype.IllegalIndicatorException;
-import pt.utl.ist.marc.iso2709.datatype.IllegalTagException;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalIdentifierException;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalIndicatorException;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalTagException;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

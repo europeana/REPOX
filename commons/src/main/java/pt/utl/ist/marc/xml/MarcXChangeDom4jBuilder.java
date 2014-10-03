@@ -9,10 +9,10 @@ package pt.utl.ist.marc.xml;
 import org.apache.log4j.Logger;
 import org.dom4j.*;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordType;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcSubfield;
 
 import java.util.Iterator;
 import java.util.List;
@@ -93,7 +93,7 @@ public class MarcXChangeDom4jBuilder {
      * @param marcFormat
      * @return record in Document
      */
-    public static Document record2Dom(Record rec, String marcFormat) {
+    public static Document record2Dom(MarcRecord rec, String marcFormat) {
         Document ret = DocumentHelper.createDocument();
         Element tmpRoot = ret.addElement("tmp");
         Element recEl = record2DomElement(rec, tmpRoot, null, marcFormat);
@@ -108,7 +108,7 @@ public class MarcXChangeDom4jBuilder {
      * @param marcFormat
      * @return record in Dom Element
      */
-    public static Element record2DomElement(Record rec, Element parentElem, String marcFormat) {
+    public static Element record2DomElement(MarcRecord rec, Element parentElem, String marcFormat) {
         return record2DomElement(rec, parentElem, null, marcFormat);
     }
 
@@ -119,7 +119,7 @@ public class MarcXChangeDom4jBuilder {
      * @param marcFormat
      * @return record in Dom Element
      */
-    public static Element record2DomElement(Record rec, Element parentElem, String namespacePrefix, String marcFormat) {
+    public static Element record2DomElement(MarcRecord rec, Element parentElem, String namespacePrefix, String marcFormat) {
         Namespace namespace = new Namespace(namespacePrefix == null ? "mx" : namespacePrefix, "info:lc/xmlns/marcxchange-v1");
         //    	Namespace namespace=new Namespace(namespacePrefix==null ? "mx" : namespacePrefix , "http://www.bs.dk/standards/MarcXchange");
         Element root = parentElem.addElement(new QName("record", namespace));
@@ -143,7 +143,7 @@ public class MarcXChangeDom4jBuilder {
 
         Element leadElem = root.addElement(new QName("leader", namespace));
         if (rec.getLeader() == null)
-            leadElem.setText(Record.DEFAULT_LEADER);
+            leadElem.setText(MarcRecord.DEFAULT_LEADER);
         else
             leadElem.setText(rec.getLeader());
 
@@ -157,16 +157,16 @@ public class MarcXChangeDom4jBuilder {
         QName subfieldQName = new QName("subfield", namespace);
         //        QName codeQName=new QName("code", namespace);
         for (Object field : fields) {
-            Field f = (Field)field;
+            MarcField f = (MarcField)field;
             if (f.isControlField()) {
                 if (inDataFields) {
                     log.warn("Datafields and controlfields not sorted: " + rec + ". Sorting them.");
                     parentElem.remove(root);
-                    Record sortedRec = new Record();
+                    MarcRecord sortedRec = new MarcRecord();
                     sortedRec.setLeader(rec.getLeader());
                     sortedRec.setNc(rec.getNc());
                     sortedRec.setRecordType(rec.getRecordType());
-                    for (Field fld : rec.getFields()) {
+                    for (MarcField fld : rec.getFields()) {
                         sortedRec.addField(fld);
                     }
                     return record2DomElement(sortedRec, parentElem, namespacePrefix);
@@ -188,7 +188,7 @@ public class MarcXChangeDom4jBuilder {
                 //	        	el.addAttribute(ind1QName, String.valueOf(f.getInd1()));   
                 //	        	el.addAttribute(ind2QName, String.valueOf(f.getInd2()));                    
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield)o;
+                    MarcSubfield sf = (MarcSubfield)o;
                     Element elsf = el.addElement(subfieldQName);
                     elsf.addAttribute("code", String.valueOf(sf.getCode()));
                     //                    elsf.addAttribute(codeQName, String.valueOf(sf.getCode()));
@@ -203,8 +203,8 @@ public class MarcXChangeDom4jBuilder {
      * @param recEl
      * @return Record
      */
-    public static Record parseRecord(Element recEl) {
-        Record rec = new Record();
+    public static MarcRecord parseRecord(Element recEl) {
+        MarcRecord rec = new MarcRecord();
         if (recEl.attribute("type") != null) {
             rec.setRecordType(RecordType.valueOf(recEl.attributeValue("type").toUpperCase()));
         }
@@ -214,13 +214,13 @@ public class MarcXChangeDom4jBuilder {
             if (fieldEl.getName().equals("leader"))
                 rec.setLeader(fieldEl.getText());
             else if (fieldEl.getName().equals("controlfield")) {
-                Field f = rec.addField(Integer.parseInt(fieldEl.attributeValue("tag")));
+                MarcField f = rec.addField(Integer.parseInt(fieldEl.attributeValue("tag")));
                 f.setValue(fieldEl.getText());
                 if (f.getTag() == 001) {
                     rec.setNc(f.getValue());
                 }
             } else if (fieldEl.getName().equals("datafield")) {
-                Field f = rec.addField(Integer.parseInt(fieldEl.attributeValue("tag")));
+                MarcField f = rec.addField(Integer.parseInt(fieldEl.attributeValue("tag")));
 
                 Attribute ai1 = fieldEl.attribute("ind1");
                 if (ai1 != null && ai1.getValue().length() > 0)
@@ -236,7 +236,7 @@ public class MarcXChangeDom4jBuilder {
                 for (Iterator<Element> isf = fieldEl.elementIterator(); isf.hasNext();) {
                     Element sfEl = isf.next();
                     if (sfEl.getName().equals("subfield")) {
-                        Subfield sf = f.addSubfield(sfEl.attributeValue("code").charAt(0));
+                        MarcSubfield sf = f.addSubfield(sfEl.attributeValue("code").charAt(0));
                         sf.setValue(sfEl.getText());
                     }
                 }

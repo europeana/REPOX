@@ -10,9 +10,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.helpers.DefaultHandler;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.List;
  * @author Nuno Freire
  */
 public class RecordBuilderFromMarcXml extends DefaultHandler {
-    protected Record       rec = null;
-    protected List<Record> recs;
+    protected MarcRecord       rec = null;
+    protected List<MarcRecord> recs;
 
     /**
      * Creates a new instance of this class.
@@ -37,8 +37,8 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param dom
      * @return Record parsed from Node
      */
-    public Record parseDom(Node dom) {
-        recs = new ArrayList<Record>();
+    public MarcRecord parseDom(Node dom) {
+        recs = new ArrayList<MarcRecord>();
         if (dom instanceof Document) {
             dom = dom.getFirstChild();
         }
@@ -63,7 +63,7 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param n
      */
     protected void parseRecord(Node n) {
-        rec = new Record();
+        rec = new MarcRecord();
         int sz = n.getChildNodes().getLength();
         for (int idx = 0; idx < sz; idx++) {
             Node node = n.getChildNodes().item(idx);
@@ -80,7 +80,7 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param n
      */
     protected void parseControlField(Node n) {
-        Field f = rec.addField(Integer.parseInt(n.getAttributes().getNamedItem("tag").getNodeValue()));
+        MarcField f = rec.addField(Integer.parseInt(n.getAttributes().getNamedItem("tag").getNodeValue()));
         if (n.getFirstChild() == null)
             f.setValue("");
         else
@@ -94,7 +94,7 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param n
      */
     protected void parseDataField(Node n) {
-        Field f = rec.addField(Integer.parseInt(n.getAttributes().getNamedItem("tag").getNodeValue()));
+        MarcField f = rec.addField(Integer.parseInt(n.getAttributes().getNamedItem("tag").getNodeValue()));
 
         if (n.getAttributes().getNamedItem("ind1") != null && n.getAttributes().getNamedItem("ind1").getNodeValue().length() > 0)
             f.setInd1(n.getAttributes().getNamedItem("ind1").getNodeValue().charAt(0));
@@ -116,8 +116,8 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param n
      * @param f
      */
-    protected void parseSubfield(Node n, Field f) {
-        Subfield sf = f.addSubfield(n.getAttributes().getNamedItem("code").getNodeValue().charAt(0));
+    protected void parseSubfield(Node n, MarcField f) {
+        MarcSubfield sf = f.addSubfield(n.getAttributes().getNamedItem("code").getNodeValue().charAt(0));
         if (n.getFirstChild() != null)
             sf.setValue(n.getFirstChild().getNodeValue());
         else
@@ -128,8 +128,8 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param dom
      * @return List of Records pased from a Document
      */
-    public List<Record> parseDomGetRecords(Document dom) {
-        recs = new ArrayList<Record>();
+    public List<MarcRecord> parseDomGetRecords(Document dom) {
+        recs = new ArrayList<MarcRecord>();
         int sz = dom.getChildNodes().getLength();
         for (int idx = 0; idx < sz; idx++) {
             Node node = dom.getChildNodes().item(idx);
@@ -147,7 +147,7 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param dom
      * @return Record parsed from Node
      */
-    public static Record domToRecord(Node dom) {
+    public static MarcRecord domToRecord(Node dom) {
         RecordBuilderFromMarcXml bld = new RecordBuilderFromMarcXml();
         if (dom instanceof Document) return bld.parseDom(dom.getFirstChild());
         return bld.parseDom(dom);
@@ -157,7 +157,7 @@ public class RecordBuilderFromMarcXml extends DefaultHandler {
      * @param dom
      * @return List of Records parsed from a Document
      */
-    public static List<Record> domToRecords(Document dom) {
+    public static List<MarcRecord> domToRecords(Document dom) {
         RecordBuilderFromMarcXml bld = new RecordBuilderFromMarcXml();
         return bld.parseDomGetRecords(dom);
     }

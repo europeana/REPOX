@@ -2,11 +2,11 @@
  * Created on 28/Jun/2005
  *
  */
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.structure.Tuple;
 
 import java.util.HashSet;
@@ -77,7 +77,7 @@ public class RecordComparer {
      * @param recB
      * @return boolean indicating if the records are equal
      */
-    public boolean areEqual(Record recA, Record recB) {
+    public boolean areEqual(MarcRecord recA, MarcRecord recB) {
         int idxA = 0;
         int idxB = 0;
 
@@ -87,8 +87,8 @@ public class RecordComparer {
 
         boolean finished = false;
         while (!finished) {
-            Field fldA = null;
-            Field fldB = null;
+            MarcField fldA = null;
+            MarcField fldB = null;
             int tagA = 0;
             int tagB = 0;
 
@@ -130,9 +130,9 @@ public class RecordComparer {
                     if (!equals(fldA.getValue(), fldB.getValue())) return false;
                 } else {
                     if (fldA.getInd1() != fldB.getInd1() || fldA.getInd2() != fldB.getInd2()) return false;
-                    for (Subfield sfA : fldA.getSubfields()) {
+                    for (MarcSubfield sfA : fldA.getSubfields()) {
                         boolean found = false;
-                        for (Subfield sfB : fldB.getSubfields()) {
+                        for (MarcSubfield sfB : fldB.getSubfields()) {
                             if (sfA.getCode() == sfB.getCode() && equals(sfA.getValue(), sfB.getValue())) {
                                 found = true;
                                 break;
@@ -141,9 +141,9 @@ public class RecordComparer {
                         if (!found) { return false; }
                     }
 
-                    for (Subfield sfB : fldB.getSubfields()) {
+                    for (MarcSubfield sfB : fldB.getSubfields()) {
                         boolean found = false;
-                        for (Subfield sfA : fldA.getSubfields()) {
+                        for (MarcSubfield sfA : fldA.getSubfields()) {
                             if (sfA.getCode() == sfB.getCode() && equals(sfA.getValue(), sfB.getValue())) {
                                 found = true;
                                 break;
@@ -163,7 +163,7 @@ public class RecordComparer {
      * @param recB
      * @return Tupple with V1=% of equal fields, V2=how the records compare
      */
-    public Tuple<Integer, RecordEngulfing> compareRecords(Record recA, Record recB) {
+    public Tuple<Integer, RecordEngulfing> compareRecords(MarcRecord recA, MarcRecord recB) {
         int idxA = 0;
         int idxB = 0;
 
@@ -174,8 +174,8 @@ public class RecordComparer {
 
         boolean finished = false;
         while (!finished) {
-            Field fldA = null;
-            Field fldB = null;
+            MarcField fldA = null;
+            MarcField fldB = null;
             int tagA = 0;
             int tagB = 0;
 
@@ -278,14 +278,14 @@ public class RecordComparer {
      * @param fB
      * @return RecordEngulfing
      */
-    protected RecordEngulfing compareFields(Field fA, Field fB) {
+    protected RecordEngulfing compareFields(MarcField fA, MarcField fB) {
         if (fA.isControlField()) { return equals(fA.getValue(), fB.getValue()) ? RecordEngulfing.Equal : RecordEngulfing.None; }
 
         RecordEngulfing engulfBtoA = RecordEngulfing.Equal;
 
-        for (Subfield sfA : fA.getSubfields()) {
+        for (MarcSubfield sfA : fA.getSubfields()) {
             boolean found = false;
-            for (Subfield sfB : fB.getSubfields()) {
+            for (MarcSubfield sfB : fB.getSubfields()) {
                 if (sfA.getCode() == sfB.getCode() && equals(sfA.getValue(), sfB.getValue())) {
                     found = true;
                     break;
@@ -298,9 +298,9 @@ public class RecordComparer {
         }
 
         RecordEngulfing engulfAtoB = RecordEngulfing.Equal;
-        for (Subfield sfB : fB.getSubfields()) {
+        for (MarcSubfield sfB : fB.getSubfields()) {
             boolean found = false;
-            for (Subfield sfA : fA.getSubfields()) {
+            for (MarcSubfield sfA : fA.getSubfields()) {
                 if (sfA.getCode() == sfB.getCode() && equals(sfA.getValue(), sfB.getValue())) {
                     found = true;
                     break;

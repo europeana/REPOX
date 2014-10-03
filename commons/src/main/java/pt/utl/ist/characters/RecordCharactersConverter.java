@@ -4,9 +4,9 @@
  */
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -21,13 +21,13 @@ public class RecordCharactersConverter {
      * @param rec
      * @param converter
      */
-    public static void convertRecord(Record rec, CharacterConverterI converter){
+    public static void convertRecord(MarcRecord rec, CharacterConverterI converter){
         if (rec==null)
             return;
         List fields=rec.getFields();
 
         for (Object field : fields) {
-            Field f = (Field) field;
+            MarcField f = (MarcField) field;
             if (f.isControlField()) {
                 if (f.getValue() == null)
                     f.setValue("");
@@ -35,7 +35,7 @@ public class RecordCharactersConverter {
                 f.setValue(newData);
             } else {
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield) o;
+                    MarcSubfield sf = (MarcSubfield) o;
                     String newData = converter.convert(sf.getValue());
                     sf.setValue(newData);
                 }
@@ -49,20 +49,20 @@ public class RecordCharactersConverter {
      * @param rec
      * @param encoding
      */
-    public static void convertRecord(Record rec, String encoding){
+    public static void convertRecord(MarcRecord rec, String encoding){
         try{
             if (rec==null)
                 return;
             List fields=rec.getFields();
 
             for (Object field : fields) {
-                Field f = (Field) field;
+                MarcField f = (MarcField) field;
                 if (f.isControlField()) {
                     String newData = convertString(f.getValue(), encoding);
                     f.setValue(newData);
                 } else {
                     for (Object o : f.getSubfields()) {
-                        Subfield sf = (Subfield) o;
+                        MarcSubfield sf = (MarcSubfield) o;
                         String newData = convertString(sf.getValue(), encoding);
                         sf.setValue(newData);
                     }

@@ -11,9 +11,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.NUtil;
 
 import javax.xml.parsers.SAXParser;
@@ -29,14 +29,14 @@ import java.util.ArrayList;
  * @author Nuno Freire
  */
 public class MarcSaxParser extends DefaultHandler {
-    ArrayList<Record>             records;
-    protected Record              currentRecord;
+    ArrayList<MarcRecord>             records;
+    protected MarcRecord              currentRecord;
     protected MarcSaxParserClient client;
 
     String                        currentCharacters = "";
 
-    protected Field               currentField      = null;
-    protected Subfield            currentSubfield   = null;
+    protected MarcField               currentField      = null;
+    protected MarcSubfield            currentSubfield   = null;
 
     /** Creates a new instance of UnimarcSaxParser */
     public MarcSaxParser() {
@@ -54,13 +54,13 @@ public class MarcSaxParser extends DefaultHandler {
     /**
      * @return the marc records parsed from the input stream
      */
-    public ArrayList<Record> getRecords() {
+    public ArrayList<MarcRecord> getRecords() {
         return records;
     }
 
     @Override
     public void startDocument() throws SAXException {
-        if (client == null) records = new ArrayList<Record>();
+        if (client == null) records = new ArrayList<MarcRecord>();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MarcSaxParser extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
             if (qName.equals("record") || qName.endsWith(":record")) {
-                currentRecord = new Record();
+                currentRecord = new MarcRecord();
             } else if (qName.equals("leader") || qName.endsWith(":leader")) {
                 currentCharacters = "";
             } else if (qName.equals("controlfield") || qName.endsWith(":controlfield")) {
@@ -146,7 +146,7 @@ public class MarcSaxParser extends DefaultHandler {
      * @return the parsed marc records
      * @throws SAXException
      */
-    public static ArrayList<Record> parse(InputStream in) throws SAXException {
+    public static ArrayList<MarcRecord> parse(InputStream in) throws SAXException {
         try {
             MarcSaxParser handler = new MarcSaxParser();
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -191,7 +191,7 @@ public class MarcSaxParser extends DefaultHandler {
     public static void main(final String[] args) {
         try {
 
-            ArrayList<Record> records = MarcSaxParser.parse(new FileInputStream("C:\\desktop\\example.xml"));
+            ArrayList<MarcRecord> records = MarcSaxParser.parse(new FileInputStream("C:\\desktop\\example.xml"));
             System.out.println(NUtil.listToString(records, "", "", "\n"));
 
             //            Record mets=UnimarcSaxParser.parse(new FileInputStream("C:\\progs\\tomcat5\\webapps\\testebndpub\\obra1\\record\\1.xml"));

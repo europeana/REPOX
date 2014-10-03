@@ -8,7 +8,7 @@ import pt.utl.ist.characters.RecordCharactersConverter;
 import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordRepoxMarc;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.StringUtil;
@@ -62,7 +62,7 @@ public class IdListHarvester extends AbstractHarvester {
         private DataSource                       dataSource;
         private File                             logFile;
         private BufferedReader                   reader;
-        Record                                   nextRecord = null;
+        MarcRecord                                   nextRecord = null;
         //
         String                                   recordId;
         //liz

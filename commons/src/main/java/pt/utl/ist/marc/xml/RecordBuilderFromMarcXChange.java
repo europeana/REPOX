@@ -9,7 +9,7 @@ package pt.utl.ist.marc.xml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordType;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 public class RecordBuilderFromMarcXChange extends RecordBuilderFromMarcXml {
     @Override
     protected void parseRecord(Node n) {
-        rec = new Record();
+        rec = new MarcRecord();
         if (n.getAttributes().getNamedItem("type") != null) {
             rec.setRecordType(RecordType.valueOf(n.getAttributes().getNamedItem("type").getNodeValue().toUpperCase()));
         }
@@ -49,12 +49,12 @@ public class RecordBuilderFromMarcXChange extends RecordBuilderFromMarcXml {
      * @param dom
      * @return Record converted from Node
      */
-    public static Record domToRecord(Node dom) {
+    public static MarcRecord domToRecord(Node dom) {
         RecordBuilderFromMarcXChange bld = new RecordBuilderFromMarcXChange();
         return bld.parseDom(dom);
     }
 
-    public static List<Record> domToRecords(Document dom) {
+    public static List<MarcRecord> domToRecords(Document dom) {
         RecordBuilderFromMarcXChange bld = new RecordBuilderFromMarcXChange();
         return bld.parseDomGetRecords(dom);
     }

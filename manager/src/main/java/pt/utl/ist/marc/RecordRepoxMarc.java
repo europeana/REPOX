@@ -7,10 +7,10 @@ package pt.utl.ist.marc;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.util.RecordComparer;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.xml.MarcXChangeDom4jBuilder;
 import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.util.marc.RecordComparer;
 
 import java.io.*;
 import java.util.HashSet;
@@ -21,7 +21,7 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
     private static final Logger log              = Logger.getLogger(RecordRepoxMarc.class);
     static final long           serialVersionUID = 1;
 
-    protected Record            record;
+    protected MarcRecord            record;
     protected boolean           isDeleted        = false;
     protected String            marcFormat;
 
@@ -64,13 +64,13 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
     public void deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
         ObjectInputStream s = new ObjectInputStream(in);
-        record = (Record)s.readObject();
+        record = (MarcRecord)s.readObject();
         s.close();
         in.close();
     }
 
     @SuppressWarnings("javadoc")
-    public RecordRepoxMarc(Record record) {
+    public RecordRepoxMarc(MarcRecord record) {
         this.record = record;
     }
 
@@ -92,12 +92,12 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
     }
 
     @SuppressWarnings("javadoc")
-    public Record getRecord() {
+    public MarcRecord getRecord() {
         return record;
     }
 
     @SuppressWarnings("javadoc")
-    public void setRecord(Record record) {
+    public void setRecord(MarcRecord record) {
         this.record = record;
     }
 

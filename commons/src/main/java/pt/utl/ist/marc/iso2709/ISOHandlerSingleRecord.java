@@ -3,8 +3,8 @@ package pt.utl.ist.marc.iso2709;
 import org.apache.log4j.Logger;
 
 import pt.utl.ist.characters.CharacterConverterI;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.util.marc.Leader;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class ISOHandlerSingleRecord extends ISOHandler {
      * 
      * @param rec
      */
-    public ISOHandlerSingleRecord(Record rec) {
+    public ISOHandlerSingleRecord(MarcRecord rec) {
         this.rec = rec;
     }
 
@@ -28,14 +28,14 @@ public class ISOHandlerSingleRecord extends ISOHandler {
      * @param rec
      * @param charConverter
      */
-    public ISOHandlerSingleRecord(Record rec, CharacterConverterI charConverter) {
+    public ISOHandlerSingleRecord(MarcRecord rec, CharacterConverterI charConverter) {
         this.rec = rec;
         this.charConverter = charConverter;
     }
 
     @Override
     public void startTape() {
-        records = new ArrayList<Record>();
+        records = new ArrayList<MarcRecord>();
     }
 
     @Override

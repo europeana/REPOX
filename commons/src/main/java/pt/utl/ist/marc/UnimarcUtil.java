@@ -11,9 +11,9 @@ public class UnimarcUtil {
      * @param r
      * @return the 2xx field of the record, or null if not found
      */
-    public static Field getMainHeadingField(Record r) {
+    public static MarcField getMainHeadingField(MarcRecord r) {
         for (Object o : r.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             if (fld.getTag() >= 200 && fld.getTag() < 300) { return fld; }
         }
         return null;
@@ -25,7 +25,7 @@ public class UnimarcUtil {
      * @param r
      * @return the 210$d the record, null if the record contains no 210$d
      */
-    public static String getYearOfPublication(Record r) {
+    public static String getYearOfPublication(MarcRecord r) {
         String dat = r.getSingleFieldValue(210, 'd');
         if (dat != null)
             dat = dat.trim();
@@ -45,7 +45,7 @@ public class UnimarcUtil {
      * @return the 105$a 4-7 or Etiq.reg./6 of the record, null if the record
      *         contains none
      */
-    public static String getForm(Record r) {
+    public static String getForm(MarcRecord r) {
         String dat = r.getSingleFieldValue(105, 'a');
         if (dat != null && dat.length() > 7) return dat.substring(4, 8);
         if (r.getLeader() != null && r.getLeader().length() > 6) return r.getLeader().substring(6, 7);
@@ -58,7 +58,7 @@ public class UnimarcUtil {
      * 
      * @return the 101$a of the record, null if the record contains none
      */
-    public static String getLanguage(Record r) {
+    public static String getLanguage(MarcRecord r) {
         String dat = r.getSingleFieldValue(101, 'a');
         if (dat != null) dat = dat.trim();
         return dat;
@@ -73,7 +73,7 @@ public class UnimarcUtil {
      * @return the title of the record, an empty string if the record contains
      *         no title
      */
-    public static String getTitle(Record r) {
+    public static String getTitle(MarcRecord r) {
         String tit = getTitleWithoutPlaceAndDate(r);
         if (tit.equals("")) return "";
         String loc = r.getSingleFieldValue(210, 'a');
@@ -99,10 +99,10 @@ public class UnimarcUtil {
      * @return the title of the record, an empty string if the record contains
      *         no title
      */
-    public static String getTitleWithoutPlaceAndDate(Record r) {
-        List<Field> fields200 = r.getField(200);
+    public static String getTitleWithoutPlaceAndDate(MarcRecord r) {
+        List<MarcField> fields200 = r.getField(200);
         if (fields200.size() == 0) return "";
-        Field f200 = r.getField(200).get(0);
+        MarcField f200 = r.getField(200).get(0);
         String tit = f200.getSingleSubfieldValue('a');
         if (tit == null) return "";
         for (String sc : f200.getSubfieldValues('c'))
@@ -126,14 +126,14 @@ public class UnimarcUtil {
      * 
      * @return the title of the record
      */
-    public static String getAuthorList(Record r) {
+    public static String getAuthorList(MarcRecord r) {
         String ret = "";
         int[][] fields = new int[3][];
         fields[0] = new int[] { 700, 710, 720 };
         fields[1] = new int[] { 701, 711, 721 };
         fields[2] = new int[] { 702, 712, 722 };
         for (int i = 0; i < 3; i++) {
-            for (Field fld : r.getFields(fields[i])) {
+            for (MarcField fld : r.getFields(fields[i])) {
                 String sfa = fld.getSingleSubfieldValue('a');
                 String sfb = fld.getSingleSubfieldValue('b');
                 if (sfa != null) {

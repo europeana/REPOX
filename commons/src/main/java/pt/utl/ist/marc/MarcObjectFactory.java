@@ -16,21 +16,21 @@ public interface MarcObjectFactory {
     /**
      * @return get new Record
      */
-    public Record newRecord();
+    public MarcRecord newRecord();
 
     /**
      * @return get new Field
      */
-    public Field newField();
+    public MarcField newField();
 
     /**
      * @return get new SubField
      */
-    public Subfield newSubfield();
+    public MarcSubfield newSubfield();
     
     /**
      * @param rec
      * @return boolean indicating if the record is from this factory
      */
-    public boolean isFromThisFactory(Record rec);
+    public boolean isFromThisFactory(MarcRecord rec);
 }

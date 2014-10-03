@@ -10,9 +10,9 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.DomUtil;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,7 +36,7 @@ public class DomBuilder {
      * @param rec a marc record
      * @return the record in xml
      */
-    public static String record2XMLString(Record rec){
+    public static String record2XMLString(MarcRecord rec){
         return record2XMLString(rec,true);
     }
     /** Creates an XML representation of a marc record
@@ -44,7 +44,7 @@ public class DomBuilder {
      * @param withXmlDeclaration include the xml declaration
      * @return the record in xml
      */
-    public static String record2XMLString(Record rec, boolean withXmlDeclaration){
+    public static String record2XMLString(MarcRecord rec, boolean withXmlDeclaration){
         Document doc=record2Dom(rec);
         return DomUtil.domToString(doc,withXmlDeclaration);
     }
@@ -72,7 +72,7 @@ public class DomBuilder {
      * @param rec a marc record
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec){
+    public static byte[] record2XMLBytes(MarcRecord rec){
         return record2XMLBytes(rec,true);
     }
     /** Creates an XML representation of a marc record
@@ -80,7 +80,7 @@ public class DomBuilder {
      * @param withXmlDeclaration include the xml declaration
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec, boolean withXmlDeclaration){
+    public static byte[] record2XMLBytes(MarcRecord rec, boolean withXmlDeclaration){
         Document doc=record2Dom(rec);
         return DomUtil.domToBytes(doc,withXmlDeclaration);
     }
@@ -118,7 +118,7 @@ public class DomBuilder {
             collection.setAttribute("xsi:schemaLocation","http://www.bn.pt/standards/metadata/marcxml/1.0/ http://xml.bn.pt/schemas/Unimarc-1.0.xsd");
             document.appendChild(collection);
             for (Object rec1 : recs) {
-                Record rec = (Record) rec1;
+                MarcRecord rec = (MarcRecord) rec1;
                 if (rec != null)
                     collection.appendChild(createRecordDom(document, rec));
             }
@@ -136,7 +136,7 @@ public class DomBuilder {
      * @return Dom Document representing the record
      *
      */
-    public static Document record2Dom(Record rec){
+    public static Document record2Dom(MarcRecord rec){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -164,7 +164,7 @@ public class DomBuilder {
      * @return Dom Document representing the record
      *
      */
-    public static Element record2DomElement(Record rec, Document document){
+    public static Element record2DomElement(MarcRecord rec, Document document){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -178,14 +178,14 @@ public class DomBuilder {
         }
     }
 
-    private static Element createRecordDom(Document document, Record rec) throws java.io.UnsupportedEncodingException{
+    private static Element createRecordDom(Document document, MarcRecord rec) throws java.io.UnsupportedEncodingException{
         Element root =  document.createElementNS("http://www.bn.pt/standards/metadata/marcxml/1.0/","record");
 
         List fields=rec.getFields();
 
         Element leadElem =  document.createElementNS("http://www.bn.pt/standards/metadata/marcxml/1.0/","leader");
         if(rec.getLeader()==null)
-            leadElem.appendChild(document.createTextNode(Record.DEFAULT_LEADER));
+            leadElem.appendChild(document.createTextNode(MarcRecord.DEFAULT_LEADER));
         else
             leadElem.appendChild(document.createTextNode(rec.getLeader()));
 
@@ -194,7 +194,7 @@ public class DomBuilder {
         // append control fields to directory and data
         boolean inDataFields=false;
         for (Object field : fields) {
-            Field f = (Field) field;
+            MarcField f = (MarcField) field;
             if (f.isControlField()) {
                 if (inDataFields) {
                     log.error("Datafields and controlfields not sorted: " + rec.getNc());
@@ -218,7 +218,7 @@ public class DomBuilder {
                 el.setAttribute("ind1", String.valueOf(f.getInd1()));
                 el.setAttribute("ind2", String.valueOf(f.getInd2()));
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield) o;
+                    MarcSubfield sf = (MarcSubfield) o;
                     Element elsf = (Element) document.createElementNS("http://www.bn.pt/standards/metadata/marcxml/1.0/", "subfield");
 //                    elsf.setAttributeNS("http://www.bn.pt/standards/metadata/marcxml/1.0/","code",String.valueOf(sf.getCode()));
                     elsf.setAttribute("code", String.valueOf(sf.getCode()));

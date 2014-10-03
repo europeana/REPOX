@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class MarcXChangeBuilder {
      *            a marc record
      * @return the record in xml
      */
-    public static String record2XMLString(Record rec) {
+    public static String record2XMLString(MarcRecord rec) {
         return record2XMLString(rec, null);
     }
 
@@ -42,7 +42,7 @@ public class MarcXChangeBuilder {
      * @param recType
      * @return the record in xml
      */
-    public static String record2XMLString(Record rec, String recType) {
+    public static String record2XMLString(MarcRecord rec, String recType) {
         return new MarcXChangeXmlBuilder(false).record2XMLString(rec, true, recType);
     }
 
@@ -56,7 +56,7 @@ public class MarcXChangeBuilder {
      * @param marcType
      * @return the record in xml
      */
-    public static String record2XMLString(Record rec, boolean withXmlDeclaration, String marcType) {
+    public static String record2XMLString(MarcRecord rec, boolean withXmlDeclaration, String marcType) {
         return new MarcXChangeXmlBuilder(false).record2XMLString(rec, withXmlDeclaration, marcType);
     }
 
@@ -91,7 +91,7 @@ public class MarcXChangeBuilder {
      *            a marc record
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec) {
+    public static byte[] record2XMLBytes(MarcRecord rec) {
         return record2XMLBytes(rec, null);
     }
 
@@ -100,7 +100,7 @@ public class MarcXChangeBuilder {
      * @param marcType
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec, String marcType) {
+    public static byte[] record2XMLBytes(MarcRecord rec, String marcType) {
         return new MarcXChangeXmlBuilder(false).record2XMLBytes(rec, true, marcType);
     }
 
@@ -113,7 +113,7 @@ public class MarcXChangeBuilder {
      *            include the xml declaration
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec, boolean withXmlDeclaration) {
+    public static byte[] record2XMLBytes(MarcRecord rec, boolean withXmlDeclaration) {
         return record2XMLBytes(rec, withXmlDeclaration, null);
     }
 
@@ -123,7 +123,7 @@ public class MarcXChangeBuilder {
      * @param marcType
      * @return the record in xml
      */
-    public static byte[] record2XMLBytes(Record rec, boolean withXmlDeclaration, String marcType) {
+    public static byte[] record2XMLBytes(MarcRecord rec, boolean withXmlDeclaration, String marcType) {
         return new MarcXChangeXmlBuilder(false).record2XMLBytes(rec, withXmlDeclaration, marcType);
     }
 
@@ -168,7 +168,7 @@ public class MarcXChangeBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public static Document record2Dom(Record rec) {
+    public static Document record2Dom(MarcRecord rec) {
         return new MarcXChangeXmlBuilder(false).record2Dom(rec);
     }
 
@@ -182,7 +182,7 @@ public class MarcXChangeBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public static Document record2Dom(Record rec, boolean withCollectionElement) {
+    public static Document record2Dom(MarcRecord rec, boolean withCollectionElement) {
         return new MarcXChangeXmlBuilder(false).record2Dom(rec, withCollectionElement, null);
     }
 
@@ -192,7 +192,7 @@ public class MarcXChangeBuilder {
      * @param marcType
      * @return record in Document
      */
-    public static Document record2Dom(Record rec, boolean withCollectionElement, String marcType) {
+    public static Document record2Dom(MarcRecord rec, boolean withCollectionElement, String marcType) {
         return new MarcXChangeXmlBuilder(false).record2Dom(rec, withCollectionElement, marcType);
     }
 
@@ -206,7 +206,7 @@ public class MarcXChangeBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public static Element record2DomElement(Record rec, Document document) {
+    public static Element record2DomElement(MarcRecord rec, Document document) {
         return new MarcXChangeXmlBuilder(false).record2DomElement(rec, document, null);
     }
 
@@ -216,7 +216,7 @@ public class MarcXChangeBuilder {
      * @param marcType
      * @return record in document Element
      */
-    public static Element record2DomElement(Record rec, Document document, String marcType) {
+    public static Element record2DomElement(MarcRecord rec, Document document, String marcType) {
         return new MarcXChangeXmlBuilder(false).record2DomElement(rec, document, marcType);
     }
 

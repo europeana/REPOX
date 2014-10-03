@@ -4,15 +4,15 @@
  * Created on 23 de Novembro de 2001, 18:50
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.utl.ist.marc.Field;
+import pt.utl.ist.marc.MarcField;
 import pt.utl.ist.marc.MarcObjectFactory;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 /**
  * 
@@ -46,8 +46,8 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static String getSingleFieldValue(String tag, char subfield, Record marc) {
-        Field f = getSingleField(tag, marc);
+    public static String getSingleFieldValue(String tag, char subfield, MarcRecord marc) {
+        MarcField f = getSingleField(tag, marc);
         if (f == null) return null;
         if (Integer.parseInt(tag) < 10) return f.getValue();
         return getSingleSubfieldValue(subfield, f);
@@ -61,18 +61,18 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static List getFieldValues(String tag, char subfield, Record marc) {
+    public static List getFieldValues(String tag, char subfield, MarcRecord marc) {
         List ret = new ArrayList();
         List f = getField(tag, marc);
         if (f.size() == 0) return ret;
         if (Integer.parseInt(tag) < 10) {
             for (Object aF : f) {
-                Field el = (Field)aF;
+                MarcField el = (MarcField)aF;
                 ret.add(el.getValue());
             }
         } else {
             for (Object aF : f) {
-                Field el = (Field)aF;
+                MarcField el = (MarcField)aF;
                 List sfs = getSubfieldValues(subfield, el);
                 for (Object sf : sfs) {
                     ret.add((String)sf);
@@ -89,13 +89,13 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static Field getSingleField(String tag, Record marc) {
+    public static MarcField getSingleField(String tag, MarcRecord marc) {
         List flds = marc.getFields();
         //System.err.print(flds);            
         int sz = flds.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
             //System.err.print(idx);            
-            Field f = (Field)flds.get(idx);
+            MarcField f = (MarcField)flds.get(idx);
             //System.err.println(f);            
             if (f.getTagAsString().equals(tag)) return f;
         }
@@ -109,12 +109,12 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static List<Field> getField(String tag, Record marc) {
-        List<Field> ret = new ArrayList<Field>();
+    public static List<MarcField> getField(String tag, MarcRecord marc) {
+        List<MarcField> ret = new ArrayList<MarcField>();
         List flds = marc.getFields();
         int sz = flds.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Field f = (Field)flds.get(idx);
+            MarcField f = (MarcField)flds.get(idx);
             if (f.getTagAsString().equals(tag)) ret.add(f);
         }
         return ret;
@@ -127,11 +127,11 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static String getSingleSubfieldValue(char sf, Field fld) {
+    public static String getSingleSubfieldValue(char sf, MarcField fld) {
         List sflds = fld.getSubfields();
         int sz = sflds.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Subfield f = (Subfield)sflds.get(idx);
+            MarcSubfield f = (MarcSubfield)sflds.get(idx);
             if (f.getCode() == sf) return f.getValue();
         }
         return null;
@@ -144,12 +144,12 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static List<String> getSubfieldValues(char sf, Field fld) {
+    public static List<String> getSubfieldValues(char sf, MarcField fld) {
         List<String> ret = new ArrayList<String>();
         List sflds = fld.getSubfields();
         int sz = sflds.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Subfield f = (Subfield)sflds.get(idx);
+            MarcSubfield f = (MarcSubfield)sflds.get(idx);
             if (f.getCode() == sf) {
                 ret.add(f.getValue());
             }
@@ -163,7 +163,7 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static String getTitleOfBibliographicRecord(Record rec) {
+    public static String getTitleOfBibliographicRecord(MarcRecord rec) {
         String tit = "";
         List tits = MarcUtil.getFieldValues("200", 'a', rec);
         for (Object tit1 : tits) {
@@ -188,11 +188,11 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static String getHeadingString(Field fld, char[] useSubfields, String separator, boolean removeBicos) {
+    public static String getHeadingString(MarcField fld, char[] useSubfields, String separator, boolean removeBicos) {
         StringBuffer value = new StringBuffer();
         boolean first = true;
         for (Object o : fld.getSubfields()) {
-            Subfield sf = (Subfield)o;
+            MarcSubfield sf = (MarcSubfield)o;
             boolean append = false;
             int sz = useSubfields.length;
             for (int idx = sz - 1; idx >= 0; idx--) {
@@ -230,8 +230,8 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static List<Field> getFields(Record rec, String[] fields) {
-        List<Field> ret = new ArrayList<Field>(fields.length);
+    public static List<MarcField> getFields(MarcRecord rec, String[] fields) {
+        List<MarcField> ret = new ArrayList<MarcField>(fields.length);
         for (String field : fields) {
             ret.addAll(getField(field, rec));
         }
@@ -241,10 +241,10 @@ public class MarcUtil {
     /**
      * @return Record of test Authority
      */
-    public static Record createTestAuthorityRecord() {
-        Record ret = new Record();
+    public static MarcRecord createTestAuthorityRecord() {
+        MarcRecord ret = new MarcRecord();
         ret.setNc("1");
-        Field fld = ret.addField(1);
+        MarcField fld = ret.addField(1);
         fld.setValue("1");
         fld = ret.addField(200);
         fld.addSubfield('a', "Freire");
@@ -263,13 +263,13 @@ public class MarcUtil {
     /**
      * @return Record of test Authority
      */
-    public static Record createTestBibliographicRecord() {
-        Record ret = new Record();
+    public static MarcRecord createTestBibliographicRecord() {
+        MarcRecord ret = new MarcRecord();
         ret.setNc("1234");
         ret.setLeader("000000000000000000000000");
         //        Field fld=ret.addField(1);
         //        fld.setValue("1");
-        Field fld = ret.addField(100);
+        MarcField fld = ret.addField(100);
         fld.addSubfield('a', "19790301d1978    m  y0pora0103    ba");
         fld = ret.addField(200);
         fld.addSubfield('a', "Uma Biblioteca");
@@ -301,21 +301,21 @@ public class MarcUtil {
      * @deprecated
      */
     @Deprecated
-    public static Record convertRecordToOtherFactory(Record source, MarcObjectFactory factory) {
+    public static MarcRecord convertRecordToOtherFactory(MarcRecord source, MarcObjectFactory factory) {
         if (factory.isFromThisFactory(source)) return source;
-        Record rec = factory.newRecord();
+        MarcRecord rec = factory.newRecord();
         rec.setLeader(source.getLeader());
         rec.setNc(source.getNc());
         for (Object o1 : source.getFields()) {
-            Field srcField = (Field)o1;
-            Field newField = rec.addField(Integer.parseInt(srcField.getTagAsString()));
+            MarcField srcField = (MarcField)o1;
+            MarcField newField = rec.addField(Integer.parseInt(srcField.getTagAsString()));
             newField.setInd1(srcField.getInd1());
             newField.setInd2(srcField.getInd2());
             if (srcField.isControlField())
                 newField.setValue(srcField.getValue());
             else {
                 for (Object o : srcField.getSubfields()) {
-                    Subfield srcSf = (Subfield)o;
+                    MarcSubfield srcSf = (MarcSubfield)o;
                     newField.addSubfield(srcSf.getCode(), srcSf.getValue());
                 }
             }
@@ -329,9 +329,9 @@ public class MarcUtil {
      * @deprecated Use the methods in Record and Field classes
      */
     @Deprecated
-    public static Field getMainHeadingField(Record rec) {
+    public static MarcField getMainHeadingField(MarcRecord rec) {
         for (Object o : rec.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             if (fld.getTagAsString().startsWith("2")) { return fld; }
         }
         return null;

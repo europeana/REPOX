@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 
  * @author Nuno Freire
  */
-public class Subfield implements Serializable {
+public class MarcSubfield implements Serializable {
     static final long serialVersionUID = 2;
 
     /** Subfield code */
@@ -27,7 +27,7 @@ public class Subfield implements Serializable {
      * Creates an empty subfield
      * 
      */
-    public Subfield() {
+    public MarcSubfield() {
     }
 
     /**
@@ -36,7 +36,7 @@ public class Subfield implements Serializable {
      * @param code
      * @param value
      */
-    public Subfield(char code, String value) {
+    public MarcSubfield(char code, String value) {
         this.code = code;
         setValue(value);
     }
@@ -48,7 +48,7 @@ public class Subfield implements Serializable {
      * @param iso2709
      *            the iso2709 part of the record that contains this field's data
      */
-    public Subfield(String iso2709) {
+    public MarcSubfield(String iso2709) {
         this.code = iso2709.charAt(0);
         if (iso2709.length() > 1) {
             setValue(iso2709.substring(1));
@@ -73,7 +73,7 @@ public class Subfield implements Serializable {
      * @return a iso2709 string representation of the field
      */
     public String toIso2709() {
-        return String.valueOf(Record.US) + String.valueOf(getCode()) + getValue();
+        return String.valueOf(MarcRecord.US) + String.valueOf(getCode()) + getValue();
     }
 
     /**************************************************************************

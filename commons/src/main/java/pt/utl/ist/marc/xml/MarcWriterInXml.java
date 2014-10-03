@@ -7,7 +7,7 @@ package pt.utl.ist.marc.xml;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.iso2709.IteratorIso2709;
 
 import java.io.File;
@@ -65,7 +65,7 @@ public class MarcWriterInXml {
      */
     public int write(File isoFile) throws IOException {
         int counter = 0;
-        for (Record rec : new IteratorIso2709(isoFile)) {
+        for (MarcRecord rec : new IteratorIso2709(isoFile)) {
             write(rec);
             counter++;
         }
@@ -76,7 +76,7 @@ public class MarcWriterInXml {
      * @param rec
      * @throws IOException
      */
-    public void write(Record rec) throws IOException {
+    public void write(MarcRecord rec) throws IOException {
         Document recDoc = MarcXChangeDom4jBuilder.record2Dom(rec, "");
         Element rootEl = recDoc.getRootElement();
         if (namespace != MARCXCHANGE_NS) {
@@ -90,8 +90,8 @@ public class MarcWriterInXml {
      * @param recs
      * @throws IOException
      */
-    public void write(Collection<Record> recs) throws IOException {
-        for (Record rec : recs) {
+    public void write(Collection<MarcRecord> recs) throws IOException {
+        for (MarcRecord rec : recs) {
             write(rec);
         }
     }

@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -156,10 +156,10 @@ public abstract class AbstractHarvester implements Harvester {
      * @param frag
      * @return Record
      */
-    protected Record handleRecord(InformationFragment frag) {
+    protected MarcRecord handleRecord(InformationFragment frag) {
         if (frag != null) {
             byte[] originalObject = (byte[])frag.getOriginalObject();
-            return new Record(originalObject, target.getCharacterEncoding().toString());
+            return new MarcRecord(originalObject, target.getCharacterEncoding().toString());
         } else {
             System.out.println("frag = " + frag);
             return null;

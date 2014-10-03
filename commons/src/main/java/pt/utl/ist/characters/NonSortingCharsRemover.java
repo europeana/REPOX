@@ -6,7 +6,7 @@
 
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.iso2709.IteratorIso2709;
 
 import java.io.File;
@@ -40,7 +40,7 @@ public class NonSortingCharsRemover implements CharacterConverterI {
         //		}
 
         IteratorIso2709 it = new IteratorIso2709(new File("c:\\desktop\\KBR-FRBR-nobel"));
-        for (Record rec : it) {
+        for (MarcRecord rec : it) {
             System.out.println(rec);
             RecordCharactersConverter.convertRecord(rec, new NonSortingCharsRemover());
             System.out.println(rec);

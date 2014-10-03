@@ -7,7 +7,7 @@ import org.jzkit.search.util.ResultSet.IRResultSet;
 import pt.utl.ist.characters.RecordCharactersConverter;
 import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordRepoxMarc;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.StringUtil;
@@ -54,7 +54,7 @@ public class IdSequenceHarvester extends AbstractHarvester {
         private DataSource                       dataSource;
         private File                             logFile;
         int                                      currentId  = 1;
-        Record                                   nextRecord = null;
+        MarcRecord                                   nextRecord = null;
 
         private Enumeration<InformationFragment> currentInformationFragment;
 

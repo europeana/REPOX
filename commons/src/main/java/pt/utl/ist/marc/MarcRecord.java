@@ -15,12 +15,12 @@ import pt.utl.ist.characters.CharacterConverterI;
 import pt.utl.ist.characters.CharacterConverters;
 import pt.utl.ist.marc.iso2709.ISOHandlerSingleRecord;
 import pt.utl.ist.marc.iso2709.MARCPartialReader;
-import pt.utl.ist.marc.util.Directory;
-import pt.utl.ist.marc.util.Leader;
 import pt.utl.ist.marc.xml.DomBuilder;
 import pt.utl.ist.marc.xml.MarcXChangeBuilder;
 import pt.utl.ist.marc.xml.RecordBuilderFromMarcXml;
 import pt.utl.ist.util.DomUtil;
+import pt.utl.ist.util.marc.Directory;
+import pt.utl.ist.util.marc.Leader;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
@@ -34,7 +34,7 @@ import java.util.List;
  * 
  * @author Nuno Freire
  */
-public class Record implements Serializable, Iterable<Field> {
+public class MarcRecord implements Serializable, Iterable<MarcField> {
     static final long          serialVersionUID = 2;
     /**
      * Record terminator character (ASCII octal 035) 29.
@@ -57,7 +57,7 @@ public class Record implements Serializable, Iterable<Field> {
     /** Record leader */
     protected String           leader;
     /** Record fields */
-    protected List<Field>      fields           = new ArrayList<Field>(5);
+    protected List<MarcField>      fields           = new ArrayList<MarcField>(5);
 
     /**************************************************************************
      ************ Constructors ******************
@@ -66,7 +66,7 @@ public class Record implements Serializable, Iterable<Field> {
      * Creates an empty Record
      * 
      */
-    public Record() {
+    public MarcRecord() {
     }
 
     /**
@@ -75,7 +75,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @param recordType
      *            the format of the record
      */
-    public Record(RecordType recordType) {
+    public MarcRecord(RecordType recordType) {
         this.recordType = recordType;
     }
 
@@ -86,7 +86,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @param iso2709
      *            the String representation of the record in ISO2709 format
      */
-    public Record(String iso2709) {
+    public MarcRecord(String iso2709) {
         MARCPartialReader mr = new MARCPartialReader();
         ISOHandlerSingleRecord handler = new ISOHandlerSingleRecord(this);
         mr.setMARCHandler(handler);
@@ -103,7 +103,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @param recordType
      *            the format of the record
      */
-    public Record(String iso2709, RecordType recordType) {
+    public MarcRecord(String iso2709, RecordType recordType) {
         this(iso2709);
         this.recordType = recordType;
     }
@@ -118,7 +118,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @param charset
      *            the charset of the record
      */
-    public Record(byte[] originalObject, String charset) {
+    public MarcRecord(byte[] originalObject, String charset) {
         CharacterConverterI converter = null;
         if (charset != null && !charset.equals("")) converter = CharacterConverters.getInstance(charset);
 
@@ -144,7 +144,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @param recordType
      *            the format of the record
      */
-    public Record(byte[] originalObject, String charset, RecordType recordType) {
+    public MarcRecord(byte[] originalObject, String charset, RecordType recordType) {
         this(originalObject, charset);
         this.recordType = recordType;
     }
@@ -153,7 +153,7 @@ public class Record implements Serializable, Iterable<Field> {
      ************ Public Methods ******************
      *************************************************************************/
     @Override
-    public java.util.Iterator<Field> iterator() {
+    public java.util.Iterator<MarcField> iterator() {
         return fields.iterator();
     }
 
@@ -164,7 +164,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @return boolean
      */
     public boolean contains(int tag, Character subfield, String value) {
-        for (Field ff : getField(tag)) {
+        for (MarcField ff : getField(tag)) {
             for (String val : ff.getSubfieldValues(subfield)) {
                 if (val.equals(value)) { return true; }
             }
@@ -176,8 +176,8 @@ public class Record implements Serializable, Iterable<Field> {
      * 
      */
     public void sortFields() {
-        Collections.sort(fields, new Comparator<Field>() {
-            public int compare(Field o1, Field o2) {
+        Collections.sort(fields, new Comparator<MarcField>() {
+            public int compare(MarcField o1, MarcField o2) {
                 return o1.getTag() - o2.getTag();
             }
         });
@@ -207,7 +207,7 @@ public class Record implements Serializable, Iterable<Field> {
      * 
      * @deprecated use addField(int)
      */
-    public pt.utl.ist.marc.Field addField(String tag) {
+    public pt.utl.ist.marc.MarcField addField(String tag) {
         short tagInt = Short.parseShort(tag);
         return addField(tagInt);
     }
@@ -219,7 +219,7 @@ public class Record implements Serializable, Iterable<Field> {
      *            the tag of the field
      * @return the added field
      */
-    public pt.utl.ist.marc.Field addField(int tag) {
+    public pt.utl.ist.marc.MarcField addField(int tag) {
         return addField((short)tag);
     }
 
@@ -230,11 +230,11 @@ public class Record implements Serializable, Iterable<Field> {
      *            the tag of the field
      * @return the added field
      */
-    public pt.utl.ist.marc.Field addField(short tag) {
-        Field ret = new Field(tag, ' ', ' ');
+    public pt.utl.ist.marc.MarcField addField(short tag) {
+        MarcField ret = new MarcField(tag, ' ', ' ');
         int sz = fields.size();
         for (int idx = 0; idx < sz; idx++) {
-            Field f = (Field)fields.get(idx);
+            MarcField f = (MarcField)fields.get(idx);
             if (f.getTag() > tag) {
                 fields.add(idx, ret);
                 return ret;
@@ -250,12 +250,12 @@ public class Record implements Serializable, Iterable<Field> {
      * @param field
      *            the Field to add
      */
-    public void addField(Field field) {
+    public void addField(MarcField field) {
         if (field.getTag() == 1 && (fields.size() == 0 || fields.get(0).getTag() != 1)) nc = field.getValue();
 
         int sz = fields.size();
         for (int idx = 0; idx < sz; idx++) {
-            Field f = (Field)fields.get(idx);
+            MarcField f = (MarcField)fields.get(idx);
             if (f.getTag() > field.getTag()) {
                 fields.add(idx, field);
                 return;
@@ -271,7 +271,7 @@ public class Record implements Serializable, Iterable<Field> {
      */
     public void removeField(int tag) {
         for (int idx = 0; idx < fields.size(); idx++) {
-            Field f = (Field)fields.get(idx);
+            MarcField f = (MarcField)fields.get(idx);
             if (f.getTag() == tag) {
                 fields.remove(idx);
                 idx--;
@@ -292,7 +292,7 @@ public class Record implements Serializable, Iterable<Field> {
      *         null if not found
      */
     public String getSingleFieldValue(int tag, char subfield) {
-        Field f = getSingleField(tag);
+        MarcField f = getSingleField(tag);
         if (f == null) return null;
         if (tag < 10) return f.getValue();
         return f.getSingleSubfieldValue(subfield);
@@ -310,8 +310,8 @@ public class Record implements Serializable, Iterable<Field> {
      * @return the value of first field/subfield that matches the parameters, or
      *         null if not found
      */
-    public Subfield getSingleSubfield(int tag, char subfield) {
-        Field f = getSingleField(tag);
+    public MarcSubfield getSingleSubfield(int tag, char subfield) {
+        MarcField f = getSingleField(tag);
         if (f == null) return null;
         if (tag < 10) return null;
         return f.getSingleSubfield(subfield);
@@ -329,16 +329,16 @@ public class Record implements Serializable, Iterable<Field> {
      */
     public List<String> getFieldValues(int tag, char subfield) {
         List<String> ret = new ArrayList<String>();
-        List<Field> f = getField(tag);
+        List<MarcField> f = getField(tag);
         if (f.size() == 0) return ret;
         if (tag < 10) {
             for (Object aF : f) {
-                Field el = (Field)aF;
+                MarcField el = (MarcField)aF;
                 ret.add(el.getValue());
             }
         } else {
             for (Object aF : f) {
-                Field el = (Field)aF;
+                MarcField el = (MarcField)aF;
                 List<String> sfs = el.getSubfieldValues(subfield);
                 for (Object sf : sfs) {
                     ret.add((String)sf);
@@ -356,10 +356,10 @@ public class Record implements Serializable, Iterable<Field> {
      *            the field tag
      * @return the first field that matches the parameters, or null if not found
      */
-    public Field getSingleField(int tag) {
+    public MarcField getSingleField(int tag) {
         int sz = fields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Field f = fields.get(idx);
+            MarcField f = fields.get(idx);
             if (f.getTag() == tag) return f;
         }
         return null;
@@ -372,11 +372,11 @@ public class Record implements Serializable, Iterable<Field> {
      *            the field tag
      * @return all occurrences of a field in the record, or an empty List
      */
-    public List<Field> getField(int tag) {
-        List<Field> ret = new ArrayList<Field>();
+    public List<MarcField> getField(int tag) {
+        List<MarcField> ret = new ArrayList<MarcField>();
         int sz = fields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Field f = fields.get(idx);
+            MarcField f = fields.get(idx);
             if (f.getTag() == tag) ret.add(f);
         }
         return ret;
@@ -394,11 +394,11 @@ public class Record implements Serializable, Iterable<Field> {
      *            the value to compare to
      * @return all occurrences of a field in the record, or an empty List
      */
-    public List<Field> getFieldWhere(int tag, char subfield, String equalsThis) {
-        List<Field> ret = new ArrayList<Field>();
+    public List<MarcField> getFieldWhere(int tag, char subfield, String equalsThis) {
+        List<MarcField> ret = new ArrayList<MarcField>();
         int sz = fields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Field f = fields.get(idx);
+            MarcField f = fields.get(idx);
             if (f.getTag() == tag) {
                 for (String value : f.getSubfieldValues(subfield)) {
                     if (value.equals(equalsThis)) {
@@ -418,8 +418,8 @@ public class Record implements Serializable, Iterable<Field> {
      *            the field tags
      * @return all occurrences of several fields in the record, or an empty List
      */
-    public List<Field> getFields(int... tags) {
-        List<Field> ret = new ArrayList<Field>(tags.length);
+    public List<MarcField> getFields(int... tags) {
+        List<MarcField> ret = new ArrayList<MarcField>(tags.length);
         for (int tag : tags) {
             ret.addAll(getField(tag));
         }
@@ -432,9 +432,9 @@ public class Record implements Serializable, Iterable<Field> {
      * @deprecated use UnimarcUtil.getMainHeadingField
      * @return the 2xx field of the record, or null if not found
      */
-    public Field getMainHeadingField() {
+    public MarcField getMainHeadingField() {
         for (Object o : getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             if (fld.getTag() >= 200 && fld.getTag() < 300) { return fld; }
         }
         return null;
@@ -488,9 +488,9 @@ public class Record implements Serializable, Iterable<Field> {
      *         no title
      */
     public String getTitleOfBibliographicWithoutPlaceAndDate() {
-        List<Field> fields200 = getField(200);
+        List<MarcField> fields200 = getField(200);
         if (fields200.size() == 0) return "";
-        Field f200 = getField(200).get(0);
+        MarcField f200 = getField(200).get(0);
         String tit = f200.getSingleSubfieldValue('a');
         if (tit == null) return "";
         for (String sc : f200.getSubfieldValues('c'))
@@ -521,7 +521,7 @@ public class Record implements Serializable, Iterable<Field> {
         fields[1] = new int[] { 701, 711, 721 };
         fields[2] = new int[] { 702, 712, 722 };
         for (int i = 0; i < 3; i++) {
-            for (Field fld : getFields(fields[i])) {
+            for (MarcField fld : getFields(fields[i])) {
                 String sfa = fld.getSingleSubfieldValue('a');
                 String sfb = fld.getSingleSubfieldValue('b');
                 if (sfa != null) {
@@ -557,7 +557,7 @@ public class Record implements Serializable, Iterable<Field> {
 
         // append fields to directory and data
         for (Object o : getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             String fldStr = fld.toIso2709();
             directory.add(fld.getTagAsString(), fldStr.length());
             data.append(fldStr);
@@ -570,7 +570,7 @@ public class Record implements Serializable, Iterable<Field> {
         leader.setBaseAddressOfData(baseAddress);
 
         // return record in tape format
-        return leader.getSerializedForm() + directory.getSerializedForm() + data + Record.RT;
+        return leader.getSerializedForm() + directory.getSerializedForm() + data + MarcRecord.RT;
     }
 
     /*
@@ -580,7 +580,7 @@ public class Record implements Serializable, Iterable<Field> {
      */
     public String toString() {
         StringBuffer b = new StringBuffer().append("\nNC: " + nc).append("\n000: " + leader);
-        for (Field el : fields) {
+        for (MarcField el : fields) {
             b.append("\n");
             b.append(el);
         }
@@ -588,16 +588,16 @@ public class Record implements Serializable, Iterable<Field> {
         return b.toString();
     }
 
-    public Record clone() {
-        Record rec = new Record();
+    public MarcRecord clone() {
+        MarcRecord rec = new MarcRecord();
         rec.setLeader(getLeader());
         rec.setRecordType(getRecordType());
         for (Object o : getFields()) {
-            Field srcField = (Field)o;
+            MarcField srcField = (MarcField)o;
             if (srcField.getTag() == 1) {
                 rec.setNc(srcField.getValue());
             } else {
-                Field newField = srcField.clone();
+                MarcField newField = srcField.clone();
                 rec.addField(newField);
             }
         }
@@ -673,7 +673,7 @@ public class Record implements Serializable, Iterable<Field> {
 
     public String toHtml() {
         StringBuffer ret = new StringBuffer().append("<p style=\'white-space:-moz-pre-wrap; font-family: \"Courier New\", Courier, mono; font-size: 12px;\'>NC: ").append(nc).append("<br><b>000</b>: ").append(leader);
-        for (Field el : fields) {
+        for (MarcField el : fields) {
             ret.append("<br>");
             ret.append(el.toHtml());
         }
@@ -737,7 +737,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @return record parsed from the string
      * @throws SAXException
      */
-    public static Record fromXmlString(String xmlString) throws SAXException {
+    public static MarcRecord fromXmlString(String xmlString) throws SAXException {
         return RecordBuilderFromMarcXml.domToRecord(DomUtil.parseDomFromString(xmlString));
     }
 
@@ -749,7 +749,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @return record parsed from the dom
      * @throws SAXException
      */
-    public static Record fromDom(Document dom) {
+    public static MarcRecord fromDom(Document dom) {
         return RecordBuilderFromMarcXml.domToRecord(dom);
     }
 
@@ -761,7 +761,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @return record parsed from the string
      * @throws SAXException
      */
-    public static Record fromMarcXChangeString(String xmlString) throws SAXException {
+    public static MarcRecord fromMarcXChangeString(String xmlString) throws SAXException {
         return RecordBuilderFromMarcXml.domToRecord(DomUtil.parseDomFromString(xmlString));
     }
 
@@ -773,7 +773,7 @@ public class Record implements Serializable, Iterable<Field> {
      * @return record parsed from the dom
      * @throws SAXException
      */
-    public static Record fromMarcXChangeDom(Node dom) {
+    public static MarcRecord fromMarcXChangeDom(Node dom) {
         return RecordBuilderFromMarcXml.domToRecord(dom);
     }
 
@@ -792,7 +792,7 @@ public class Record implements Serializable, Iterable<Field> {
      */
     public String getNc() {
         if (nc == null || nc.equals("")) {
-            Field f = getSingleField(1);
+            MarcField f = getSingleField(1);
             if (f != null) {
                 try {
                     nc = f.getValue();
@@ -811,9 +811,9 @@ public class Record implements Serializable, Iterable<Field> {
      */
     public void setNc(String nc) {
         this.nc = nc;
-        Field f001 = getSingleField(1);
+        MarcField f001 = getSingleField(1);
         if (f001 == null) {
-            f001 = new Field(1, nc);
+            f001 = new MarcField(1, nc);
             fields.add(0, f001);
         } else {
             f001.setValue(nc);
@@ -834,11 +834,11 @@ public class Record implements Serializable, Iterable<Field> {
     /**
      * @return the fields of the document
      */
-    public List<Field> getFields() {
+    public List<MarcField> getFields() {
         return fields;
     }
 
-    public void setFields(List<Field> fields) {
+    public void setFields(List<MarcField> fields) {
         this.fields = fields;
     }
 

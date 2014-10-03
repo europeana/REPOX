@@ -1,8 +1,8 @@
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.FileUtilSecond;
 
 import java.io.File;
@@ -242,17 +242,17 @@ public class HorizonConverter implements CharacterConverterI {
     /**
      * @param rec
      */
-    public static void convertRecord(Record rec) {
+    public static void convertRecord(MarcRecord rec) {
         if (rec == null) return;
 
         if (rec.getLeader() != null) rec.setLeader(convertString(rec.getLeader()));
 
-        for (Field field : rec.getFields()) {
+        for (MarcField field : rec.getFields()) {
             if (field.isControlField()) {
                 String newData = convertString(field.getValue());
                 field.setValue(newData);
             } else {
-                for (Subfield subfield : field.getSubfields()) {
+                for (MarcSubfield subfield : field.getSubfields()) {
                     String newData = convertString(subfield.getValue());
                     subfield.setValue(newData);
                 }
@@ -300,7 +300,7 @@ public class HorizonConverter implements CharacterConverterI {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Record r = new Record(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
+        MarcRecord r = new MarcRecord(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
         //    	Record r=HorizonClient.getRecord(""+1106184, HorizonClient.IdentificationSpace.NCB);
         System.err.println(r);
         //HorizonConverter.convertRecord(r);

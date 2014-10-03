@@ -26,8 +26,8 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 	 * @param dc
 	 * @return the converted Record
 	 */
-	public static Record toUnimarc(Element dc) {
-		Record rec=new Record();
+	public static MarcRecord toUnimarc(Element dc) {
+		MarcRecord rec=new MarcRecord();
 		rec.setLeader("00000naa  2200000   450 ");
 		Namespace dcNS=new Namespace("dc","http://purl.org/dc/elements/1.1/");
 		Element resourceDc=(Element)dc.elements(new QName("resource",new Namespace("bnd","http://bnd.bn.pt/"))).get(0);
@@ -49,12 +49,12 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
         f100a += "c" + (yearOfPublication==null ? "    " : yearOfPublication) + "    ";
         f100a += "m  y0pora0103    ba";
         
-        Field f100=rec.addField(100);
+        MarcField f100=rec.addField(100);
         f100.setInd1(' ');
         f100.setInd2(' ');
         f100.addSubfield('a', f100a);
 
-        Field f001=null;
+        MarcField f001=null;
 		for(Iterator<Element> i=resourceDc.elementIterator(new QName("identifier",dcNS)) ; i.hasNext() ; ) {
 			Element node=i.next();
             String id=node.getText();
@@ -65,7 +65,7 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
             }
             
             if(node.getText().toLowerCase().startsWith("http://")) {
-                Field f856=rec.addField(856);
+                MarcField f856=rec.addField(856);
                 f856.setInd1(' ');
                 f856.setInd2(' ');
                 f856.addSubfield('u', node.getText());
@@ -76,13 +76,13 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 		for(Iterator<Element> i=resourceDc.elementIterator(new QName("title",dcNS)) ; i.hasNext() ; ) {
 			Element node=i.next();
             if(first) {
-                Field f200=rec.addField(200);
+                MarcField f200=rec.addField(200);
                 f200.setInd1('1');
                 f200.setInd2(' ');
                 f200.addSubfield('a',node.getText());   
                 first=false;
             }else {
-                Field f517=rec.addField(517);
+                MarcField f517=rec.addField(517);
                 f517.setInd1('1');
                 f517.setInd2(' ');
                 f517.addSubfield('a',node.getText());  
@@ -96,13 +96,13 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
             if(first) {
             	String name=node.getText();
             	if(name.contains(",")) {                	
-                    Field f700=rec.addField(700);
+                    MarcField f700=rec.addField(700);
                     f700.setInd1(' ');
                     f700.setInd2('1');
                     f700.addSubfield('a',name.substring(0,name.indexOf(',')).trim());
                     f700.addSubfield('b',name.substring(name.indexOf(',')+1).trim());    
             	}else {              	
-                    Field f700=rec.addField(700);
+                    MarcField f700=rec.addField(700);
                     f700.setInd1(' ');
                     f700.setInd2('0');
                     f700.addSubfield('a',node.getText());             		            		
@@ -111,13 +111,13 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
             }else {
             	String name=node.getText();
             	if(name.contains(",")) {                	
-                    Field f701=rec.addField(701);
+                    MarcField f701=rec.addField(701);
                     f701.setInd1(' ');
                     f701.setInd2('1');
                     f701.addSubfield('a',name.substring(0,name.indexOf(',')).trim());
                     f701.addSubfield('b',name.substring(name.indexOf(',')+1).trim());    
             	}else {              	
-                    Field f701=rec.addField(701);
+                    MarcField f701=rec.addField(701);
                     f701.setInd1(' ');
                     f701.setInd2('0');
                     f701.addSubfield('a',node.getText());             		            		
@@ -131,13 +131,13 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 			Element node=i.next();
         	String name=node.getText();
         	if(name.contains(",")) {                	
-                Field f702=rec.addField(702);
+                MarcField f702=rec.addField(702);
                 f702.setInd1(' ');
                 f702.setInd2('1');
                 f702.addSubfield('a',name.substring(0,name.indexOf(',')).trim());
                 f702.addSubfield('b',name.substring(name.indexOf(',')+1).trim());    
         	}else {              	
-                Field f702=rec.addField(702);
+                MarcField f702=rec.addField(702);
                 f702.setInd1(' ');
                 f702.setInd2('0');
                 f702.addSubfield('a',node.getText());             		            		
@@ -148,7 +148,7 @@ public class PortugalMatematicaDublinCoreToUnimarcCrosswalk {
 		for(Iterator<Element> i=resourceDc.elementIterator(new QName("publisher",dcNS)) ; i.hasNext() ; ) {
 			Element node=i.next();
         	String name=node.getText();      	
-            Field f210=rec.addField(210);
+            MarcField f210=rec.addField(210);
             f210.setInd1(' ');
             f210.setInd2(' ');
             f210.addSubfield('c',node.getText());

@@ -1,8 +1,8 @@
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -112,17 +112,17 @@ public class Marc8CharsetConverter {
     /**
      * @param rec
      */
-    public void convertRecord(Record rec){
+    public void convertRecord(MarcRecord rec){
         List fields=rec.getFields();
 
         for (Object field : fields) {
-            Field f = (Field) field;
+            MarcField f = (MarcField) field;
             if (f.isControlField()) {
                 String newData = convertString(f.getValue());
                 f.setValue(newData);
             } else {
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield) o;
+                    MarcSubfield sf = (MarcSubfield) o;
                     String newData = convertString(sf.getValue());
                     sf.setValue(newData);
                 }

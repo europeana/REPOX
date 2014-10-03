@@ -1,8 +1,8 @@
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.FileUtilSecond;
 
 import java.io.File;
@@ -196,21 +196,21 @@ public class Cp850Converter {
     /**
      * @param rec
      */
-    public static void convertRecord(Record rec) {
+    public static void convertRecord(MarcRecord rec) {
         if (rec == null) { return; }
 
         if (rec.getLeader() != null) {
             rec.setLeader(convertString(rec.getLeader()));
         }
 
-        List<Field> fields = rec.getFields();
+        List<MarcField> fields = rec.getFields();
 
-        for (Field field : fields) {
+        for (MarcField field : fields) {
             if (field.isControlField()) {
                 String newData = convertString(field.getValue());
                 field.setValue(newData);
             } else {
-                for (Subfield sf : field.getSubfields()) {
+                for (MarcSubfield sf : field.getSubfields()) {
                     String newData = convertString(sf.getValue());
                     sf.setValue(newData);
                 }
@@ -236,7 +236,7 @@ public class Cp850Converter {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Record r = new Record(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
+        MarcRecord r = new MarcRecord(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
         System.err.println(r);
 
     } // main

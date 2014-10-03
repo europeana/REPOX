@@ -24,7 +24,7 @@ package pt.utl.ist.marc.iso2709;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.xml.MarcWriterInXml;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class MARCPartialReaderUkraine extends MARCPartialReader {
      */
     public static void main(String[] args) throws Exception {
         MarcWriterInXml w = new MarcWriterInXml(new File("C:\\Desktop\\t.xml"));
-        for (Record r : new IteratorIso2709Ukraine(new File("C:\\Desktop\\Projectos\\TELplus\\Repox\\ukraine.iso"))) {
+        for (MarcRecord r : new IteratorIso2709Ukraine(new File("C:\\Desktop\\Projectos\\TELplus\\Repox\\ukraine.iso"))) {
             System.out.println(r.toMarcXChangeXmlString());
 
             w.write(r);

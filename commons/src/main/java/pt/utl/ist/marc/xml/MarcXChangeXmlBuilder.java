@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordType;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcSubfield;
 import pt.utl.ist.util.DomUtil;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -66,7 +66,7 @@ public class MarcXChangeXmlBuilder {
             //            collection.setAttribute("xsi:schemaLocation","info:lc/xmlns/marcxchange-v1 info:lc/xmlns/marcxchange-v1.xsd");
             document.appendChild(collection);
             for (Object rec1 : recs) {
-                Record rec = (Record)rec1;
+                MarcRecord rec = (MarcRecord)rec1;
                 if (rec != null) collection.appendChild(createRecordDom(document, rec, marcType));
             }
             return document;
@@ -84,7 +84,7 @@ public class MarcXChangeXmlBuilder {
      *            a marc record
      * @return the record in xml
      */
-    public String record2XMLString(Record rec) {
+    public String record2XMLString(MarcRecord rec) {
         return record2XMLString(rec, true);
     }
 
@@ -97,7 +97,7 @@ public class MarcXChangeXmlBuilder {
      *            include the xml declaration
      * @return the record in xml
      */
-    public String record2XMLString(Record rec, boolean withXmlDeclaration) {
+    public String record2XMLString(MarcRecord rec, boolean withXmlDeclaration) {
         return record2XMLString(rec, withXmlDeclaration, null);
     }
 
@@ -107,7 +107,7 @@ public class MarcXChangeXmlBuilder {
      * @param marcType
      * @return record in xml String
      */
-    public String record2XMLString(Record rec, boolean withXmlDeclaration, String marcType) {
+    public String record2XMLString(MarcRecord rec, boolean withXmlDeclaration, String marcType) {
         Document doc = record2Dom(rec, false, marcType);
         return DomUtil.domToString(doc, withXmlDeclaration);
     }
@@ -144,7 +144,7 @@ public class MarcXChangeXmlBuilder {
      *            a marc record
      * @return the record in xml
      */
-    public byte[] record2XMLBytes(Record rec) {
+    public byte[] record2XMLBytes(MarcRecord rec) {
         return record2XMLBytes(rec, true);
     }
 
@@ -157,7 +157,7 @@ public class MarcXChangeXmlBuilder {
      *            include the xml declaration
      * @return the record in xml
      */
-    public byte[] record2XMLBytes(Record rec, boolean withXmlDeclaration) {
+    public byte[] record2XMLBytes(MarcRecord rec, boolean withXmlDeclaration) {
         return record2XMLBytes(rec, withXmlDeclaration, null);
     }
 
@@ -167,7 +167,7 @@ public class MarcXChangeXmlBuilder {
      * @param marcType
      * @return record in xml
      */
-    public byte[] record2XMLBytes(Record rec, boolean withXmlDeclaration, String marcType) {
+    public byte[] record2XMLBytes(MarcRecord rec, boolean withXmlDeclaration, String marcType) {
         Document doc = record2Dom(rec, true, marcType);
         return DomUtil.domToBytes(doc, withXmlDeclaration);
     }
@@ -206,7 +206,7 @@ public class MarcXChangeXmlBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public Document record2Dom(Record rec) {
+    public Document record2Dom(MarcRecord rec) {
         return record2Dom(rec, true, null);
     }
 
@@ -221,7 +221,7 @@ public class MarcXChangeXmlBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public Document record2Dom(Record rec, boolean withCollectionElement, String marcType) {
+    public Document record2Dom(MarcRecord rec, boolean withCollectionElement, String marcType) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -256,7 +256,7 @@ public class MarcXChangeXmlBuilder {
      * @return Dom Document representing the record
      * 
      */
-    public Element record2DomElement(Record rec, Document document, String marcType) {
+    public Element record2DomElement(MarcRecord rec, Document document, String marcType) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -274,7 +274,7 @@ public class MarcXChangeXmlBuilder {
         }
     }
 
-    private Element createRecordDom(Document document, Record rec, String marcType) throws java.io.UnsupportedEncodingException {
+    private Element createRecordDom(Document document, MarcRecord rec, String marcType) throws java.io.UnsupportedEncodingException {
         Element root = document.createElementNS("info:lc/xmlns/marcxchange-v1", "record");
 
         //createAttribute(root, "format",(marcType==null ? "Unimarc" : marcType));
@@ -288,7 +288,7 @@ public class MarcXChangeXmlBuilder {
 
         Element leadElem = document.createElementNS("info:lc/xmlns/marcxchange-v1", "leader");
         if (rec.getLeader() == null)
-            leadElem.appendChild(document.createTextNode(Record.DEFAULT_LEADER));
+            leadElem.appendChild(document.createTextNode(MarcRecord.DEFAULT_LEADER));
         else
             leadElem.appendChild(document.createTextNode(rec.getLeader()));
         root.appendChild(leadElem);
@@ -296,15 +296,15 @@ public class MarcXChangeXmlBuilder {
         // append control fields to directory and data
         boolean inDataFields = false;
         for (Object field : fields) {
-            Field f = (Field)field;
+            MarcField f = (MarcField)field;
             if (f.isControlField()) {
                 if (inDataFields) {
                     log.warn("Datafields and controlfields not sorted: " + rec);
-                    Record sortedRec = new Record();
+                    MarcRecord sortedRec = new MarcRecord();
                     sortedRec.setLeader(rec.getLeader());
                     sortedRec.setNc(rec.getNc());
                     sortedRec.setRecordType(rec.getRecordType());
-                    for (Field fld : rec.getFields()) {
+                    for (MarcField fld : rec.getFields()) {
                         sortedRec.addField(fld);
                     }
                     return createRecordDom(document, sortedRec, marcType);
@@ -322,7 +322,7 @@ public class MarcXChangeXmlBuilder {
                 createAttribute(el, "ind1", String.valueOf(f.getInd1()));
                 createAttribute(el, "ind2", String.valueOf(f.getInd2()));
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield)o;
+                    MarcSubfield sf = (MarcSubfield)o;
                     Element elsf = (Element)document.createElementNS("info:lc/xmlns/marcxchange-v1", "subfield");
                     createAttribute(elsf, "code", String.valueOf(sf.getCode()));
                     elsf.appendChild(document.createTextNode(String.valueOf(sf.getValue())));

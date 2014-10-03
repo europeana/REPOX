@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author Nuno Freire
  */
-public class Field implements Serializable {
+public class MarcField implements Serializable {
     static final long        serialVersionUID = 2;
     /** Field tag */
     protected short          tag;
@@ -25,7 +25,7 @@ public class Field implements Serializable {
     /** Field value */
     protected String         value            = null;
     /** Field subfields */
-    protected List<Subfield> subfields        = new ArrayList<Subfield>();
+    protected List<MarcSubfield> subfields        = new ArrayList<MarcSubfield>();
 
     /**************************************************************************
      ************ Constructors ******************
@@ -34,7 +34,7 @@ public class Field implements Serializable {
      * Constructs an empty Field
      * 
      */
-    public Field() {
+    public MarcField() {
     }
 
     /**
@@ -45,7 +45,7 @@ public class Field implements Serializable {
      * @param ind1
      * @param ind2
      */
-    public Field(int tag, char ind1, char ind2) {
+    public MarcField(int tag, char ind1, char ind2) {
         this((short)tag, ind1, ind2);
     }
 
@@ -57,11 +57,11 @@ public class Field implements Serializable {
      * @param ind1
      * @param ind2
      */
-    public Field(short tag, char ind1, char ind2) {
+    public MarcField(short tag, char ind1, char ind2) {
         this.tag = tag;
         this.ind1 = ind1;
         this.ind2 = ind2;
-        this.subfields = new ArrayList<Subfield>(1);
+        this.subfields = new ArrayList<MarcSubfield>(1);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Field implements Serializable {
      * @param subfield
      * @param value
      */
-    public Field(short tag, char ind1, char ind2, char subfield, String value) {
+    public MarcField(short tag, char ind1, char ind2, char subfield, String value) {
         this(tag, ind1, ind2);
         addSubfield(subfield, value);
 
@@ -88,7 +88,7 @@ public class Field implements Serializable {
      * @param subfield2
      * @param value2
      */
-    public Field(short tag, char ind1, char ind2, char subfield, String value, char subfield2, String value2) {
+    public MarcField(short tag, char ind1, char ind2, char subfield, String value, char subfield2, String value2) {
         this(tag, ind1, ind2);
         addSubfield(subfield, value);
         addSubfield(subfield2, value2);
@@ -102,7 +102,7 @@ public class Field implements Serializable {
      *            should be < 10
      * @param value
      */
-    public Field(int tag, String value) {
+    public MarcField(int tag, String value) {
         this((short)tag, value);
     }
 
@@ -113,7 +113,7 @@ public class Field implements Serializable {
      *            should be < 10
      * @param value
      */
-    public Field(short tag, String value) {
+    public MarcField(short tag, String value) {
         this.tag = tag;
         setValue(value);
     }
@@ -122,7 +122,7 @@ public class Field implements Serializable {
      * @deprecated
      */
     @Deprecated
-    public Field(String tag, char ind1, char ind2) {
+    public MarcField(String tag, char ind1, char ind2) {
         this(Integer.parseInt(tag), ind1, ind2);
     }
 
@@ -130,7 +130,7 @@ public class Field implements Serializable {
      * @deprecated
      */
     @Deprecated
-    public Field(String tag, String value) {
+    public MarcField(String tag, String value) {
         this(Integer.parseInt(tag), value);
     }
 
@@ -143,18 +143,18 @@ public class Field implements Serializable {
      * @param tag
      *            the tag of the field
      */
-    public Field(String iso2709, short tag) {
+    public MarcField(String iso2709, short tag) {
         this.tag = tag;
-        if (iso2709.endsWith(String.valueOf(Record.FT))) iso2709 = iso2709.substring(0, iso2709.length() - 1);
+        if (iso2709.endsWith(String.valueOf(MarcRecord.FT))) iso2709 = iso2709.substring(0, iso2709.length() - 1);
         if (tag < 10)
             value = iso2709;
         else {
             ind1 = iso2709.charAt(0);
             ind2 = iso2709.charAt(1);
             if (iso2709.length() >= 4) {
-                String[] sfs = iso2709.substring(3).split(String.valueOf(Record.US));
+                String[] sfs = iso2709.substring(3).split(String.valueOf(MarcRecord.US));
                 for (String sfIso : sfs) {
-                    if (sfIso.length() >= 2) subfields.add(new Subfield(sfIso));
+                    if (sfIso.length() >= 2) subfields.add(new MarcSubfield(sfIso));
                 }
             }
         }
@@ -168,8 +168,8 @@ public class Field implements Serializable {
      * @param code 
      */
     public void removeSubfield(char code) {
-        for (Iterator<Subfield> it = subfields.iterator(); it.hasNext();) {
-            Subfield sf = it.next();
+        for (Iterator<MarcSubfield> it = subfields.iterator(); it.hasNext();) {
+            MarcSubfield sf = it.next();
             if (sf.getCode() == code) it.remove();
         }
     }
@@ -181,8 +181,8 @@ public class Field implements Serializable {
      *            the subfield code
      * @return the created subfield
      */
-    public pt.utl.ist.marc.Subfield addSubfield(char code) {
-        Subfield ret = new Subfield(code, " ");
+    public pt.utl.ist.marc.MarcSubfield addSubfield(char code) {
+        MarcSubfield ret = new MarcSubfield(code, " ");
         subfields.add(ret);
         return ret;
     }
@@ -194,8 +194,8 @@ public class Field implements Serializable {
      * @param value
      * @return the created subfield
      */
-    public pt.utl.ist.marc.Subfield addSubfield(char code, String value) {
-        Subfield ret = new Subfield(code, value);
+    public pt.utl.ist.marc.MarcSubfield addSubfield(char code, String value) {
+        MarcSubfield ret = new MarcSubfield(code, value);
         subfields.add(ret);
         return ret;
     }
@@ -227,7 +227,7 @@ public class Field implements Serializable {
         else {
             b.append(ind1);
             b.append(ind2);
-            for (Subfield el : subfields) {
+            for (MarcSubfield el : subfields) {
                 b.append(el);
             }
         }
@@ -244,7 +244,7 @@ public class Field implements Serializable {
         else {
             ret.append(ind1).append(" ");
             ret.append(ind2).append(" ");
-            for (Subfield el : subfields) {
+            for (MarcSubfield el : subfields) {
                 ret.append("<b>$").append(el.getCode()).append("</b>").append(el.getValue());
             }
         }
@@ -257,14 +257,14 @@ public class Field implements Serializable {
      */
     public String toIso2709() {
         if (isControlField()) {
-            return getValue() + Record.FT;
+            return getValue() + MarcRecord.FT;
         } else {
             StringBuffer dataField = new StringBuffer().append(getInd1()).append(getInd2());
-            for (Subfield subfield1 : getSubfields()) {
-                Subfield subfield = subfield1;
+            for (MarcSubfield subfield1 : getSubfields()) {
+                MarcSubfield subfield = subfield1;
                 dataField.append(subfield.toIso2709());
             }
-            dataField.append(Record.FT);
+            dataField.append(MarcRecord.FT);
             return dataField.toString();
         }
     }
@@ -294,12 +294,12 @@ public class Field implements Serializable {
     }
 
     @SuppressWarnings("javadoc")
-    public List<Subfield> getSubfields() {
+    public List<MarcSubfield> getSubfields() {
         return subfields;
     }
 
     @SuppressWarnings("javadoc")
-    public void setSubfields(List<Subfield> subfields) {
+    public void setSubfields(List<MarcSubfield> subfields) {
         this.subfields = subfields;
     }
 
@@ -362,8 +362,8 @@ public class Field implements Serializable {
     }
 
     @Override
-    public Field clone() {
-        Field newField = new Field();
+    public MarcField clone() {
+        MarcField newField = new MarcField();
         newField.setTag(getTag());
         newField.setInd1(getInd1());
         newField.setInd2(getInd2());
@@ -371,7 +371,7 @@ public class Field implements Serializable {
             newField.setValue(getValue());
         else {
             for (Object o : getSubfields()) {
-                Subfield srcSf = (Subfield)o;
+                MarcSubfield srcSf = (MarcSubfield)o;
                 newField.addSubfield(srcSf.getCode(), srcSf.getValue());
             }
         }
@@ -389,7 +389,7 @@ public class Field implements Serializable {
     public String getSingleSubfieldValue(char sf) {
         int sz = subfields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Subfield f = subfields.get(idx);
+            MarcSubfield f = subfields.get(idx);
             if (f.getCode() == sf) return f.getValue();
         }
         return null;
@@ -403,10 +403,10 @@ public class Field implements Serializable {
      *            the subfield code
      * @return the first subfield that matches, null otherwise
      */
-    public Subfield getSingleSubfield(char sf) {
+    public MarcSubfield getSingleSubfield(char sf) {
         int sz = subfields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Subfield f = subfields.get(idx);
+            MarcSubfield f = subfields.get(idx);
             if (f.getCode() == sf) return f;
         }
         return null;
@@ -422,7 +422,7 @@ public class Field implements Serializable {
         List<String> ret = new ArrayList<String>();
         int sz = subfields.size() - 1;
         for (int idx = 0; idx <= sz; idx++) {
-            Subfield f = subfields.get(idx);
+            MarcSubfield f = subfields.get(idx);
             if (f.getCode() == sf) {
                 ret.add(f.getValue());
             }
@@ -445,7 +445,7 @@ public class Field implements Serializable {
         StringBuffer value = new StringBuffer();
         boolean first = true;
         for (Object o : getSubfields()) {
-            Subfield sf = (Subfield)o;
+            MarcSubfield sf = (MarcSubfield)o;
             boolean append = false;
             int sz = useSubfields.length;
             for (int idx = sz - 1; idx >= 0; idx--) {

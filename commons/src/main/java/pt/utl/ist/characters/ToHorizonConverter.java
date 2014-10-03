@@ -1,8 +1,8 @@
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -363,19 +363,19 @@ public class ToHorizonConverter {
     /**
      * @param rec
      */
-    public static void convertRecord(Record rec){
+    public static void convertRecord(MarcRecord rec){
         if (rec==null)
             return;
         List fields=rec.getFields();
 
         for (Object field : fields) {
-            Field f = (Field) field;
+            MarcField f = (MarcField) field;
             if (f.isControlField()) {
                 String newData = convertString(f.getValue());
                 f.setValue(newData);
             } else {
                 for (Object o : f.getSubfields()) {
-                    Subfield sf = (Subfield) o;
+                    MarcSubfield sf = (MarcSubfield) o;
                     String newData = convertString(sf.getValue());
                     sf.setValue(newData);
                 }

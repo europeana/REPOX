@@ -4,7 +4,7 @@
  * Created on 20 de Julho de 2002, 19:31
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
 import java.text.DecimalFormat;
 

@@ -4,7 +4,7 @@
  */
 package pt.utl.ist.marc.iso2709;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.xml.MarcWriterInXml;
 
 import java.io.File;
@@ -46,7 +46,7 @@ public class IteratorIso2709Albania extends IteratorIso2709 {
      */
     public static void main(String[] args) throws Exception {
         MarcWriterInXml w = new MarcWriterInXml(new File("C:\\Desktop\\t.xml"));
-        for (Record r : new IteratorIso2709Albania(new File("C:\\Desktop\\Projectos\\TELplus\\Repox\\Albania.txt"))) {
+        for (MarcRecord r : new IteratorIso2709Albania(new File("C:\\Desktop\\Projectos\\TELplus\\Repox\\Albania.txt"))) {
             w.write(r);
             System.out.println(r);
         }

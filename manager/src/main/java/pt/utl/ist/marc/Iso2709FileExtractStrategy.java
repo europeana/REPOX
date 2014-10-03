@@ -11,7 +11,7 @@ import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.iso2709.IsoNavigator;
 import pt.utl.ist.marc.iso2709.IteratorIso2709;
 import pt.utl.ist.recordPackage.RecordRepox;
@@ -97,7 +97,7 @@ public class Iso2709FileExtractStrategy implements FileExtractStrategy {
         public RecordRepox next() {
             try {
                 TimeUtil.getTimeSinceLastTimerArray(2);
-                Record currentRecord = iteratorIso2709.next();
+                MarcRecord currentRecord = iteratorIso2709.next();
                 RecordCharactersConverter.convertRecord(currentRecord, new UnderCode32Remover());
 
                 boolean isRecordDeleted = (currentRecord.getLeader().charAt(5) == 'd');

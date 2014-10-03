@@ -24,9 +24,12 @@ package pt.utl.ist.marc.iso2709;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.iso2709.datatype.*;
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalIdentifierException;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalIndicatorException;
+import pt.utl.ist.util.exceptions.marc.iso2709.IllegalTagException;
+import pt.utl.ist.util.marc.Leader;
 
 import java.io.*;
 
@@ -84,17 +87,17 @@ public class MARCReader {
     /** MARCReader charset */
     protected String            charset;
     /** MARCReader rt */
-    public char                 rt  = Record.RT;
+    public char                 rt  = MarcRecord.RT;
 
     /**
      * Field terminator character (ASCII octal 036). 30
      */
-    public char                 ft  = Record.FT;
+    public char                 ft  = MarcRecord.FT;
 
     /**
      * Delimiter (Unit Separator ASCII octal 037). 31
      */
-    public char                 us  = Record.US;
+    public char                 us  = MarcRecord.US;
 
     /**
      * Creates a new instance of this class.
@@ -767,8 +770,8 @@ public class MARCReader {
      * @param str
      * @return Record
      */
-    public static Record readRecordFromIso2709String(String str) {
-        return new Record(str);
+    public static MarcRecord readRecordFromIso2709String(String str) {
+        return new MarcRecord(str);
     }
 
     @SuppressWarnings("javadoc")

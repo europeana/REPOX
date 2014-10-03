@@ -12,7 +12,7 @@ import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.xml.IteratorMarcXChange;
 import pt.utl.ist.marc.xml.MarcSaxParser;
 import pt.utl.ist.recordPackage.RecordRepox;
@@ -50,7 +50,7 @@ public class MarcXchangeFileExtractStrategy implements FileExtractStrategy {
         private CharacterEncoding characterEncoding;
         private File              logFile;
 
-        private Iterator<Record>  recordIterator;
+        private Iterator<MarcRecord>  recordIterator;
 
         public RecordIterator(DataSource dataSource, File file, CharacterEncoding characterEncoding, File logFile) {
             this.dataSource = dataSource;
@@ -82,7 +82,7 @@ public class MarcXchangeFileExtractStrategy implements FileExtractStrategy {
         public RecordRepox next() {
             try {
                 TimeUtil.getTimeSinceLastTimerArray(2);
-                Record currentRecord = recordIterator.next();
+                MarcRecord currentRecord = recordIterator.next();
                 log.debug("Iterate MarcXChange: " + TimeUtil.getTimeSinceLastTimerArray(2));
                 RecordCharactersConverter.convertRecord(currentRecord, new UnderCode32Remover());
 
@@ -112,8 +112,8 @@ public class MarcXchangeFileExtractStrategy implements FileExtractStrategy {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Iterator<Record> recordIterator = MarcSaxParser.parse(new FileInputStream(new File("f:/temp/2marcxchange/999.xml"))).iterator();
-        Record currentRecord = recordIterator.next();
+        Iterator<MarcRecord> recordIterator = MarcSaxParser.parse(new FileInputStream(new File("f:/temp/2marcxchange/999.xml"))).iterator();
+        MarcRecord currentRecord = recordIterator.next();
         Element marcRootElement = XmlUtil.getRootElement(currentRecord.toXmlbytes());
         Element recordElement = marcRootElement;
         if (marcRootElement.elements().size() == 1 && marcRootElement.getName().equals("collection")) {

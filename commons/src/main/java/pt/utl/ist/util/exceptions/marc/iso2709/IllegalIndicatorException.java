@@ -20,7 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package pt.utl.ist.marc.iso2709.datatype;
+package pt.utl.ist.util.exceptions.marc.iso2709;
+
+import pt.utl.ist.marc.iso2709.datatype.Indicator;
 
 /**
  * <p>

@@ -9,7 +9,7 @@ package pt.utl.ist.marc.iso2709;
 import org.apache.log4j.Logger;
 
 import pt.utl.ist.characters.CharacterConverterI;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.util.NUtil;
 import pt.utl.ist.util.structure.Tuple;
 
@@ -115,7 +115,7 @@ public class IsoNavigator {
     /**
      * @return the next List of Records
      */
-    public List<Record> getNextRecords(){
+    public List<MarcRecord> getNextRecords(){
         try {
             if (!started){
                 marcReader.parse(inputStream,inc);
@@ -170,7 +170,7 @@ public class IsoNavigator {
             int counter=0;
             int i;
             while((i = reader.read()) != -1){
-                if(i == Record.RT) 
+                if(i == MarcRecord.RT) 
                     counter++;
             }                 
             return counter;
@@ -195,10 +195,10 @@ public class IsoNavigator {
             int dirPosition=-1;
             String field="";
             while((i = reader.read()) != -1){
-                if(i == Record.RT) { 
+                if(i == MarcRecord.RT) { 
                 	recCounter++;
                 	leaderPosition=0;
-                }else if(i == Record.FT && dirPosition!=-1) {
+                }else if(i == MarcRecord.FT && dirPosition!=-1) {
                 	dirPosition=-1;
                 }else if(leaderPosition<24) {
                 	leaderPosition++;

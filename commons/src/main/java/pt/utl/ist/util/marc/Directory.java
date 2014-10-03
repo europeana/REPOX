@@ -4,9 +4,9 @@
  * Created on 20 de Julho de 2002, 19:18
  */
 
-package pt.utl.ist.marc.util;
+package pt.utl.ist.util.marc;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 
 import java.text.DecimalFormat;
 
@@ -96,7 +96,7 @@ public class Directory {
      * @return <code>String</code> - the directory
      */
     public String getSerializedForm() {
-        return directory.toString() + Record.FT;
+        return directory.toString() + MarcRecord.FT;
     }
 
     /**

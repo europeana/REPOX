@@ -8,11 +8,11 @@ package pt.utl.ist.marc.iso2709;
 
 import org.apache.log4j.Logger;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.marc.util.Directory;
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
+import pt.utl.ist.util.marc.Directory;
+import pt.utl.ist.util.marc.Leader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class Record2Iso2709HorizonVisitor {
      * @param rec
      * @return converted bytes
      */
-    public static byte[] toIso2709(Record rec) {
+    public static byte[] toIso2709(MarcRecord rec) {
         try {
             ByteArrayOutputStream data = new ByteArrayOutputStream();
             Directory directory = new Directory();
@@ -36,7 +36,7 @@ public class Record2Iso2709HorizonVisitor {
 
             // append fields to directory and data
             for (Object o : rec.getFields()) {
-                Field fld = (Field)o;
+                MarcField fld = (MarcField)o;
                 byte[] fldStr = fieldToIso2709(fld);
                 directory.add(fld.getTagAsString(), fldStr.length);
                 data.write(fldStr);
@@ -55,7 +55,7 @@ public class Record2Iso2709HorizonVisitor {
             data.write(leader.getSerializedForm().getBytes("ISO8859-1"));
             data.write(directory.getSerializedForm().getBytes("ISO8859-1"));
             data.write(fieldsData);
-            data.write(Record.RT);
+            data.write(MarcRecord.RT);
             return data.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -68,19 +68,19 @@ public class Record2Iso2709HorizonVisitor {
      * @return converted bytes
      * @throws IOException
      */
-    protected static byte[] fieldToIso2709(Field fld) throws IOException {
+    protected static byte[] fieldToIso2709(MarcField fld) throws IOException {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
         if (fld.isControlField()) {
             data.write(fld.getValue().getBytes("ISO8859-1"));
-            data.write(Record.FT);
+            data.write(MarcRecord.FT);
         } else {
             data.write(fld.getInd1());
             data.write(fld.getInd2());
-            for (Subfield subfield1 : fld.getSubfields()) {
-                Subfield subfield = subfield1;
+            for (MarcSubfield subfield1 : fld.getSubfields()) {
+                MarcSubfield subfield = subfield1;
                 data.write(subfieldToIso2709(subfield, fld.getTagAsString().equals("977") && subfield.getCode() == 'a'));
             }
-            data.write(Record.FT);
+            data.write(MarcRecord.FT);
         }
         return data.toByteArray();
     }
@@ -91,9 +91,9 @@ public class Record2Iso2709HorizonVisitor {
      * @return converted bytes
      * @throws IOException
      */
-    protected static byte[] subfieldToIso2709(Subfield sfld, boolean converToCp850) throws IOException {
+    protected static byte[] subfieldToIso2709(MarcSubfield sfld, boolean converToCp850) throws IOException {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
-        data.write(Record.US);
+        data.write(MarcRecord.US);
         data.write(sfld.getCode());
         data.write(converToCp850 ? sfld.getValue().getBytes("CP850") : sfld.getValue().getBytes());
         return data.toByteArray();

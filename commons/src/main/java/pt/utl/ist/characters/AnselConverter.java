@@ -1,8 +1,8 @@
 package pt.utl.ist.characters;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
 
 /**
  * 4
@@ -263,14 +263,14 @@ public class AnselConverter {
     /**
      * @param rec
      */
-    public static void convertRecord(Record rec) {
+    public static void convertRecord(MarcRecord rec) {
         if (rec == null) { return; }
         // todo: GDJ: this loop appears many times so the converters should all be restructured. it should be in one place only.
-        for (Field field : rec.getFields()) {
+        for (MarcField field : rec.getFields()) {
             if (field.isControlField()) {
                 field.setValue(convertString(field.getValue()));
             } else {
-                for (Subfield subfield : field.getSubfields()) {
+                for (MarcSubfield subfield : field.getSubfields()) {
                     subfield.setValue(convertString(subfield.getValue()));
                 }
             }

@@ -209,7 +209,7 @@ public class Viewer extends javax.swing.JFrame {
      ************ Private Methods ******************
      *************************************************************************/
     private void gotoNextRecord() {
-        for (Record record : iso.getNextRecords()) {
+        for (MarcRecord record : iso.getNextRecords()) {
             viewArea.setText(record.toString());
         }
     }

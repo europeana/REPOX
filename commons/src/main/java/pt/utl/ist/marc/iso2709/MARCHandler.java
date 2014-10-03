@@ -22,7 +22,7 @@
 
 package pt.utl.ist.marc.iso2709;
 
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.util.marc.Leader;
 
 /**
  * <p>

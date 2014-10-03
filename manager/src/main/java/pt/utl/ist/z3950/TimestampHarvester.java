@@ -7,7 +7,7 @@ import org.jzkit.search.util.ResultSet.IRResultSet;
 import pt.utl.ist.characters.RecordCharactersConverter;
 import pt.utl.ist.characters.UnderCode32Remover;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.RecordRepoxMarc;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.StringUtil;
@@ -52,7 +52,7 @@ public class TimestampHarvester extends AbstractHarvester {
         private boolean                          fullIngest;
         private Date                             currentDay;
         private Date                             tomorrow;
-        Record                                   nextRecord = null;
+        MarcRecord                                   nextRecord = null;
 
         private Enumeration<InformationFragment> currentInformationFragment;
 

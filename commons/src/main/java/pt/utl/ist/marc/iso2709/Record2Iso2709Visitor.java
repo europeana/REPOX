@@ -6,11 +6,11 @@
 
 package pt.utl.ist.marc.iso2709;
 
-import pt.utl.ist.marc.Field;
-import pt.utl.ist.marc.Record;
-import pt.utl.ist.marc.Subfield;
-import pt.utl.ist.marc.util.Directory;
-import pt.utl.ist.marc.util.Leader;
+import pt.utl.ist.marc.MarcField;
+import pt.utl.ist.marc.MarcRecord;
+import pt.utl.ist.marc.MarcSubfield;
+import pt.utl.ist.util.marc.Directory;
+import pt.utl.ist.util.marc.Leader;
 
 /**
  * 
@@ -24,14 +24,14 @@ public class Record2Iso2709Visitor {
      * @deprecated use Record.toIso2709
      */
     @Deprecated
-    public static String toIso2709(Record rec) {
+    public static String toIso2709(MarcRecord rec) {
         StringBuffer data = new StringBuffer();
         Directory directory = new Directory();
         Leader leader = new Leader(rec.getLeader());
 
         // append fields to directory and data
         for (Object o : rec.getFields()) {
-            Field fld = (Field)o;
+            MarcField fld = (MarcField)o;
             String fldStr = fieldToIso2709(fld);
             directory.add(fld.getTagAsString(), fldStr.length());
             data.append(fldStr);
@@ -44,23 +44,23 @@ public class Record2Iso2709Visitor {
         leader.setBaseAddressOfData(baseAddress);
 
         // return record in tape format
-        return leader.getSerializedForm() + directory.getSerializedForm() + data + Record.RT;
+        return leader.getSerializedForm() + directory.getSerializedForm() + data + MarcRecord.RT;
     }
 
     /**
      * @param fld
      * @return converted String
      */
-    protected static String fieldToIso2709(Field fld) {
+    protected static String fieldToIso2709(MarcField fld) {
         if (fld.isControlField()) {
-            return fld.getValue() + Record.FT;
+            return fld.getValue() + MarcRecord.FT;
         } else {
             StringBuffer dataField = new StringBuffer().append(fld.getInd1()).append(fld.getInd2());
-            for (Subfield subfield1 : fld.getSubfields()) {
-                Subfield subfield = subfield1;
+            for (MarcSubfield subfield1 : fld.getSubfields()) {
+                MarcSubfield subfield = subfield1;
                 dataField.append(subfieldToIso2709(subfield));
             }
-            dataField.append(Record.FT);
+            dataField.append(MarcRecord.FT);
             return dataField.toString();
         }
     }
@@ -69,8 +69,8 @@ public class Record2Iso2709Visitor {
      * @param sfld
      * @return converted String
      */
-    protected static String subfieldToIso2709(Subfield sfld) {
-        return new StringBuffer().append(Record.US).append(sfld.getCode()).append(sfld.getValue()).toString();
+    protected static String subfieldToIso2709(MarcSubfield sfld) {
+        return new StringBuffer().append(MarcRecord.US).append(sfld.getCode()).append(sfld.getValue()).toString();
     }
 
     /**

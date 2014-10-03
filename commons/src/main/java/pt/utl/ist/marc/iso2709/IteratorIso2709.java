@@ -6,7 +6,7 @@ package pt.utl.ist.marc.iso2709;
 
 import pt.utl.ist.characters.CharacterConverterI;
 import pt.utl.ist.characters.CharacterConverters;
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +15,10 @@ import java.util.List;
 
 /**
  */
-public class IteratorIso2709 implements Iterator<Record>, Iterable<Record> {
+public class IteratorIso2709 implements Iterator<MarcRecord>, Iterable<MarcRecord> {
     File         isoFile;
     IsoNavigator isoNavig;
-    List<Record> records = null;
+    List<MarcRecord> records = null;
     int          currentIndex;
 
     /**
@@ -76,8 +76,8 @@ public class IteratorIso2709 implements Iterator<Record>, Iterable<Record> {
     }
 
     @Override
-    public Record next() {
-        Record ret = null;
+    public MarcRecord next() {
+        MarcRecord ret = null;
         if (hasNext()) {
             ret = records.get(currentIndex);
             currentIndex++;
@@ -87,14 +87,14 @@ public class IteratorIso2709 implements Iterator<Record>, Iterable<Record> {
     }
 
     @Override
-    public Iterator<Record> iterator() {
+    public Iterator<MarcRecord> iterator() {
         return this;
     }
 
     /**
      * @param rec
      */
-    protected void processRecord(Record rec) {
+    protected void processRecord(MarcRecord rec) {
     }
 
 }

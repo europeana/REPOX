@@ -7,7 +7,7 @@ package pt.utl.ist.marc.xml;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import pt.utl.ist.marc.Record;
+import pt.utl.ist.marc.MarcRecord;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  */
-public class IteratorMarcXChange extends MarcSaxParserClient implements Iterator<Record>, Iterable<Record> {
+public class IteratorMarcXChange extends MarcSaxParserClient implements Iterator<MarcRecord>, Iterable<MarcRecord> {
     /**
      * Logger for this class
      */
@@ -26,7 +26,7 @@ public class IteratorMarcXChange extends MarcSaxParserClient implements Iterator
 
     File                        xmlFile;
     FileInputStream             xmlFis;
-    LinkedBlockingQueue<Record> queue                             = new LinkedBlockingQueue<Record>(3);
+    LinkedBlockingQueue<MarcRecord> queue                             = new LinkedBlockingQueue<MarcRecord>(3);
     Thread                      parserThread                      = null;
 
     boolean                     iteratorWasInterruptedInTheMiddle = false;
@@ -80,7 +80,7 @@ public class IteratorMarcXChange extends MarcSaxParserClient implements Iterator
     }
 
     @Override
-    public Record next() {
+    public MarcRecord next() {
         log.debug("next");
         try {
             //			if(queue.poll()!=null)
@@ -97,12 +97,12 @@ public class IteratorMarcXChange extends MarcSaxParserClient implements Iterator
     }
 
     @Override
-    public Iterator<Record> iterator() {
+    public Iterator<MarcRecord> iterator() {
         return this;
     }
 
     @Override
-    protected void processRecord(Record rec) throws InterruptedException {
+    protected void processRecord(MarcRecord rec) throws InterruptedException {
         if (!iteratorWasInterruptedInTheMiddle) if (!queue.offer(rec, 60 * 30, TimeUnit.SECONDS)) {
             log.debug("interrupted");
             iteratorWasInterruptedInTheMiddle = true;
