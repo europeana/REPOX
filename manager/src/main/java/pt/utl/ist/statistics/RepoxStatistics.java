@@ -31,132 +31,106 @@ public abstract class RepoxStatistics {
     private Map<String, Integer>                  countriesRecords;
     private int                                   recordsTotal;
 
-    @SuppressWarnings("javadoc")
     public Date getGenerationDate() {
         return generationDate;
     }
 
-    @SuppressWarnings("javadoc")
     public void setGenerationDate(Date generationDate) {
         this.generationDate = generationDate;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesIdExtracted() {
         return dataSourcesIdExtracted;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesIdExtracted(int dataSourcesIdExtracted) {
         this.dataSourcesIdExtracted = dataSourcesIdExtracted;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesIdGenerated() {
         return dataSourcesIdGenerated;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesIdGenerated(int dataSourcesIdGenerated) {
         this.dataSourcesIdGenerated = dataSourcesIdGenerated;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesIdProvided() {
         return dataSourcesIdProvided;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesIdProvided(int dataSourcesIdProvided) {
         this.dataSourcesIdProvided = dataSourcesIdProvided;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataProviders() {
         return dataProviders;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataProviders(int dataProviders) {
         this.dataProviders = dataProviders;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesOai() {
         return dataSourcesOai;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesOai(int dataSourcesOai) {
         this.dataSourcesOai = dataSourcesOai;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesZ3950() {
         return dataSourcesZ3950;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesZ3950(int dataSourcesZ3950) {
         this.dataSourcesZ3950 = dataSourcesZ3950;
     }
 
-    @SuppressWarnings("javadoc")
     public int getDataSourcesDirectoryImporter() {
         return dataSourcesDirectoryImporter;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesDirectoryImporter(int dataSourcesDirectoryImporter) {
         this.dataSourcesDirectoryImporter = dataSourcesDirectoryImporter;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, MetadataFormatStatistics> getDataSourcesMetadataFormats() {
         return dataSourcesMetadataFormats;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesMetadataFormats(Map<String, MetadataFormatStatistics> dataSourcesMetadataFormats) {
         this.dataSourcesMetadataFormats = dataSourcesMetadataFormats;
     }
 
-    @SuppressWarnings("javadoc")
     public float getRecordsAvgDataSource() {
         return recordsAvgDataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordsAvgDataSource(float recordsAvgDataSource) {
         this.recordsAvgDataSource = recordsAvgDataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public float getRecordsAvgDataProvider() {
         return recordsAvgDataProvider;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordsAvgDataProvider(float recordsAvgDataProvider) {
         this.recordsAvgDataProvider = recordsAvgDataProvider;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, Integer> getCountriesRecords() {
         return countriesRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCountriesRecords(Map<String, Integer> countriesRecords) {
         this.countriesRecords = countriesRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public int getRecordsTotal() {
         return recordsTotal;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordsTotal(int recordsTotal) {
         this.recordsTotal = recordsTotal;
     }

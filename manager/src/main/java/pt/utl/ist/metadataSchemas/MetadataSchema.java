@@ -37,17 +37,14 @@ public class MetadataSchema {
         this.metadataSchemaVersions = metadataSchemaVersions;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDesignation() {
         return designation;
     }
 
-    @SuppressWarnings("javadoc")
     public String getShortDesignation() {
         return shortDesignation;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return description;
     }
@@ -56,62 +53,50 @@ public class MetadataSchema {
     //        return creationDate;
     //    }
 
-    @SuppressWarnings("javadoc")
     public String getNamespace() {
         return namespace;
     }
 
-    @SuppressWarnings("javadoc")
     public String getNotes() {
         return notes;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOAIAvailable(boolean value) {
         bOAIAvailable = value;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isOAIAvailable() {
         return bOAIAvailable;
     }
 
-    @SuppressWarnings("javadoc")
     public List<MetadataSchemaVersion> getMetadataSchemaVersions() {
         return metadataSchemaVersions;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDesignation(String designation) {
         this.designation = designation;
     }
 
-    @SuppressWarnings("javadoc")
     public void setShortDesignation(String shortDesignation) {
         this.shortDesignation = shortDesignation;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @SuppressWarnings("javadoc")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    @SuppressWarnings("javadoc")
     public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    @SuppressWarnings("javadoc")
     public void setbOAIAvailable(boolean bOAIAvailable) {
         this.bOAIAvailable = bOAIAvailable;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataSchemaVersions(List<MetadataSchemaVersion> metadataSchemaVersions) {
         this.metadataSchemaVersions = metadataSchemaVersions;
     }

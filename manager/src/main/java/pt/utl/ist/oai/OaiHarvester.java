@@ -47,82 +47,66 @@ public class OaiHarvester implements RunnableStoppable {
     private int                 numberOfRecordsPerResponse = -1;                               // -1 value not calculated yet; 0 -> unknown info
     private ArrayList<Long>     statisticsHarvest          = new ArrayList<Long>();
 
-    @SuppressWarnings("javadoc")
     public String getSourceUrl() {
         return sourceUrl;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSourceUrl(String sourceUrl) {
         this.sourceUrl = sourceUrl;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSourceSet() {
         return sourceSet;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSourceSet(String sourceSet) {
         this.sourceSet = sourceSet;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFromDateString() {
         return fromDateString;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFromDateString(String fromDateString) {
         this.fromDateString = fromDateString;
     }
 
-    @SuppressWarnings("javadoc")
     public String getUntilDateString() {
         return untilDateString;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUntilDateString(String untilDateString) {
         this.untilDateString = untilDateString;
     }
 
-    @SuppressWarnings("javadoc")
     public ResponseTransformer getResponseTransformer() {
         return responseTransformer;
     }
 
-    @SuppressWarnings("javadoc")
     public void setResponseTransformer(ResponseTransformer responseTransformer) {
         this.responseTransformer = responseTransformer;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataFormat() {
         return metadataFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataFormat(String metadataFormat) {
         this.metadataFormat = metadataFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public File getLogFile() {
         return logFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLogFile(File logFile) {
         this.logFile = logFile;
     }
 
-    @SuppressWarnings("javadoc")
     public ArrayList<Long> getStatisticsHarvest() {
         return statisticsHarvest;
     }
 
-    @SuppressWarnings("javadoc")
     public void setStatisticsHarvest(ArrayList<Long> statisticsHarvest) {
         this.statisticsHarvest = statisticsHarvest;
     }
@@ -302,12 +286,10 @@ public class OaiHarvester implements RunnableStoppable {
         }
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isHarvestFinished() {
         return getHarvestFinishedFile().exists();
     }
 
-    @SuppressWarnings("javadoc")
     public File getHarvestFinishedFile() {
         File harvestFinishedFile = new File(outputDirname + "/harvestFinished.txt");
 
@@ -378,12 +360,10 @@ public class OaiHarvester implements RunnableStoppable {
         }
     }
 
-    @SuppressWarnings("javadoc")
     public File getRequestFile(int request) {
         return new File(outputDirname + "/" + REQUEST_FILENAME_START + "-" + request + ".xml");
     }
 
-    @SuppressWarnings("javadoc")
     public File getRequestFileNoRecords() {
         return new File(outputDirname + "/" + REQUEST_FILENAME_START + "--1.xml");
     }

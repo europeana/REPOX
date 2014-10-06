@@ -51,37 +51,30 @@ public class MetadataTransformationManager {
         loadMetadataTransformations();
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, List<MetadataTransformation>> getMetadataTransformations() {
         return Collections.unmodifiableMap(metadataTransformations);
     }
 
-    @SuppressWarnings("javadoc")
     protected void setMetadataTransformations(Map<String, List<MetadataTransformation>> metadataTransformations) {
         this.metadataTransformations = metadataTransformations;
     }
 
-    @SuppressWarnings("javadoc")
     public File getXsltDir() {
         return xsltDir;
     }
 
-    @SuppressWarnings("javadoc")
     public File getXmapDir() {
         return xmapDir;
     }
 
-    @SuppressWarnings("javadoc")
     public void setXsltDir(File xsltDir) {
         this.xsltDir = xsltDir;
     }
 
-    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }

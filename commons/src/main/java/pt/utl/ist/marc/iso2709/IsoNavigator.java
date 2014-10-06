@@ -107,7 +107,6 @@ public class IsoNavigator {
 		}
     }
     
-    @SuppressWarnings("javadoc")
     public void setIncrement(int inc){
         this.inc=inc;
     }

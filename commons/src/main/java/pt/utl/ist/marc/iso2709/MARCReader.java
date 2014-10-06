@@ -118,17 +118,14 @@ public class MARCReader {
         this.charset = charset;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordTerminator(char rt) {
         this.rt = rt;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFieldTerminator(char ft) {
         this.ft = ft;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUnitDelimiter(char us) {
         this.us = us;
     }
@@ -774,12 +771,10 @@ public class MARCReader {
         return new MarcRecord(str);
     }
 
-    @SuppressWarnings("javadoc")
     public String getCharset() {
         return charset;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCharset(String charset) {
         this.charset = charset;
     }

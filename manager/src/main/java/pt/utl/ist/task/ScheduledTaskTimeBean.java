@@ -14,52 +14,42 @@ public class ScheduledTaskTimeBean {
     private List<Integer> hours;    //00-23	
     private Calendar      firstRun;
 
-    @SuppressWarnings("javadoc")
     public String getFrequency() {
         return frequency;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFrequency(String frequency) {
         this.frequency = frequency;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getXmonths() {
         return xmonths;
     }
 
-    @SuppressWarnings("javadoc")
     public void setXmonths(Integer xmonths) {
         this.xmonths = xmonths;
     }
 
-    @SuppressWarnings("javadoc")
     public List<Integer> getMinutes() {
         return minutes;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMinutes(List<Integer> minutes) {
         this.minutes = minutes;
     }
 
-    @SuppressWarnings("javadoc")
     public List<Integer> getHours() {
         return hours;
     }
 
-    @SuppressWarnings("javadoc")
     public void setHours(List<Integer> hours) {
         this.hours = hours;
     }
 
-    @SuppressWarnings("javadoc")
     public Calendar getFirstRun() {
         return firstRun;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFirstRun(Calendar firstRun) {
         this.firstRun = firstRun;
     }

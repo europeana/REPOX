@@ -30,17 +30,14 @@ public class ErrorLogElement extends LogElement{
         this.inputException = inputException;
     }
 
-    @SuppressWarnings("javadoc")
     public Date getOccurenceTime() {
         return occurenceTime;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOccurenceClass() {
         return occurenceClass;
     }
 
-    @SuppressWarnings("javadoc")
     public Exception getInputException() {
         return inputException;
     }

@@ -68,7 +68,6 @@ public class FileUtil {
         return changedFiles;
     }
 
-    @SuppressWarnings("javadoc")
     public static boolean isFileChanged(Date fromDate, File file) {
         return fromDate == null || file.lastModified() > fromDate.getTime();
     }

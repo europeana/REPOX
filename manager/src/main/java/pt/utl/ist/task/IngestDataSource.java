@@ -21,42 +21,34 @@ public class IngestDataSource implements RunnableStoppable {
     private boolean             fullIngest;
     private Task.Status         exitStatus;
 
-    @SuppressWarnings("javadoc")
     public String getTaskId() {
         return taskId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDataSourceId() {
         return dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isFullIngest() {
         return fullIngest;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFullIngest(boolean fullIngest) {
         this.fullIngest = fullIngest;
     }
 
-    @SuppressWarnings("javadoc")
     public Task.Status getExitStatus() {
         return exitStatus;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExitStatus(Task.Status exitStatus) {
         this.exitStatus = exitStatus;
     }

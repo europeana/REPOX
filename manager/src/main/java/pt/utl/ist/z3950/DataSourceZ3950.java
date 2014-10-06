@@ -31,12 +31,10 @@ public class DataSourceZ3950 extends DataSource {
 
     private Harvester       harvestMethod;
 
-    @SuppressWarnings("javadoc")
     public Harvester getHarvestMethod() {
         return harvestMethod;
     }
 
-    @SuppressWarnings("javadoc")
     public void setHarvestMethod(Harvester harvestMethod) {
         this.harvestMethod = harvestMethod;
     }

@@ -23,27 +23,22 @@ public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     private Map<String, String> namespaces;
     private String              identifierXpath;                          //private String identifierXpath = "/record/identifier"; OAI-DC
 
-    @SuppressWarnings("javadoc")
     public Map<String, String> getNamespaces() {
         return namespaces;
     }
 
-    @SuppressWarnings("javadoc")
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
-    @SuppressWarnings("javadoc")
     public String getIdentifierXpath() {
         return identifierXpath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIdentifierXpath(String identifierXpath) {
         this.identifierXpath = identifierXpath;
     }
 
-    @SuppressWarnings("javadoc")
     public XPath getIdXpath() {
         String namespaceAwareXPath = identifierXpath;
 

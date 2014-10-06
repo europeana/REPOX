@@ -42,32 +42,26 @@ public class OaiDataSource extends DataSource {
 
     private FileRetrieveStrategy retrieveStrategy;
 
-    @SuppressWarnings("javadoc")
     public FileRetrieveStrategy getRetrieveStrategy() {
         return retrieveStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRetrieveStrategy(FileRetrieveStrategy retrieveStrategy) {
         this.retrieveStrategy = retrieveStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOaiSourceURL() {
         return oaiSourceURL;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOaiSourceURL(String oaiSourceURL) {
         this.oaiSourceURL = oaiSourceURL;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOaiSet() {
         return oaiSet;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOaiSet(String oaiSet) {
         this.oaiSet = oaiSet;
     }

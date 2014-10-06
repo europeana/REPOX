@@ -10,17 +10,14 @@ public class DataSourceTag {
 
     private String name;
 
-    @SuppressWarnings("javadoc")
     public DataSourceTag(String name) {
         this.name = name;
     }
 
-    @SuppressWarnings("javadoc")
     public String getName() {
         return name;
     }
 
-    @SuppressWarnings("javadoc")
     public void setName(String name) {
         this.name = name;
     }

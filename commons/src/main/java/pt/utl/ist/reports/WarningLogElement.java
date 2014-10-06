@@ -22,7 +22,6 @@ public class WarningLogElement extends LogElement {
         this.type = LogEntryType.WARNING;
     }
 
-    @SuppressWarnings("javadoc")
     public String getResultLink() {
         return resultLink;
     }

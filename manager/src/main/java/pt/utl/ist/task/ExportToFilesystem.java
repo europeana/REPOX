@@ -55,62 +55,50 @@ public class ExportToFilesystem implements RunnableStoppable {
     private String              metadataExportFormat;
     private boolean             executeProfile;
 
-    @SuppressWarnings("javadoc")
     public String getTaskId() {
         return taskId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDataSourceId() {
         return dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public File getExportDir() {
         return exportDir;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExportDir(File exportDir) {
         this.exportDir = exportDir;
     }
 
-    @SuppressWarnings("javadoc")
     public int getRecordsPerFile() {
         return recordsPerFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordsPerFile(int recordsPerFile) {
         this.recordsPerFile = recordsPerFile;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isExecuteProfile() {
         return executeProfile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExecuteProfile(boolean executeProfile) {
         this.executeProfile = executeProfile;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataExportFormat() {
         return metadataExportFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataExportFormat(String metadataExportFormat) {
         this.metadataExportFormat = metadataExportFormat;
     }

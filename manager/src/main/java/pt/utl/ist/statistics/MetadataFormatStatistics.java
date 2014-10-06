@@ -21,22 +21,18 @@ public class MetadataFormatStatistics {
         this.recordNumber = recordNumber;
     }
 
-    @SuppressWarnings("javadoc")
     public void addCollectionNumber() {
         collectionNumber++;
     }
 
-    @SuppressWarnings("javadoc")
     public void addRecordNumber(int recordNumber) {
         this.recordNumber += recordNumber;
     }
 
-    @SuppressWarnings("javadoc")
     public int getCollectionNumber() {
         return collectionNumber;
     }
 
-    @SuppressWarnings("javadoc")
     public int getRecordNumber() {
         return recordNumber;
     }

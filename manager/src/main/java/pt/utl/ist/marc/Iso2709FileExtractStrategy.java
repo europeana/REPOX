@@ -33,17 +33,14 @@ public class Iso2709FileExtractStrategy implements FileExtractStrategy {
 
     private String              isoImplementationClass;
 
-    @SuppressWarnings("javadoc")
     public String getIsoImplementationClass() {
         return isoImplementationClass;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIsoImplementationClass(String isoImplementationClass) {
         this.isoImplementationClass = isoImplementationClass;
     }
 
-    @SuppressWarnings("javadoc")
     public Iso2709FileExtractStrategy(String isoImplementationClass) {
         this.isoImplementationClass = isoImplementationClass;
     }

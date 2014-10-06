@@ -87,12 +87,10 @@ public class DefaultWebServices implements WebServices {
     private static final Logger log = Logger.getLogger(DefaultWebServices.class);
     private String requestURI;
 
-    @SuppressWarnings("javadoc")
     public String getRequestURI() {
         return requestURI;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRequestURI(String requestURI) {
         this.requestURI = requestURI;
     }

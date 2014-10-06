@@ -21,7 +21,6 @@ public abstract class MarcSaxParserClient {
         counter++;
     }
 
-    @SuppressWarnings("javadoc")
     public int getRecordCount() {
         return counter;
     }

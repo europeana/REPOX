@@ -72,12 +72,10 @@ public abstract class AccessPoint {
      */
     public abstract List index(List<RecordRepox> records);
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public void setId(String id) {
         this.id = id;
     }
@@ -87,12 +85,10 @@ public abstract class AccessPoint {
      */
     public abstract Class typeOfIndex();
 
-    @SuppressWarnings("javadoc")
     public boolean isTokenizable() {
         return tokenizable;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTokenizable(boolean tokenizable) {
         this.tokenizable = tokenizable;
     }
@@ -112,42 +108,34 @@ public abstract class AccessPoint {
     }
 
     //public abstract Collection<String> indexDomain(RecordNode record);
-    @SuppressWarnings("javadoc")
     public boolean isIndexDeletedRecords() {
         return indexDeletedRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIndexDeletedRecords(boolean indexDeletedRecords) {
         this.indexDeletedRecords = indexDeletedRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isRemoveAllSpaces() {
         return removeAllSpaces;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRemoveAllSpaces(boolean removeAllSpaces) {
         this.removeAllSpaces = removeAllSpaces;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isRepoxInternal() {
         return repoxInternal;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRepoxInternal(boolean repoxInternal) {
         this.repoxInternal = repoxInternal;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isIndexEncoded() {
         return indexEncoded;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIndexEncoded(boolean indexEncoded) {
         this.indexEncoded = indexEncoded;
     }

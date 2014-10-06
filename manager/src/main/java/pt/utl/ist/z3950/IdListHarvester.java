@@ -28,22 +28,18 @@ public class IdListHarvester extends AbstractHarvester {
     private String              idBibAttribute              = "12";
     private File                idListFile;
 
-    @SuppressWarnings("javadoc")
     public String getIdBibAttribute() {
         return idBibAttribute;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIdBibAttribute(String idBibAttribute) {
         this.idBibAttribute = idBibAttribute;
     }
 
-    @SuppressWarnings("javadoc")
     public File getIdListFile() {
         return idListFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIdListFile(File idListFile) {
         this.idListFile = idListFile;
     }

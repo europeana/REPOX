@@ -17,32 +17,26 @@ public class TaskCalendarMonth {
     private Month       month;
     private int         year;
 
-    @SuppressWarnings("javadoc")
     public TaskDay[][] getMonthdays() {
         return monthdays;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMonthdays(TaskDay[][] monthdays) {
         this.monthdays = monthdays;
     }
 
-    @SuppressWarnings("javadoc")
     public Month getMonth() {
         return month;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMonth(Month month) {
         this.month = month;
     }
 
-    @SuppressWarnings("javadoc")
     public int getYear() {
         return year;
     }
 
-    @SuppressWarnings("javadoc")
     public void setYear(int year) {
         this.year = year;
     }

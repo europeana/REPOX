@@ -45,7 +45,6 @@ public class TimestampAccessPoint extends AccessPoint {
         return Date.class;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return "Timestamp";
     }

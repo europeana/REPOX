@@ -80,22 +80,18 @@ public class MarcSubfield implements Serializable {
      ************ Properties Methods ******************
      *************************************************************************/
     
-    @SuppressWarnings("javadoc")
     public String getValue() {
         return value;
     }
 
-    @SuppressWarnings("javadoc")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SuppressWarnings("javadoc")
     public char getCode() {
         return code;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCode(char code) {
         this.code = code;
     }

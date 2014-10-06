@@ -32,12 +32,10 @@ public enum Month {
 
     private int monthNumber;
 
-    @SuppressWarnings("javadoc")
     public int getMonthNumber() {
         return monthNumber;
     }
 
-    @SuppressWarnings("javadoc")
     public static Month getMonth(int monthNumber) {
         for (Month currentMonth : Month.values()) {
             if (currentMonth.getMonthNumber() == monthNumber) { return currentMonth; }
@@ -45,7 +43,6 @@ public enum Month {
         return null;
     }
 
-    @SuppressWarnings("javadoc")
     public static Month getCurrentMonth() {
         int currentMonthInt = Calendar.getInstance().get(Calendar.MONTH);
         return getMonth(currentMonthInt);

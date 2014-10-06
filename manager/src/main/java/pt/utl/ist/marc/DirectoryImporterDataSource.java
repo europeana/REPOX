@@ -50,72 +50,58 @@ public class DirectoryImporterDataSource extends DataSource {
     private Map<String, String>  namespaces;
     private String               idTypePolicy;
 
-    @SuppressWarnings("javadoc")
     public String getIdTypePolicy() {
         return idTypePolicy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIdTypePolicy(String idTypePolicy) {
         this.idTypePolicy = idTypePolicy;
     }
 
-    @SuppressWarnings("javadoc")
     public FileRetrieveStrategy getRetrieveStrategy() {
         return retrieveStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRetrieveStrategy(FileRetrieveStrategy retrieveStrategy) {
         this.retrieveStrategy = retrieveStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public FileExtractStrategy getExtractStrategy() {
         return extractStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExtractStrategy(FileExtractStrategy extractStrategy) {
         this.extractStrategy = extractStrategy;
     }
 
-    @SuppressWarnings("javadoc")
     public CharacterEncoding getCharacterEncoding() {
         return characterEncoding;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCharacterEncoding(CharacterEncoding characterEncoding) {
         this.characterEncoding = characterEncoding;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSourcesDirPath() {
         return sourcesDirPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSourcesDirPath(String sourcesDirPath) {
         this.sourcesDirPath = sourcesDirPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRecordXPath() {
         return recordXPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordXPath(String recordXPath) {
         this.recordXPath = recordXPath;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, String> getNamespaces() {
         return namespaces;
     }
 
-    @SuppressWarnings("javadoc")
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }

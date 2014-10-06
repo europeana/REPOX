@@ -45,12 +45,10 @@ public class ManualMetadataTransformationManager {
 
     private Map<String, Set<String>> tagMappings;
 
-    @SuppressWarnings("javadoc")
     public Map<String, Set<String>> getTagMappings() {
         return tagMappings;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTagMappings(Map<String, Set<String>> tagMappings) {
         this.tagMappings = tagMappings;
     }

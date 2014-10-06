@@ -32,52 +32,42 @@ public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     private String              idTypeAccess;                                     // "Normal" or "Anonymous
     private String              ftpPath;
 
-    @SuppressWarnings("javadoc")
     public String getServer() {
         return server;
     }
 
-    @SuppressWarnings("javadoc")
     public void setServer(String server) {
         this.server = server;
     }
 
-    @SuppressWarnings("javadoc")
     public String getUser() {
         return user;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUser(String user) {
         this.user = user;
     }
 
-    @SuppressWarnings("javadoc")
     public String getPassword() {
         return password;
     }
 
-    @SuppressWarnings("javadoc")
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @SuppressWarnings("javadoc")
     public String getIdTypeAccess() {
         return idTypeAccess;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIdTypeAccess(String idTypeAccess) {
         this.idTypeAccess = idTypeAccess;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFtpPath() {
         return ftpPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFtpPath(String ftpPath) {
         this.ftpPath = ftpPath;
     }

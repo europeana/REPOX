@@ -22,57 +22,46 @@ public class DataProvider {
     // optional
     private String                               email;
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public void setId(String id) {
         this.id = id;
     }
 
-    @SuppressWarnings("javadoc")
     public String getName() {
         return name;
     }
 
-    @SuppressWarnings("javadoc")
     public void setName(String name) {
         this.name = name;
     }
 
-    @SuppressWarnings("javadoc")
     public String getCountry() {
         return country;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCountry(String country) {
         this.country = country;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return description;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @SuppressWarnings("javadoc")
     public String getEmail() {
         return email;
     }
 
-    @SuppressWarnings("javadoc")
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @SuppressWarnings("javadoc")
     public static String generateId(String name) {
         String generatedIdPrefix = "";
 
@@ -125,12 +114,10 @@ public class DataProvider {
         return reversedDataSources;
     }
 
-    @SuppressWarnings("javadoc")
     public HashMap<String, DataSourceContainer> getDataSourceContainers() {
         return dataSourceContainers;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourceContainers(HashMap<String, DataSourceContainer> dataSourceContainers) {
         this.dataSourceContainers = dataSourceContainers;
     }

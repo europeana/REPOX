@@ -69,12 +69,10 @@ public class DateUtil {
         return date2String(now.getTime(), format);
     }
 
-    @SuppressWarnings("javadoc")
     static public Date startOfDayDate() {
         return startOfDayDate(new java.util.Date());
     }
 
-    @SuppressWarnings("javadoc")
     static public Date startOfDayDate(Date date) {
         Calendar now = Calendar.getInstance();
         now.setTime(date);
@@ -85,7 +83,6 @@ public class DateUtil {
         return now.getTime();
     }
 
-    @SuppressWarnings("javadoc")
     static public Date startOfMonthDate(Date date) {
         Calendar now = Calendar.getInstance();
         now.setTime(date);
@@ -97,7 +94,6 @@ public class DateUtil {
         return now.getTime();
     }
 
-    @SuppressWarnings("javadoc")
     static public Date endOfDayDate(Date date) {
         Calendar now = Calendar.getInstance();
         now.setTime(date);

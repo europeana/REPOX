@@ -40,27 +40,22 @@ public class LogElement {
         this.type = LogEntryType.ERROR;
     }
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public String getValue() {
         return value;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFailedId() {
         return failedId;
     }
 
-    @SuppressWarnings("javadoc")
     public String getErrorCause() {
         return errorCause;
     }
 
-    @SuppressWarnings("javadoc")
     public LogEntryType getType() {
         return type;
     }

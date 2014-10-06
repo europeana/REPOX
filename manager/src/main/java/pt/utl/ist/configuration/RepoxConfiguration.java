@@ -157,232 +157,186 @@ public abstract class RepoxConfiguration {
         this.useOAINamespace = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE));
     }
 
-    @SuppressWarnings("javadoc")
     public String getBaseUrn() {
         return baseUrn;
     }
 
-    @SuppressWarnings("javadoc")
     public void setBaseUrn(String baseUrn) {
         this.baseUrn = baseUrn;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRepositoryPath() {
         return repositoryPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRepositoryPath(String repositoryPath) {
         this.repositoryPath = repositoryPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getXmlConfigPath() {
         return xmlConfigPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setXmlConfigPath(String xmlConfigPath) {
         this.xmlConfigPath = xmlConfigPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOaiRequestPath() {
         return oaiRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOaiRequestPath(String oaiRequestPath) {
         this.oaiRequestPath = oaiRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFtpRequestPath() {
         return ftpRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFtpRequestPath(String ftpRequestPath) {
         this.ftpRequestPath = ftpRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getHttpRequestPath() {
         return httpRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setHttpRequestPath(String httpRequestPath) {
         this.httpRequestPath = httpRequestPath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getAdministratorEmail() {
         return administratorEmail;
     }
 
-    @SuppressWarnings("javadoc")
     public void setAdministratorEmail(String administratorEmail) {
         this.administratorEmail = administratorEmail;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSmtpServer() {
         return smtpServer;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSmtpServer(String smtpServer) {
         this.smtpServer = smtpServer;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabasePath() {
         return databasePath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabasePath(String databasePath) {
         this.databasePath = databasePath;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabaseDriverClassName() {
         return databaseDriverClassName;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabaseDriverClassName(String databaseDriverClassName) {
         this.databaseDriverClassName = databaseDriverClassName;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isDatabaseEmbeddedDriver() {
         return databaseEmbeddedDriver;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabaseEmbeddedDriver(boolean databaseEmbeddedDriver) {
         this.databaseEmbeddedDriver = databaseEmbeddedDriver;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabaseUrl() {
         return databaseUrl;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabaseUrl(String databaseUrl) {
         this.databaseUrl = databaseUrl;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isDatabaseCreate() {
         return databaseCreate;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabaseCreate(boolean databaseCreate) {
         this.databaseCreate = databaseCreate;
     }
 
-    @SuppressWarnings("javadoc")
     public File getTempDir() {
         return new File(xmlConfigPath, TEMP_DIRNAME);
     }
 
-    @SuppressWarnings("javadoc")
     public File getLogosDir() {
         return new File(repositoryPath, LOGOS_DIRNAME);
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabaseUser() {
         return databaseUser;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabasePassword() {
         return databasePassword;
     }
 
-    @SuppressWarnings("javadoc")
     public int getSampleRecords() {
         return sampleRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSampleRecords(int sampleRecords) {
         this.sampleRecords = sampleRecords;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDefaultEmail() {
         return defaultEmail;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDefaultEmail(String defaultEmail) {
         this.defaultEmail = defaultEmail;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMailPassword() {
         return mailPassword;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMailPassword(String mailPassword) {
         this.mailPassword = mailPassword;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSmtpPort() {
         return smtpPort;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSmtpPort(String smtpPort) {
         this.smtpPort = smtpPort;
     }
 
-    @SuppressWarnings("javadoc")
     public Boolean getUseCountriesTxt() {
         return useCountriesTxt;
     }
 
-    @SuppressWarnings("javadoc")
     public Boolean getSendEmailAfterIngest() {
         return sendEmailAfterIngest;
     }
 
-    @SuppressWarnings("javadoc")
     public String getLdapHost() {
         return ldapHost;
     }
 
-    @SuppressWarnings("javadoc")
     public String getLdapUserPrefix() {
         return ldapUserPrefix;
     }
 
-    @SuppressWarnings("javadoc")
     public String getLdapLoginDN() {
         return ldapLoginDN;
     }
 
-    @SuppressWarnings("javadoc")
     public String getCurrentServerOAIUrl() {
         return currentServerOAIUrl;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isUseMailSSLAuthentication() {
         return useMailSSLAuthentication;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isUseOAINamespace() {
         return useOAINamespace;
     }

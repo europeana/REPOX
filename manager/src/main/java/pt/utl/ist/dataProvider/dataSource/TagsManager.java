@@ -38,7 +38,6 @@ public class TagsManager {
         loadAllTags();
     }
 
-    @SuppressWarnings("javadoc")
     public List<DataSourceTag> getTags() {
         if (tags == null) tags = new ArrayList<DataSourceTag>();
         return tags;

@@ -40,6 +40,5 @@ public interface Harvester {
      */
     public Target getTarget();
 
-    @SuppressWarnings("javadoc")
     public void setTarget(Target target);
 }

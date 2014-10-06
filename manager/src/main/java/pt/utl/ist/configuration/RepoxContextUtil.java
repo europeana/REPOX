@@ -14,12 +14,9 @@ public interface RepoxContextUtil {
     /** RepoxContextUtil TEST_CONFIG_FILE */
     String TEST_CONFIG_FILE = "Test-configuration.properties";
 
-    @SuppressWarnings("javadoc")
     RepoxManager getRepoxManager();
 
-    @SuppressWarnings("javadoc")
     RepoxManager getRepoxManagerTest();
 
-    @SuppressWarnings("javadoc")
     void reloadProperties();
 }

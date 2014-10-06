@@ -23,72 +23,58 @@ public class Target {
 
     protected String            recordSyntax;                        // "unimarc" or "usmarc"
 
-    @SuppressWarnings("javadoc")
     public String getAddress() {
         return address;
     }
 
-    @SuppressWarnings("javadoc")
     public void setAddress(String address) {
         this.address = address;
     }
 
-    @SuppressWarnings("javadoc")
     public int getPort() {
         return port;
     }
 
-    @SuppressWarnings("javadoc")
     public void setPort(int port) {
         this.port = port;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDatabase() {
         return database;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDatabase(String database) {
         this.database = database;
     }
 
-    @SuppressWarnings("javadoc")
     public String getUser() {
         return user;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUser(String user) {
         this.user = user;
     }
 
-    @SuppressWarnings("javadoc")
     public String getPassword() {
         return password;
     }
 
-    @SuppressWarnings("javadoc")
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRecordSyntax() {
         return recordSyntax;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordSyntax(String recordSyntax) {
         this.recordSyntax = recordSyntax;
     }
 
-    @SuppressWarnings("javadoc")
     public CharacterEncoding getCharacterEncoding() {
         return characterEncoding;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCharacterEncoding(CharacterEncoding characterEncoding) {
         this.characterEncoding = characterEncoding;
     }

@@ -54,7 +54,6 @@ public abstract class Task {
         return taskClass;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTaskClass(Class<? extends RunnableStoppable> taskClass) {
         this.taskClass = taskClass;
     }
@@ -92,47 +91,38 @@ public abstract class Task {
         parameters[index] = parameter;
     }
 
-    @SuppressWarnings("javadoc")
     public String[] getParameters() {
         return parameters;
     }
 
-    @SuppressWarnings("javadoc")
     public void setParameters(String[] parameters) {
         this.parameters = parameters;
     }
 
-    @SuppressWarnings("javadoc")
     public Thread getTaskThread() {
         return taskThread;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTaskThread(Thread taskThread) {
         this.taskThread = taskThread;
     }
 
-    @SuppressWarnings("javadoc")
     public Calendar getStartTime() {
         return startTime;
     }
 
-    @SuppressWarnings("javadoc")
     public void setStartTime(Calendar startTime) {
         this.startTime = startTime;
     }
 
-    @SuppressWarnings("javadoc")
     public Calendar getFinishTime() {
         return finishTime;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFinishTime(Calendar finishTime) {
         this.finishTime = finishTime;
     }
 
-    @SuppressWarnings("javadoc")
     public Status getStatus() {
         if (runnableTask != null && IngestDataSource.class.isAssignableFrom(taskClass)) {
             IngestDataSource ingestDataSource = (IngestDataSource)runnableTask;
@@ -142,47 +132,38 @@ public abstract class Task {
         return status;
     }
 
-    @SuppressWarnings("javadoc")
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    @SuppressWarnings("javadoc")
     public int getMaxRetries() {
         return maxRetries;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
-    @SuppressWarnings("javadoc")
     public int getRetries() {
         return retries;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRetries(int retries) {
         this.retries = retries;
     }
 
-    @SuppressWarnings("javadoc")
     public long getRetryDelay() {
         return retryDelay;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRetryDelay(long retryDelay) {
         this.retryDelay = retryDelay;
     }
 
-    @SuppressWarnings("javadoc")
     public Calendar getFailTime() {
         return failTime;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFailTime(Calendar failTime) {
         this.failTime = failTime;
     }
@@ -239,19 +220,16 @@ public abstract class Task {
         this.retryDelay = retryDelay;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isRunning() {
         return (taskThread != null && taskThread.isAlive());
     }
 
-    @SuppressWarnings("javadoc")
     protected boolean isTimeToRetry(Calendar calendar) {
         long minRetryDelayInMillis = retryDelay * 1000;
         long failTimeDiffInMillis = calendar.getTimeInMillis() - failTime.getTimeInMillis();
         return retries < maxRetries && failTimeDiffInMillis > minRetryDelayInMillis;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isTimeToRun(Calendar calendar) {
         return !isRunning() && (failTime == null || isTimeToRetry(calendar));
     }

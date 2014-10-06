@@ -39,22 +39,18 @@ public class ExternalRestServicesManager {
         loadExternalRestServices();
     }
 
-    @SuppressWarnings("javadoc")
     public List<ExternalRestService> getExternalRestServices() throws IOException, DocumentException {
         return externalRestServices;
     }
 
-    @SuppressWarnings("javadoc")
     protected void setExternalRestServices(List<ExternalRestService> externalRestServices) {
         this.externalRestServices = externalRestServices;
     }
 
-    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }

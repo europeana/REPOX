@@ -41,52 +41,42 @@ public class TaskManager implements RunnableStoppable {
     private File                configurationFile;
     private File                runningTasksFile;
 
-    @SuppressWarnings("javadoc")
     public List<ScheduledTask> getScheduledTasks() {
         return scheduledTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public void setScheduledTasks(List<ScheduledTask> scheduledTasks) {
         this.scheduledTasks = scheduledTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public List<Task> getRunningTasks() {
         return runningTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRunningTasks(List<Task> runningTasks) {
         this.runningTasks = runningTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public List<Task> getOnetimeTasks() {
         return onetimeTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOnetimeTasks(List<Task> onetimeTasks) {
         this.onetimeTasks = onetimeTasks;
     }
 
-    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }
 
-    @SuppressWarnings("javadoc")
     public File getRunningTasksFile() {
         return runningTasksFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRunningTasksFile(File runningTasksFile) {
         this.runningTasksFile = runningTasksFile;
     }
@@ -492,7 +482,6 @@ public class TaskManager implements RunnableStoppable {
         TaskFileHelper.removeTask(runningTasksFile, task);
     }
 
-    @SuppressWarnings("javadoc")
     public synchronized ScheduledTask getTask(String id) {
         for (ScheduledTask currentScheduledTask : scheduledTasks) {
             if (currentScheduledTask.getId().equals(id)) { return currentScheduledTask; }
@@ -501,7 +490,6 @@ public class TaskManager implements RunnableStoppable {
         return null;
     }
 
-    @SuppressWarnings("javadoc")
     public synchronized Task getRunningTask(String id) {
         for (Task runningTask : runningTasks) {
             if (runningTask.getParameter(0).equals(id)) { return runningTask; }
@@ -509,7 +497,6 @@ public class TaskManager implements RunnableStoppable {
         return null;
     }
 
-    @SuppressWarnings("javadoc")
     public synchronized void saveTask(ScheduledTask task) throws IOException {
         scheduledTasks.add(task);
         saveTasks();

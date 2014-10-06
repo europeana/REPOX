@@ -50,7 +50,6 @@ public enum CharacterEncoding {
     /** CharacterEncoding CP1251 */
     CP1251;
 
-    @SuppressWarnings("javadoc")
     public static CharacterEncoding[] getValues() {
         return values();
     }

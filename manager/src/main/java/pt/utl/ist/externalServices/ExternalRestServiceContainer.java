@@ -49,7 +49,6 @@ public class ExternalRestServiceContainer {
         this.logFile = logFile;
     }
 
-    @SuppressWarnings("javadoc")
     public List<ExternalRestServiceThread> getServiceThreads() {
         return serviceThreads;
     }
@@ -68,27 +67,22 @@ public class ExternalRestServiceContainer {
         }
     }
 
-    @SuppressWarnings("javadoc")
     public String getDataSourceId() {
         return dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public ExternalServiceStates.ServiceRunningState getContainerRunningState() {
         return runningState;
     }
 
-    @SuppressWarnings("javadoc")
     public ExternalServiceStates.ServiceExitState getContainerExitState() {
         return exitState;
     }
 
-    @SuppressWarnings("javadoc")
     public ExternalServiceStates.ContainerType getContainerType() {
         return containerType;
     }
 
-    @SuppressWarnings("javadoc")
     public void setContainerType(ExternalServiceStates.ContainerType containerType) {
         this.containerType = containerType;
     }

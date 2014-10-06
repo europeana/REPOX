@@ -12,22 +12,18 @@ public class DataSourceTester implements Runnable {
     private DataSource          dataSource;
     private boolean             working;
 
-    @SuppressWarnings("javadoc")
     public DataSource getDataSource() {
         return dataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isWorking() {
         return working;
     }
 
-    @SuppressWarnings("javadoc")
     public void setWorking(boolean working) {
         this.working = working;
     }

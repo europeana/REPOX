@@ -20,42 +20,34 @@ public class BatchInfo {
     boolean lineBreaks;
     Sgb     sgb;
 
-    @SuppressWarnings("javadoc")
     public CharSet getCharSet() {
         return charSet;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCharSet(CharSet charSet) {
         this.charSet = charSet;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isLineBreaks() {
         return lineBreaks;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLineBreaks(boolean lineBreaks) {
         this.lineBreaks = lineBreaks;
     }
 
-    @SuppressWarnings("javadoc")
     public Sgb getSgb() {
         return sgb;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSgb(Sgb sgb) {
         this.sgb = sgb;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isStandardSeparators() {
         return standardSeparators;
     }
 
-    @SuppressWarnings("javadoc")
     public void setStandardSeparators(boolean standardSeparators) {
         this.standardSeparators = standardSeparators;
     }

@@ -17,7 +17,6 @@ public class Countries {
 
     private static Map<String, String> countryMap;
 
-    @SuppressWarnings("javadoc")
     public static Map<String, String> getCountries() {
         if (countryMap == null) {
             loadCountries();

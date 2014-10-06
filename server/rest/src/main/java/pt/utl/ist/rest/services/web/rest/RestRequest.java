@@ -19,57 +19,46 @@ public class RestRequest {
     private List<String>        uriHierarchy;
     private Map<String, String> requestParameters;
 
-    @SuppressWarnings("javadoc")
     public String getContextURL() {
         return contextURL;
     }
-
-    @SuppressWarnings("javadoc")
+    
     public void setContextURL(String contextURL) {
         this.contextURL = contextURL;
     }
 
-    @SuppressWarnings("javadoc")
     public String getParsedRequestURI() {
         return parsedRequestURI;
     }
 
-    @SuppressWarnings("javadoc")
     public void setParsedRequestURI(String parsedRequestURI) {
         this.parsedRequestURI = parsedRequestURI;
     }
-
-    @SuppressWarnings("javadoc")
+    
     public String getCorrectedQueryURI() {
         return correctedQueryURI;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCorrectedQueryURI(String correctedQueryURI) {
         this.correctedQueryURI = correctedQueryURI;
     }
 
-    @SuppressWarnings("javadoc")
     public List<String> getUriHierarchy() {
         return uriHierarchy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUriHierarchy(List<String> uriHierarchy) {
         this.uriHierarchy = uriHierarchy;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, String> getRequestParameters() {
         return requestParameters;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRequestParameters(Map<String, String> requestParameters) {
         this.requestParameters = requestParameters;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFullRequestURI() {
         return contextURL + parsedRequestURI + correctedQueryURI;
     }

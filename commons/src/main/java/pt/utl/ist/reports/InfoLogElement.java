@@ -27,12 +27,10 @@ public class InfoLogElement extends LogElement{
         this.type = LogEntryType.INFO;
     }
 
-    @SuppressWarnings("javadoc")
     public Date getOccurenceTime() {
         return occurenceTime;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOccurenceClass() {
         return occurenceClass;
     }

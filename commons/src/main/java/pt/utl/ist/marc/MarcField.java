@@ -273,32 +273,26 @@ public class MarcField implements Serializable {
      ************ Properties Methods ******************
      *************************************************************************/
     
-    @SuppressWarnings("javadoc")
     public char getInd1() {
         return ind1;
     }
 
-    @SuppressWarnings("javadoc")
     public void setInd1(char ind1) {
         this.ind1 = ind1;
     }
 
-    @SuppressWarnings("javadoc")
     public char getInd2() {
         return ind2;
     }
 
-    @SuppressWarnings("javadoc")
     public void setInd2(char ind2) {
         this.ind2 = ind2;
     }
 
-    @SuppressWarnings("javadoc")
     public List<MarcSubfield> getSubfields() {
         return subfields;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSubfields(List<MarcSubfield> subfields) {
         this.subfields = subfields;
     }
@@ -336,27 +330,22 @@ public class MarcField implements Serializable {
         this.tag = Short.parseShort(tag);
     }
 
-    @SuppressWarnings("javadoc")
     public short getTag() {
         return tag;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTag(int tag) {
         this.tag = (short)tag;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTag(short tag) {
         this.tag = tag;
     }
 
-    @SuppressWarnings("javadoc")
     public String getValue() {
         return value;
     }
 
-    @SuppressWarnings("javadoc")
     public void setValue(String value) {
         this.value = value;
     }

@@ -90,7 +90,6 @@ import freemarker.template.TemplateException;
  * DataSourceDirectoryImporter
  */
 public abstract class DataSource {
-    @SuppressWarnings("javadoc")
     public enum StatusDS {
         RUNNING, ERROR, OK, WARNING, CANCELED, PRE_PROCESSING, POST_PROCESSING, PRE_PROCESS_ERROR, POST_PROCESS_ERROR
     }
@@ -129,130 +128,105 @@ public abstract class DataSource {
     protected int                                 lastIngestCount, lastIngestDeletedCount;
     protected List<DataSourceTag>                 tags;
 
-    @SuppressWarnings("javadoc")
     public int getMaxRecord4Sample() {
         return maxRecord4Sample;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMaxRecord4Sample(int maxRecord4Sample) {
         this.maxRecord4Sample = maxRecord4Sample;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSchema() {
         return schema;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSchema(String schema) {
         this.schema = schema;
     }
 
-    @SuppressWarnings("javadoc")
     public String getNamespace() {
         return namespace;
     }
 
-    @SuppressWarnings("javadoc")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    @SuppressWarnings("javadoc")
     public HashMap<String, AccessPoint> getAccessPoints() {
         return accessPoints;
     }
 
-    @SuppressWarnings("javadoc")
     public void setAccessPoints(HashMap<String, AccessPoint> accessPoints) {
         this.accessPoints = accessPoints;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, MetadataTransformation> getMetadataTransformations() {
         return metadataTransformations;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataTransformations(Map<String, MetadataTransformation> metadataTransformations) {
         this.metadataTransformations = metadataTransformations;
     }
 
-    @SuppressWarnings("javadoc")
     public List<ExternalRestService> getExternalRestServices() {
         if (externalRestServices == null) externalRestServices = new ArrayList<ExternalRestService>();
         return externalRestServices;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExternalRestServices(List<ExternalRestService> externalRestServices) {
         this.externalRestServices = externalRestServices;
     }
 
-    @SuppressWarnings("javadoc")
     public ExternalServiceStates.ContainerType getExternalServicesRunType() {
         return externalServicesRunType;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExternalServicesRunType(ExternalServiceStates.ContainerType externalServicesRunType) {
         this.externalServicesRunType = externalServicesRunType;
     }
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public void setId(String id) {
         this.id = id;
     }
 
-    @SuppressWarnings("javadoc")
     public RecordIdPolicy getRecordIdPolicy() {
         return recordIdPolicy;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordIdPolicy(RecordIdPolicy recordIdPolicy) {
         this.recordIdPolicy = recordIdPolicy;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return description;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @SuppressWarnings("javadoc")
     public StatusDS getStatus() {
         return status;
         //return StatusDS.OK;
     }
 
-    @SuppressWarnings("javadoc")
     public List<OldTask> getOldTasksList() {
         return oldTasksList;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOldTasksList(List<OldTask> oldTasksList) {
         this.oldTasksList = oldTasksList;
     }
 
-    @SuppressWarnings("javadoc")
     public List<DataSourceTag> getTags() {
         if (tags == null) tags = new ArrayList<DataSourceTag>();
         return tags;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTags(List<DataSourceTag> tags) {
         this.tags = tags;
     }
@@ -260,73 +234,59 @@ public abstract class DataSource {
     /**
      * Obtains the current status of this DataSource
      */
-    @SuppressWarnings("javadoc")
     public String getStatusString() throws IOException {
         if (status != null) { return status.toString(); }
         return "";
     }
 
-    @SuppressWarnings("javadoc")
     public void setStatus(StatusDS status) {
         this.status = status;
     }
 
-    @SuppressWarnings("javadoc")
     public String getLastRunResult() {
         return lastRunResult;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLastRunResult(String lastRunResult) {
         this.lastRunResult = lastRunResult;
     }
 
-    @SuppressWarnings("javadoc")
     public Date getLastUpdate() {
         return lastUpdate;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataFormat() {
         return metadataFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataFormat(String metadataFormat) {
         this.metadataFormat = metadataFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMarcFormat() {
         return marcFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMarcFormat(String marcFormat) {
         this.marcFormat = marcFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isSample() {
         return isSample;
     }
 
-    @SuppressWarnings("javadoc")
     public void setIsSample(boolean sample) {
         isSample = sample;
     }
 
-    @SuppressWarnings("javadoc")
     public int getLastIngestCount() {
         return lastIngestCount;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLastIngestCount(int lastIngestCount) {
         this.lastIngestCount = lastIngestCount;
     }

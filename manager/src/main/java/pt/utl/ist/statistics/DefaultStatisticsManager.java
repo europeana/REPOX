@@ -33,12 +33,10 @@ public class DefaultStatisticsManager implements StatisticsManager {
 
     private File                configurationFile;
 
-    @SuppressWarnings("javadoc")
     public File getConfigurationFile() {
         return configurationFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }

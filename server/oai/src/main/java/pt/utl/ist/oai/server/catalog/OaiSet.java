@@ -24,22 +24,18 @@ public class OaiSet {
         this.metadataPrefix = metadataPrefix;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDataSetId() {
         return dataSetId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSetId(String dataSetId) {
         this.dataSetId = dataSetId;
     }
 
-    @SuppressWarnings("javadoc")
     public String getTotalRecordNumber() {
         return totalRecordNumber;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTotalRecordNumber(String totalRecordNumber) {
         this.totalRecordNumber = totalRecordNumber;
     }
@@ -49,7 +45,6 @@ public class OaiSet {
         return new AlphabeticComparator();
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataPrefix() {
         return metadataPrefix;
     }

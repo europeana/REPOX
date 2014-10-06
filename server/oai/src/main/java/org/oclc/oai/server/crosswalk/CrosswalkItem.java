@@ -145,52 +145,42 @@ public class CrosswalkItem {
         return (Crosswalk)constructor.newInstance(new Object[] { this });
     }
 
-    @SuppressWarnings("javadoc")
     public String getNativeRecordSchema() {
         return nativeRecordSchema;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataPrefix() {
         return metadataPrefix;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMetadataNamespace() {
         return metadataNamespace;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSchema() {
         return schema;
     }
 
-    @SuppressWarnings("javadoc")
     public Crosswalk getCrosswalk() {
         return crosswalk;
     }
 
-    @SuppressWarnings("javadoc")
     public String getContentType() {
         return contentType;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDocType() {
         return docType;
     }
 
-    @SuppressWarnings("javadoc")
     public String getEncoding() {
         return encoding;
     }
 
-    @SuppressWarnings("javadoc")
     public String getXSLTName() {
         return xsltName;
     }
     
-    @SuppressWarnings("javadoc")
     public int getRank() {
         return rank;
     }

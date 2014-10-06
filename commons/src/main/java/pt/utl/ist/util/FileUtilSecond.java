@@ -208,7 +208,6 @@ public class FileUtilSecond {
         fos.close();
     }
 
-    @SuppressWarnings("javadoc")
     public static String getSystemCharset() {
         return NUtil.getSystemCharset();
     }

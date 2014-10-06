@@ -26,12 +26,10 @@ public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
 
     private String              url;
 
-    @SuppressWarnings("javadoc")
     public String getUrl() {
         return url;
     }
 
-    @SuppressWarnings("javadoc")
     public void setUrl(String url) {
         this.url = url;
     }

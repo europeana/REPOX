@@ -104,12 +104,10 @@ public class DefaultDataManager implements DataManager {
         return Collections.unmodifiableList(dataProviders);
     }
 
-    @SuppressWarnings("javadoc")
     public File getDataProvidersFile() {
         return dataProvidersFile;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataProvidersFile(File dataProvidersFile) {
         this.dataProvidersFile = dataProvidersFile;
     }
@@ -119,7 +117,6 @@ public class DefaultDataManager implements DataManager {
         return metadataTransformationManager;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMetadataTransformationManager(MetadataTransformationManager metadataTransformationManager) {
         this.metadataTransformationManager = metadataTransformationManager;
     }

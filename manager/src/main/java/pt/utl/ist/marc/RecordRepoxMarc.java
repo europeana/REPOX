@@ -69,7 +69,6 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
         in.close();
     }
 
-    @SuppressWarnings("javadoc")
     public RecordRepoxMarc(MarcRecord record) {
         this.record = record;
     }
@@ -91,12 +90,10 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
         return MarcXChangeDom4jBuilder.record2Dom(record, marcFormat).getRootElement();
     }
 
-    @SuppressWarnings("javadoc")
     public MarcRecord getRecord() {
         return record;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecord(MarcRecord record) {
         this.record = record;
     }
@@ -111,12 +108,10 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
         this.isDeleted = isDeleted;
     }
 
-    @SuppressWarnings("javadoc")
     public String getMarcFormat() {
         return marcFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMarcFormat(String marcFormat) {
         this.marcFormat = marcFormat;
     }

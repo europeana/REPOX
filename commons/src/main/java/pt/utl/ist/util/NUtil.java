@@ -174,7 +174,6 @@ public class NUtil {
         return sb.toString();
     }
 
-    @SuppressWarnings("javadoc")
     public static String[] objectArrayToStringArray(Object[] objs) {
         if (objs == null) return null;
         String[] ret = new String[objs.length];
@@ -184,7 +183,6 @@ public class NUtil {
         return ret;
     }
 
-    @SuppressWarnings("javadoc")
     public static List arrayToList(Object[] objs) {
         if (objs == null) return null;
         List ret = new ArrayList(objs.length);
@@ -194,7 +192,6 @@ public class NUtil {
         return ret;
     }
 
-    @SuppressWarnings("javadoc")
     public static List arrayToIntegerList(Object[] objs) {
         if (objs == null) return null;
         List ret = new ArrayList(objs.length);
@@ -215,12 +212,10 @@ public class NUtil {
         return ret;
     }
 
-    @SuppressWarnings("javadoc")
     public static String[] listToStringArray(List objs) {
         return collectionToStringArray(objs);
     }
 
-    @SuppressWarnings("javadoc")
     public static String[] collectionToStringArray(Collection objs) {
         if (objs == null) return null;
         String[] ret = new String[objs.size()];
@@ -260,7 +255,6 @@ public class NUtil {
         return pss.toString();
     }
 
-    @SuppressWarnings("javadoc")
     public static String getSystemCharset() {
         String defaultEncoding = new InputStreamReader(new ByteArrayInputStream(new byte[0])).getEncoding();
         return defaultEncoding;

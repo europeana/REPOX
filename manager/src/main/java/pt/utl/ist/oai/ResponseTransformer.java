@@ -50,12 +50,10 @@ public class ResponseTransformer {
 
     private Transformer         transformer;
 
-    @SuppressWarnings("javadoc")
     public Transformer getTransformer() {
         return transformer;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTransformer(Transformer transformer) {
         this.transformer = transformer;
     }

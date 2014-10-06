@@ -35,22 +35,18 @@ public class DataSourcesMonitor {
     private Calendar                  lastMonitoringTime;
     private Map<String, Boolean>      dataSourcesState;                                                  //Map with key Data Source id and value working state.
 
-    @SuppressWarnings("javadoc")
     public Calendar getLastMonitoringTime() {
         return lastMonitoringTime;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLastMonitoringTime(Calendar lastMonitoringTime) {
         this.lastMonitoringTime = lastMonitoringTime;
     }
 
-    @SuppressWarnings("javadoc")
     public Map<String, Boolean> getDataSourcesState() {
         return dataSourcesState;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourcesState(Map<String, Boolean> dataSourcesState) {
         this.dataSourcesState = dataSourcesState;
     }

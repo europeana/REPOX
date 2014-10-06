@@ -7,32 +7,26 @@ public class Tag implements Comparable<Tag> {
     protected String description;
     protected String xpath;
 
-    @SuppressWarnings("javadoc")
     public String getName() {
         return name;
     }
 
-    @SuppressWarnings("javadoc")
     public void setName(String name) {
         this.name = name;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return description;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @SuppressWarnings("javadoc")
     public String getXpath() {
         return xpath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setXpath(String xpath) {
         this.xpath = xpath;
     }

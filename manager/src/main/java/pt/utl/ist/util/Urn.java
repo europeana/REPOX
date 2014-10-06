@@ -98,17 +98,14 @@ public class Urn {
         return baseUrn + dataSourceId + URN_SEPARATOR + recordId + (timestamp == null ? "" : URN_TIMESTAMP_SEPARATOR + timestamp);
     }
 
-    @SuppressWarnings("javadoc")
     public String getDataSourceId() {
         return dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
 
-    @SuppressWarnings("javadoc")
     public Object getRecordId() throws DocumentException, IOException {
         if (recordId == null) { return null; }
 
@@ -140,17 +137,14 @@ public class Urn {
         }
     }
 
-    @SuppressWarnings("javadoc")
     public void setRecordId(Object recordId) {
         this.recordId = recordId;
     }
 
-    @SuppressWarnings("javadoc")
     public String getTimestamp() {
         return timestamp;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }

@@ -31,12 +31,10 @@ public class IdSequenceHarvester extends AbstractHarvester {
     private String              idBibAttribute              = "12";
     public Long                 maximumId;
 
-    @SuppressWarnings("javadoc")
     public Long getMaximumId() {
         return maximumId;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMaximumId(Long maximumId) {
         this.maximumId = maximumId;
     }

@@ -26,12 +26,10 @@ public class TimestampHarvester extends AbstractHarvester {
     private String              modificationDateBibAttribute = "1012";
     private Date                earliestTimestamp;
 
-    @SuppressWarnings("javadoc")
     public Date getEarliestTimestamp() {
         return earliestTimestamp;
     }
 
-    @SuppressWarnings("javadoc")
     public void setEarliestTimestamp(Date earliestTimestamp) {
         this.earliestTimestamp = earliestTimestamp;
     }

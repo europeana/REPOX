@@ -61,92 +61,74 @@ public class OldTask {
         parseDate();
     }
 
-    @SuppressWarnings("javadoc")
     public DataSource getDataSource() {
         return dataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public String getStatus() {
         return status;
     }
 
-    @SuppressWarnings("javadoc")
     public String getIngestType() {
         return ingestType;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDelay() {
         return delay;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRecords() {
         return records;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRetries() {
         return retries;
     }
 
-    @SuppressWarnings("javadoc")
     public String getRetryMax() {
         return retryMax;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDateString() {
         return dateString;
     }
 
-    @SuppressWarnings("javadoc")
     public String getLogName() {
         return logName;
     }
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getDay() {
         return day;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getMonth() {
         return month;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getYear() {
         return year;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getHours() {
         return hours;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getMinutes() {
         return minutes;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOnlyDate() {
         return onlyDate;
     }
 
-    @SuppressWarnings("javadoc")
     public String getOnlyTime() {
         return onlyTime;
     }
 
-    @SuppressWarnings("javadoc")
     public Date getActualDate() {
         return actualDate;
     }

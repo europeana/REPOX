@@ -84,22 +84,18 @@ public class TransformationFile {
         return true;
     }
 
-    @SuppressWarnings("javadoc")
     public Templates getTemplate() {
         return template;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTemplate(Templates template) {
         this.template = template;
     }
 
-    @SuppressWarnings("javadoc")
     public List<TransformationSubFile> getTransformationSubFiles() {
         return transformationSubFiles;
     }
 
-    @SuppressWarnings("javadoc")
     public Long getTimestamp() {
         return timestamp;
     }

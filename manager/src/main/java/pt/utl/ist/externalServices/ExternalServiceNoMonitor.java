@@ -22,7 +22,6 @@ public class ExternalServiceNoMonitor extends ExternalRestService {
         this.dataSource = dataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public DataSource getDataSource() {
         return dataSource;
     }

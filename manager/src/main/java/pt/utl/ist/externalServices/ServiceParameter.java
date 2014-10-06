@@ -37,67 +37,54 @@ public class ServiceParameter {
         this.semantics = semantics;
     }
 
-    @SuppressWarnings("javadoc")
     public void setName(String name) {
         this.name = name;
     }
 
-    @SuppressWarnings("javadoc")
     public String getName() {
         return name;
     }
 
-    @SuppressWarnings("javadoc")
     public void setType(String type) {
         this.type = type;
     }
 
-    @SuppressWarnings("javadoc")
     public String getType() {
         return type;
     }
 
-    @SuppressWarnings("javadoc")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SuppressWarnings("javadoc")
     public String getValue() {
         return value;
     }
 
-    @SuppressWarnings("javadoc")
     public void setRequired(boolean required) {
         this.required = required;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean getRequired() {
         return required;
     }
 
-    @SuppressWarnings("javadoc")
     public String getExample() {
         return example;
     }
 
-    @SuppressWarnings("javadoc")
     public void setExample(String example) {
         this.example = example;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSemantics() {
         return semantics;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSemantics(String semantics) {
         this.semantics = semantics;
     }
 
-    @SuppressWarnings("javadoc")
     public List<String> getComboValues() {
         if (comboValues == null) comboValues = new ArrayList<String>();
         return comboValues;

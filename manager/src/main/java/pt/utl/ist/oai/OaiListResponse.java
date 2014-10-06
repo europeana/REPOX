@@ -9,22 +9,18 @@ public class OaiListResponse {
     private List<OaiItem> oaiItems = new ArrayList<OaiItem>();
     private int           lastRequestedIdentifier;
 
-    @SuppressWarnings("javadoc")
     public List<OaiItem> getOaiItems() {
         return oaiItems;
     }
 
-    @SuppressWarnings("javadoc")
     public void setOaiItems(List<OaiItem> oaiItems) {
         this.oaiItems = oaiItems;
     }
 
-    @SuppressWarnings("javadoc")
     public int getLastRequestedIdentifier() {
         return lastRequestedIdentifier;
     }
 
-    @SuppressWarnings("javadoc")
     public void setLastRequestedIdentifier(int lastRequestedIdentifier) {
         this.lastRequestedIdentifier = lastRequestedIdentifier;
     }

@@ -19,52 +19,42 @@ public class TagGroup extends Tag {
     private String             finalSuffix;
     private String             commonXpath;
 
-    @SuppressWarnings("javadoc")
     public List<Tag> getTags() {
         return tags;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
-    @SuppressWarnings("javadoc")
     public List<String> getTagPrefixes() {
         return tagPrefixes;
     }
 
-    @SuppressWarnings("javadoc")
     public void setTagPrefixes(List<String> tagPrefixes) {
         this.tagPrefixes = tagPrefixes;
     }
 
-    @SuppressWarnings("javadoc")
     public String getInitialPrefix() {
         return initialPrefix;
     }
 
-    @SuppressWarnings("javadoc")
     public void setInitialPrefix(String initialPrefix) {
         this.initialPrefix = initialPrefix;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFinalSuffix() {
         return finalSuffix;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFinalSuffix(String finalSuffix) {
         this.finalSuffix = finalSuffix;
     }
 
-    @SuppressWarnings("javadoc")
     public String getCommonXpath() {
         return commonXpath;
     }
 
-    @SuppressWarnings("javadoc")
     public void setCommonXpath(String commonXpath) {
         this.commonXpath = commonXpath;
     }

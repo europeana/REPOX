@@ -9,12 +9,10 @@ import org.dom4j.Element;
 public abstract class DataSourceContainer {
     protected DataSource dataSource;
 
-    @SuppressWarnings("javadoc")
     public DataSource getDataSource() {
         return dataSource;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }

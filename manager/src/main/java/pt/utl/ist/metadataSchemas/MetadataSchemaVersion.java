@@ -19,12 +19,10 @@ public class MetadataSchemaVersion {
         this.xsdLink = xsdLink;
     }
 
-    @SuppressWarnings("javadoc")
     public double getVersion() {
         return version;
     }
 
-    @SuppressWarnings("javadoc")
     public String getXsdLink() {
         return xsdLink;
     }

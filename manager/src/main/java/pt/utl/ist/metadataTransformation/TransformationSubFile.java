@@ -19,12 +19,10 @@ public class TransformationSubFile {
         this.fileName = fileName;
     }
 
-    @SuppressWarnings("javadoc")
     public Long getTimestamp() {
         return timestamp;
     }
 
-    @SuppressWarnings("javadoc")
     public String getFileName() {
         return fileName;
     }

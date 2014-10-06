@@ -28,67 +28,54 @@ public class ScheduledTask extends Task {
         throw new UnsupportedOperationException("This method is not supposed to be called here");
     }
 
-    @SuppressWarnings("javadoc")
     public List<String> getMinutesList() {
         return minutesList;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMinutesList(List<String> minutesList) {
         this.minutesList = minutesList;
     }
 
-    @SuppressWarnings("javadoc")
     public List<String> getHoursList() {
         return hoursList;
     }
 
-    @SuppressWarnings("javadoc")
     public void setHoursList(List<String> hoursList) {
         this.hoursList = hoursList;
     }
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public void setId(String id) {
         this.id = id;
     }
 
-    @SuppressWarnings("javadoc")
     public Calendar getFirstRun() {
         return firstRun;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFirstRun(Calendar firstRun) {
         this.firstRun = firstRun;
     }
 
-    @SuppressWarnings("javadoc")
     public Frequency getFrequency() {
         return frequency;
     }
 
-    @SuppressWarnings("javadoc")
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getXmonths() {
         return xmonths;
     }
 
-    @SuppressWarnings("javadoc")
     public void setXmonths(Integer xmonths) {
         this.xmonths = xmonths;
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getMinute() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -96,7 +83,6 @@ public class ScheduledTask extends Task {
         return firstRun.get(Calendar.MINUTE);
     }
 
-    @SuppressWarnings("javadoc")
     public void setMinute(Integer minute) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -104,7 +90,6 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.MINUTE, minute);
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getHour() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -112,7 +97,6 @@ public class ScheduledTask extends Task {
         return firstRun.get(Calendar.HOUR_OF_DAY);
     }
 
-    @SuppressWarnings("javadoc")
     public void setHour(Integer hour) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -120,7 +104,6 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.HOUR_OF_DAY, hour);
     }
 
-    @SuppressWarnings("javadoc")
     public String getDate() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -128,7 +111,6 @@ public class ScheduledTask extends Task {
         return DateUtil.date2String(firstRun.getTime(), "");
     }
 
-    @SuppressWarnings("javadoc")
     public void setDate(String date) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -140,7 +122,6 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.YEAR, Integer.valueOf(dateComponents[2]));
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getDay() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -148,7 +129,6 @@ public class ScheduledTask extends Task {
         return firstRun.get(Calendar.DAY_OF_MONTH);
     }
 
-    @SuppressWarnings("javadoc")
     public void setDay(Integer day) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -156,7 +136,6 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.DAY_OF_MONTH, day);
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getMonth() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -164,7 +143,6 @@ public class ScheduledTask extends Task {
         return firstRun.get(Calendar.MONTH);
     }
 
-    @SuppressWarnings("javadoc")
     public void setMonth(Integer month) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -172,7 +150,6 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.MONTH, month - 1);
     }
 
-    @SuppressWarnings("javadoc")
     public Integer getYear() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -180,7 +157,6 @@ public class ScheduledTask extends Task {
         return firstRun.get(Calendar.YEAR);
     }
 
-    @SuppressWarnings("javadoc")
     public void setYear(Integer year) {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -188,17 +164,14 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.YEAR, year);
     }
 
-    @SuppressWarnings("javadoc")
     public String getFirstRunString() {
         return DateUtil.date2String(firstRun.getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS);
     }
 
-    @SuppressWarnings("javadoc")
     public String getFirstRunStringHour() {
         return DateUtil.date2String(firstRun.getTime(), "HH:mm");
     }
 
-    @SuppressWarnings("javadoc")
     public String getFirstRunStringDate() {
 
         return DateUtil.date2String(firstRun.getTime(), "dd/MM/yyyy");

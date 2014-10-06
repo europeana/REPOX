@@ -37,122 +37,98 @@ public class MetadataTransformation {
     private boolean             versionTwo      = false;
     private boolean             bDeleteOldFiles = false;
 
-    @SuppressWarnings("javadoc")
     public void setSourceSchema(String schema) {
         sourceSchema = schema;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSourceSchema() {
         return sourceSchema;
     }
 
-    @SuppressWarnings("javadoc")
     public void setMDRCompliant(boolean mdrCompliant) {
         bMDRCompliant = mdrCompliant;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isMDRCompliant() {
         return bMDRCompliant;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isVersionTwo() {
         return versionTwo;
     }
 
-    @SuppressWarnings("javadoc")
     public void setVersionTwo(boolean versionTwo) {
         this.versionTwo = versionTwo;
     }
 
-    @SuppressWarnings("javadoc")
     public String getId() {
         return id;
     }
 
-    @SuppressWarnings("javadoc")
     public void setId(String id) {
         this.id = id;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDescription() {
         return description;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @SuppressWarnings("javadoc")
     public String getSourceFormat() {
         return sourceFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setSourceFormat(String sourceFormat) {
         this.sourceFormat = sourceFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDestinationFormat() {
         return destinationFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDestinationFormat(String destinationFormat) {
         this.destinationFormat = destinationFormat;
     }
 
-    @SuppressWarnings("javadoc")
     public String getStylesheet() {
         return stylesheet;
     }
 
-    @SuppressWarnings("javadoc")
     public void setStylesheet(String stylesheet) {
         this.stylesheet = stylesheet;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isEditable() {
         return bEditable;
     }
 
-    @SuppressWarnings("javadoc")
     public void setEditable(boolean editable) {
         this.bEditable = editable;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDestSchema() {
         return destSchema;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDestSchema(String destSchema) {
         this.destSchema = destSchema;
     }
 
-    @SuppressWarnings("javadoc")
     public String getDestNamespace() {
         return destNamespace;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDestNamespace(String destNamespace) {
         this.destNamespace = destNamespace;
     }
 
-    @SuppressWarnings("javadoc")
     public boolean isDeleteOldFiles() {
         return bDeleteOldFiles;
     }
 
-    @SuppressWarnings("javadoc")
     public void setDeleteOldFiles(boolean deleteOldFiles) {
         this.bDeleteOldFiles = deleteOldFiles;
     }
