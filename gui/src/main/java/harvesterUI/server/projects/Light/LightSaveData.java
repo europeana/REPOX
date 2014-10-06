@@ -31,11 +31,11 @@ import java.util.TreeMap;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.configuration.DefaultRepoxManager;
+import pt.utl.ist.configuration.LightRepoxManager;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.LightDataSourceContainer;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
@@ -112,7 +112,7 @@ public class LightSaveData {
     public static SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException {
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
-            DefaultRepoxManager repoxManagerDefault = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            LightRepoxManager repoxManagerDefault = (LightRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
 
             ResponseState urlStatus = Util.getUrlStatus(dataSourceUI);
             if(urlStatus != null){
@@ -545,7 +545,7 @@ public class LightSaveData {
                     while (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceOai.getId()) != null) {
                         dataSourceOai.setId(dataSourceOai.getId() + "_new");
                     }
-                    DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSourceOai);
+                    LightDataSourceContainer dataSourceContainer = new LightDataSourceContainer(dataSourceOai);
                     dataProvider.getDataSourceContainers().put(dataSourceOai.getId(),dataSourceContainer);
 
                     dataSourceOai.initAccessPoints();

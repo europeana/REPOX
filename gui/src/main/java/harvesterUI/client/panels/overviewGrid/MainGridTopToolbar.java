@@ -100,7 +100,7 @@ public class MainGridTopToolbar extends ToolBar{
         viewMenu.add(dps);
         viewMenu.add(dss);
 
-        if(HarvesterUI.getProjectType() != ProjectType.EUROPEANA){
+        if(HarvesterUI.getProjectType() != ProjectType.DEFAULT){
             viewButton.getMenu().getItems().remove(viewButton.getMenu().getItemByItemId("aggs"));
             ((ToggleButton)viewButton.getMenu().getItemByItemId("dps")).toggle();
         }

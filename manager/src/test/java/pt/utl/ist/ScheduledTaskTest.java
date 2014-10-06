@@ -1,5 +1,8 @@
 package pt.utl.ist;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +12,6 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.ScheduledTask.Frequency;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class ScheduledTaskTest {
 	private ScheduledTask goodTask;

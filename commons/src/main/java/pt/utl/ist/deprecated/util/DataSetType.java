@@ -20,7 +20,6 @@ package pt.utl.ist.deprecated.util;
 // * permissions and limitations under the Licence.
 // */
 //
-//package eu.europeana.repox2sip.models;
 //
 ///**
 // * @author Nicola Aloia   <nicola.aloia@isti.cnr.it>

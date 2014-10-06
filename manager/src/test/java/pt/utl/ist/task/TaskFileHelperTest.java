@@ -1,5 +1,13 @@
 package pt.utl.ist.task;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Assert;
@@ -8,7 +16,11 @@ import org.junit.Test;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.*;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.LightDataManager;
+import pt.utl.ist.dataProvider.LightDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
@@ -16,24 +28,10 @@ import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.task.DataSourceExportTask;
-import pt.utl.ist.task.DataSourceIngestTask;
-import pt.utl.ist.task.ScheduledTask;
-import pt.utl.ist.task.Task;
-import pt.utl.ist.task.TaskFileHelper;
-import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.util.CompareUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
 
 public class TaskFileHelperTest {
 	TaskManager taskManager;
@@ -54,22 +52,22 @@ public class TaskFileHelperTest {
 
         DataSource dataSourceOai = new OaiDataSource(newDP, "dummyDSIngest", "test DS", "schema", "namespace", MetadataFormat.oai_dc.toString(),
                 "http://dummy.oai.rp", "noset", new IdProvidedRecordIdPolicy(), null);
-        dataSourceContainers.put(dataSourceOai.getId(), new DefaultDataSourceContainer(dataSourceOai));
+        dataSourceContainers.put(dataSourceOai.getId(), new LightDataSourceContainer(dataSourceOai));
 
         //DataSource dataSourceDImporter = new DataSourceDirectoryImporter(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.oai_dc.toString(),
         DataSource dataSourceDImporter = new DirectoryImporterDataSource(newDP, "dummyDSExport1", "", "", "test DS", MetadataFormat.ese.toString(),
                 new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.marc.CharacterEncoding.UTF_8,
                  "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
-        dataSourceContainers.put(dataSourceDImporter.getId(), new DefaultDataSourceContainer(dataSourceDImporter));
+        dataSourceContainers.put(dataSourceDImporter.getId(), new LightDataSourceContainer(dataSourceDImporter));
 
         DataSource dataSourceDImporter1 = new DirectoryImporterDataSource(newDP, "dummyDSExport2", "", "", "test DS", MetadataFormat.ISO2709.toString(),
                 new Iso2709FileExtractStrategy("pt.utl.ist.marc.iso2709.IteratorIso2709"), new FolderFileRetrieveStrategy(), pt.utl.ist.marc.CharacterEncoding.UTF_8,
                 "src/test/resources/directoryImportTest", new IdGeneratedRecordIdPolicy(), null, null, null);
 
-        dataSourceContainers.put(dataSourceDImporter1.getId(), new DefaultDataSourceContainer(dataSourceDImporter1));
+        dataSourceContainers.put(dataSourceDImporter1.getId(), new LightDataSourceContainer(dataSourceDImporter1));
 
-        ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(newDP);
+        ((LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(newDP);
 
         Calendar now = Calendar.getInstance();
         now.set(Calendar.MILLISECOND, 0); // Because millisecond is not saved to file, not setting this would cause difference after loading

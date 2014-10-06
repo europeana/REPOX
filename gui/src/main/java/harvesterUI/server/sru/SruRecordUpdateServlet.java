@@ -34,7 +34,6 @@ import org.dom4j.Element;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.recordPackage.RecordRepox;
@@ -65,8 +64,8 @@ public class SruRecordUpdateServlet extends HttpServlet {
         if(projectType == ProjectType.LIGHT){
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
-        }else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
+        }else if(projectType == ProjectType.DEFAULT){
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         }
         try {

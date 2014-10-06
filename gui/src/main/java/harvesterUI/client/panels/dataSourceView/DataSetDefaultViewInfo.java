@@ -66,7 +66,7 @@ public class DataSetDefaultViewInfo {
         infoSetFolder.add(metadataSchema,formData);
 
         // Europeana Only
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name = new LabelField();
             name.setFieldLabel(HarvesterUI.CONSTANTS.name());
             infoSetFolder.add(name,formData);
@@ -197,7 +197,7 @@ public class DataSetDefaultViewInfo {
         deletedRecords.setValue(dataSourceUI.getDeletedRecords());
 
         // Europeana Only
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.setValue(dataSourceUI.getName());
             nameCode.setValue(dataSourceUI.getNameCode());
         }

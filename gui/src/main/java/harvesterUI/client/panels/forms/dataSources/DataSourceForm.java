@@ -320,7 +320,7 @@ public abstract class DataSourceForm extends DefaultFormPanel {
         dataSourceUI.setTags(dataSourceTagContainer.getTags());
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             String exprtP;
             if(exportPath == null) {
                 exprtP = HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/" + record_set;
@@ -334,7 +334,7 @@ public abstract class DataSourceForm extends DefaultFormPanel {
 
         if(dataSourceUI.getExportDirectory().isEmpty()) {
             String dsExportPath;
-            if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+            if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
                 dsExportPath = HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/" + record_set;
             else
                 dsExportPath = HarvesterUI.getMainConfigurationData().getRepositoryFolderPath() + "/" + record_set + "/export";

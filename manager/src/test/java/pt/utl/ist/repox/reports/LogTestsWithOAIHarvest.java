@@ -1,5 +1,10 @@
 package pt.utl.ist.repox.reports;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Assert;
@@ -10,18 +15,13 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.LightDataManager;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 
 public class LogTestsWithOAIHarvest {
     private final String DATA_PROVIDER_ID = "DP_OAI_TEST";
@@ -34,7 +34,7 @@ public class LogTestsWithOAIHarvest {
     private final String SOURCE_METADATA_FORMAT = MetadataFormat.ese.name();
     private final int RECORD_COUNT = 37;
 
-    DefaultDataManager dataManager;
+    LightDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceOai;
 
@@ -42,7 +42,7 @@ public class LogTestsWithOAIHarvest {
     public void setUp() {
         try {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-            dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            dataManager = (LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             provider = dataManager.createDataProvider(DATA_PROVIDER_ID, "pt", "DP_description");
             dataSourceOai = dataManager.createDataSourceOai(provider.getId(), DATA_SOURCE_ID, DATA_SOURCE_DESCRIPTION,

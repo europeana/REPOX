@@ -1,4 +1,4 @@
-package harvesterUI.server.projects.europeana;
+package harvesterUI.server.projects;
 
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.DataType;
@@ -6,7 +6,6 @@ import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
 import harvesterUI.server.dataManagement.filters.FilterManagementUtil;
 import harvesterUI.server.dataManagement.filters.FilteredDataResponse;
-import harvesterUI.server.projects.ProjectManager;
 import harvesterUI.server.userManagement.UserManagementServiceImpl;
 import harvesterUI.server.util.PagingUtil;
 import harvesterUI.server.util.StatisticsUtil;
@@ -23,7 +22,7 @@ import harvesterUI.shared.filters.FilterAttribute;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.filters.FilterType;
 import harvesterUI.shared.search.BaseSearchResult;
-import harvesterUI.shared.search.EuropeanaSearchResult;
+import harvesterUI.shared.search.DefaultBaseSearchResult;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
@@ -51,20 +50,19 @@ import javax.mail.AuthenticationFailedException;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.EuropeanaRepoxConfiguration;
-import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
-import pt.utl.ist.configuration.EuropeanaRepoxManager;
+import pt.utl.ist.configuration.DefaultRepoxManager;
+import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.Countries;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.rest.dataProvider.Aggregator;
-import pt.utl.ist.rest.dataProvider.DefaultDataManager;
-import pt.utl.ist.rest.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.rest.dataProvider.DefualtDataProvider;
 import pt.utl.ist.rest.statistics.DefaultRepoxStatistics;
 import pt.utl.ist.rest.statistics.DefaultStatisticsManager;
 import pt.utl.ist.rest.util.DefaultEmailUtil;
@@ -88,12 +86,12 @@ import eu.europeana.definitions.domain.Country;
  * Date: 30-04-2012
  * Time: 11:29
  */
-public class EuropeanaManager extends ProjectManager {
+public class DefaultProjectManager extends ProjectManager {
 
     private int filteredDataSize;
 
-    public EuropeanaManager() {
-        ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
+    public DefaultProjectManager() {
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
     }
 
     public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType, String username) throws ServerSideException {
@@ -168,7 +166,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public AdminInfo loadAdminFormInfo() throws ServerSideException{
         try{
-            EuropeanaRepoxConfiguration configuration = (EuropeanaRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration();
+            DefaultRepoxConfiguration configuration = (DefaultRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration();
             AdminInfo adminInfo = new AdminInfo();
             adminInfo.set("repositoryFolder",configuration.getRepositoryPath());
             adminInfo.set("configFilesFolder",configuration.getXmlConfigPath());
@@ -434,12 +432,12 @@ public class EuropeanaManager extends ProjectManager {
                             countryMap.get(dataProvider.getCountry()) + "\"/> " + countryMap.get(dataProvider.getCountry());
                     values.add(new FilterAttribute(showName,dataProvider.getCountry()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
-                    DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider)dataProvider;
+                    DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider)dataProvider;
                     values.add(new FilterAttribute(dataProviderEuropeana.getDataSetType().name(),dataProviderEuropeana.getDataSetType().name()));
                 }
             }
             else if(object instanceof DataSourceContainer){
-                DefualtDataProvider parent = (DefualtDataProvider)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
+                DefaultDataProvider parent = (DefaultDataProvider)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
                         getDataProviderParent(((DataSourceContainer) object).getDataSource().getId());
                 if(filterType.equals(FilterType.COUNTRY)){
                     String showName = "<img src=\"resources/images/countries/" +
@@ -566,7 +564,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public SaveDataResponse saveDataProvider(boolean update, DataProviderUI dataProviderUI, int pageSize, String username) throws ServerSideException {
         try{
-            return EuropeanaSaveData.saveDataProvider(update, dataProviderUI,pageSize,username);
+            return DefaultSaveData.saveDataProvider(update, dataProviderUI,pageSize,username);
         }catch (Exception e){
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
@@ -595,7 +593,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public String deleteDataProviders(List<DataProviderUI> dataProviderUIs) throws ServerSideException{
         try{
-            return EuropeanaSaveData.deleteDataProviders(dataProviderUIs);
+            return DefaultSaveData.deleteDataProviders(dataProviderUIs);
         }catch (Exception e){
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
@@ -604,7 +602,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException {
         try{
-            return EuropeanaSaveData.saveDataSource(update, type, originalDSset, dataSourceUI,pageSize);
+            return DefaultSaveData.saveDataSource(update, type, originalDSset, dataSourceUI,pageSize);
         }catch (Exception e){
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
@@ -621,7 +619,7 @@ public class EuropeanaManager extends ProjectManager {
             else if(checkUrlResult.equals("URL_NOT_EXISTS"))
                 return "URL_NOT_EXISTS";
 
-            EuropeanaSaveData.addAllOAIURL(url.trim(),dataProviderID,dsSchema,dsNamespace,dsMTDFormat,dataSetOperationsService.checkOAIURL(url.trim()),
+            DefaultSaveData.addAllOAIURL(url.trim(),dataProviderID,dsSchema,dsNamespace,dsMTDFormat,dataSetOperationsService.checkOAIURL(url.trim()),
                     name,nameCode,exportPath);
         }catch (Exception e){
             e.printStackTrace();
@@ -655,7 +653,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public String deleteDataSources(List<DataSourceUI> dataSourceUIs) throws ServerSideException{
         try{
-            return EuropeanaSaveData.deleteDataSources(dataSourceUIs);
+            return DefaultSaveData.deleteDataSources(dataSourceUIs);
         }catch (Exception e){
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
@@ -664,7 +662,7 @@ public class EuropeanaManager extends ProjectManager {
 
     public Boolean dataSourceExport(DataSourceUI dataSourceUI) throws ServerSideException{
         try {
-            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             DataSourceContainer dataSourceContainer = repoxManagerEuropeana.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
 
             DataSource dataSource = dataSourceContainer.getDataSource();
@@ -818,7 +816,7 @@ public class EuropeanaManager extends ProjectManager {
     }
 
     private DataProviderUI parseDataProviderEuropeana(DataProvider dataProvider, AggregatorUI aggregatorUI)  throws ServerSideException{
-        DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider) dataProvider;
+        DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider) dataProvider;
         String country;
         if(dataProviderEuropeana.getCountry() != null)
             country = dataProviderEuropeana.getCountry();
@@ -946,17 +944,17 @@ public class EuropeanaManager extends ProjectManager {
                     String name = ((Aggregator) data).getName();
                     String nameCode = ((Aggregator) data).getNameCode();
                     if(Util.compareStrings(searchValue,name) || Util.compareStrings(searchValue, nameCode)){
-                        EuropeanaSearchResult agg = createModelEuropeana(id, name, nameCode, "", "", DataType.AGGREGATOR);
+                        DefaultBaseSearchResult agg = createModelEuropeana(id, name, nameCode, "", "", DataType.AGGREGATOR);
                         searchData.add(agg);
                     }
                 }else if(data instanceof DataProvider){
                     String id = ((DataProvider) data).getId();
                     String name = ((DataProvider) data).getName();
-                    String nameCode = ((DefualtDataProvider) data).getNameCode();
+                    String nameCode = ((DefaultDataProvider) data).getNameCode();
                     String description = ((DataProvider) data).getDescription();
                     if(Util.compareStrings(searchValue, description) ||
                             Util.compareStrings(searchValue, name) || Util.compareStrings(searchValue, nameCode)){
-                        EuropeanaSearchResult dp = createModelEuropeana(id, name, nameCode, description, "", DataType.DATA_PROVIDER);
+                        DefaultBaseSearchResult dp = createModelEuropeana(id, name, nameCode, description, "", DataType.DATA_PROVIDER);
                         searchData.add(dp);
                     }
                 }else if(data instanceof DataSourceContainer){
@@ -968,7 +966,7 @@ public class EuropeanaManager extends ProjectManager {
                     if(Util.compareStrings(searchValue, id) || Util.compareStrings(searchValue, description) ||
                             Util.compareStrings(searchValue, name) || Util.compareStrings(searchValue, nameCode)
                             || Util.compareStrings(searchValue, records)){
-                        EuropeanaSearchResult ds = createModelEuropeana(id, name, nameCode, description, id, DataType.DATA_SET);
+                        DefaultBaseSearchResult ds = createModelEuropeana(id, name, nameCode, description, id, DataType.DATA_SET);
                         ds.set("records",records);
                         searchData.add(ds);
                     }

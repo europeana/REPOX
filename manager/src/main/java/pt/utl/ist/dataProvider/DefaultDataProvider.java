@@ -1,10 +1,8 @@
-package pt.utl.ist.rest.dataProvider;
+package pt.utl.ist.dataProvider;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.util.ProviderType;
 
 import java.net.URL;
@@ -17,7 +15,7 @@ import java.util.HashMap;
  * Time: 13:27
  * To change this template use File | Settings | File Templates.
  */
-public class DefualtDataProvider extends DataProvider{
+public class DefaultDataProvider extends DataProvider{
     private String nameCode;
     private URL homePage;
     private ProviderType dataSetType;
@@ -86,7 +84,7 @@ public class DefualtDataProvider extends DataProvider{
 
 
     /**
-     * Create new DataProviderEuropeana
+     * Create new DefaultDataProvider
      * @param id
      * @param name
      * @param country
@@ -96,13 +94,13 @@ public class DefualtDataProvider extends DataProvider{
      * @param homePage
      * @param dataSetType
      */
-    public DefualtDataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, URL homePage, ProviderType dataSetType) {
+    public DefaultDataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, URL homePage, ProviderType dataSetType) {
         super(id, name, country, description, dataSourceContainers);
         this.nameCode = nameCode;
         this.homePage = homePage;
         this.dataSetType = dataSetType;
     }
 
-    public DefualtDataProvider() {
+    public DefaultDataProvider() {
     }
 }

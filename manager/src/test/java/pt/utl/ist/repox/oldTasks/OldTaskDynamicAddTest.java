@@ -1,5 +1,9 @@
 package pt.utl.ist.repox.oldTasks;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Before;
@@ -9,17 +13,13 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.LightDataManager;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.task.OldTaskReviewer;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 
 public class OldTaskDynamicAddTest {
     private final String DATA_PROVIDER_ID = "DP_OAI_TEST";
@@ -32,7 +32,7 @@ public class OldTaskDynamicAddTest {
     private final String SOURCE_METADATA_FORMAT = MetadataFormat.ese.name();
     private final int RECORD_COUNT = 37;
 
-    DefaultDataManager dataManager;
+    LightDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceOai;
 
@@ -41,7 +41,7 @@ public class OldTaskDynamicAddTest {
     @Before
     public void setUp() {
         ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-        dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+        dataManager = (LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 //        addDataSet();
     }
 

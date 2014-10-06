@@ -6,7 +6,7 @@ import org.dom4j.Element;
 
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
-import pt.utl.ist.rest.services.web.DefaultWebServices;
+import pt.utl.ist.rest.services.web.LightWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
@@ -31,10 +31,10 @@ import java.util.List;
  * Time: 21:53
  * To change this template use File | Settings | File Templates.
  */
-public class ResponseRestLight extends ResponseOperations implements ResponseRest {
+public class LightResponseRest extends ResponseOperations implements ResponseRest {
     public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServicesLight) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
 
-        DefaultWebServices webServices = (DefaultWebServices)webServicesLight;
+        LightWebServices webServices = (LightWebServices)webServicesLight;
 
         RestRequest restRequest = RestUtils.processRequest(RestServlet.BASE_URI, request);
         response.setContentType("text/xml");

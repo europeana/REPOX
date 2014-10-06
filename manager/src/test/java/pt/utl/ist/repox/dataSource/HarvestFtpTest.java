@@ -1,5 +1,12 @@
 package pt.utl.ist.repox.dataSource;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Assert;
@@ -11,19 +18,12 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.LightDataManager;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class HarvestFtpTest {
     private final String DATA_PROVIDER_ID = "DP_FTP";
@@ -50,7 +50,7 @@ public class HarvestFtpTest {
 
     private final int RECORD_COUNT =1849;
 
-    DefaultDataManager dataManager;
+    LightDataManager dataManager;
     private DataProvider provider;
     private DataSource dataSourceFtp;
 
@@ -58,7 +58,7 @@ public class HarvestFtpTest {
     public void setUp() {
         try {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-            dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            dataManager = (LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             provider = dataManager.createDataProvider(DATA_PROVIDER_ID, "pt", "DP_description");
 

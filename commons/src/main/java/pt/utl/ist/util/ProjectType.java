@@ -8,5 +8,5 @@ package pt.utl.ist.util;
  */
 public enum ProjectType{
     LIGHT,
-    EUROPEANA
+    DEFAULT
 }

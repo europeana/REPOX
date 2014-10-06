@@ -70,7 +70,7 @@ public class StatisticsPanel extends ContentPanel{
     private void parseStatistics() {
         BaseTreeModel treeModel = new BaseTreeModel();
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             BaseTreeModel agg = createNewNode(HarvesterUI.CONSTANTS.aggregators(), formatNumber(statistics.getAggregators()));
             treeModel.add(agg);
         }

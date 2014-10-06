@@ -1,5 +1,9 @@
 package pt.utl.ist.repox.mdr;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
@@ -11,12 +15,10 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.util.exceptions.*;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 
 public class SaveMappingsTest {
     private final String TRANSFORM_ID_1 = "TRANS_TEST_1";

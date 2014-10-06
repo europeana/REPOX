@@ -16,8 +16,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.LightDataManager;
+import pt.utl.ist.dataProvider.LightDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.util.date.DateUtil;
@@ -107,9 +107,9 @@ public class Test {
         DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers);
         DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGeneratedRecordIdPolicy(), null);
 
-        dataSourceContainers.put(dataSourceZ3950.getId(), new DefaultDataSourceContainer(dataSourceZ3950));
+        dataSourceContainers.put(dataSourceZ3950.getId(), new LightDataSourceContainer(dataSourceZ3950));
 
-        ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(dummyDP);
+        ((LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager()).addDataProvider(dummyDP);
         dataSourceZ3950.initAccessPoints();
         ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager().initialize(dummyDP.getDataSourceContainers());
 

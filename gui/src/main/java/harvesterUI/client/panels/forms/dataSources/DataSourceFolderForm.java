@@ -469,7 +469,7 @@ public class DataSourceFolderForm extends DataSourceForm {
         exportPath.setValue(dataSourceUI.getExportDirectory());
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.setValue(dataSourceUI.getName());
             nameCode.setValue(dataSourceUI.getNameCode());
         }
@@ -503,7 +503,7 @@ public class DataSourceFolderForm extends DataSourceForm {
         authenticationCombo.setValue(authenticationCombo.getStore().getModels().get(0));
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.clear();
             nameCode.clear();
         }
@@ -616,7 +616,7 @@ public class DataSourceFolderForm extends DataSourceForm {
 
         dataSourceUI.setMarcFormat(dataSourceSchemaForm.getMarcFormat().trim());
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             saveDataSource(dataSourceUI,oldDataSetId, DatasetType.FOLDER,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
                     metadataFormat,name.getValue(),nameCode.getValue(),exportPath.getValue());
         else

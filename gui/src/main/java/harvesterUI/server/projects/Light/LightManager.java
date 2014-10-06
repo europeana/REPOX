@@ -13,7 +13,7 @@ import java.util.List;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.DefaultRepoxManager;
+import pt.utl.ist.configuration.LightRepoxManager;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 
@@ -86,7 +86,7 @@ public class LightManager extends EuDMLAndLightManager {
 
     public Boolean dataSourceExport(DataSourceUI dataSourceUI) throws ServerSideException{
         try {
-            DefaultRepoxManager repoxManagerDefault = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            LightRepoxManager repoxManagerDefault = (LightRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             DataSourceContainer dataSourceContainer = repoxManagerDefault.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
 
             DataSource dataSource = dataSourceContainer.getDataSource();

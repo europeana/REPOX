@@ -111,7 +111,7 @@ public class BrowseFilterPanel extends ContentPanel {
         DataFilter tagFilter = new DataFilter("Tag","tag",new TagsFilter(this));
         DataFilter records = new DataFilter(HarvesterUI.CONSTANTS.records(),"records",new RecordsFilter(this));
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             DataFilter type = new DataFilter(HarvesterUI.CONSTANTS.type(),"type",new TypeFilter(this));
             attributesListStore.add(type);
         }

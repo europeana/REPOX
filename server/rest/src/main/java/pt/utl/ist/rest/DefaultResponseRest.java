@@ -6,7 +6,7 @@ import org.dom4j.Element;
 
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
-import pt.utl.ist.rest.services.web.EuropeanaWebServices;
+import pt.utl.ist.rest.services.web.DefaultWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
@@ -31,10 +31,10 @@ import java.util.List;
  * Time: 22:01
  * To change this template use File | Settings | File Templates.
  */
-public class ResponseRestEuropeana extends ResponseOperations implements ResponseRest {
+public class DefaultResponseRest extends ResponseOperations implements ResponseRest {
     public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServicesEuropeana) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
 
-        EuropeanaWebServices webServices = (EuropeanaWebServices)webServicesEuropeana;
+        DefaultWebServices webServices = (DefaultWebServices)webServicesEuropeana;
 
         RestRequest restRequest = RestUtils.processRequest(RestServlet.BASE_URI, request);
         response.setContentType("text/xml");

@@ -25,7 +25,7 @@ public class CreateDataProviderButton extends WidgetWithRole{
     public CreateDataProviderButton(ToolBar toolBar) {
         if(drawWidget){
             Button createMainDataButton;
-            if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA){
+            if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
                 createMainDataButton = new Button(HarvesterUI.CONSTANTS.createAggregator());
                 createMainDataButton.setIcon(HarvesterUI.ICONS.add());
                 createMainDataButton.setId("firstToolBarButton");

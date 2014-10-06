@@ -1,5 +1,13 @@
 package pt.utl.ist.repox.directoryImporter;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Assert;
@@ -10,8 +18,8 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.LightDataManager;
+import pt.utl.ist.dataProvider.LightDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
@@ -23,14 +31,6 @@ import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.statistics.RecordCount;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class HarvestTest {
     private final String DATA_PROVIDER_ID = "DP_DIMPORTER";
@@ -49,7 +49,7 @@ public class HarvestTest {
     public void setUp() {
         try {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-            DefaultDataManager dataManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
+            LightDataManager dataManager = (LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
             DataProvider newDataProvider = new DataProvider(DATA_PROVIDER_ID, "data provider", "pt", "it's new", dataSourceContainers);
@@ -99,7 +99,7 @@ public class HarvestTest {
                     namespaces);
             dataSourceDirectoryImporter.setCharacterEncoding(CharacterEncoding.UTF_8);
 
-            dataSourceContainers.put(dataSourceDirectoryImporter.getId(), new DefaultDataSourceContainer(dataSourceDirectoryImporter));
+            dataSourceContainers.put(dataSourceDirectoryImporter.getId(), new LightDataSourceContainer(dataSourceDirectoryImporter));
             dataManager.addDataProvider(newDataProvider);
 
             ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getAccessPointsManager().initialize(dataSourceContainers);

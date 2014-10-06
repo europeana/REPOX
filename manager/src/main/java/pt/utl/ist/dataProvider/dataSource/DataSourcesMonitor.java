@@ -1,5 +1,15 @@
 package pt.utl.ist.dataProvider.dataSource;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -14,12 +24,6 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.date.DateUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  */

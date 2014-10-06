@@ -177,7 +177,7 @@ public class AdminForm extends VerticalPanel {
         defaultExportFolderField.setAllowBlank(false);
 
         // Only for Europeana version
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             simple.add(defaultExportFolderField, formData);
 
         // Only for Eudml version

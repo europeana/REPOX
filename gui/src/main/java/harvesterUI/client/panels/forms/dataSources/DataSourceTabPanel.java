@@ -46,7 +46,7 @@ public class DataSourceTabPanel extends FormDialog {
         dataSourceZ39Form = new DataSourceZ39Form(formData);
         dataSourceSruForm = new DataSourceSruForm(formData);
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             dataSourceOAIForm.addEuropeanaFields();
             dataSourceFolderForm.addEuropeanaFields();
             dataSourceZ39Form.addEuropeanaFields();

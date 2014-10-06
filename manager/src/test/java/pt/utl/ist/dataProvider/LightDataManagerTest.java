@@ -1,5 +1,14 @@
 package pt.utl.ist.dataProvider;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.junit.After;
@@ -10,29 +19,18 @@ import org.junit.Test;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
-import pt.utl.ist.util.*;
+import pt.utl.ist.util.CompareUtil;
+import pt.utl.ist.util.PropertyUtil;
+import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-public class DefaultDataManagerTest {
+public class LightDataManagerTest {
     private final String OUTPUT_CONFIGURATION_FILE_NAME = DefaultRepoxContextUtil.DATA_PROVIDERS_FILENAME;
     private final String OUTPUT_CONFIGURATION_FILE_NAME_ALT = "dataProviders.temp.xml";
     public static final String CONFIG_FILE = "configuration.properties";
@@ -53,7 +51,7 @@ public class DefaultDataManagerTest {
             configurationDefault = new DefaultRepoxConfiguration(configurationProperties);
 
             File oldTasksFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getConfiguration().getXmlConfigPath(), DefaultRepoxContextUtil.OLD_TASKS_FILENAME);
-            DefaultDataManager dataManager = new DefaultDataManager(configurationFile, transformationManager,
+            LightDataManager dataManager = new LightDataManager(configurationFile, transformationManager,
                     metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
 
             DataProvider provider = dataManager.createDataProvider("DPName", "pt", "DP_description");
@@ -149,7 +147,7 @@ public class DefaultDataManagerTest {
         MetadataSchemaManager metadataSchemaManager = ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getMetadataSchemaManager();
 
         File oldTasksFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getConfiguration().getXmlConfigPath(), DefaultRepoxContextUtil.OLD_TASKS_FILENAME);
-        DefaultDataManager dataManager = new DefaultDataManager(configurationFile, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
+        LightDataManager dataManager = new LightDataManager(configurationFile, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
 
         List<DataProvider> dataProviders = getTestDataProviders();
         for(DataProvider dp: dataProviders) {
@@ -158,10 +156,10 @@ public class DefaultDataManagerTest {
 
         Element dataSourcesElement = XmlUtil.getRootElement(configurationFile);
         //
-        DefaultDataManager dataManager2 = new DefaultDataManager(configurationFile, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
+        LightDataManager dataManager2 = new LightDataManager(configurationFile, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
         List<DataProvider> loadedDataProviders = dataManager2.getDataProviders();
 
-        DefaultDataManager dataManagerReloaded = new DefaultDataManager(configurationFileAlt, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
+        LightDataManager dataManagerReloaded = new LightDataManager(configurationFileAlt, transformationManager, metadataSchemaManager, repositoryPath, oldTasksFile,configurationDefault);
         for(DataProvider dp: loadedDataProviders) {
             dataManagerReloaded.addDataProvider(dp);
         }

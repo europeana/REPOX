@@ -91,7 +91,7 @@ public class SearchComboBox extends ComboBox<ModelData>{
     }
 
     private String getSearchTemplate(){
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             return getEuropeanaSearchTemplate();
         else
             return getLightSearchTemplate();

@@ -89,7 +89,7 @@ public class HistoryController extends Controller {
             } else
                 History.newItem("CREATE_AGGREGATOR",false);
         }else if (type == AppEvents.ViewDataProviderForm) {
-            if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+            if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
                 if(event.getData() instanceof DataProviderUI) {
                     DataProviderUI dataProviderUI = (DataProviderUI) event.getData();
                     History.newItem("EDIT_DP?id=" + dataProviderUI.getName(),false);

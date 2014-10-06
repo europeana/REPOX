@@ -11,5 +11,5 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public enum ProjectType implements IsSerializable{
     LIGHT,
-    EUROPEANA
+    DEFAULT
 }

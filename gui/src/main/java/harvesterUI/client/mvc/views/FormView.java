@@ -128,7 +128,7 @@ public class FormView extends View {
         newSchemaDialog = new NewSchemaDialog();
         dataSourceTabPanel = new DataSourceTabPanel();
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA){
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
             aggregatorForm = new AggregatorForm();
             dataProviderForm = new DataProviderEuropeanaForm();
         }else{

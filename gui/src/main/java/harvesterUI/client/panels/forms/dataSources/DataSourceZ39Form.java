@@ -176,7 +176,7 @@ public class DataSourceZ39Form extends DataSourceForm {
 
         dataSourceUI.setExportDirectory(exportPath.getValue() != null ? exportPath.getValue().trim() : "");
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             saveDataSource(dataSourceUI,oldDataSetId, DatasetType.Z39,"info:lc/xmlns/marcxchange-v1.xsd","info:lc/xmlns/marcxchange-v1",
                     "MarcXchange",name.getValue(),nameCode.getValue(),exportPath.getValue());
         else
@@ -458,7 +458,7 @@ public class DataSourceZ39Form extends DataSourceForm {
         exportPath.setValue(dataSourceUI.getExportDirectory());
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.setValue(dataSourceUI.getName());
             nameCode.setValue(dataSourceUI.getNameCode());
         }
@@ -497,7 +497,7 @@ public class DataSourceZ39Form extends DataSourceForm {
             characterEncoding.setValue(characterEncoding.getStore().getModels().get(0));
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.clear();
             nameCode.clear();
         }

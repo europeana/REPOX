@@ -1,7 +1,7 @@
 package harvesterUI.server.dataManagement.filters;
 
 import harvesterUI.server.RepoxServiceImpl;
-import harvesterUI.server.projects.europeana.EuropeanaManager;
+import harvesterUI.server.projects.DefaultProjectManager;
 import harvesterUI.server.userManagement.UserManagementServiceImpl;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
@@ -19,14 +19,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.rest.dataProvider.Aggregator;
-import pt.utl.ist.rest.dataProvider.DefaultDataManager;
-import pt.utl.ist.rest.dataProvider.DefualtDataProvider;
 
 import com.extjs.gxt.ui.client.util.DateWrapper;
 
@@ -98,8 +98,8 @@ public class FilterManagementUtil {
         if(result != null && !result)
             deleteDataProviderFromList(dataProvider, dataToRemove);
 
-        if(RepoxServiceImpl.getProjectManager() instanceof EuropeanaManager){
-            DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider) dataProvider;
+        if(RepoxServiceImpl.getProjectManager() instanceof DefaultProjectManager){
+            DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider) dataProvider;
             result = isSameDPType(dataProviderEuropeana.getDataSetType().name(), filterQuery);
             if(result != null && !result)
                 deleteDataProviderFromList(dataProvider, dataToRemove);
@@ -299,7 +299,7 @@ public class FilterManagementUtil {
         try {
             DataProvider dataProvider = RepoxServiceImpl.getRepoxManager().getDataManager().getDataProviderParent(currentDataSource.getId());
 
-            if(RepoxServiceImpl.getProjectManager() instanceof EuropeanaManager){
+            if(RepoxServiceImpl.getProjectManager() instanceof DefaultProjectManager){
                 Aggregator aggregatorEuropeana = ((DefaultDataManager) RepoxServiceImpl.getRepoxManager().
                         getDataManager()).getAggregatorParent(dataProvider.getId());
 
@@ -398,7 +398,7 @@ public class FilterManagementUtil {
     public void deleteDataProviderFromList(DataProvider dataProvider, List<Object> dataToRemove){
         deleteSubDataSources(dataProvider,dataToRemove);
         dataToRemove.add(dataProvider);
-        if(RepoxServiceImpl.getProjectManager() instanceof EuropeanaManager)
+        if(RepoxServiceImpl.getProjectManager() instanceof DefaultProjectManager)
             deleteDataProviderAggregator(dataProvider,dataToRemove);
     }
 

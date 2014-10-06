@@ -166,7 +166,7 @@ public class DataSourceOAIForm extends DataSourceForm {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 // Check required data in Europeana
-                if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA && (name.getValue() == null || nameCode.getValue() == null)) {
+                if(HarvesterUI.getProjectType() == ProjectType.DEFAULT && (name.getValue() == null || nameCode.getValue() == null)) {
                     HarvesterUI.UTIL_MANAGER.getInfoBox(HarvesterUI.CONSTANTS.addAll(), HarvesterUI.CONSTANTS.pleaseFillNameAndNamecode());
                     return;
                 }
@@ -197,7 +197,7 @@ public class DataSourceOAIForm extends DataSourceForm {
                 String metadataFormat = dataSourceSchemaForm.getMetadataFormatCombo().getValue().getShortDesignation();
                 String schem = dataSourceSchemaForm.getSchema().getValue();
                 String mtdNamespace = dataSourceSchemaForm.getMetadataNamespace().getValue();
-                if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA){
+                if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
                     dataSetOperationsService.addAllOAIURL(oaiUrl.getValue().trim(), parent.getId(), schem,mtdNamespace,
                             metadataFormat, name.getValue(), nameCode.getValue(), exportPath.getValue(), callback);
                 }else {
@@ -302,7 +302,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         mdPrefixesCombo.hide();
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.setValue(dataSourceUI.getName());
             nameCode.setValue(dataSourceUI.getNameCode());
         }
@@ -328,7 +328,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         dataSourceSchemaForm.getMetadataFormatCombo().getStore().clearFilters();
 
         // Europeana Fields
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             name.clear();
             nameCode.clear();
         }
@@ -395,7 +395,7 @@ public class DataSourceOAIForm extends DataSourceForm {
 
         dataSourceUI.setMarcFormat(dataSourceSchemaForm.getMarcFormat().trim());
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA)
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             saveDataSource(dataSourceUI,oldDataSetId, DatasetType.OAI,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
                     metadataFormat,name.getValue(),nameCode.getValue(),exportPath.getValue());
         else

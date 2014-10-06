@@ -46,7 +46,6 @@ import org.oclc.oai.server.verb.ServerVerb;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.util.ProjectType;
 import pt.utl.ist.util.PropertyUtil;
 
@@ -98,8 +97,8 @@ public class OAIHandler extends HttpServlet {
         if(projectType == ProjectType.LIGHT){
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         } 
-        else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
+        else if(projectType == ProjectType.DEFAULT){
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         }
         try {
             Map<String, Object> attributes = null;

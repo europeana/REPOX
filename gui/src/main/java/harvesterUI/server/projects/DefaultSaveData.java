@@ -1,4 +1,4 @@
-package harvesterUI.server.projects.europeana;
+package harvesterUI.server.projects;
 
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
 import harvesterUI.server.dataManagement.dataSets.Z39FileUpload;
@@ -33,10 +33,13 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.configuration.EuropeanaRepoxManager;
+import pt.utl.ist.configuration.DefaultRepoxManager;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
@@ -45,9 +48,6 @@ import pt.utl.ist.externalServices.ExternalServiceStates;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.rest.dataProvider.DefaultDataManager;
-import pt.utl.ist.rest.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.rest.dataProvider.DefualtDataProvider;
 import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
@@ -61,13 +61,13 @@ import pt.utl.ist.util.exceptions.ObjectNotFoundException;
  * Date: 04-07-2011
  * Time: 13:35
  */
-public class EuropeanaSaveData {
-    private static final Logger log = Logger.getLogger(EuropeanaSaveData.class);
+public class DefaultSaveData {
+    private static final Logger log = Logger.getLogger(DefaultSaveData.class);
 
     public static String deleteDataProviders(List<DataProviderUI> dataProviderUIs) {
         for (DataProviderUI dataProvider : dataProviderUIs) {
             try {
-                EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+                DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
                 repoxManagerEuropeana.getDataManager().deleteDataProvider(dataProvider.getId());
             } catch (IOException e) {
                 return MessageType.OTHER.name();
@@ -83,7 +83,7 @@ public class EuropeanaSaveData {
     public static SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
-            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
 
             ResponseState urlStatus = Util.getUrlStatus(dataSourceUI);
             if(urlStatus != null){
@@ -500,7 +500,7 @@ public class EuropeanaSaveData {
         }
 
         if(update) {
-            DefualtDataProvider dataProvider = (DefualtDataProvider)europeanaManager.getDataProvider(dataProviderUI.getId());
+            DefaultDataProvider dataProvider = (DefaultDataProvider)europeanaManager.getDataProvider(dataProviderUI.getId());
             if(dataProvider != null) {
                 dataProvider.setCountry(dataProviderUI.getCountry());
                 dataProvider.setName(dataProviderUI.getName());
@@ -510,7 +510,7 @@ public class EuropeanaSaveData {
                 dataProvider.setHomePage(url);
 
                 try {
-                    dataProvider = (DefualtDataProvider)europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
+                    dataProvider = (DefaultDataProvider)europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
                             dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType());
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
@@ -548,7 +548,7 @@ public class EuropeanaSaveData {
     public static String deleteDataSources(List<DataSourceUI> dataSourceUIs) {
         Iterator<DataSourceUI> dataSourceUIIterator = dataSourceUIs.iterator();
         while (dataSourceUIIterator.hasNext()) {
-            EuropeanaRepoxManager repoxManagerEuropeana = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
             // todo use result
             try {
                 repoxManagerEuropeana.getDataManager().deleteDataSourceContainer(dataSourceUIIterator.next().getDataSourceSet());
@@ -567,7 +567,7 @@ public class EuropeanaSaveData {
         try {
             String finalExportPath;
             if(exportPath == null) {
-                EuropeanaRepoxManager europeanaManager = (EuropeanaRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+                DefaultRepoxManager europeanaManager = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
                 finalExportPath = europeanaManager.getConfiguration().getExportDefaultFolder();
             } else
                 finalExportPath = exportPath;
@@ -576,7 +576,7 @@ public class EuropeanaSaveData {
             List<String> setNames = map.get("setNames");
 
             DefaultDataManager europeanaManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
-            DefualtDataProvider dataProviderEuropeana = (DefualtDataProvider)europeanaManager.getDataProvider(dataProviderID);
+            DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider)europeanaManager.getDataProvider(dataProviderID);
 
             for (int i=0; i<sets.size(); i++) {
                 String setSpec = sets.get(i);

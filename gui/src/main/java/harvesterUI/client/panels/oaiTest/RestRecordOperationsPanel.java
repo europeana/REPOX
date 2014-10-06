@@ -125,7 +125,7 @@ public class RestRecordOperationsPanel extends ContentPanel {
         operationsListLabel.setStyleName("hyperlink_style_label_selected");
         retrievalOperationsSet.add(operationsListLabel,formData);
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA){
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
             aggregatorsLabel = new LabelToolItem("<span style='color:blue" + "'>" +
                     HarvesterUI.CONSTANTS.aggregatorsOperations() + "</span>");
             aggregatorsLabel.addListener(Events.OnClick, new Listener<BoxComponentEvent>() {
@@ -216,7 +216,7 @@ public class RestRecordOperationsPanel extends ContentPanel {
         recordFillLabel.setStyleName("hyperlink_style_label");
         commonRetrievalSet.add(recordFillLabel,formData);
 
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA){
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
             LabelToolItem aggregatorsListLabel = new LabelToolItem("<span style='color:blue" + "'>" +
                     HarvesterUI.CONSTANTS.listAggregators() + "</span>");
             aggregatorsListLabel.addListener(Events.OnClick, new Listener<BoxComponentEvent>() {

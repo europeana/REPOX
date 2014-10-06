@@ -15,7 +15,7 @@ import harvesterUI.shared.filters.FilterAttribute;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.filters.FilterType;
 import harvesterUI.shared.search.BaseSearchResult;
-import harvesterUI.shared.search.EuropeanaSearchResult;
+import harvesterUI.shared.search.DefaultBaseSearchResult;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
@@ -128,8 +128,8 @@ public abstract class ProjectManager {
         return m;
     }
 
-    protected EuropeanaSearchResult createModelEuropeana(String id, String name, String nameCode, String description, String dataSet, DataType dataType) {
-        return new EuropeanaSearchResult(id,name,nameCode,description,dataSet,dataType.toString());
+    protected DefaultBaseSearchResult createModelEuropeana(String id, String name, String nameCode, String description, String dataSet, DataType dataType) {
+        return new DefaultBaseSearchResult(id,name,nameCode,description,dataSet,dataType.toString());
     }
 
     protected BaseSearchResult createModelLight(String id,String name, String description, String dataSet,DataType dataType) {

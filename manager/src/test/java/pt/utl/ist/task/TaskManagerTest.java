@@ -1,5 +1,13 @@
 package pt.utl.ist.task;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.dom4j.DocumentException;
 import org.junit.After;
 import org.junit.Assert;
@@ -8,19 +16,8 @@ import org.junit.Test;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.task.DataSourceIngestTask;
-import pt.utl.ist.task.ScheduledTask;
-import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.task.ScheduledTask.Frequency;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class TaskManagerTest {
 	TaskManager taskManager;

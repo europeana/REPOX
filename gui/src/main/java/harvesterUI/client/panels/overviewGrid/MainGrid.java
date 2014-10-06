@@ -265,7 +265,7 @@ public class MainGrid extends DataGridContainer<DataContainer> {
         columns.add(name);
 
         // Europeana column only
-        if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
             ColumnConfig nameCode = new ColumnConfig("nameCode", "<CENTER>"+HarvesterUI.CONSTANTS.nameCodeHeader()+"</CENTER>", 100);
             columns.add(nameCode);
         }

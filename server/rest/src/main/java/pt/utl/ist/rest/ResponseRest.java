@@ -2,7 +2,7 @@ package pt.utl.ist.rest;
 
 import org.dom4j.DocumentException;
 
-import pt.utl.ist.rest.services.web.DefaultWebServices;
+import pt.utl.ist.rest.services.web.LightWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.exceptions.InvalidRequestException;

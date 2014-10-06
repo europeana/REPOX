@@ -2,9 +2,9 @@ package harvesterUI.server;
 
 import harvesterUI.client.servlets.RepoxService;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
+import harvesterUI.server.projects.DefaultProjectManager;
 import harvesterUI.server.projects.ProjectManager;
 import harvesterUI.server.projects.Light.LightManager;
-import harvesterUI.server.projects.europeana.EuropeanaManager;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.ServerSideException;
@@ -26,7 +26,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.configuration.EuropeanaRepoxConfiguration;
+import pt.utl.ist.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.TransformationResultLogger;
@@ -49,8 +49,8 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
             case LIGHT:
                 projectManager = new LightManager();
                 break;
-            case EUROPEANA:
-                projectManager = new EuropeanaManager();
+            case DEFAULT:
+                projectManager = new DefaultProjectManager();
                 break;
         }
     }
@@ -125,8 +125,8 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
             String repositoryFodlerPath = RepoxServiceImpl.getRepoxManager().getConfiguration().getRepositoryPath();
             MainConfigurationInfo mainConfigurationInfo = new MainConfigurationInfo(projectType,repositoryFodlerPath);
 
-            if(getProjectManager() instanceof EuropeanaManager){
-                String defaultExportFolder = ((EuropeanaRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration()).getExportDefaultFolder();
+            if(getProjectManager() instanceof DefaultProjectManager){
+                String defaultExportFolder = ((DefaultRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration()).getExportDefaultFolder();
                 mainConfigurationInfo.setDefaultExportFolder(defaultExportFolder);
             }
 

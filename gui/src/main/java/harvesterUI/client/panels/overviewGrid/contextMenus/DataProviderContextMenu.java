@@ -96,7 +96,7 @@ public class DataProviderContextMenu extends Menu {
 
             add(edit);
 
-            if(HarvesterUI.getProjectType() == ProjectType.EUROPEANA) {
+            if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
                 MenuItem move = new MenuItem();
                 move.setText(HarvesterUI.CONSTANTS.moveDataProvider());
                 move.setIcon(HarvesterUI.ICONS.arrow_move());

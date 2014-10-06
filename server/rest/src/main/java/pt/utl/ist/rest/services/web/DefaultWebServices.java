@@ -1,6 +1,5 @@
 package pt.utl.ist.rest.services.web;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +25,8 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxConfiguration;
+import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
@@ -54,7 +55,6 @@ import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.TransformationsFileManager;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.sru.SruRecordUpdateDataSource;
@@ -65,6 +65,7 @@ import pt.utl.ist.task.IngestDataSource;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
@@ -82,9 +83,15 @@ import pt.utl.ist.z3950.Target;
 import pt.utl.ist.z3950.TimestampHarvester;
 
 /**
+ * Created by IntelliJ IDEA.
+ * User: Gilberto Pedrosa
+ * Date: 01-07-2011
+ * Time: 15:48
+ * To change this template use File | Settings | File Templates.
  */
 public class DefaultWebServices implements WebServices {
-    private static final Logger log = Logger.getLogger(DefaultWebServices.class);
+    private static final Logger log = Logger.getLogger(LightWebServices.class);
+
     private String requestURI;
 
     public String getRequestURI() {
@@ -95,12 +102,77 @@ public class DefaultWebServices implements WebServices {
         this.requestURI = requestURI;
     }
 
-    /**
-     * Creates a new instance of this class.
-     */
     public DefaultWebServices() {
         super();
     }
+
+
+    public void writeAggregators(OutputStream out) throws DocumentException, IOException {
+        List<Aggregator> aggregatorsEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregators();
+
+        Element aggregatorsElement = DocumentHelper.createElement("aggregators");
+        for (Aggregator currentAggregator : aggregatorsEuropeana) {
+            Element currentAggregatorElement = currentAggregator.createElement(false);
+            aggregatorsElement.add(currentAggregatorElement);
+        }
+        RestUtils.writeRestResponse(out, aggregatorsElement);
+    }
+
+
+    public void createAggregator(OutputStream out, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
+        try {
+            Aggregator aggregatorEuropeana = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
+            RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating Aggregator. Aggregator with name \"" + name + "\" and name code \"" + nameCode + "\" already exists.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Aggregator.");
+        }
+    }
+
+    public void updateAggregator(OutputStream out, String id, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
+        try {
+            Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
+            RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Aggregator: id \"" + id + "\" was not found.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error updating Aggregator with id \"" + id + "\".");
+        }
+    }
+
+
+    public void deleteAggregator(OutputStream out, String aggregatorId) throws DocumentException, IOException {
+        try {
+            ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).deleteAggregator(aggregatorId);
+            Element currentAggregatorElement = DocumentHelper.createElement("success");
+            currentAggregatorElement.setText("Aggregator with id \"" + aggregatorId + "\" was successfully deleted.");
+            RestUtils.writeRestResponse(out, currentAggregatorElement);
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error deleting Aggregator. Data provider with id \"" + aggregatorId + "\" was not found.");
+        }
+    }
+
+    public void getAggregator(OutputStream out, String aggregatorId) throws DocumentException, IOException {
+        try {
+            Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+            if(aggregatorEuropeana != null){
+                Element aggregatorsElement = aggregatorEuropeana.createElement(false);
+                RestUtils.writeRestResponse(out, aggregatorsElement);
+            }
+            else{
+                createErrorMessage(out, MessageType.NOT_FOUND, "Error retrieving Aggregator. Aggregator with id \"" + aggregatorId + "\" was not found.");
+            }
+        }
+        catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error retrieving Data Provider with id \"" + aggregatorId + "\".");
+        }
+    }
+
 
     public void writeDataProviders(OutputStream out) throws DocumentException, IOException {
         List<DataProvider> dataProviders = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviders();
@@ -115,45 +187,139 @@ public class DefaultWebServices implements WebServices {
         RestUtils.writeRestResponse(out, dataProvidersElement);
     }
 
+
+    public void writeDataProviders(OutputStream out, String aggregatorId) throws DocumentException, IOException {
+        Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+
+        Element dataProvidersElement = DocumentHelper.createElement("dataProviders");
+
+        for (DataProvider dataProvider : aggregatorEuropeana.getDataProviders()) {
+            Element currentDataProviderElement = dataProvider.createElement(false);
+            dataProvidersElement.add(currentDataProviderElement);
+        }
+
+        RestUtils.writeRestResponse(out, dataProvidersElement);
+    }
+
+
+    @Deprecated
     public void createDataProvider(OutputStream out, String name, String country, String description) throws DocumentException {
+    }
+
+    public void createDataProvider(OutputStream out, String aggregatorId, String name, String country, String description,
+                                   String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().createDataProvider(name,
-                    country, description);
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
+                    name, country, description, nameCode, url, dataSetType);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error creating Data Provider. Data provider with id \"" + aggregatorId + "\" was not found.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating Data Provider. Data provider with id \"" +url+ "\" Already exists.");
+        } catch (InvalidArgumentsException e) {
+            String list = "";
+            for (ProviderType providerType : ProviderType.values()) {
+                if(!list.equals(""))
+                    list = list + ", " + providerType.name();
+                else
+                    list = providerType.name();
+            }
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Provider: invalid parameters - check homepage url \"" + url + "\" was not valid and dataSetType (" + list + ").");
         } catch (IOException e) {
             createErrorMessage(out, MessageType.OTHER, "Error creating Data Provider.");
-        } catch (AlreadyExistsException e) {
-            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Data Provider already exists.");
         }
     }
 
+    public void createDataProvider(OutputStream out, String aggregatorId, String dataProviderId, String name, String country, String description,
+                                   String nameCode, String url, String dataSetType) throws DocumentException, IOException {
+
+        DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProvider(dataProviderId);
+
+        if(dataProvider != null){
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating Data Provider. Data provider with id \"" +url+ "\" Already exists.");
+        }
+        else{
+            try {
+                dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
+                        dataProviderId, name, country, description, nameCode, url, dataSetType);
+                RestUtils.writeRestResponse(out, dataProvider.createElement(false));
+            } catch (ObjectNotFoundException e) {
+                createErrorMessage(out, MessageType.NOT_FOUND, "Error creating Data Provider. Data provider with id \"" + aggregatorId + "\" was not found.");
+            } catch (AlreadyExistsException e) {
+                createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating Data Provider. Data provider with id \"" +url+ "\" Already exists.");
+            } catch (InvalidArgumentsException e) {
+                String list = "";
+                for (ProviderType providerType : ProviderType.values()) {
+                    if(!list.equals(""))
+                        list = list + ", " + providerType.name();
+                    else
+                        list = providerType.name();
+                }
+                createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Provider: invalid parameters - check homepage url \"" + url + "\" was not valid and dataSetType (" + list + ").");
+            } catch (IOException e) {
+                createErrorMessage(out, MessageType.OTHER, "Error creating Data Provider.");
+            }
+        }
+    }
+
+    @Deprecated
     public void updateDataProvider(OutputStream out, String id, String name, String country, String description) throws DocumentException {
+    }
+
+    public void updateDataProvider(OutputStream out, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().updateDataProvider(id,
-                    name, country, description);
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(id,
+                    name, country, description, nameCode, url, dataSetType);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
         } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Data Provider: id \"" + id + "\" was not found.");
+            String list = "";
+            for (ProviderType providerType : ProviderType.values()) {
+                if(!list.equals(""))
+                    list = list + ", " + providerType.name();
+                else
+                    list = providerType.name();
+            }
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Provider: invalid parameters - check homepage url \"" + url + "\" was not valid and dataSetType (" + list + ").");
+        } catch (InvalidArgumentsException e) {
+            String list = "";
+            for (ProviderType providerType : ProviderType.values()) {
+                if(!list.equals(""))
+                    list = list + ", " + providerType.name();
+                else
+                    list = providerType.name();
+            }
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Provider: invalid parameters - check homepage url \"" + url + "\" was not valid and dataSetType (" + list + ").");
         } catch (IOException e) {
             createErrorMessage(out, MessageType.OTHER, "Error updating Data Provider with id \"" + id + "\".");
         }
     }
 
 
-    public void deleteDataProvider(OutputStream out, String dataProviderId) throws DocumentException {
+    public void deleteDataProvider(OutputStream out, String dataProviderId) throws DocumentException, IOException {
         try {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().deleteDataProvider(dataProviderId);
             Element currentDataProviderElement = DocumentHelper.createElement("success");
             currentDataProviderElement.setText("Data Provider with id \"" + dataProviderId + "\" was successfully deleted.");
             RestUtils.writeRestResponse(out, currentDataProviderElement);
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error deleting Data Provider with id \"" + dataProviderId + "\".");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error deleting Data Provider. Data provider with id \"" + dataProviderId + "\" was not found.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error deleting Data Provider with id \"" + dataProviderId + "\".");
         }
     }
 
-    public void getDataProvider(OutputStream out, String dataProviderId) throws DocumentException {
+    public void moveDataProvider(OutputStream out, String dataProviderId, String newAggregatorId) throws DocumentException, IOException {
+        try {
+            ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).moveDataProvider(newAggregatorId, dataProviderId);
+            Element currentDataProviderElement = DocumentHelper.createElement("success");
+            currentDataProviderElement.setText("Data Provider with id \"" + dataProviderId + "\" was successfully moved to Aggregator " + newAggregatorId + ".");
+            RestUtils.writeRestResponse(out, currentDataProviderElement);
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error moving Data Provider with id \"" + dataProviderId + "\".");
+        }
+    }
+
+    public void getDataProvider(OutputStream out, String dataProviderId) throws DocumentException, IOException {
         try {
             DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProvider(dataProviderId);
 
@@ -170,14 +336,13 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
-
     public void writeDataSources(OutputStream out) throws DocumentException, IOException {
         HashMap<String, DataSourceContainer> dataSourceContainers = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().loadDataSourceContainers();
 
         Element dataSourcesElement = DocumentHelper.createElement("dataSources");
 
         for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-            Element currentDatasourceElement = dataSourceContainer.getDataSource().createElement();
+            Element currentDatasourceElement = dataSourceContainer.createElement();
             dataSourcesElement.add(currentDatasourceElement);
         }
 
@@ -191,7 +356,7 @@ public class DefaultWebServices implements WebServices {
             Element dataSourcesElement = DocumentHelper.createElement("dataSources");
 
             for (DataSourceContainer dataSourceContainer : dataProvider.getDataSourceContainers().values()) {
-                Element currentDatasourceElement = dataSourceContainer.getDataSource().createElement();
+                Element currentDatasourceElement = dataSourceContainer.createElement();
                 dataSourcesElement.add(currentDatasourceElement);
             }
 
@@ -202,89 +367,128 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
-    
+
+    @Deprecated
     public void createDataSourceOai(OutputStream out, String dataProviderId, String id, String description,
-            String schema, String namespace, String metadataFormat, String oaiSourceURL,
-            String oaiSet, String marcFormat) throws DocumentException {
+                                    String schema, String namespace, String metadataFormat, String oaiSourceURL,
+                                    String oaiSet, String marcFormat) throws DocumentException {
+
+    }
+
+
+    public void createDataSourceOai(OutputStream out, String dataProviderId, String id, String description,
+            String nameCode, String name, String exportPath, String schema, String namespace,
+            String metadataFormat, String oaiSourceURL, String oaiSet, String marcFormat) throws DocumentException, IOException {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
-        
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+            
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceOai(dataProviderId,
-                    id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new HashMap<String, MetadataTransformation>(),
-                    new ArrayList<ExternalRestService>(),marcFormat);
+                    id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Base.");
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source OAI. Unable to check OAI URL or Data source id \"" + dataProviderId + "\" was not valid.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source OAI. Data provider with id \"" + dataProviderId + "\" was not found.");
         } catch (AlreadyExistsException e) {
             createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source OAI. Data source with id \"" + id + "\" already exists.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source OAI. Invalid argument " + e.getMessage() + ".");
+        } catch (SQLException e) {
+            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source OAI.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source OAI.");
         }
     }
-    
 
+    @Deprecated
     public void createDataSourceSruRecordUpdate(OutputStream out, String dataProviderId, String id, String description,
-                                    String schema, String namespace, String metadataFormat, 
-                                    String marcFormat) throws DocumentException {
+                                    String schema, String namespace, String metadataFormat, String marcFormat) throws DocumentException, IOException{
+    }
+    
+    public void createDataSourceSruRecordUpdate(OutputStream out, String dataProviderId, String id, String description,
+                                    String nameCode, String name, String exportPath, String schema, String namespace,
+                                    String metadataFormat, String marcFormat) throws DocumentException, IOException {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
-
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceSruRecordUpdate(dataProviderId,
-                    id, description, schema, namespace, metadataFormat, new HashMap<String, MetadataTransformation>(),
-                    new ArrayList<ExternalRestService>(),marcFormat);
+                    id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Base.");
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source SRU. Unable to check SRU URL or Data source id \"" + dataProviderId + "\" was not valid.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source SRU. Data provider with id \"" + dataProviderId + "\" was not found.");
         } catch (AlreadyExistsException e) {
             createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source SRU. Data source with id \"" + id + "\" already exists.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source SRU. Invalid argument " + e.getMessage() + ".");
+        } catch (SQLException e) {
+            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source SRU.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source SRU.");
         }
     }
 
-
+    @Deprecated
     public void createDataSourceZ3950Timestamp(OutputStream out, String dataProviderId, String id, String description,
                                                String schema, String namespace, String address, String port, String database,
                                                String user, String password, String recordSyntax, String charset, String earliestTimestampString,
-                                               String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, IOException, ParseException {
+                                               String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, ParseException {
+    }
+
+    public void createDataSourceZ3950Timestamp(OutputStream out, String dataProviderId, String id, String description,
+                                               String nameCode, String name, String exportPath, String schema, String namespace,
+                                               String address, String port, String database, String user, String password,
+                                               String recordSyntax, String charset, String earliestTimestampString,
+                                               String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, ParseException, IOException {
         saveNewMetadataSchema(MetadataFormat.MarcXchange.toString(), schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950Timestamp(dataProviderId,
-                    id, description, schema, namespace, address, port, database, user, password,
+                    id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
-                    new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
+        } catch (SQLException e) {
+            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Base Z3950 Timestamp.");
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z3950 Timestamp.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Timestamp. Data source id \"" + dataProviderId + "\" was not valid.");
         } catch (AlreadyExistsException e) {
             createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Z39.50 Timestamp. Data source with id \"" + id + "\" already exists.");
-        } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source Z39.50 Timestamp. Data provider with id \"" + dataProviderId + "\" was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Timestamp. Invalid argument " + e.getMessage() + ".");
-        } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source Z39.50 Timestamp.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z3950 Timestamp.");
         }
     }
 
+    @Deprecated
     public void createDataSourceZ3950IdList(OutputStream out, String dataProviderId, String id, String description,
                                             String schema, String namespace, String address, String port, String database,
                                             String user, String password, String recordSyntax, String charset, InputStream xslFile,
-                                            String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, IOException, ParseException {
+                                            String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException {
+    }
+
+    public void createDataSourceZ3950IdList(OutputStream out, String dataProviderId, String id, String description,
+                                            String nameCode, String name, String exportPath, String schema, String namespace,
+                                            String address, String port, String database, String user, String password,
+                                            String recordSyntax, String charset, InputStream xslFile,
+                                            String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, IOException {
         saveNewMetadataSchema(MetadataFormat.MarcXchange.toString(), schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
@@ -304,146 +508,200 @@ public class DefaultWebServices implements WebServices {
                 xslFile.close();
             }
 
-            DataSource dataSource = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
-                    id, description, schema, namespace, address, port, database, user, password,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdList(dataProviderId,
+                    id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, temporaryFile.getAbsolutePath(), recordIdPolicyClass, idXpath, namespaces,
-                    new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
         } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source Z39.50 Id List. Data provider with id \"" + dataProviderId + "\" was not found.");
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source Z39.50 Id List not Found.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Id List. Data source id \"" + dataProviderId + "\" was not valid.");
         } catch (AlreadyExistsException e) {
             createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Z39.50 Id List. Data source with id \"" + id + "\" already exists.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Id List. Invalid argument " + e.getMessage() + ".");
         } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source Z39.50 Id List.");
+            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data base Source Z39.50 Id List.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z39.50 Id List.");
+        } catch (ParseException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z39.50 Id List.");
         }
     }
 
+    @Deprecated
     public void createDataSourceZ3950IdSequence(OutputStream out, String dataProviderId, String id, String description,
                                                 String schema, String namespace, String address, String port,
                                                 String database, String user, String password, String recordSyntax,
                                                 String charset, String maximumIdString, String recordIdPolicyClass,
-                                                String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, IOException, ParseException {
+                                                String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, ParseException {
+    }
+
+    public void createDataSourceZ3950IdSequence(OutputStream out, String dataProviderId, String id, String description,
+                                                String nameCode, String name, String exportPath, String schema, String namespace,
+                                                String address, String port, String database, String user, String password,
+                                                String recordSyntax, String charset, String maximumIdString,
+                                                String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri) throws DocumentException, IOException {
         saveNewMetadataSchema(MetadataFormat.MarcXchange.toString(), schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceZ3950IdSequence(dataProviderId,
-                    id, description, schema, namespace, address, port, database, user, password,
+                    id, description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
-                    new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>());
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>());
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (AlreadyExistsException e) {
-            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Z39.50 Id Sequence. Data source with id \"" + id + "\" already exists.");
+        } catch (SQLException e) {
+            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source Z39.50 Id List.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source Z39.50 Id Sequence. Data provider with id \"" + dataProviderId + "\" was not found.");
         } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Id Sequence. Invalid argument " + e.getMessage() + ".");
-        } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source Z39.50 Id Sequence.");
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating a Data Source Z39.50 Id Sequence. Data source id \"" + dataProviderId + "\" was not valid.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Z39.50 Id Sequence. Data source with id \"" + id + "\" already exists.");
+        } catch (ParseException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z39.50 Id Sequence.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Z39.50 Id Sequence.");
         }
     }
 
 
+    @Deprecated
     public void createDataSourceFtp(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                     String metadataFormat, String isoFormat, String charset,
                                     String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
                                     String recordXPath, String server, String user, String password, String ftpPath, String marcFormat) throws DocumentException {
+    }
+
+    public void createDataSourceFtp(OutputStream out, String dataProviderId, String id, String description,
+                                    String nameCode, String name, String exportPath, String schema, String namespace,
+                                    String metadataFormat, String isoFormat, String charset,
+                                    String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
+                                    String recordXPath, String server, String user, String password, String ftpPath, String marcFormat) throws DocumentException, IOException {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().
+                        getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFtp(dataProviderId,
-                    id, description, schema, namespace, metadataFormat, isoFormat, charset,
+                    id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
-                    ftpPath, new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
+                    ftpPath, new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source FTP.");
-        } catch (AlreadyExistsException e) {
-            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source FTP. Data source with id \"" + id + "\" already exists.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source. Check the record id policy; or data source id \"" + dataProviderId + "\" could be not valid.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source FTP. Data provider with id \"" + dataProviderId + "\" was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source. Invalid argument " + e.getMessage() + ".");
         } catch (SQLException e) {
             createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source FTP.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source FTP. Data source with id \"" + id + "\" already exists.");
         }
-
     }
 
+    @Deprecated
     public void createDataSourceHttp(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                      String metadataFormat, String isoFormat, String charset,
                                      String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
                                      String recordXPath, String url, String marcFormat) throws DocumentException {
+    }
+
+    public void createDataSourceHttp(OutputStream out, String dataProviderId, String id, String description,
+                                     String nameCode, String name, String exportPath, String schema, String namespace,
+                                     String metadataFormat, String isoFormat, String charset,
+                                     String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
+                                     String recordXPath, String url, String marcFormat) throws DocumentException, IOException {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().
+                        getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceHttp(dataProviderId,
-                    id, description, schema, namespace, metadataFormat, isoFormat, charset,
-                    recordIdPolicyClass, idXpath, namespaces, recordXPath, url,
-                    new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
+                    id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
+                    recordIdPolicyClass, idXpath, namespaces,recordXPath, url,
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source HTTP.");
-        } catch (AlreadyExistsException e) {
-            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source HTTP. Data source with id \"" + id + "\" already exists.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source HTTP. Invalid URL or record id policy or the data source id \"" + dataProviderId + "\" was not valid.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source HTTP. Data provider with id \"" + dataProviderId + "\" was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source HTTP. Invalid argument " + e.getMessage() + ".");
         } catch (SQLException e) {
             createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source HTTP.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source HTTP. Data source with id \"" + id + "\" already exists.");
         }
     }
 
 
+    @Deprecated
     public void createDataSourceFolder(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                        String metadataFormat, String isoFormat, String charset,
                                        String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
                                        String recordXPath, String sourcesDirPath, String marcFormat) throws DocumentException {
+    }
+
+    public void createDataSourceFolder(OutputStream out, String dataProviderId, String id, String description,
+                                       String nameCode, String name, String exportPath, String schema, String namespace,
+                                       String metadataFormat, String isoFormat, String charset,
+                                       String recordIdPolicyClass, String idXpath, String namespacePrefix, String namespaceUri,
+                                       String recordXPath, String sourcesDirPath, String marcFormat) throws DocumentException, IOException {
         saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
+            if(exportPath.isEmpty())
+                exportPath = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().
+                        getRepoxManager().getConfiguration()).getExportDefaultFolder() + File.separator + id;
+
             Map<String, String> namespaces = new TreeMap<String, String>();
             namespaces.put(namespacePrefix, namespaceUri);
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataSourceFolder(dataProviderId,
-                    id, description, schema, namespace, metadataFormat, isoFormat, charset,
+                    id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
-                    new HashMap<String, MetadataTransformation>(),new ArrayList<ExternalRestService>(),marcFormat);
+                    new HashMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),marcFormat);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source Folder. Invalid record id policy ot the data source id \"" + dataProviderId + "\" was not valid.");
         } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error creating a Data Source Folder. Data provider with id \"" + dataProviderId + "\" was not found.");
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source Folder. Invalid record id policy ot the data source id \"" + dataProviderId + "\" was not valid.");
         } catch (AlreadyExistsException e) {
             createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source Folder. Invalid " + e.getMessage() + ".");
         } catch (SQLException e) {
-            createErrorMessage(out, MessageType.ERROR_DATABASE, "Error creating Data Source.");
+            createErrorMessage(out, MessageType.OTHER, "Error creating Data Source Folder");
         }
     }
 
-    public void updateDataSourceSruRecordUpdate(OutputStream out, String id, String description, String schema, String namespace,
-            String metadataFormat, String marcFormat) throws DocumentException {
+    @Deprecated
+    public void updateDataSourceOai(OutputStream out, String id, String description, String schema, String namespace,
+                                    String metadataFormat, String oaiSourceURL, String oaiSet, String marcFormat) throws DocumentException {
+    }
+
+    public void updateDataSourceSruRecordUpdate(OutputStream out, String id, String description,
+            String nameCode, String name, String exportPath, String schema, String namespace,
+            String metadataFormat, String marcFormat) throws DocumentException, IOException {
         if(metadataFormat != null && schema != null && namespace != null)
             saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
             
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -459,12 +717,18 @@ public class DefaultWebServices implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
                     
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
                 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -478,30 +742,31 @@ public class DefaultWebServices implements WebServices {
                 if(dataSourceOld.getExternalRestServices().size() > 0)
                     externalServices = dataSourceOld.getExternalRestServices();
             }
+            
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceSruRecordUpdate(id, id,
-                    description, schema, namespace, metadataFormat, 
-                    transformations, externalServices, marcFormat, false);
+                    description, nameCode, name, exportPath, schema, namespace, metadataFormat,
+                    transformations, externalServices, marcFormat,
+                    false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error updating an OAI Data Source. Data Source with id \"" + id + "\" was not an OAI-PMH data source.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating an OAI Data Source. Data Provider was not found or the Data Source with id \"" + id + "\" was not found.");
         } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating an OAI Data Source. Invalid argument " + e.getMessage() + ".");
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating an OAI Data Source. Unable to check OAI URL.");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating an OAI Data Source. Data Source with id \"" + id + "\" was not an OAI-PMH data source.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating an OAI Data Source. Incompatible Type OAI URL.");
         }
     }
-    public void updateDataSourceOai(OutputStream out, String id, String description, String schema, String namespace,
-                                    String metadataFormat, String oaiSourceURL, String oaiSet, String marcFormat) throws DocumentException {
+    public void updateDataSourceOai(OutputStream out, String id, String description,
+                                    String nameCode, String name, String exportPath, String schema, String namespace,
+                                    String metadataFormat, String oaiSourceURL, String oaiSet, String marcFormat) throws DocumentException, IOException {
         if(metadataFormat != null && schema != null && namespace != null)
             saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -517,12 +782,18 @@ public class DefaultWebServices implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -540,27 +811,37 @@ public class DefaultWebServices implements WebServices {
                 if(dataSourceOld.getExternalRestServices().size() > 0)
                     externalServices = dataSourceOld.getExternalRestServices();
             }
+
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceOai(id, id,
-                    description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
-                    transformations, externalServices, marcFormat, false);
+                    description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet,
+                    transformations, externalServices, marcFormat,
+                    false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error updating an OAI Data Source. Data Source with id \"" + id + "\" was not an OAI-PMH data source.");
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating an OAI Data Source. Data Provider was not found or the Data Source with id \"" + id + "\" was not found.");
         } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating an OAI Data Source. Invalid argument " + e.getMessage() + ".");
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating an OAI Data Source. Unable to check OAI URL.");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating an OAI Data Source. Data Source with id \"" + id + "\" was not an OAI-PMH data source.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating an OAI Data Source. Incompatible Type OAI URL.");
         }
     }
 
+    @Deprecated
     public void updateDataSourceZ3950Timestamp(OutputStream out, String id, String description, String schema, String namespace,
                                                String address, String port, String database, String user, String password,
                                                String recordSyntax, String charset, String earliestTimestampString,
                                                String recordIdPolicyClass, String idXpath, String namespacePrefix,
-                                               String namespaceUri) throws DocumentException, IOException, ParseException {
+                                               String namespaceUri) throws DocumentException, ParseException {
+    }
+
+    public void updateDataSourceZ3950Timestamp(OutputStream out, String id, String description,
+                                               String nameCode, String name, String exportPath, String schema, String namespace,
+                                               String address, String port, String database, String user, String password,
+                                               String recordSyntax, String charset, String earliestTimestampString,
+                                               String recordIdPolicyClass, String idXpath, String namespacePrefix,
+                                               String namespaceUri) throws DocumentException, ParseException, IOException {
+
         if(schema != null && namespace != null)
             saveNewMetadataSchema(MetadataFormat.MarcXchange.toString(), schema, namespace, out);
         try {
@@ -568,7 +849,9 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            if(dataSourceContainerOld != null){
+
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
 
@@ -596,28 +879,34 @@ public class DefaultWebServices implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
                     namespace = dataSourceOld.getNamespace();
                 if(address == null)
-                    address = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getAddress();
+                    address = ((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getAddress();
                 if(port == null)
-                    port = String.valueOf(((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPort());
+                    port = String.valueOf(((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPort());
                 if(database == null)
-                    database = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getDatabase();
+                    database = ((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getDatabase();
                 if(user == null)
-                    user = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getUser();
+                    user = ((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getUser();
                 if(password == null)
-                    password = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPassword();
+                    password = ((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPassword();
                 if(recordSyntax == null)
-                    recordSyntax = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getRecordSyntax();
+                    recordSyntax = ((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getRecordSyntax();
 
                 if(earliestTimestampString == null)
                     earliestTimestampString = DateUtil.date2String(((TimestampHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getEarliestTimestamp(), "yyyyMMdd");
@@ -625,7 +914,6 @@ public class DefaultWebServices implements WebServices {
                 if(charset == null && ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding() != null)
                     charset = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding().toString();
 
-                // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
                     if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
                         recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
@@ -700,26 +988,36 @@ public class DefaultWebServices implements WebServices {
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
-            DataSource dataSource = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
-                    description, schema, namespace, address, port, database, user, password,
+            DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950Timestamp(id, id,
+                    description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, earliestTimestampString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Z39.50 Data Source with Time Stamp. Data Source with id \"" + id + "\" was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with Time Stamp. Invalid argument " + e.getMessage() + ".");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with Time Stamp. Data Source with id \"" + id + "\" was not a Z39.50 Data Source with Time Stamp.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with Time Stamp. Data Source with id \"" + id + "\" Incompatible type.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with Time Stamp " + e.getMessage());
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error updating a Z39.50 Data Source with Time Stamp. Data Source with id \"" + id + "\" was not a Z39.50 Data Source with Time Stamp.");
         }
     }
 
+    @Deprecated
     public void updateDataSourceZ3950IdList(OutputStream out, String id, String description, String schema,
                                             String namespace, String address, String port, String database,
                                             String user, String password, String recordSyntax, String charset,
                                             InputStream xslFile, String recordIdPolicyClass, String idXpath,
-                                            String namespacePrefix, String namespaceUri) throws DocumentException, IOException, ParseException {
+                                            String namespacePrefix, String namespaceUri) throws DocumentException, ParseException {
+    }
+
+    public void updateDataSourceZ3950IdList(OutputStream out, String id, String description, String nameCode, String name,
+                                            String exportPath, String schema, String namespace, String address,
+                                            String port, String database, String user, String password, String recordSyntax,
+                                            String charset, InputStream xslFile, String recordIdPolicyClass, String idXpath,
+                                            String namespacePrefix, String namespaceUri) throws DocumentException, ParseException, IOException {
         String filePath = null;
         if(xslFile != null){
             File temporaryFile = IdListHarvester.getIdListFilePermanent();
@@ -747,8 +1045,9 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
+
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
 
@@ -786,34 +1085,39 @@ public class DefaultWebServices implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
                     namespace = dataSourceOld.getNamespace();
                 if(address == null)
-                    address = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getAddress();
+                    address = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getAddress();
                 if(port == null)
-                    port = String.valueOf(((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPort());
+                    port = String.valueOf(((IdListHarvester) ((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPort());
                 if(database == null)
-                    database = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getDatabase();
+                    database = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getDatabase();
                 if(user == null)
-                    user = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getUser();
+                    user = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getUser();
                 if(password == null)
-                    password = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPassword();
+                    password = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPassword();
                 if(recordSyntax == null)
-                    recordSyntax = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getRecordSyntax();
-                if(charset == null && ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding() != null)
-                    charset = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding().toString();
+                    recordSyntax = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getRecordSyntax();
+                if(charset == null && ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getCharacterEncoding() != null)
+                    charset = ((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getCharacterEncoding().toString();
                 if(filePath == null)
                     filePath = (((IdListHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getIdListFile().getAbsolutePath());
 
-                // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
                     if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
                         recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
@@ -889,25 +1193,36 @@ public class DefaultWebServices implements WebServices {
             }
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdList(id, id,
-                    description, schema, namespace, address, port, database, user, password,
+                    description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, filePath, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with ID List. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Z39.50 Data Source with ID List. Data Source with id \"" + id + "\" was not found.");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with ID List. Data Source with id \"" + id + "\" was not a Z39.50 Data Source with ID List.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with ID List. Invalid argument " + e.getMessage() + ".");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with ID List. Data Source with id \"" + id + "\" Incompatible type.");
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error updating a Z39.50 Data Source with ID List. Data Source with id \"" + id + "\" was not a Z39.50 Data Source with ID List.");
         }
     }
 
+    @Deprecated
     public void updateDataSourceZ3950IdSequence(OutputStream out, String id, String description, String schema,
                                                 String namespace, String address, String port, String database,
                                                 String user, String password, String recordSyntax, String charset,
                                                 String maximumIdString, String recordIdPolicyClass, String idXpath,
-                                                String namespacePrefix, String namespaceUri) throws DocumentException, IOException, ParseException {
+                                                String namespacePrefix, String namespaceUri) throws DocumentException, ParseException {
+    }
+
+    public void updateDataSourceZ3950IdSequence(OutputStream out, String id, String description, String nameCode,
+                                                String name, String exportPath, String schema, String namespace,
+                                                String address, String port, String database, String user, String password,
+                                                String recordSyntax, String charset, String maximumIdString,
+                                                String recordIdPolicyClass, String idXpath, String namespacePrefix,
+                                                String namespaceUri) throws DocumentException, ParseException, IOException {
         if(schema != null && namespace != null)
             saveNewMetadataSchema(MetadataFormat.MarcXchange.toString(), schema, namespace, out);
         try {
@@ -915,7 +1230,8 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -939,34 +1255,39 @@ public class DefaultWebServices implements WebServices {
                     newDataSource.setTags(dataSourceOld.getTags());
 
                     dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                    dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                     dataSourceOld = newDataSource;
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
                     namespace = dataSourceOld.getNamespace();
                 if(address == null)
-                    address = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getAddress();
+                    address = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getAddress();
                 if(port == null)
-                    port = String.valueOf(((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPort());
+                    port = String.valueOf(((IdSequenceHarvester) ((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPort());
                 if(database == null)
-                    database = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getDatabase();
+                    database = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getDatabase();
                 if(user == null)
-                    user = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getUser();
+                    user = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getUser();
                 if(password == null)
-                    password = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getPassword();
+                    password = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getPassword();
                 if(recordSyntax == null)
-                    recordSyntax = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getRecordSyntax();
-                if(charset == null && ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding() != null)
-                    charset = ((DataSourceZ3950)dataSourceOld).getHarvestMethod().getTarget().getCharacterEncoding().toString();
+                    recordSyntax = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getRecordSyntax();
+                if(charset == null && ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getCharacterEncoding() != null)
+                    charset = ((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getTarget().getCharacterEncoding().toString();
                 if(maximumIdString == null)
-                    maximumIdString = String.valueOf(((IdSequenceHarvester)((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getMaximumId());
+                    maximumIdString = String.valueOf(((IdSequenceHarvester) ((DataSourceZ3950)dataSourceOld).getHarvestMethod()).getMaximumId());
 
-                // todo... make a lot of tests
                 if(recordIdPolicyClass == null){
                     if(dataSourceOld.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
                         recordIdPolicyClass = IdExtractedRecordIdPolicy.class.getSimpleName();
@@ -1042,24 +1363,32 @@ public class DefaultWebServices implements WebServices {
             }
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceZ3950IdSequence(id, id,
-                    description, schema, namespace, address, port, database, user, password,
+                    description, nameCode, name, exportPath, schema, namespace, address, port, database, user, password,
                     recordSyntax, charset, maximumIdString, recordIdPolicyClass, idXpath, namespaces,
                     transformations, externalServices, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with ID Sequence. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Z39.50 Data Source with ID Sequence. Data Provider was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating a Z39.50 Data Source with ID List. Invalid argument " + e.getMessage() + ".");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with ID Sequence. Data Source with id \"" + id + "\" was not a Z39.50 Data Source with ID Sequence.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Z39.50 Data Source with ID Sequence. Data Source with id \"" + id + "\" Incompatible type..");
         }
     }
 
+    @Deprecated
     public void updateDataSourceFtp(OutputStream out, String id, String description, String schema, String namespace,
                                     String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass,
                                     String idXpath, String namespacePrefix, String namespaceUri, String recordXPath,
                                     String server, String user, String password, String ftpPath, String marcFormat) throws DocumentException {
+    }
+
+    public void updateDataSourceFtp(OutputStream out, String id, String description, String nameCode, String name,
+                                    String exportPath, String schema, String namespace, String metadataFormat,
+                                    String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+                                    String namespacePrefix, String namespaceUri, String recordXPath,
+                                    String server, String user, String password, String ftpPath, String marcFormat) throws DocumentException, IOException {
         if(metadataFormat != null && schema != null && namespace != null)
             saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
@@ -1067,8 +1396,9 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
             if(dataSourceContainerOld != null){
+
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
                 if(!(dataSourceOld instanceof DirectoryImporterDataSource)){
@@ -1107,13 +1437,19 @@ public class DefaultWebServices implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1226,27 +1562,34 @@ public class DefaultWebServices implements WebServices {
                 password = "";
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFtp(id, id,
-                    description, schema, namespace, metadataFormat, isoFormat, charset,
+                    description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, server, user, password,
                     ftpPath, transformations, externalServices, marcFormat, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error updating Data Source FTP.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source FTP. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Data Source FTP. Data Provider was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source FTP. Invalid argument " + e.getMessage() + ".");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source FTP. Data Source with id \"" + id + "\" was not a FTP data source.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source FTP. Data Provider was not Incompatible.");
         }
-
     }
 
+    @Deprecated
     public void updateDataSourceHttp(OutputStream out, String id, String description, String schema, String namespace,
                                      String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass,
                                      String idXpath, String namespacePrefix, String namespaceUri, String recordXPath,
                                      String url, String marcFormat) throws DocumentException {
+    }
+
+
+
+    public void updateDataSourceHttp(OutputStream out, String id, String description, String nameCode, String name,
+                                     String exportPath, String schema, String namespace, String metadataFormat,
+                                     String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+                                     String namespacePrefix, String namespaceUri, String recordXPath,
+                                     String url, String marcFormat) throws DocumentException, IOException {
         if(metadataFormat != null && schema != null && namespace != null)
             saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
@@ -1254,7 +1597,8 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            if(dataSourceContainerOld != null){
 
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
@@ -1286,13 +1630,19 @@ public class DefaultWebServices implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1379,6 +1729,7 @@ public class DefaultWebServices implements WebServices {
                     idXpath = null;
                     namespaces = new TreeMap<String, String>();
                 }
+
                 if(recordXPath == null)
                     recordXPath = ((DirectoryImporterDataSource)dataSourceOld).getRecordXPath();
                 if(url == null)
@@ -1392,26 +1743,33 @@ public class DefaultWebServices implements WebServices {
             }
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceHttp(id, id,
-                    description, schema, namespace, metadataFormat, isoFormat, charset,
+                    description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, url,
                     transformations, externalServices, marcFormat, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error updating Data Source HTTP.");
+        } catch (InvalidArgumentsException e) {
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source HTTP. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Data Source HTTP. Data Provider was not found.");
-        } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source HTTP. Invalid argument " + e.getMessage() + ".");
         } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source HTTP. Data Source with id \"" + id + "\" was not a HTTP data source.");
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Data Source HTTP. Data Provider was not found.");
         }
     }
 
+    @Deprecated
     public void updateDataSourceFolder(OutputStream out, String id, String description, String schema, String namespace,
                                        String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass,
                                        String idXpath, String namespacePrefix, String namespaceUri, String recordXPath,
-                                       String sourcesDirPath, String marcFormat) throws IOException, DocumentException {
+                                       String sourcesDirPath, String marcFormat) throws DocumentException {
+    }
+
+
+    public void updateDataSourceFolder(OutputStream out, String id, String description, String nameCode, String name,
+                                       String exportPath, String schema, String namespace, String metadataFormat,
+                                       String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+                                       String namespacePrefix, String namespaceUri, String recordXPath,
+                                       String sourcesDirPath, String marcFormat) throws DocumentException, IOException {
         if(metadataFormat != null && schema != null && namespace != null)
             saveNewMetadataSchema(metadataFormat, schema, namespace, out);
         try {
@@ -1419,8 +1777,8 @@ public class DefaultWebServices implements WebServices {
             Map<String, MetadataTransformation> transformations = new HashMap<String, MetadataTransformation>();
             List<ExternalRestService> externalServices = new ArrayList<ExternalRestService>();
 
-            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(id));if(dataSourceContainerOld != null){
-
+            DefaultDataSourceContainer dataSourceContainerOld = (DefaultDataSourceContainer)(((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getDataSourceContainer(id));
+            if(dataSourceContainerOld != null){
                 DataSource dataSourceOld = dataSourceContainerOld.getDataSource();
                 DataProvider dataProviderParent = getDataProviderParent(dataSourceOld.getId());
                 if(!(dataSourceOld instanceof DirectoryImporterDataSource)){
@@ -1452,13 +1810,19 @@ public class DefaultWebServices implements WebServices {
                         newDataSource.setTags(dataSourceOld.getTags());
 
                         dataProviderParent.getDataSourceContainers().remove(dataSourceOld.getId());
-                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource));
+                        dataProviderParent.getDataSourceContainers().put(newDataSource.getId(), new DefaultDataSourceContainer(newDataSource,nameCode,name,exportPath));
                         dataSourceOld = newDataSource;
                     }
                 }
 
                 if(description == null)
                     description = dataSourceOld.getDescription();
+                if(nameCode == null)
+                    nameCode = dataSourceContainerOld.getNameCode();
+                if(name == null)
+                    name = dataSourceContainerOld.getName();
+                if(exportPath == null)
+                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1554,63 +1918,31 @@ public class DefaultWebServices implements WebServices {
                     sourcesDirPath = ((DirectoryImporterDataSource)dataSourceOld).getSourcesDirPath();
                 if(marcFormat == null)
                     marcFormat = dataSourceOld.getMarcFormat();
-
                 if(dataSourceOld.getMetadataTransformations().size() > 0)
                     transformations = dataSourceOld.getMetadataTransformations();
-
                 if(dataSourceOld.getExternalRestServices().size() > 0)
                     externalServices = dataSourceOld.getExternalRestServices();
             }
 
             DataSource dataSource = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataSourceFolder(id, id,
-                    description, schema, namespace, metadataFormat, isoFormat, charset,
+                    description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                     recordIdPolicyClass, idXpath, namespaces, recordXPath, sourcesDirPath,
                     transformations, externalServices, marcFormat, false);
             DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSource.getId());
             RestUtils.writeRestResponse(out, dataSourceContainer.createElement());
-        } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Data Source Folder. Data Source with id \"" + id + "\" was not found.");
         } catch (InvalidArgumentsException e) {
-            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Data Source. Invalid argument " + e.getMessage() + ".");
-        } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source Folder. Data Source with id \"" + id + "\" was not a Folder data source.");
-        }
-    }
-
-    public void deleteDataSource(OutputStream out, String id) throws DocumentException {
-        try {
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().deleteDataSourceContainer(id);
-            Element currentDataProviderElement = DocumentHelper.createElement("success");
-            currentDataProviderElement.setText("Data Source with id \"" + id + "\" was successfully deleted.");
-            RestUtils.writeRestResponse(out, currentDataProviderElement);
-        } catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error deleting Data Source with id \"" + id + "\".");
+            createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source Folder. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error deleting Data Source with id \"" + id + "\".");
-        }
-    }
-
-    public void getDataSource(OutputStream out, String dataSourceId) throws DocumentException {
-        try {
-            DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId);
-
-            if(dataSourceContainer != null){
-                Element dataSourcesElement = dataSourceContainer.getDataSource().createElement();
-                RestUtils.writeRestResponse(out, dataSourcesElement);
-            }
-            else{
-                createErrorMessage(out, MessageType.NOT_FOUND, "Error retrieving Data Source. Data Source with id \"" + dataSourceId + "\" was not found.");
-            }
-        }
-        catch (IOException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error retrieving Data Source with id \"" + dataSourceId + "\".");
+            createErrorMessage(out, MessageType.OTHER, "Error updating Data Source Folder. Data Source with id \"" + id + "\" was not a Folder data source.");
+        } catch (IncompatibleInstanceException e) {
+            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source Folder. Incompatible record id policy.");
         }
     }
 
     public void countRecordsDataSource(OutputStream out, String dataSourceId) throws DocumentException, IOException, SQLException {
         DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId);
         if(dataSourceContainer != null){
-            RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceId,true);
+            RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceId, true);
             int totalMinusDeleted = dataSourceCount.getCount() - dataSourceCount.getDeleted();
             int deletedRecords = dataSourceCount.getDeleted();
 
@@ -1643,7 +1975,37 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
-    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean fullIngest) throws DocumentException, IOException {
+    public void deleteDataSource(OutputStream out, String id) throws DocumentException, IOException {
+        try {
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().deleteDataSourceContainer(id);
+            Element currentDataProviderElement = DocumentHelper.createElement("success");
+            currentDataProviderElement.setText("Data Source with id \"" + id + "\" was successfully deleted.");
+            RestUtils.writeRestResponse(out, currentDataProviderElement);
+        } catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error deleting Data Source with id \"" + id + "\".");
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error deleting Data Source with id \"" + id + "\".");
+        }
+    }
+
+    public void getDataSource(OutputStream out, String dataSourceId) throws DocumentException, IOException {
+        try {
+            DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId);
+
+            if(dataSourceContainer != null){
+                Element dataSourcesElement = dataSourceContainer.createElement();
+                RestUtils.writeRestResponse(out, dataSourcesElement);
+            }
+            else{
+                createErrorMessage(out, MessageType.NOT_FOUND, "Error retrieving Data Source. Data Source with id \"" + dataSourceId + "\" was not found.");
+            }
+        }
+        catch (IOException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error retrieving Data Source with id \"" + dataSourceId + "\".");
+        }
+    }
+
+    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException {
         try {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceId, fullIngest);
             Element successElement = DocumentHelper.createElement("success");
@@ -1681,7 +2043,6 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.OTHER, "Error stopping the Data Source task.");
         }
     }
-
 
     public void scheduleIngestDataSource(OutputStream out, String dataSourceId, String firstRunDate, String firstRunHour,
                                          String frequency, String xmonths, String fullIngest) throws DocumentException, IOException {
@@ -1737,6 +2098,8 @@ public class DefaultWebServices implements WebServices {
 
             for (ScheduledTask scheduledTask : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getScheduledTasks()) {
                 if(scheduledTask.getParameters()[1].equals(dataSourceId)){
+
+
                     Element scheduledTaskElement = scheduleTasksElement.addElement("task");
                     scheduledTaskElement.addAttribute("id", scheduledTask.getId());
 
@@ -1765,7 +2128,6 @@ public class DefaultWebServices implements WebServices {
             DataSource dataSource = dataSourceContainer.getDataSource();
 
             Element harvestingStatus = DocumentHelper.createElement("harvestingStatus");
-
             if(dataSource.getStatus() != null){
                 if(dataSource.getStatusString().equalsIgnoreCase(DataSource.StatusDS.RUNNING.name())){
                     try {
@@ -1802,7 +2164,7 @@ public class DefaultWebServices implements WebServices {
                             e.printStackTrace();
                         }
                     }
-                    RestUtils.writeRestResponse(out, harvestingStatus);
+
                 }
                 else{
                     Element statusMessage = DocumentHelper.createElement("status");
@@ -1829,6 +2191,25 @@ public class DefaultWebServices implements WebServices {
         }
         else{
             createErrorMessage(out, MessageType.NOT_FOUND, "Error scheduling the Data Source ingestion. ID \"" + dataSourceId + "\" was not found.");
+        }
+    }
+
+    public void startExportDataSource(OutputStream out, String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, IOException {
+        try {
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startExportDataSource(dataSourceId, recordsPerFile, metadataExportFormat);
+            Element successElement = DocumentHelper.createElement("success");
+            successElement.setText("Exportation of Data Source with ID \"" + dataSourceId + "\" will start in a few seconds.");
+            RestUtils.writeRestResponse(out, successElement);
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error starting the Data Source exportation. ID \"" + dataSourceId + "\" is already exporting.");
+        } catch (ClassNotFoundException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
+        } catch (NoSuchMethodException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
+        } catch (ParseException e) {
+            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
+        } catch (ObjectNotFoundException e) {
+            createErrorMessage(out, MessageType.NOT_FOUND, "Error starting the Data Source exportation. ID \"" + dataSourceId + "\" was not found.");
         }
     }
 
@@ -1872,61 +2253,28 @@ public class DefaultWebServices implements WebServices {
         RestUtils.writeRestResponse(out, runningTasksElement);
     }
 
-    public void startExportDataSource(OutputStream out, String dataSourceId, String recordsPerFile) throws DocumentException, IOException {
-        startExportDataSource(out, dataSourceId, recordsPerFile, null);
-    }
-
-    public void startExportDataSource(OutputStream out, String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, IOException {
-        try {
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startExportDataSource(dataSourceId, recordsPerFile, metadataExportFormat);
-            Element successElement = DocumentHelper.createElement("success");
-            successElement.setText("Exportation of Data Source with ID \"" + dataSourceId + "\" will start in a few seconds.");
-            RestUtils.writeRestResponse(out, successElement);
-        } catch (AlreadyExistsException e) {
-            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error starting the Data Source exportation. ID \"" + dataSourceId + "\" is already exporting.");
-        } catch (ClassNotFoundException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
-        } catch (NoSuchMethodException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
-        } catch (ParseException e) {
-            createErrorMessage(out, MessageType.OTHER, "Error starting Data Source exportation.");
-        } catch (ObjectNotFoundException e) {
-            createErrorMessage(out, MessageType.NOT_FOUND, "Error starting the Data Source exportation. ID \"" + dataSourceId + "\" was not found.");
-        }
-    }
-
 
     public void getRecord(OutputStream out, Urn recordUrn) throws IOException, DocumentException, SQLException {
-        byte[] recordMetadata = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().getRecord(recordUrn).getMetadata();
-        SAXReader reader = new SAXReader();
-        Document recordDocument = reader.read(new ByteArrayInputStream(recordMetadata));
+        Node detachedRecordNode = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getRecord(recordUrn);
 
         Element recordResultElement = DocumentHelper.createElement("recordResult");
         recordResultElement.addAttribute("urn", recordUrn.toString());
-        Node detachedRecordNode = recordDocument.getRootElement().detach();
         recordResultElement.add(detachedRecordNode);
         RestUtils.writeRestResponse(out, recordResultElement);
     }
 
     public void saveRecord(OutputStream out, String recordId, String dataSourceId, String recordString) throws IOException, DocumentException {
-        DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceId);
-        if(dataSourceContainer != null){
-            try {
-                Element recordRoot = (Element) DocumentHelper.parseText(recordString).getRootElement().detach();
-                DataSource dataSource = dataSourceContainer.getDataSource();
-                RecordRepox recordRepox = dataSource.getRecordIdPolicy().createRecordRepox(recordRoot, recordId, false, false);
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecord(dataSource, recordRepox,null);
-
-                Element successElement = DocumentHelper.createElement("success");
-                successElement.setText("Record with id " + recordRepox.getId() + " saved successfully");
-                RestUtils.writeRestResponse(out, successElement);
-            }
-            catch(Exception e) {
-                createErrorMessage(out, MessageType.OTHER, "Unable to save Record");
-            }
+        MessageType returnMessage = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).saveRecord(recordId, dataSourceId, recordString);
+        if(returnMessage == MessageType.OK){
+            Element successElement = DocumentHelper.createElement("success");
+            successElement.setText("Record with id " + recordId + " saved successfully");
+            RestUtils.writeRestResponse(out, successElement);
+        }
+        else if(returnMessage == MessageType.NOT_FOUND){
+            createErrorMessage(out, MessageType.NOT_FOUND, "Unable to save or update record. Data source with ID \"" + dataSourceId + "\" was not found.");
         }
         else{
-            createErrorMessage(out, MessageType.NOT_FOUND, "Unable to save or update record. Data source with ID \"" + dataSourceId + "\" was not found.");
+            createErrorMessage(out, MessageType.OTHER, "Unable to save Record");
         }
     }
 
@@ -1960,7 +2308,15 @@ public class DefaultWebServices implements WebServices {
         catch(Exception e) {
             createErrorMessage(out, MessageType.OTHER, "Unable to permanently remove Record");
         }
-
+        /*MessageType returnMessage = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).deleteRecord(recordId);
+        if(returnMessage == MessageType.OK){
+            Element successElement = DocumentHelper.createElement("success");
+            successElement.setText("Record with id " + recordId + " marked as deleted successfully");
+            RestUtils.writeRestResponse(out, successElement);
+        }
+        else{
+            createErrorMessage(out, MessageType.OTHER, "Unable to permanently remove Record");
+        }*/
     }
 
     public void eraseRecord(OutputStream out, String recordId) throws IOException {
@@ -1995,6 +2351,15 @@ public class DefaultWebServices implements WebServices {
         catch(Exception e) {
             createErrorMessage(out, MessageType.OTHER, "Unable to permanently remove Record");
         }
+        /*MessageType returnMessage = ((DataManagerEuropeana)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).eraseRecord(recordId);
+        if(returnMessage == MessageType.OK){
+            Element successElement = DocumentHelper.createElement("success");
+            successElement.setText("Record with id " + recordId + " permanently removed successfully");
+            RestUtils.writeRestResponse(out, successElement);
+        }
+        else{
+            createErrorMessage(out, MessageType.OTHER, "Unable to permanently remove Record");
+        }*/
     }
 
     public void createErrorMessage(OutputStream out, MessageType type, String cause) {
@@ -2011,9 +2376,22 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    private void saveNewMetadataSchema(String metadataFormat,String schema, String namespace,OutputStream out){
+        // Create new MDR schema if it doesn't exist
+        boolean exists = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager().
+                schemaExists(metadataFormat);
+
+        if(!exists){
+            List<MetadataSchemaVersion> metadataSchemaVersions = new ArrayList<MetadataSchemaVersion>();
+            metadataSchemaVersions.add(new MetadataSchemaVersion(1.0,schema));
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager().
+                    saveMetadataSchema(null,metadataFormat,null,namespace,null,null,metadataSchemaVersions,true);
+        }
+    }
+
     public void createMapping(OutputStream out, String id,String description,String srcSchemaId,String srcSchemaVersion,
                               String destSchemaId,String destSchemaVersion,String isXslVersion2,
-                              String xslFilename, InputStream xsdFile){
+                              String xslFilename,InputStream xsdFile){
         try {
             Document document = DocumentHelper.createDocument();
             Element root = document.addElement("response");
@@ -2151,18 +2529,6 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.OTHER, "Error removing Mapping: IO Error");
         } catch (DocumentException e) {
             createErrorMessage(out, MessageType.OTHER, "Error removing Mapping: Document Exception");
-        }
-    }
-
-    private void saveNewMetadataSchema(String metadataFormat,String schema, String namespace,OutputStream out){
-        boolean exists = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager().
-                schemaExists(metadataFormat);
-
-        if(!exists){
-            List<MetadataSchemaVersion> metadataSchemaVersions = new ArrayList<MetadataSchemaVersion>();
-            metadataSchemaVersions.add(new MetadataSchemaVersion(1.0,schema));
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager().
-                    saveMetadataSchema(null,metadataFormat,null,namespace,null,null,metadataSchemaVersions,true);
         }
     }
 
@@ -2320,5 +2686,11 @@ public class DefaultWebServices implements WebServices {
             targetDataSet.setLastUpdate(date);
         }else
             targetDataSet.setLastUpdate(originalDataSet.getLastUpdate());
+    }
+
+    @Deprecated
+    public void updateDataSourceSruRecordUpdate(OutputStream out, String id, String description,
+            String schema, String namespace, String metadataFormat, String marcFormat)
+            throws DocumentException, IOException {
     }
 }

@@ -18,13 +18,12 @@ import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.EuropeanaRepoxContextUtil;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.rest.services.web.LightWebServices;
 import pt.utl.ist.rest.services.web.DefaultWebServices;
-import pt.utl.ist.rest.services.web.EuropeanaWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
@@ -55,8 +54,8 @@ public class RestServlet extends HttpServlet {
         if(projectType == ProjectType.LIGHT){
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
-        } else if(projectType == ProjectType.EUROPEANA){
-            ConfigSingleton.setRepoxContextUtil(new EuropeanaRepoxContextUtil());
+        } else if(projectType == ProjectType.DEFAULT){
+            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
             this.repoxManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager();
         }
     }
@@ -75,12 +74,12 @@ public class RestServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             if(projectType == ProjectType.LIGHT){
-                DefaultWebServices webServicesLight = new DefaultWebServices();
-                responseRest = new ResponseRestLight();
+                LightWebServices webServicesLight = new LightWebServices();
+                responseRest = new LightResponseRest();
                 responseRest.response(request, response, webServicesLight);
-            }else if(projectType == ProjectType.EUROPEANA){
-                EuropeanaWebServices webServicesEuropeana = new EuropeanaWebServices();
-                responseRest = new ResponseRestEuropeana();
+            }else if(projectType == ProjectType.DEFAULT){
+                DefaultWebServices webServicesEuropeana = new DefaultWebServices();
+                responseRest = new DefaultResponseRest();
                 responseRest.response(request, response, webServicesEuropeana);
             }
 
@@ -113,9 +112,9 @@ public class RestServlet extends HttpServlet {
         try {
             WebServices webServices = null;
             if(projectType == ProjectType.LIGHT){
+                webServices = new LightWebServices();
+            } else if(projectType == ProjectType.DEFAULT){
                 webServices = new DefaultWebServices();
-            } else if(projectType == ProjectType.EUROPEANA){
-                webServices = new EuropeanaWebServices();
             }
 
             RestRequest restRequest = RestUtils.processRequest(BASE_URI, request);
@@ -211,7 +210,7 @@ public class RestServlet extends HttpServlet {
                 }
 
             }
-            else if(webServices instanceof EuropeanaWebServices){
+            else if(webServices instanceof DefaultWebServices){
                 if(restRequest.getUriHierarchy().get(1).equals("createZ3950IdList")) {
                     String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                     String id = restRequest.getRequestParameters().get("id");
@@ -247,7 +246,7 @@ public class RestServlet extends HttpServlet {
                             charset != null && !charset.isEmpty() &&
                             xsdFile != null && xsdFile.available() != 0 &&
                             recordIdPolicy != null && !recordIdPolicy.isEmpty()){
-                        ((EuropeanaWebServices)webServices).createDataSourceZ3950IdList(out, dataProviderId, id, description, nameCode,
+                        ((DefaultWebServices)webServices).createDataSourceZ3950IdList(out, dataProviderId, id, description, nameCode,
                                 name, exportPath, schema, namespace, address, port, database, user, password,
                                 recordSyntax, charset, xsdFile, recordIdPolicy, idXpath, namespacePrefix,
                                 namespaceUri);
@@ -291,7 +290,7 @@ public class RestServlet extends HttpServlet {
                     InputStream xsdFile = request.getInputStream();
 
                     if(id != null && !id.isEmpty()){
-                        ((EuropeanaWebServices)webServices).updateDataSourceZ3950IdList(out, id, description, nameCode,
+                        ((DefaultWebServices)webServices).updateDataSourceZ3950IdList(out, id, description, nameCode,
                                 name, exportPath, schema, namespace, address, port, database, user, password,
                                 recordSyntax, charset, xsdFile, recordIdPolicy, idXpath, namespacePrefix,
                                 namespaceUri);
