@@ -26,5 +26,9 @@
 			<groupId>repox</groupId>
 			<artifactId>repox-manager</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
+		</dependency>
 	</dependencies>
 </project>
