@@ -108,10 +108,10 @@ public class DefaultWebServices implements WebServices {
 
 
     public void writeAggregators(OutputStream out) throws DocumentException, IOException {
-        List<Aggregator> aggregatorsEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregators();
+        List<Aggregator> aggregators = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregators();
 
         Element aggregatorsElement = DocumentHelper.createElement("aggregators");
-        for (Aggregator currentAggregator : aggregatorsEuropeana) {
+        for (Aggregator currentAggregator : aggregators) {
             Element currentAggregatorElement = currentAggregator.createElement(false);
             aggregatorsElement.add(currentAggregatorElement);
         }
@@ -121,8 +121,8 @@ public class DefaultWebServices implements WebServices {
 
     public void createAggregator(OutputStream out, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            Aggregator aggregatorEuropeana = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
-            RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
+            Aggregator aggregator = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
+            RestUtils.writeRestResponse(out, aggregator.createElement(false));
         } catch (InvalidArgumentsException e) {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
         } catch (AlreadyExistsException e) {
@@ -134,8 +134,8 @@ public class DefaultWebServices implements WebServices {
 
     public void updateAggregator(OutputStream out, String id, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            Aggregator aggregatorEuropeana = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
-            RestUtils.writeRestResponse(out, aggregatorEuropeana.createElement(false));
+            Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
+            RestUtils.writeRestResponse(out, aggregator.createElement(false));
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Aggregator: id \"" + id + "\" was not found.");
         } catch (InvalidArgumentsException e) {
@@ -174,6 +174,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     public void writeDataProviders(OutputStream out) throws DocumentException, IOException {
         List<DataProvider> dataProviders = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviders();
 
@@ -202,6 +203,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     @Deprecated
     public void createDataProvider(OutputStream out, String name, String country, String description) throws DocumentException {
     }
@@ -262,6 +264,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataProvider(OutputStream out, String id, String name, String country, String description) throws DocumentException {
     }
@@ -295,6 +298,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     public void deleteDataProvider(OutputStream out, String dataProviderId) throws DocumentException, IOException {
         try {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().deleteDataProvider(dataProviderId);
@@ -319,6 +323,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     public void getDataProvider(OutputStream out, String dataProviderId) throws DocumentException, IOException {
         try {
             DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProvider(dataProviderId);
@@ -336,6 +341,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     public void writeDataSources(OutputStream out) throws DocumentException, IOException {
         HashMap<String, DataSourceContainer> dataSourceContainers = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().loadDataSourceContainers();
 
@@ -349,6 +355,7 @@ public class DefaultWebServices implements WebServices {
         RestUtils.writeRestResponse(out, dataSourcesElement);
     }
 
+    @Override
     public void writeDataSources(OutputStream out, String dataProviderId) throws DocumentException, IOException {
         DataProvider dataProvider = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProvider(dataProviderId);
 
@@ -368,6 +375,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     @Deprecated
     public void createDataSourceOai(OutputStream out, String dataProviderId, String id, String description,
                                     String schema, String namespace, String metadataFormat, String oaiSourceURL,
@@ -402,6 +410,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void createDataSourceSruRecordUpdate(OutputStream out, String dataProviderId, String id, String description,
                                     String schema, String namespace, String metadataFormat, String marcFormat) throws DocumentException, IOException{
@@ -433,6 +442,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void createDataSourceZ3950Timestamp(OutputStream out, String dataProviderId, String id, String description,
                                                String schema, String namespace, String address, String port, String database,
@@ -472,6 +482,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void createDataSourceZ3950IdList(OutputStream out, String dataProviderId, String id, String description,
                                             String schema, String namespace, String address, String port, String database,
@@ -529,6 +540,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void createDataSourceZ3950IdSequence(OutputStream out, String dataProviderId, String id, String description,
                                                 String schema, String namespace, String address, String port,
@@ -572,6 +584,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     @Deprecated
     public void createDataSourceFtp(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                     String metadataFormat, String isoFormat, String charset,
@@ -610,6 +623,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void createDataSourceHttp(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                      String metadataFormat, String isoFormat, String charset,
@@ -649,6 +663,7 @@ public class DefaultWebServices implements WebServices {
     }
 
 
+    @Override
     @Deprecated
     public void createDataSourceFolder(OutputStream out, String dataProviderId, String id, String description, String schema, String namespace,
                                        String metadataFormat, String isoFormat, String charset,
@@ -687,6 +702,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataSourceOai(OutputStream out, String id, String description, String schema, String namespace,
                                     String metadataFormat, String oaiSourceURL, String oaiSet, String marcFormat) throws DocumentException {
@@ -827,6 +843,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataSourceZ3950Timestamp(OutputStream out, String id, String description, String schema, String namespace,
                                                String address, String port, String database, String user, String password,
@@ -1005,6 +1022,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataSourceZ3950IdList(OutputStream out, String id, String description, String schema,
                                             String namespace, String address, String port, String database,
@@ -1209,6 +1227,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataSourceZ3950IdSequence(OutputStream out, String id, String description, String schema,
                                                 String namespace, String address, String port, String database,
@@ -1377,6 +1396,7 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
+    @Override
     @Deprecated
     public void updateDataSourceFtp(OutputStream out, String id, String description, String schema, String namespace,
                                     String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass,

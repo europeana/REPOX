@@ -67,7 +67,7 @@ The command to build is:
     Maven profile that generates copies of specific configuration files from the repox-resources project to the maven `src/main/resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `process-resources -Pcopy-resources`  
     This profile is bound to the `process-resources` phase of maven so its sufficient to run the maven build until this phase to get the resources. This is needed if for example there is the need to run a specific project(eg. repox-server-oai) in an IDE(eg. Eclipse) for testing.  
-    After copying the `copy-resources` profile is run then a normal build can be run `clean package`.
+    After copying the `copy-resources` profile is run then a normal build without a profile can be run `clean package`.
 
 
 Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the WEB-INF/classes directory.

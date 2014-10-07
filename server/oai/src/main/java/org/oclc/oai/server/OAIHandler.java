@@ -46,6 +46,7 @@ import org.oclc.oai.server.verb.ServerVerb;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.configuration.LightRepoxContextUtil;
 import pt.utl.ist.util.ProjectType;
 import pt.utl.ist.util.PropertyUtil;
 
@@ -66,7 +67,7 @@ public class OAIHandler extends HttpServlet {
     /** OAIHandler attributesMap */
     protected Map<String, Map<String, Object>> attributesMap                        = new HashMap<String, Map<String, Object>>();
     private ServletConfig                      initialConfig;
-    public static ProjectType projectType;
+    public static ProjectType                  projectType;
 
     /**
      * Get the VERSION number
@@ -94,10 +95,9 @@ public class OAIHandler extends HttpServlet {
         Properties propertiesGui = PropertyUtil.loadGuiConfiguration("gui.properties");
         projectType = ProjectType.valueOf(propertiesGui.getProperty("project.type"));
 
-        if(projectType == ProjectType.LIGHT){
-            ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-        } 
-        else if(projectType == ProjectType.DEFAULT){
+        if (projectType == ProjectType.LIGHT) {
+            ConfigSingleton.setRepoxContextUtil(new LightRepoxContextUtil());
+        } else if (projectType == ProjectType.DEFAULT) {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         }
         try {
@@ -122,7 +122,8 @@ public class OAIHandler extends HttpServlet {
                     properties = new Properties();
                     properties.load(in);
                     attributes = getAttributes(properties);
-                    if (debug) System.out.println("OAIHandler.init: fileName=" + fileName);
+                    if (debug)
+                        System.out.println("OAIHandler.init: fileName=" + fileName);
                 }
             } else {
                 log.debug("Load context properties");
@@ -188,7 +189,8 @@ public class OAIHandler extends HttpServlet {
         }
         String xsltName = properties.getProperty("OAIHandler.styleSheet");
         String appBase = properties.getProperty("OAIHandler.appBase");
-        if (appBase == null) appBase = "webapps";
+        if (appBase == null)
+            appBase = "webapps";
         if (xsltName != null && ("true".equalsIgnoreCase(properties.getProperty("OAIHandler.renderForOldBrowsers")) || forceRender)) {
             InputStream is;
             try {
@@ -239,7 +241,8 @@ public class OAIHandler extends HttpServlet {
                 }
             }
         }
-        if (attributes == null) log.debug("use global attributes");
+        if (attributes == null)
+            log.debug("use global attributes");
         attributes = attributesMap.get("global");
         return attributes;
     }
@@ -259,7 +262,9 @@ public class OAIHandler extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> attributes = getAttributes(request.getPathInfo());
-        if (!filterRequest(request, response)) { return; }
+        if (!filterRequest(request, response)) {
+            return;
+        }
 
         if (request.getQueryString() != null && request.getQueryString().equals("reloadOAIProperties")) {
             reloadOAIProperties();
@@ -292,7 +297,8 @@ public class OAIHandler extends HttpServlet {
         // throw new IOException(e.getMessage());
         // }
         Date then = null;
-        if (monitor) then = new Date();
+        if (monitor)
+            then = new Date();
         if (debug) {
             Enumeration headerNames = request.getHeaderNames();
             System.out.println("OAIHandler.doGet: ");
