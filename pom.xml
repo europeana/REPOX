@@ -23,7 +23,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/europeana/repox2.git</connection>
-		<developerConnection>scm:git:git@github.com/europeana/repox2.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:europeana/repox2.git</developerConnection>
 		<url>https://github.com/europeana/repox2</url>
 	</scm>
 
