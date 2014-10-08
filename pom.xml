@@ -166,7 +166,7 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5.1</version>
 					<configuration>
-					<tagNameFormat>Repox@v{project.version}</tagNameFormat>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 <!-- 					<pushChanges>false</pushChanges> -->
 				</configuration>
