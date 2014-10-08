@@ -161,7 +161,16 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-<!-- 				mvn release:prepare -DdryRun=true -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+<!-- 					<tagBase>https://github.com/stzanakis/project1/releases</tagBase> -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+<!-- 					<pushChanges>false</pushChanges> -->
+				</configuration>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
