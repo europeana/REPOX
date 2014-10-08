@@ -167,18 +167,9 @@
 					<version>2.5.1</version>
 					<configuration>
 					<tagNameFormat>Repox@v{project.version}</tagNameFormat>
-<!-- 					<tagBase>https://github.com/stzanakis/project1/releases</tagBase> -->
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 <!-- 					<pushChanges>false</pushChanges> -->
 				</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<configuration>
-						<tagBase>https://github.com/europeana/repox2/releases</tagBase>
-					</configuration>
 				</plugin>
 
 				<plugin>
