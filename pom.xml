@@ -47,7 +47,7 @@
 		<module>commons</module>
 		<module>gui</module>
 		<module>resources</module>
-	</modules>
+  </modules>
 
 	<properties>
 		<!-- Skip tests by default -->
@@ -237,7 +237,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
