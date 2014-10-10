@@ -1,5 +1,5 @@
 /* AggregatorsTest.java - created on Oct 9, 2014, Copyright (c) 2011 The European Library, all rights reserved */
-package org.tel.servlets;
+package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +35,7 @@ public class AggregatorsTest extends JerseyTest{
     }
 
     /**
-     * Test method for {@link org.tel.servlets.Aggregators#getAggregator(java.lang.String)}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.Aggregators#getAggregator(java.lang.String)}.
      */
     @Test
     public final void testGetAggregator() {

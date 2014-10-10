@@ -1,5 +1,5 @@
 /* Aggregators.java - created on Oct 9, 2014, Copyright (c) 2011 The European Library, all rights reserved */
-package org.tel.servlets;
+package org.theeuropeanlibrary.repox.rest.servlets;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
