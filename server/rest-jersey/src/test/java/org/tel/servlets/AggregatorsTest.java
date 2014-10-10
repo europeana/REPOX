@@ -2,14 +2,12 @@
 package org.tel.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.test.framework.JerseyTest;
 
 /**
  * 
@@ -18,13 +16,10 @@ import com.sun.jersey.test.framework.JerseyTest;
  * @since Oct 9, 2014
  */
 public class AggregatorsTest extends JerseyTest{
-
-    
-    
     public AggregatorsTest()throws Exception {
-        super("org.tel.servlets");
+        super(new ResourceConfig().packages("org.tel.servlets"));
     }
-
+   
     /**
      * @throws java.lang.Exception
      */
@@ -45,10 +40,7 @@ public class AggregatorsTest extends JerseyTest{
     @Test
     public final void testGetAggregator() {
         String aggregatorId = "10";
-        
-        WebResource webResource = resource();
-        String responseMsg = webResource.path("/aggregators/" + aggregatorId).get(String.class);
-        System.out.println("ss " + responseMsg);
+        final String responseMsg = target("/aggregators/" + aggregatorId).request().get(String.class);
         assertEquals("Aggregator" + aggregatorId, responseMsg);
     }
 
