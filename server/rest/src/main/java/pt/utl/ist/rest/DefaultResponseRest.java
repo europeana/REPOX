@@ -32,31 +32,31 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class DefaultResponseRest extends ResponseOperations implements ResponseRest {
-    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServicesEuropeana) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
+    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
 
-        DefaultWebServices webServices = (DefaultWebServices)webServicesEuropeana;
+        DefaultWebServices defaultWebServices = (DefaultWebServices)webServices;
 
         RestRequest restRequest = RestUtils.processRequest(RestServlet.BASE_URI, request);
         response.setContentType("text/xml");
         ServletOutputStream out = response.getOutputStream();
 
-        webServices.setRequestURI(request.getRequestURL().toString());
+        defaultWebServices.setRequestURI(request.getRequestURL().toString());
 
         if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals("removeMapping")) {
             String id = restRequest.getRequestParameters().get("id");
 
             if(id != null && !id.isEmpty()){
-                webServices.removeMapping(out, id);
+                defaultWebServices.removeMapping(out, id);
             }
             else{
-                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error removing mapping:" +
+                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error removing mapping:" +
                         "invalid arguments. Syntax: /rest/removeMapping?id=ID" +
                         "[Mandatory fields: id]");
             }
         }else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals("listMappings")) {
-            webServices.listMappings(out);
+            defaultWebServices.listMappings(out);
         }
         // Schemas
         else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
@@ -81,11 +81,11 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
             if(id != null && !id.isEmpty() ||
                     namespace != null && !namespace.isEmpty() ||
                     versions != null && !versions.isEmpty()){
-                webServices.createMetadataSchema(out, id, "", namespace, designation, description,
+                defaultWebServices.createMetadataSchema(out, id, "", namespace, designation, description,
                         notes, oaiAvailable,metadataSchemaVersionList);
             }
             else{
-                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
+                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
                         "Metadata Schema: invalid arguments." +
                         "Syntax: /rest/createSchema?shortDesignation=SHORT_DESIGNATION&namespace=NAMESPACE" +
                         "&designation=DESIGNATION&description=DESCRIPTION&notes=NOTES&oaiAvailable=TRUE/FALSE " +
@@ -112,11 +112,11 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
             }
 
             if(id != null && !id.isEmpty()){
-                webServices.updateMetadataSchema(out, id, oldId == null ? id : oldId, namespace, designation, description,
+                defaultWebServices.updateMetadataSchema(out, id, oldId == null ? id : oldId, namespace, designation, description,
                         notes, oaiAvailable,metadataSchemaVersionList);
             }
             else{
-                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the" +
+                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the" +
                         "Metadata Schema: invalid arguments." +
                         "Syntax: /rest/updateSchema?shortDesignation=SHORT_DESIGNATION&oldShortDesignation=OLD_SHORT_DESIGNATION&namespace=NAMESPACE" +
                         "&designation=DESIGNATION&description=DESCRIPTION&notes=NOTES&oaiAvailable=TRUE/FALSE " +
@@ -127,16 +127,16 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
             String id = restRequest.getRequestParameters().get("id");
 
             if(id != null && !id.isEmpty()){
-                webServices.removeMetadataSchema(out, id);
+                defaultWebServices.removeMetadataSchema(out, id);
             }
             else{
-                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error removing schema:" +
+                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error removing schema:" +
                         "invalid arguments. Syntax: /rest/removeSchema?id=ID" +
                         "[Mandatory fields: id]");
             }
         }else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
                 && restRequest.getUriHierarchy().get(0).equals("listSchemas")) {
-            webServices.listMetadataSchemas(out);
+            defaultWebServices.listMetadataSchemas(out);
         }
         // aggregators
         else if((restRequest.getUriHierarchy() != null) && !restRequest.getUriHierarchy().isEmpty()
@@ -150,7 +150,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                 if(restRequest.getUriHierarchy().size() == 2) {
 
                     if(restRequest.getUriHierarchy().get(1).equals("list")) {
-                        webServices.writeAggregators(out);
+                        defaultWebServices.writeAggregators(out);
                     }
                     else if(restRequest.getUriHierarchy().get(1).equals("create")) {
                         String name = restRequest.getRequestParameters().get("name");
@@ -158,10 +158,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String homepage = restRequest.getRequestParameters().get("homepage");
 
                         if(name != null && !name.isEmpty()){
-                            webServices.createAggregator(out, name, nameCode, homepage);
+                            defaultWebServices.createAggregator(out, name, nameCode, homepage);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
                                     "Aggregator: invalid arguments. Syntax: /rest/aggregators/create?name=NAME" +
                                     "&nameCode=NAME_CODE&homepage=HOMEPAGE [mandatory fields: name]");
                         }
@@ -173,10 +173,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String homepage = restRequest.getRequestParameters().get("homepage");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateAggregator(out, id, name, nameCode, homepage);
+                            defaultWebServices.updateAggregator(out, id, name, nameCode, homepage);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating" +
                                     "Aggregator: invalid arguments. Syntax: /rest/aggregators/update?id=ID" +
                                     "&name=NAME&nameCode=NAME_CODE&homepage=HOMEPAGE [mandatory field: id]");
                         }
@@ -194,10 +194,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.deleteAggregator(out, id);
+                            defaultWebServices.deleteAggregator(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting " +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting " +
                                     "Aggregator: invalid arguments. Syntax: /rest/aggregators/delete?id=ID" +
                                     " [mandatory field: id]");
                         }
@@ -205,10 +205,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("getAggregator")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.getAggregator(out, id);
+                            defaultWebServices.getAggregator(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving " +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving " +
                                     "Aggregator: invalid arguments. Syntax: /rest/aggregators/getAggregator?id=ID" +
                                     " [mandatory field: id]");
                         }
@@ -233,16 +233,16 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                 if(restRequest.getUriHierarchy().size() == 2) {
                     if(restRequest.getUriHierarchy().get(1).equals("list")) {
                         if(restRequest.getRequestParameters().size() == 0) {
-                            webServices.writeDataProviders(out);
+                            defaultWebServices.writeDataProviders(out);
                         }
                         else{
                             String aggregatorId = restRequest.getRequestParameters().get("aggregatorId");
                             if (restRequest.getRequestParameters().size() == 1 &&
                                     aggregatorId != null && !aggregatorId.isEmpty()) {
-                                webServices.writeDataProviders(out, aggregatorId);
+                                defaultWebServices.writeDataProviders(out, aggregatorId);
                             }
                             else{
-                                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing" +
+                                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing" +
                                         " Data Provider: invalid arguments." +
                                         "Syntax: /rest/dataProviders/list?aggregatorId=AGGREGATOR_ID");
                             }
@@ -264,16 +264,16 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 dataSetType != null && !dataSetType.isEmpty()){
 
                             if(dataProviderId == null || dataProviderId.isEmpty()){
-                                webServices.createDataProvider(out, aggregatorId, name, country, description, nameCode,
+                                defaultWebServices.createDataProvider(out, aggregatorId, name, country, description, nameCode,
                                         url, dataSetType);
                             }
                             else{
-                                webServices.createDataProvider(out, aggregatorId, dataProviderId, name, country,
+                                defaultWebServices.createDataProvider(out, aggregatorId, dataProviderId, name, country,
                                         description, nameCode, url, dataSetType);
                             }
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the" +
                                     "Data Provider: invalid arguments." +
                                     "Syntax: /rest/dataProviders/create?aggregatorId=AGGREGATOR_ID" +
                                     "&dataProviderId=DATA_PROVIDER_ID&name=NAME" +
@@ -292,11 +292,11 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String dataSetType = restRequest.getRequestParameters().get("dataSetType");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataProvider(out, id, name, country, description, nameCode, url,
+                            defaultWebServices.updateDataProvider(out, id, name, country, description, nameCode, url,
                                     dataSetType);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/update?id=ID" +
                                     "&name=NAME&description=DESCRIPTION&country=2_LETTERS_COUNTRY&nameCode=NAME_CODE" +
                                     "&url=URL&dataSetType=DATA_SET_TYPE [mandatory field: id]");
@@ -320,10 +320,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.deleteDataProvider(out, id);
+                            defaultWebServices.deleteDataProvider(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/delete?id=ID [mandatory " +
                                     "field: id");
                         }
@@ -331,10 +331,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("getDataProvider")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.getDataProvider(out, id);
+                            defaultWebServices.getDataProvider(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/getDataProvider?id=ID [mandatory " +
                                     "field: id");
                         }
@@ -345,10 +345,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
 
                         if(idDataProvider != null && !idDataProvider.isEmpty() &&
                                 idNewAggr != null && !idNewAggr.isEmpty()){
-                            webServices.moveDataProvider(out, idDataProvider, idNewAggr);
+                            defaultWebServices.moveDataProvider(out, idDataProvider, idNewAggr);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error moving Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error moving Data" +
                                     "Provider: invalid arguments. Syntax: /rest/dataProviders/move?idDataProvider=" +
                                     "ID_DATA_PROVIVER&idNewAggr=ID_NEW_AGGREGATOR [mandatory fields: " +
                                     "idDataProvider, idNewAggr]");
@@ -373,16 +373,16 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                 if(restRequest.getUriHierarchy().size() == 2) {
                     if(restRequest.getUriHierarchy().get(1).equals("list")){
                         if(restRequest.getRequestParameters().size() == 0) {
-                            webServices.writeDataSources(out);
+                            defaultWebServices.writeDataSources(out);
                         }
                         else{
                             String dataProviderId = restRequest.getRequestParameters().get("dataProviderId");
                             if (restRequest.getRequestParameters().size() == 1 &&
                                     dataProviderId != null && !dataProviderId.isEmpty()) {
-                                webServices.writeDataSources(out, dataProviderId);
+                                defaultWebServices.writeDataSources(out, dataProviderId);
                             }
                             else{
-                                webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing the" +
+                                defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error listing the" +
                                         "Data Sources: invalid arguments." +
                                         "Syntax: /rest/dataSources/list?dataProviderId=DATA_PROVIDER_ID");
                             }
@@ -412,12 +412,12 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 oaiURL != null && !oaiURL.isEmpty()){
 
-                            webServices.createDataSourceOai(out, dataProviderId, id, description, nameCode, name,
+                            defaultWebServices.createDataSourceOai(out, dataProviderId, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, oaiURL,
                                     !oaiSet.isEmpty() ? oaiSet : null, (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createOai?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION&schema=SCHEMA&namespace=NAMESPACE" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
@@ -462,13 +462,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 earliestTimestamp != null && !earliestTimestamp.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty()){
 
-                            webServices.createDataSourceZ3950Timestamp(out, dataProviderId, id, description, nameCode,
+                            defaultWebServices.createDataSourceZ3950Timestamp(out, dataProviderId, id, description, nameCode,
                                     name, exportPath, schema, namespace, address, port, database, user, password,
                                     recordSyntax, charset, earliestTimestamp, recordIdPolicy, idXpath, namespacePrefix,
                                     namespaceUri);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createZ3950Timestamp?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
@@ -519,13 +519,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 maximumId != null && !maximumId.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty()){
 
-                            webServices.createDataSourceZ3950IdSequence(out, dataProviderId, id, description, nameCode,
+                            defaultWebServices.createDataSourceZ3950IdSequence(out, dataProviderId, id, description, nameCode,
                                     name, exportPath, schema, namespace, address, port, database, user, password,
                                     recordSyntax, charset, maximumId, recordIdPolicy, idXpath, namespacePrefix,
                                     namespaceUri);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createZ3950IdSequence?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION&schema=SCHEMA&namespace=NAMESPACE" +
@@ -578,14 +578,14 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 server != null && !server.isEmpty() &&
                                 ftpPath != null && !ftpPath.isEmpty()){
 
-                            webServices.createDataSourceFtp(out, dataProviderId, id, description, nameCode, name,
+                            defaultWebServices.createDataSourceFtp(out, dataProviderId, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
                                     idXpath, namespacePrefix, namespaceUri, recordXPath, server, (user != null && !user.isEmpty()) ? user : "",
                                     (password != null && !password.isEmpty()) ? password : "",
                                     ftpPath,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createFtp?dataProviderId=DATA_PROVIDER_ID&" +
                                     "id=DATA_SOURCE_ID&description=DESCRIPTION" +
@@ -639,13 +639,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                                 namespaceUri != null && !namespaceUri.isEmpty())) &&
                                 url != null && !url.isEmpty()){
 
-                            webServices.createDataSourceHttp(out, dataProviderId, id, description, nameCode, name,
+                            defaultWebServices.createDataSourceHttp(out, dataProviderId, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
                                     idXpath, namespacePrefix, namespaceUri, recordXPath, url,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createHttp?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
@@ -697,13 +697,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                                 namespaceUri != null && !namespaceUri.isEmpty())) &&
                                 folder != null && !folder.isEmpty()){
 
-                            webServices.createDataSourceFolder(out, dataProviderId, id, description, nameCode,
+                            defaultWebServices.createDataSourceFolder(out, dataProviderId, id, description, nameCode,
                                     name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                                     recordIdPolicy, idXpath, namespacePrefix, namespaceUri, recordXPath, folder,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error creating the Data" +
                                     "Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/createFolder?dataProviderId=DATA_PROVIDER_ID" +
                                     "&id=DATA_SOURCE_ID&description=DESCRIPTION" +
@@ -735,13 +735,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceOai(out, id, description, nameCode, name,
+                            defaultWebServices.updateDataSourceOai(out, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, oaiURL,
                                     (oaiSet != null &&!oaiSet.isEmpty()) ? oaiSet : null,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the OAI" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the OAI" +
                                     "Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateOai?id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
@@ -773,14 +773,14 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String namespaceUri = restRequest.getRequestParameters().get("namespaceUri");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceZ3950Timestamp(out, id, description, nameCode,
+                            defaultWebServices.updateDataSourceZ3950Timestamp(out, id, description, nameCode,
                                     name, exportPath, schema, namespace, address, port, database, user, password,
                                     recordSyntax, charset, earliestTimestamp, recordIdPolicy, idXpath, namespacePrefix,
                                     namespaceUri);
                         }
 
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the" +
                                     "Z39.50 Data Source with Time Stamp: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateZ3950Timestamp?id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
@@ -815,13 +815,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String namespaceUri = restRequest.getRequestParameters().get("namespaceUri");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceZ3950IdSequence(out, id, description, nameCode,
+                            defaultWebServices.updateDataSourceZ3950IdSequence(out, id, description, nameCode,
                                     name, exportPath, schema, namespace, address, port, database, user, password,
                                     recordSyntax, charset, maximumId, recordIdPolicy, idXpath, namespacePrefix,
                                     namespaceUri);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Z39.50" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Z39.50" +
                                     "Data Source with ID Sequence: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateZ3950IdSequence?id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
@@ -857,7 +857,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceFtp(out, id, description, nameCode, name,
+                            defaultWebServices.updateDataSourceFtp(out, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
                                     idXpath, namespacePrefix, namespaceUri, recordXPath, server, user, password,
                                     /*(user != null && !user.isEmpty()) ? user : "",
@@ -865,7 +865,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                     ftpPath,(marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the FTP Data Source: invalid arguments." +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the FTP Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateFtp?dataProviderId=id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
@@ -901,13 +901,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceHttp(out, id, description, nameCode, name,
+                            defaultWebServices.updateDataSourceHttp(out, id, description, nameCode, name,
                                     exportPath, schema, namespace, metadataFormat, isoFormat, charset, recordIdPolicy,
                                     idXpath, namespacePrefix, namespaceUri, recordXPath, url,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the HTTP Data Source: invalid arguments." +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the HTTP Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateHttp?id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
@@ -944,13 +944,13 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String marcFormat = restRequest.getRequestParameters().get("marcFormat");
 
                         if(id != null && !id.isEmpty()){
-                            webServices.updateDataSourceFolder(out, id, description, nameCode,
+                            defaultWebServices.updateDataSourceFolder(out, id, description, nameCode,
                                     name, exportPath, schema, namespace, metadataFormat, isoFormat, charset,
                                     recordIdPolicy, idXpath, namespacePrefix, namespaceUri, recordXPath, folder,
                                     (marcFormat != null && !marcFormat.isEmpty()) ? marcFormat : null);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Folder Data Source: invalid arguments." +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating the Folder Data Source: invalid arguments." +
                                     "Syntax: /rest/dataSources/updateFolder?id=DATA_SOURCE_ID&description=DESCRIPTION" +
                                     "&nameCode=NAME_CODE&name=NAME&exportPath=EXPORT_PATH" +
                                     "&schema=SCHEMA&namespace=NAMESPACE" +
@@ -968,10 +968,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("delete")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.deleteDataSource(out, id);
+                            defaultWebServices.deleteDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting Data" +
                                     "Source: invalid arguments. Syntax: /rest/dataSources/delete?id=ID [Mandatory " +
                                     "field: id]");
                         }
@@ -979,10 +979,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("getDataSource")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.getDataSource(out, id);
+                            defaultWebServices.getDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving Data" +
                                     "Source: invalid arguments. Syntax: /rest/dataSources/getDataSource?id=ID [Mandatory " +
                                     "field: id]");
                         }
@@ -990,10 +990,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("countRecords")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.countRecordsDataSource(out, id);
+                            defaultWebServices.countRecordsDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error counting records from" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error counting records from" +
                                     " Data Source: invalid arguments. Syntax: /rest/dataSources/countRecords?id=ID " +
                                     "[Mandatory field: id]");
                         }
@@ -1001,10 +1001,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("lastIngestionDate")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.lastIngestionDateDataSource(out, id);
+                            defaultWebServices.lastIngestionDateDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving last" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error retrieving last" +
                                     "ingestion date from Data Source: invalid arguments. Syntax: " +
                                     "/rest/dataSources/lastIngestionDate?id=ID [Mandatory field: id]");
                         }
@@ -1015,10 +1015,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         if(id != null && !id.isEmpty() &&
                                 fullIngest != null && !fullIngest.isEmpty() &&
                                 (fullIngest.equalsIgnoreCase("true") || fullIngest.equalsIgnoreCase("false"))){
-                            webServices.startIngestDataSource(out, id, Boolean.valueOf(fullIngest));
+                            defaultWebServices.startIngestDataSource(out, id, Boolean.valueOf(fullIngest));
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error starting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error starting the Data" +
                                     "Source ingestion: invalid arguments. Syntax: /rest/dataSources/startIngest?id=ID&" +
                                     "fullIngest=BOOLEAN [Mandatory fields: id, fullIngest]");
                         }
@@ -1027,10 +1027,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("stopIngest")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.stopIngestDataSource(out, id);
+                            defaultWebServices.stopIngestDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error stopping the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error stopping the Data" +
                                     "Source ingestion: invalid arguments. Syntax: /rest/dataSources/stopIngest?id=ID " +
                                     "[Mandatory field: id]");
                         }
@@ -1051,11 +1051,11 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 xmonths != null && !xmonths.isEmpty() &&
                                 fullIngest != null && !fullIngest.isEmpty() &&
                                 (fullIngest.equalsIgnoreCase("true") || fullIngest.equalsIgnoreCase("false"))){
-                            webServices.scheduleIngestDataSource(out, id, firstRunDate, firstRunHour, frequency,
+                            defaultWebServices.scheduleIngestDataSource(out, id, firstRunDate, firstRunHour, frequency,
                                     xmonths, fullIngest);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error scheduling the" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error scheduling the" +
                                     "Data Source ingestion: invalid arguments. Syntax: /rest/dataSources/scheduleIngest?id=ID" +
                                     "&firstRunDate=YYYY-MM-DD&firstRunHour=HH:MM&frequency=ONCE_DAILY_WEEKLY_XMONTHLY" +
                                     "&xmonths=NUMBER&fullIngest=BOOLEAN [Mandatory fields: id, firstRunDate, firstRunHour, " +
@@ -1066,10 +1066,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("scheduleList")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.scheduleListDataSource(out, id);
+                            defaultWebServices.scheduleListDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
                                     "Source ingestion schedule: invalid arguments. Syntax: /rest/dataSources/" +
                                     "scheduleList?id=ID [Mandatory field: id]");
                         }
@@ -1078,10 +1078,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("harvestStatus")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.harvestStatusDataSource(out, id);
+                            defaultWebServices.harvestStatusDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
                                     "Source harvest status: invalid arguments. Syntax: /rest/dataSources/harvestStatus?id=ID " +
                                     "[Mandatory field: id]");
                         }
@@ -1089,10 +1089,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
 
                     else if(restRequest.getUriHierarchy().get(1).equals("harvesting")) {
                         if(restRequest.getRequestParameters().size() == 0){
-                            webServices.harvestingDataSources(out);
+                            defaultWebServices.harvestingDataSources(out);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the list" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the list" +
                                     "of data sources harvesting: invalid arguments. Syntax: /rest/dataSources/harvesting");
                         }
                     }
@@ -1103,10 +1103,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String metadataExportFormat = restRequest.getRequestParameters().get("metadataExportFormat");
                         if(id != null && !id.isEmpty() &&
                                 recordsPerFile != null && !recordsPerFile.isEmpty()){
-                            webServices.startExportDataSource(out, id, recordsPerFile, metadataExportFormat);
+                            defaultWebServices.startExportDataSource(out, id, recordsPerFile, metadataExportFormat);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error starting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error starting the Data" +
                                     "Source exportation: invalid arguments. Syntax: /rest/dataSources/startExport?id=ID&" +
                                     "recordsPerFile=RECORDS_NUMBER&metadataExportFormat=METADATA_EXPORT_FORMAT [Mandatory fields: id, recordsPerFile]");
                         }
@@ -1115,10 +1115,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("log")) {
                         String id = restRequest.getRequestParameters().get("id");
                         if(id != null && !id.isEmpty()){
-                            webServices.logDataSource(out, id);
+                            defaultWebServices.logDataSource(out, id);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
                                     "Source log: invalid arguments. Syntax: /rest/dataSources/log?id=ID [Mandatory " +
                                     "field: id]");
                         }
@@ -1142,10 +1142,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     if(restRequest.getUriHierarchy().get(1).equals("getRecord")){
                         String recordId = restRequest.getRequestParameters().get("recordId");
                         if(recordId != null && !recordId.isEmpty()){
-                            webServices.getRecord(out, new Urn(recordId));
+                            defaultWebServices.getRecord(out, new Urn(recordId));
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error getting the Data" +
                                     "Source log: invalid arguments. Syntax: /rest/records/getRecord?recordId=RECORD_ID" +
                                     " [Mandatory field: recordId]");
                         }
@@ -1158,10 +1158,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 dataSourceId != null && !dataSourceId.isEmpty() &&
                                 recordString != null && !recordString.isEmpty()){
 
-                            webServices.saveRecord(out, recordId, dataSourceId, recordString);
+                            defaultWebServices.saveRecord(out, recordId, dataSourceId, recordString);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error saving record:" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error saving record:" +
                                     "invalid arguments. Syntax: /rest/records/saveRecord?recordId=RECORD_ID" +
                                     "&dataSourceId=DATA_SOURCE_ID&recordString=RECORD_STRING [Mandatory fields: " +
                                     "recordId, dataSourceId, recordString]");
@@ -1170,10 +1170,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("deleteRecord")){
                         String recordId = restRequest.getRequestParameters().get("recordId");
                         if(recordId != null && !recordId.isEmpty()){
-                            webServices.deleteRecord(out, recordId);
+                            defaultWebServices.deleteRecord(out, recordId);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting record:" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error deleting record:" +
                                     "invalid arguments. Syntax: /rest/records/deleteRecord?recordId=RECORD_ID " +
                                     "[Mandatory field: recordId]");
                         }
@@ -1181,10 +1181,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                     else if(restRequest.getUriHierarchy().get(1).equals("eraseRecord")){
                         String recordId = restRequest.getRequestParameters().get("recordId");
                         if(recordId != null && !recordId.isEmpty()){
-                            webServices.eraseRecord(out, recordId);
+                            defaultWebServices.eraseRecord(out, recordId);
                         }
                         else{
-                            webServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error erasing record:" +
+                            defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error erasing record:" +
                                     "invalid arguments. Syntax: /rest/records/eraseRecord?recordId=RECORD_ID " +
                                     "[Mandatory field: recordId]");
                         }
@@ -1203,10 +1203,10 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
             else {
                 if(restRequest.getUriHierarchy().get(1).equals("getStatistics")){
                     if(restRequest.getRequestParameters().get("type") != null){
-                        webServices.getStatistics(out, restRequest.getRequestParameters().get("type"));
+                        defaultWebServices.getStatistics(out, restRequest.getRequestParameters().get("type"));
                     }
                     else{
-                        webServices.getStatistics(out, "ALL");
+                        defaultWebServices.getStatistics(out, "ALL");
                     }
                 }
             }
