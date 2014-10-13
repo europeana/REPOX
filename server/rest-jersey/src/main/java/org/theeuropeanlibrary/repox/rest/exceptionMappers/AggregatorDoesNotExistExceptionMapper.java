@@ -3,18 +3,20 @@ package org.theeuropeanlibrary.repox.rest.exceptionMappers;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import pt.utl.ist.util.exceptions.AggregatorDoesNotExistsException;
+import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
 
 /**
- * Exception handler for the {@link pt.utl.ist.util.exceptions.AggregatorDoesNotExistsException}
+ * Exception handler for the {@link pt.utl.ist.util.exceptions.AggregatorDoesNotExistException}
  * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 10, 2014
  */
-public class AggregatorDoesNotExistsExceptionMapper implements ExceptionMapper<AggregatorDoesNotExistsException> {
+@Provider
+public class AggregatorDoesNotExistExceptionMapper implements ExceptionMapper<AggregatorDoesNotExistException> {
     @Override
-    public Response toResponse(AggregatorDoesNotExistsException ex) {
+    public Response toResponse(AggregatorDoesNotExistException ex) {
         //TODO Fix error code
         return Response.status(404).entity(ex.getMessage()).type("text/plain").build();
     }

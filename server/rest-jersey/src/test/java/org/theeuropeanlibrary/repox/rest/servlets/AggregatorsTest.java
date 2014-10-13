@@ -3,23 +3,37 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.URI;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
+
+import pt.utl.ist.dataProvider.Aggregator;
 
 /**
- * 
+ * Aggregators context path handling tests.
  * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
-public class AggregatorsTest extends JerseyTest{
-    public AggregatorsTest()throws Exception {
-        super(new ResourceConfig().packages("org.tel.servlets"));
+public class AggregatorsTest extends JerseyTest {
+
+    public AggregatorsTest() throws Exception {
+        super(new ResourceConfig().packages("org.theeuropeanlibrary.repox.rest.servlets"));
     }
-   
+
     /**
      * @throws java.lang.Exception
      */
@@ -35,13 +49,80 @@ public class AggregatorsTest extends JerseyTest{
     }
 
     /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.Aggregators#getOptions()}.
+     */
+    @Test
+    @Ignore
+    public void testGetOptions() {
+        int numberOfAvailableOptions = 1;
+        AggregatorOptionListContainer aolc = target("/aggregators").request(MediaType.APPLICATION_XML).options().readEntity(AggregatorOptionListContainer.class);
+        //Check the number of options provided
+        assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
+    }
+
+    /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.Aggregators#getAggregator(java.lang.String)}.
      */
     @Test
+//    @Ignore
     public final void testGetAggregator() {
-        String aggregatorId = "10";
-        final String responseMsg = target("/aggregators/" + aggregatorId).request().get(String.class);
-        assertEquals("Aggregator" + aggregatorId, responseMsg);
+        String aggregatorId = "Austriar";
+//        final String responseMsg = target("/aggregators/" + aggregatorId).request().get(String.class);
+//        assertEquals("Aggregator" + aggregatorId, responseMsg);
+//        System.out.println("Aggregator" + responseMsg);
+        
+        Response response = target("/aggregators/" + aggregatorId).request(MediaType.APPLICATION_XML).get();
+        System.out.println(response.getStatus());
+        String aggregator = response.readEntity(String.class);
+        System.out.println(aggregator);
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+
+    /**
+     * TEMPORARY TEST METHOD
+     * @throws JAXBException
+     */
+    @Test
+    @Ignore
+    public final void fastTesting() throws JAXBException {
+        //        ArrayList<Option> arrayList = new ArrayList<Option>();
+        //        arrayList.add(new Option("description", "syntax"));
+        //        arrayList.add(new Option("description2", "syntax2"));
+        //        OptionList optionList = new OptionList(arrayList);
+
+        URI uri = UriBuilder.fromPath("http://app/rest").build();
+        AggregatorOptionListContainer optionList = new AggregatorOptionListContainer(uri);
+
+        JAXBContext jc = JAXBContext.newInstance(AggregatorOptionListContainer.class);
+
+        Marshaller marshaller = jc.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //pretty print XML
+        marshaller.marshal(optionList, System.out);
+        
+        
+        
+//        JAXBContext ctx;
+//        try {
+//            ctx = JAXBContext.newInstance(AggregatorOptionListContainer.class);
+//            Marshaller marshaller = ctx.createMarshaller();
+//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//            marshaller.marshal(aolc, System.out);
+//
+//        } catch (JAXBException e) {
+//            throw new RuntimeException("Caused by JAXBException", e);
+//        }
+//
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        System.out.println(gson.toJson(aolc));
+//        
+//        System.out.println(target("/aggregators/options").request(MediaType.APPLICATION_JSON).options().readEntity(String.class));
     }
 
 }

@@ -13,12 +13,73 @@
 	<artifactId>repox-server-rest-jersey</artifactId>
 	<packaging>war</packaging>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<!-- <failOnMissingWebXml>false</failOnMissingWebXml> -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-shared-resources</id>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<!-- Use as much as needed to be specific or else it will unpack dependencies 
+								that are not needed...also scope,type,classifier etc -->
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+							<includeArtifacIds>repox-resources</includeArtifacIds>
+							<includeGroupIds>${project.groupId}</includeGroupIds>
+							<includeClassifiers>resources</includeClassifiers>
+							<includeTypes>zip</includeTypes>
+							<excludeTransitive>true</excludeTransitive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
+		<!-- Copy reosurces for accessing the repox sercies -->
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-resources</artifactId>
+			<classifier>resources</classifier>
+			<type>zip</type>
+			<!-- Make sure this isn't included on any classpath -->
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
 			<version>2.13</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- (Un)Marshal for JSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3</version>
 		</dependency>
 
 		<!-- Media types support -->
@@ -41,25 +102,43 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<warSourceDirectory>src/main/webapp</warSourceDirectory>
-					<!-- <failOnMissingWebXml>false</failOnMissingWebXml> -->
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	<profiles>
+		<!-- The development profile is only used while development and what it 
+			really does is copy the needed property files from the classes folder to 
+			the default maven resources folder so it can be deployed in an IDE(ex. eclipse) 
+			for testing -->
+		<profile>
+			<id>copy-resources</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>src/main/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>configuration.properties</include>
+												<include>gui.properties</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
