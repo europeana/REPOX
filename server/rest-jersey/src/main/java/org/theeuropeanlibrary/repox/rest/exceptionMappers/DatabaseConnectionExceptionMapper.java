@@ -1,5 +1,5 @@
 /* DatabaseConnectionException.java - created on Oct 10, 2014, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.repox.rest.exceptionHandlers;
+package org.theeuropeanlibrary.repox.rest.exceptionMappers;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -14,9 +14,10 @@ import pt.utl.ist.util.exceptions.DatabaseConnectionException;
  * @since Oct 10, 2014
  */
 @Provider
-public class DatabaseConnectionExceptionHandler implements ExceptionMapper<DatabaseConnectionException> {
+public class DatabaseConnectionExceptionMapper implements ExceptionMapper<DatabaseConnectionException> {
     @Override
     public Response toResponse(DatabaseConnectionException ex) {
+        //TODO Fix error code
         return Response.status(404).entity(ex.getMessage()).type("text/plain").build();
     }
 }
