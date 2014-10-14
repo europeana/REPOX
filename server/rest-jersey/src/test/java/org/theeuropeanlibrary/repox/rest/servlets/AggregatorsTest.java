@@ -3,24 +3,17 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
-import java.net.URI;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
-
-import pt.utl.ist.dataProvider.Aggregator;
 
 /**
  * Aggregators context path handling tests.
@@ -31,9 +24,9 @@ import pt.utl.ist.dataProvider.Aggregator;
 public class AggregatorsTest extends JerseyTest {
 
     public AggregatorsTest() throws Exception {
-        super(new ResourceConfig().packages("org.theeuropeanlibrary.repox.rest.servlets"));
+        super(new JerseyConfig());
     }
-
+    
     /**
      * @throws java.lang.Exception
      */
@@ -55,7 +48,9 @@ public class AggregatorsTest extends JerseyTest {
     @Ignore
     public void testGetOptions() {
         int numberOfAvailableOptions = 1;
-        AggregatorOptionListContainer aolc = target("/aggregators").request(MediaType.APPLICATION_XML).options().readEntity(AggregatorOptionListContainer.class);
+        Response response = target("/aggregators").request(MediaType.APPLICATION_XML).options();
+        assertEquals(200, response.getStatus());
+        AggregatorOptionListContainer aolc = response.readEntity(AggregatorOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
     }
@@ -66,7 +61,7 @@ public class AggregatorsTest extends JerseyTest {
     @Test
 //    @Ignore
     public final void testGetAggregator() {
-        String aggregatorId = "Austriar";
+        String aggregatorId = "Austriar0";
 //        final String responseMsg = target("/aggregators/" + aggregatorId).request().get(String.class);
 //        assertEquals("Aggregator" + aggregatorId, responseMsg);
 //        System.out.println("Aggregator" + responseMsg);
@@ -75,7 +70,6 @@ public class AggregatorsTest extends JerseyTest {
         System.out.println(response.getStatus());
         String aggregator = response.readEntity(String.class);
         System.out.println(aggregator);
-        
     }
     
     
@@ -92,19 +86,26 @@ public class AggregatorsTest extends JerseyTest {
     @Test
     @Ignore
     public final void fastTesting() throws JAXBException {
+        
+        
+        Response response = target("/aggregators").request(MediaType.TEXT_PLAIN).get();
+        System.out.println(response.getStatus());
+        String aggregator = response.readEntity(String.class);
+        System.out.println(aggregator);
+        
         //        ArrayList<Option> arrayList = new ArrayList<Option>();
         //        arrayList.add(new Option("description", "syntax"));
         //        arrayList.add(new Option("description2", "syntax2"));
         //        OptionList optionList = new OptionList(arrayList);
 
-        URI uri = UriBuilder.fromPath("http://app/rest").build();
-        AggregatorOptionListContainer optionList = new AggregatorOptionListContainer(uri);
-
-        JAXBContext jc = JAXBContext.newInstance(AggregatorOptionListContainer.class);
-
-        Marshaller marshaller = jc.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //pretty print XML
-        marshaller.marshal(optionList, System.out);
+//        URI uri = UriBuilder.fromPath("http://app/rest").build();
+//        AggregatorOptionListContainer optionList = new AggregatorOptionListContainer(uri);
+//
+//        JAXBContext jc = JAXBContext.newInstance(AggregatorOptionListContainer.class);
+//
+//        Marshaller marshaller = jc.createMarshaller();
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //pretty print XML
+//        marshaller.marshal(optionList, System.out);
         
         
         

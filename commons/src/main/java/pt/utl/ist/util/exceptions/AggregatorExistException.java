@@ -9,18 +9,18 @@ import java.io.Serializable;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 10, 2014
  */
-public class AggregatorExistsException extends Exception implements Serializable{
+public class AggregatorExistException extends Exception implements Serializable{
     private static final long serialVersionUID = 44L;
 
-    public AggregatorExistsException() {
+    public AggregatorExistException() {
         super();
     }
 
-    public AggregatorExistsException(String msg) {
+    public AggregatorExistException(String msg) {
         super(msg);
     }
 
-    public AggregatorExistsException(String msg, Exception e) {
+    public AggregatorExistException(String msg, Exception e) {
         super(msg, e);
     }
 }

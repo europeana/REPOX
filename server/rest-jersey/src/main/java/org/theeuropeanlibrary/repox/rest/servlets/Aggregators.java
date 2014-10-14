@@ -6,7 +6,6 @@ import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -55,34 +54,31 @@ public class Aggregators {
     @Path("/{aggregatorId}")
     @Produces({ MediaType.APPLICATION_XML })
     public String getAggregator(@PathParam("aggregatorId") String aggregatorId) throws AggregatorDoesNotExistException {
-        
-        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());    
-        
+
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+
         Aggregator aggregator = null;
         Element aggregatorsElement = null;
-        try {
-            aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
-            if(aggregator != null){
-                aggregatorsElement = aggregator.createElement(false);
-//                System.out.println(aggregatorsElement.asXML());
-            }
-            else{
-                throw new WebApplicationException(300);
-//                throw new AggregatorDoesNotExistException("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            }
+        aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        if (aggregator != null) {
+            aggregatorsElement = aggregator.createElement(false);
+            //                System.out.println(aggregatorsElement.asXML());
+        } else {
+            throw new AggregatorDoesNotExistException("Aggregator doesn't exist!");
         }
-        catch (Exception e) {
-            throw new WebApplicationException(300);
-//            throw new AggregatorDoesNotExistException("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//            System.out.println();
-        }
-        
-        
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//      System.out.println(gson.toJson(aggregator));
-        
-        
+
+        //        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //      System.out.println(gson.toJson(aggregator));
+
         return aggregatorsElement.asXML();
-//        return "Aggregator" + aggregatorId;
+        //        return "Aggregator" + aggregatorId;
+    }
+
+    @GET
+    @Produces({ MediaType.TEXT_PLAIN })
+    public String test() throws AggregatorDoesNotExistException {
+        //            return "ss";
+        throw new AggregatorDoesNotExistException("AAAAA");
+
     }
 }
