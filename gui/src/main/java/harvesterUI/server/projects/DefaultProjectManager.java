@@ -433,7 +433,7 @@ public class DefaultProjectManager extends ProjectManager {
                     values.add(new FilterAttribute(showName,dataProvider.getCountry()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
                     DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider)dataProvider;
-                    values.add(new FilterAttribute(dataProviderEuropeana.getDataSetType().name(),dataProviderEuropeana.getDataSetType().name()));
+                    values.add(new FilterAttribute(dataProviderEuropeana.getProviderType().name(),dataProviderEuropeana.getProviderType().name()));
                 }
             }
             else if(object instanceof DataSourceContainer){
@@ -445,7 +445,7 @@ public class DefaultProjectManager extends ProjectManager {
                             countryMap.get(parent.getCountry()) + "\"/> " + countryMap.get(parent.getCountry());
                     values.add(new FilterAttribute(showName,parent.getCountry()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
-                    values.add(new FilterAttribute(parent.getDataSetType().name(),parent.getDataSetType().name()));
+                    values.add(new FilterAttribute(parent.getProviderType().name(),parent.getProviderType().name()));
                 }
             }
         }
@@ -830,7 +830,7 @@ public class DefaultProjectManager extends ProjectManager {
         newDataProviderUI.setDescription(dataProviderEuropeana.getDescription());
         if(dataProviderEuropeana.getHomePage() != null)
             newDataProviderUI.setHomepage(dataProviderEuropeana.getHomePage().toString());
-        newDataProviderUI.setType(dataProviderEuropeana.getDataSetType().name());
+        newDataProviderUI.setType(dataProviderEuropeana.getProviderType().name());
         newDataProviderUI.setParentAggregatorID(aggregatorUI.getId());
         return newDataProviderUI;
     }

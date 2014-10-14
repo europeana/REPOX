@@ -8,6 +8,11 @@ import pt.utl.ist.util.ProviderType;
 import java.net.URL;
 import java.util.HashMap;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by IntelliJ IDEA.
  * User: GPedrosa
@@ -15,10 +20,15 @@ import java.util.HashMap;
  * Time: 13:27
  * To change this template use File | Settings | File Templates.
  */
+@XmlRootElement(name = "dataprovider")
+@XmlAccessorType(XmlAccessType.NONE)
 public class DefaultDataProvider extends DataProvider{
+    @XmlElement
     private String nameCode;
+    @XmlElement
     private URL homePage;
-    private ProviderType dataSetType;
+    @XmlElement
+    private ProviderType providerType;
 
     public String getNameCode() {
         return nameCode;
@@ -36,19 +46,19 @@ public class DefaultDataProvider extends DataProvider{
         this.homePage = homePage;
     }
 
-    public ProviderType getDataSetType() {
-        return dataSetType;
+    public ProviderType getProviderType() {
+        return providerType;
     }
 
-    public void setDataSetType(ProviderType dataSetType) {
-        this.dataSetType = dataSetType;
+    public void setProviderType(ProviderType dataSetType) {
+        this.providerType = dataSetType;
     }
-
 
     /**
      * Create Element from data provider information
      * @return Document
      */
+    @Override
     public Element createElement(boolean writeDataSources){
         Element dataProviderElement = DocumentHelper.createElement("provider");
 
@@ -60,8 +70,8 @@ public class DefaultDataProvider extends DataProvider{
         if(this.getDescription() != null) {
             dataProviderElement.addElement("description").setText(this.getDescription());
         }
-        if(this.getDataSetType() != null) {
-            dataProviderElement.addElement("type").setText(this.getDataSetType().toString());
+        if(this.getProviderType() != null) {
+            dataProviderElement.addElement("type").setText(this.getProviderType().toString());
         }
         if(this.getNameCode() != null) {
             dataProviderElement.addElement("nameCode").setText(this.getNameCode());
@@ -80,9 +90,6 @@ public class DefaultDataProvider extends DataProvider{
         return dataProviderElement;
     }
 
-
-
-
     /**
      * Create new DefaultDataProvider
      * @param id
@@ -98,7 +105,7 @@ public class DefaultDataProvider extends DataProvider{
         super(id, name, country, description, dataSourceContainers);
         this.nameCode = nameCode;
         this.homePage = homePage;
-        this.dataSetType = dataSetType;
+        this.providerType = dataSetType;
     }
 
     public DefaultDataProvider() {

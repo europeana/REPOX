@@ -15,15 +15,17 @@ import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 
+import pt.utl.ist.dataProvider.Aggregator;
+
 /**
  * Aggregators context path handling tests.
  * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
-public class AggregatorsTest extends JerseyTest {
+public class AggregatorsResourceTest extends JerseyTest {
 
-    public AggregatorsTest() throws Exception {
+    public AggregatorsResourceTest() throws Exception {
         super(new JerseyConfig());
     }
     
@@ -42,7 +44,7 @@ public class AggregatorsTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.Aggregators#getOptions()}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
      */
     @Test
     @Ignore
@@ -56,20 +58,16 @@ public class AggregatorsTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.Aggregators#getAggregator(java.lang.String)}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregator(java.lang.String)}.
      */
     @Test
 //    @Ignore
-    public final void testGetAggregator() {
+    public final void testGetAggregator() {    
         String aggregatorId = "Austriar0";
-//        final String responseMsg = target("/aggregators/" + aggregatorId).request().get(String.class);
-//        assertEquals("Aggregator" + aggregatorId, responseMsg);
-//        System.out.println("Aggregator" + responseMsg);
-        
-        Response response = target("/aggregators/" + aggregatorId).request(MediaType.APPLICATION_XML).get();
+        Response response = target("/aggregators/" + aggregatorId).request(MediaType.APPLICATION_JSON).get();
         System.out.println(response.getStatus());
-        String aggregator = response.readEntity(String.class);
-        System.out.println(aggregator);
+        Aggregator aggregator = response.readEntity(Aggregator.class);
+        System.out.println(aggregator.getId());
     }
     
     

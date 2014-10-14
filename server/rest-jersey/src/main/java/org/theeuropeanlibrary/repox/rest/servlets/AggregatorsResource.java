@@ -10,7 +10,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import org.dom4j.Element;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -27,9 +26,17 @@ import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
  */
 
 @Path("/aggregators")
-public class Aggregators {
+public class AggregatorsResource {
     @Context
     UriInfo uriInfo;
+    
+    public static DefaultDataManager dataManager;
+    
+    public AggregatorsResource()
+    {
+        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
+        dataManager = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager());
+    }
 
     /**
      * Retrieve all the available options for Aggregators
@@ -47,37 +54,24 @@ public class Aggregators {
      * Retrieve the aggregator with the provided id.
      * Relative path : /aggregators/{aggregatorId}
      * @param aggregatorId
-     * @return
+     * @return Aggregator information
      * @throws AggregatorDoesNotExistException 
      */
     @GET
     @Path("/{aggregatorId}")
-    @Produces({ MediaType.APPLICATION_XML })
-    public String getAggregator(@PathParam("aggregatorId") String aggregatorId) throws AggregatorDoesNotExistException {
-
-        ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Aggregator getAggregator(@PathParam("aggregatorId") String aggregatorId) throws AggregatorDoesNotExistException {
         Aggregator aggregator = null;
-        Element aggregatorsElement = null;
-        aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
-        if (aggregator != null) {
-            aggregatorsElement = aggregator.createElement(false);
-            //                System.out.println(aggregatorsElement.asXML());
-        } else {
+        aggregator = dataManager.getAggregator(aggregatorId);
+        if (aggregator == null)
             throw new AggregatorDoesNotExistException("Aggregator doesn't exist!");
-        }
 
-        //        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        //      System.out.println(gson.toJson(aggregator));
-
-        return aggregatorsElement.asXML();
-        //        return "Aggregator" + aggregatorId;
+        return aggregator;
     }
 
     @GET
     @Produces({ MediaType.TEXT_PLAIN })
     public String test() throws AggregatorDoesNotExistException {
-        //            return "ss";
         throw new AggregatorDoesNotExistException("AAAAA");
 
     }

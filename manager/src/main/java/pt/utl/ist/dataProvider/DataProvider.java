@@ -1,25 +1,39 @@
 package pt.utl.ist.dataProvider;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-
-import pt.utl.ist.configuration.ConfigSingleton;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
+import pt.utl.ist.configuration.ConfigSingleton;
+
 /**
  */
+@XmlRootElement(name = "dataprovider")
+@XmlAccessorType(XmlAccessType.NONE)
 public class DataProvider {
+    @XmlElement
     private String                               id;
+    @XmlElement
     private String                               name;
+    @XmlElement
     private String                               country;
+    @XmlElement
     private String                               description;
+    @Transient
     private HashMap<String, DataSourceContainer> dataSourceContainers;
 
     // optional
+    @XmlElement
     private String                               email;
 
     public String getId() {

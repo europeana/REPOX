@@ -100,7 +100,7 @@ public class FilterManagementUtil {
 
         if(RepoxServiceImpl.getProjectManager() instanceof DefaultProjectManager){
             DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider) dataProvider;
-            result = isSameDPType(dataProviderEuropeana.getDataSetType().name(), filterQuery);
+            result = isSameDPType(dataProviderEuropeana.getProviderType().name(), filterQuery);
             if(result != null && !result)
                 deleteDataProviderFromList(dataProvider, dataToRemove);
         }

@@ -23,6 +23,11 @@ import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.TransformerConfigurationException;
 
 import java.io.*;
@@ -34,12 +39,17 @@ import java.util.*;
  * Implementation of a DataSource that makes requests to a OAI-PMH Provider and
  * harvests its Records into the DataSource
  */
+@XmlRootElement(name = "datasource")
+@XmlAccessorType(XmlAccessType.NONE)
 public class OaiDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(OaiDataSource.class);
 
+    @XmlElement
     private String               oaiSourceURL;
+    @XmlElement
     private String               oaiSet;
 
+    @Transient
     private FileRetrieveStrategy retrieveStrategy;
 
     public FileRetrieveStrategy getRetrieveStrategy() {

@@ -505,7 +505,7 @@ public class DefaultSaveData {
                 dataProvider.setCountry(dataProviderUI.getCountry());
                 dataProvider.setName(dataProviderUI.getName());
                 dataProvider.setDescription(dataProviderUI.getDescription());
-                dataProvider.setDataSetType(ProviderType.valueOf(dataProviderUI.getType()));
+                dataProvider.setProviderType(ProviderType.valueOf(dataProviderUI.getType()));
                 dataProvider.setNameCode(dataProviderUI.getNameCode());
                 dataProvider.setHomePage(url);
 

@@ -871,7 +871,7 @@ public class DefaultDataManager implements DataManager {
                 }
             }
             try {
-                newDataProvider.setDataSetType(ProviderType.get(dataSetType));
+                newDataProvider.setProviderType(ProviderType.get(dataSetType));
             } catch (Exception e) {
                 throw new InvalidArgumentsException(dataSetType);
             }
@@ -942,7 +942,7 @@ public class DefaultDataManager implements DataManager {
                 }
             }
             try {
-                newDataProvider.setDataSetType(ProviderType.get(dataSetType));
+                newDataProvider.setProviderType(ProviderType.get(dataSetType));
             } catch (Exception e) {
                 throw new InvalidArgumentsException(dataSetType);
             }
@@ -1096,7 +1096,7 @@ public class DefaultDataManager implements DataManager {
 
             if (dataSetType != null) {
                 try {
-                    dataProvider.setDataSetType(ProviderType.get(dataSetType));
+                    dataProvider.setProviderType(ProviderType.get(dataSetType));
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(dataSetType);
                 }
