@@ -2,6 +2,11 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -10,13 +15,15 @@ import javax.xml.bind.JAXBException;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig;
+import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigTesting;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 
 import pt.utl.ist.dataProvider.Aggregator;
+import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
 
 /**
  * Aggregators context path handling tests.
@@ -28,7 +35,7 @@ import pt.utl.ist.dataProvider.Aggregator;
 public class AggregatorsResourceTest extends JerseyTest {
 
     public AggregatorsResourceTest() throws Exception {
-        super(new JerseyConfig());
+        super(new JerseyConfigTesting());
     }
     
     /**
@@ -44,12 +51,17 @@ public class AggregatorsResourceTest extends JerseyTest {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
     }
+    
+    @Before
+    public void setUpBeforeMethod()  throws Exception{
+        reset(JerseyConfigTesting.dataManager);
+    }
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {     
         int numberOfAvailableOptions = 1;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
@@ -67,13 +79,13 @@ public class AggregatorsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregator(java.lang.String)}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetAggregator() {    
         String aggregatorId = "Austriar0";
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
         
         Response response = target.request(MediaType.APPLICATION_XML).head();
-        assertEquals(200, response.getStatus()); //Check xml workinng
+        assertEquals(200, response.getStatus()); //Check xml working
         response = target.request(MediaType.APPLICATION_JSON).head(); 
         assertEquals(200, response.getStatus()); //Check json working
         response = target.request(MediaType.APPLICATION_XML).get();
@@ -103,16 +115,34 @@ public class AggregatorsResourceTest extends JerseyTest {
     /**
      * TEMPORARY TEST METHOD
      * @throws JAXBException
+     * @throws AggregatorDoesNotExistException 
+     * @throws MalformedURLException 
      */
     @Test
-    @Ignore
-    public final void fastTesting() throws JAXBException {
+//    @Ignore
+    public final void fastTesting() throws JAXBException, AggregatorDoesNotExistException, MalformedURLException {
+        String aggregatorId = "Austriar0";
         
+//        DefaultDataManager dataManager = mock(DefaultDataManager.class);
+//        when(dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
+//        AggregatorsResource ar = new AggregatorsResource(dataManager);
         
-        Response response = target("/aggregators").request(MediaType.TEXT_PLAIN).get();
-        System.out.println(response.getStatus());
-        String aggregator = response.readEntity(String.class);
-        System.out.println(aggregator);
+//        Aggregator aggregator = ar.getAggregator(aggregatorId);
+        
+        when(JerseyConfigTesting.dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
+        reset(JerseyConfigTesting.dataManager);
+        when(JerseyConfigTesting.dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://else"), null));
+        
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, response.getStatus());
+        Aggregator aggregator = response.readEntity(Aggregator.class);
+        assertEquals(aggregatorId, aggregator.getId());
+        System.out.println(aggregator.getHomePage());
+//        Response response = target("/aggregators").request(MediaType.TEXT_PLAIN).get();
+//        System.out.println(response.getStatus());
+//        String aggregator = response.readEntity(String.class);
+//        System.out.println(aggregator);
         
         //        ArrayList<Option> arrayList = new ArrayList<Option>();
         //        arrayList.add(new Option("description", "syntax"));

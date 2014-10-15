@@ -30,7 +30,7 @@ public class AggregatorsResource {
     @Context
     UriInfo uriInfo;
     
-    public static DefaultDataManager dataManager;
+    public DefaultDataManager dataManager;
     
     /**
      * Initialize fields before serving.
@@ -40,6 +40,17 @@ public class AggregatorsResource {
         ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
         dataManager = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager());
     }
+    
+
+    /**
+     * Creates a new instance of this class.
+     * @param dataManager
+     */
+    public AggregatorsResource(DefaultDataManager dataManager) {
+        super();
+        this.dataManager = dataManager;
+    }
+
 
     /**
      * Retrieve all the available options for Aggregators

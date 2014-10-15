@@ -3,13 +3,15 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.MalformedURLException;
+
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
-import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig;
+import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigTesting;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RootOptionListContainer;
 
 /**
@@ -23,9 +25,10 @@ public class RootResourceTest extends JerseyTest  {
     
     /**
      * Initialize with the configuration
+     * @throws MalformedURLException 
      */
-    public RootResourceTest() {
-        super(new JerseyConfig());
+    public RootResourceTest() throws MalformedURLException {
+        super(new JerseyConfigTesting());
     }
 
     /**
