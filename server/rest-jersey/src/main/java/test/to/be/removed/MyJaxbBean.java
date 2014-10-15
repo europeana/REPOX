@@ -1,5 +1,5 @@
 /* MyJaxbBean.java - created on Oct 13, 2014, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.repox.rest.servlets;
+package test.to.be.removed;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
