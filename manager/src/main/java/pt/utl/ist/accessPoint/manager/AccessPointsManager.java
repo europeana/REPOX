@@ -18,14 +18,13 @@ import java.util.List;
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
 
 /**
- * Created by IntelliJ IDEA.
- * User: GPedrosa
- * Date: 31-03-2011
- * Time: 12:51
- * To change this template use File | Settings | File Templates.
+ * This interface defines access to the actual data.
+ *
+ * @author Gilberto Pedrosa
+ * @author Nuno Freire
  */
-
 public interface AccessPointsManager {
+
     /**
      * Do some initialization tasks if necessary. This is called from the
      * RepoxManagerDefault when initializing
@@ -41,7 +40,7 @@ public interface AccessPointsManager {
      * @throws SQLException
      */
     void shutdown() throws SQLException;
-    
+
     /**
      * Update a Data Source Access Point after the Data Source Id is changed
      *
@@ -83,9 +82,9 @@ public interface AccessPointsManager {
      * @throws IOException
      * @throws SQLException
      */
-    public void processRecord(DataSource dataSource, RecordRepox record,File logFile) throws IOException, SQLException;
+    public void processRecord(DataSource dataSource, RecordRepox record, File logFile) throws IOException, SQLException;
 //    void processRecord(DataSource dataSource, RecordRepox record, File logFile) throws AccessPointException;
-    
+
     /**
      * Processes and saves the values for the AccessPoints of a List of
      * RecordRepox records
@@ -151,7 +150,7 @@ public interface AccessPointsManager {
      * @throws SQLException
      */
     Collection<OaiItem> getRecords(Urn... urnOfRecords) throws IOException, DocumentException, SQLException;
-    
+
     /**
      * Gets an OaiItem corresponding to a RecordRepox URN
      *
@@ -210,4 +209,3 @@ public interface AccessPointsManager {
      */
     int[] getRecordCountLastrowPair(DataSource dataSource, Integer fromRow, String fromDate, String toDate) throws SQLException;
 }
-
