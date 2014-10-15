@@ -3,12 +3,11 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.ws.rs.core.Application;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RootOptionListContainer;
@@ -33,10 +32,14 @@ public class RootResourceTest extends JerseyTest  {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.RootResource#getOptions()}.
      */
     @Test
-    public final void testGetOptions() {
+    public void testGetOptions() {
         int numberOfAvailableOptions = 1;
-        Response response = target("/").request(MediaType.APPLICATION_XML).get();
-        assertEquals(200, response.getStatus());
+        WebTarget target = target("/");
+        
+        Response response = target.request(MediaType.APPLICATION_XML).options();
+        assertEquals(200, response.getStatus()); //Check xml workking
+        response = target("/").request(MediaType.APPLICATION_JSON).options();
+        assertEquals(200, response.getStatus()); //Check json workking
         RootOptionListContainer rolc = response.readEntity(RootOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, rolc.getOptionList().size());
