@@ -11,6 +11,7 @@
 
 	<name>REPOX-SERVER-REST-JERSEY</name>
 	<artifactId>repox-server-rest-jersey</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<build>
@@ -57,6 +58,47 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<!-- The development profile is only used while development and what it 
+			really does is copy the needed property files from the classes folder to 
+			the default maven resources folder so it can be deployed in an IDE(ex. eclipse) 
+			for testing -->
+		<profile>
+			<id>copy-resources</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>src/main/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>configuration.properties</include>
+												<include>gui.properties</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -116,44 +158,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<profiles>
-		<!-- The development profile is only used while development and what it 
-			really does is copy the needed property files from the classes folder to 
-			the default maven resources folder so it can be deployed in an IDE(ex. eclipse) 
-			for testing -->
-		<profile>
-			<id>copy-resources</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>2.6</version>
-						<executions>
-							<execution>
-								<id>copy-resources</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>src/main/resources</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</directory>
-											<filtering>true</filtering>
-											<includes>
-												<include>configuration.properties</include>
-												<include>gui.properties</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
