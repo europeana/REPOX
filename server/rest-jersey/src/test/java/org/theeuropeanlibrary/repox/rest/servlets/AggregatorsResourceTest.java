@@ -19,10 +19,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigTesting;
+import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 
 import pt.utl.ist.dataProvider.Aggregator;
+import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
 
 /**
@@ -34,10 +35,13 @@ import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
 //@Ignore
 public class AggregatorsResourceTest extends JerseyTest {
 
+    DefaultDataManager dataManager;
+
     public AggregatorsResourceTest() throws Exception {
-        super(new JerseyConfigTesting());
+        super(new JerseyConfigMocked());
+        dataManager = JerseyConfigMocked.getDataManager();
     }
-    
+
     /**
      * @throws java.lang.Exception
      */
@@ -51,25 +55,27 @@ public class AggregatorsResourceTest extends JerseyTest {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
     }
-    
+
     @Before
-    public void setUpBeforeMethod()  throws Exception{
-        reset(JerseyConfigTesting.dataManager);
+    public void setUpBeforeMethod() throws Exception {
+        reset(dataManager);
     }
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
      */
     @Test
-//    @Ignore
-    public void testGetOptions() {     
+    //    @Ignore
+    public void testGetOptions() {
         int numberOfAvailableOptions = 1;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
-        
+
+        //Check xml options working
         Response response = target.request(MediaType.APPLICATION_XML).options();
-        assertEquals(200, response.getStatus()); //Check xml working
+        assertEquals(200, response.getStatus());
+        //Check json options working
         response = target.request(MediaType.APPLICATION_JSON).options();
-        assertEquals(200, response.getStatus()); //Check json working 
+        assertEquals(200, response.getStatus()); 
         AggregatorOptionListContainer aolc = response.readEntity(AggregatorOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
@@ -77,40 +83,41 @@ public class AggregatorsResourceTest extends JerseyTest {
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregator(java.lang.String)}.
+     * @throws MalformedURLException 
      */
     @Test
-//    @Ignore
-    public void testGetAggregator() {    
+    //    @Ignore
+    public void testGetAggregator() throws MalformedURLException {
         String aggregatorId = "Austriar0";
+        //Mocking
+        when(dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
+
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-        
+        //Check xml head working
         Response response = target.request(MediaType.APPLICATION_XML).head();
-        assertEquals(200, response.getStatus()); //Check xml working
-        response = target.request(MediaType.APPLICATION_JSON).head(); 
-        assertEquals(200, response.getStatus()); //Check json working
+        assertEquals(200, response.getStatus());
+        //Check json head working
+        response = target.request(MediaType.APPLICATION_JSON).head();
+        assertEquals(200, response.getStatus());
+        //Check get xml working with 200 status
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(200, response.getStatus());
         Aggregator aggregator = response.readEntity(Aggregator.class);
+        //Check get json working with 200 status
         response = target.request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, response.getStatus());
         aggregator = response.readEntity(Aggregator.class);
         assertEquals(aggregatorId, aggregator.getId());
-        
-        //Make the call return an exception
-        target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + "aFakeAggregatorId");
+
+        //Check Errors
+        //Check get xml working with 404 status
+        target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + "FakeAggregatorId");
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
+        //Check get xml working with 404 status
         response = target.request(MediaType.APPLICATION_JSON).get();
         assertEquals(404, response.getStatus());
-//        System.out.println(aggregator.getId());
     }
-    
-    
-    
-    
-    
-    
-    
 
     /**
      * TEMPORARY TEST METHOD
@@ -119,62 +126,9 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws MalformedURLException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public final void fastTesting() throws JAXBException, AggregatorDoesNotExistException, MalformedURLException {
-        String aggregatorId = "Austriar0";
-        
-//        DefaultDataManager dataManager = mock(DefaultDataManager.class);
-//        when(dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
-//        AggregatorsResource ar = new AggregatorsResource(dataManager);
-        
-//        Aggregator aggregator = ar.getAggregator(aggregatorId);
-        
-        when(JerseyConfigTesting.dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
-        reset(JerseyConfigTesting.dataManager);
-        when(JerseyConfigTesting.dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://else"), null));
-        
-        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        assertEquals(200, response.getStatus());
-        Aggregator aggregator = response.readEntity(Aggregator.class);
-        assertEquals(aggregatorId, aggregator.getId());
-        System.out.println(aggregator.getHomePage());
-//        Response response = target("/aggregators").request(MediaType.TEXT_PLAIN).get();
-//        System.out.println(response.getStatus());
-//        String aggregator = response.readEntity(String.class);
-//        System.out.println(aggregator);
-        
-        //        ArrayList<Option> arrayList = new ArrayList<Option>();
-        //        arrayList.add(new Option("description", "syntax"));
-        //        arrayList.add(new Option("description2", "syntax2"));
-        //        OptionList optionList = new OptionList(arrayList);
 
-//        URI uri = UriBuilder.fromPath("http://app/rest").build();
-//        AggregatorOptionListContainer optionList = new AggregatorOptionListContainer(uri);
-//
-//        JAXBContext jc = JAXBContext.newInstance(AggregatorOptionListContainer.class);
-//
-//        Marshaller marshaller = jc.createMarshaller();
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //pretty print XML
-//        marshaller.marshal(optionList, System.out);
-        
-        
-        
-//        JAXBContext ctx;
-//        try {
-//            ctx = JAXBContext.newInstance(AggregatorOptionListContainer.class);
-//            Marshaller marshaller = ctx.createMarshaller();
-//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-//            marshaller.marshal(aolc, System.out);
-//
-//        } catch (JAXBException e) {
-//            throw new RuntimeException("Caused by JAXBException", e);
-//        }
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        System.out.println(gson.toJson(aolc));
-//        
-//        System.out.println(target("/aggregators/options").request(MediaType.APPLICATION_JSON).options().readEntity(String.class));
     }
 
 }

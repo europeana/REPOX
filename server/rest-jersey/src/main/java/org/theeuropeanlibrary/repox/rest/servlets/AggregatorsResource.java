@@ -78,7 +78,7 @@ public class AggregatorsResource {
         Aggregator aggregator = null;
         aggregator = dataManager.getAggregator(aggregatorId);
         if (aggregator == null)
-            throw new AggregatorDoesNotExistException("Aggregator doesn't exist!");
+            throw new AggregatorDoesNotExistException("Aggregator does NOT exist!");
 
         return aggregator;
     }
