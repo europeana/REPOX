@@ -3,11 +3,10 @@ package pt.utl.ist.util.exceptions;
 import java.io.Serializable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Gilberto Pedrosa
- * Date: 28-07-2011
- * Time: 9:46
- * To change this template use File | Settings | File Templates.
+ * Already existent resource.
+ * 
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
+ * @since Oct 16, 2014
  */
 public class AlreadyExistsException extends Exception implements Serializable{
     private static final long serialVersionUID = 44L;

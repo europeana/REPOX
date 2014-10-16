@@ -4,7 +4,7 @@ package pt.utl.ist.util.exceptions;
 import java.io.Serializable;
 
 /**
- * The aggregator specified is not existent.
+ * The resource specified is not existent.
  * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 10, 2014
