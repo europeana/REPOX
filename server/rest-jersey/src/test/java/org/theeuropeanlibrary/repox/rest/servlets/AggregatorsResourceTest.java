@@ -3,6 +3,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
@@ -23,6 +24,7 @@ import pt.utl.ist.dataProvider.Aggregator;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
+//@Ignore
 public class AggregatorsResourceTest extends JerseyTest {
 
     public AggregatorsResourceTest() throws Exception {
@@ -48,10 +50,14 @@ public class AggregatorsResourceTest extends JerseyTest {
      */
     @Test
     @Ignore
-    public void testGetOptions() {
+    public void testGetOptions() {     
         int numberOfAvailableOptions = 1;
-        Response response = target("/aggregators").request(MediaType.APPLICATION_XML).options();
-        assertEquals(200, response.getStatus());
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
+        
+        Response response = target.request(MediaType.APPLICATION_XML).options();
+        assertEquals(200, response.getStatus()); //Check xml working
+        response = target.request(MediaType.APPLICATION_JSON).options();
+        assertEquals(200, response.getStatus()); //Check json working 
         AggregatorOptionListContainer aolc = response.readEntity(AggregatorOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
@@ -61,13 +67,30 @@ public class AggregatorsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregator(java.lang.String)}.
      */
     @Test
-//    @Ignore
-    public final void testGetAggregator() {    
+    @Ignore
+    public void testGetAggregator() {    
         String aggregatorId = "Austriar0";
-        Response response = target("/aggregators/" + aggregatorId).request(MediaType.APPLICATION_JSON).get();
-        System.out.println(response.getStatus());
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
+        
+        Response response = target.request(MediaType.APPLICATION_XML).head();
+        assertEquals(200, response.getStatus()); //Check xml workinng
+        response = target.request(MediaType.APPLICATION_JSON).head(); 
+        assertEquals(200, response.getStatus()); //Check json working
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
         Aggregator aggregator = response.readEntity(Aggregator.class);
-        System.out.println(aggregator.getId());
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, response.getStatus());
+        aggregator = response.readEntity(Aggregator.class);
+        assertEquals(aggregatorId, aggregator.getId());
+        
+        //Make the call return an exception
+        target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + "aFakeAggregatorId");
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(404, response.getStatus());
+//        System.out.println(aggregator.getId());
     }
     
     

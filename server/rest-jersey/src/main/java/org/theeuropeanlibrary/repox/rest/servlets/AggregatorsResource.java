@@ -25,13 +25,16 @@ import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
  * @since Oct 9, 2014
  */
 
-@Path("/aggregators")
+@Path("/" + AggregatorOptionListContainer.AGGREGATORS)
 public class AggregatorsResource {
     @Context
     UriInfo uriInfo;
     
     public static DefaultDataManager dataManager;
     
+    /**
+     * Initialize fields before serving.
+     */
     public AggregatorsResource()
     {
         ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
@@ -58,7 +61,7 @@ public class AggregatorsResource {
      * @throws AggregatorDoesNotExistException 
      */
     @GET
-    @Path("/{aggregatorId}")
+    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Aggregator getAggregator(@PathParam("aggregatorId") String aggregatorId) throws AggregatorDoesNotExistException {
         Aggregator aggregator = null;
@@ -68,6 +71,16 @@ public class AggregatorsResource {
 
         return aggregator;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @GET
     @Produces({ MediaType.TEXT_PLAIN })

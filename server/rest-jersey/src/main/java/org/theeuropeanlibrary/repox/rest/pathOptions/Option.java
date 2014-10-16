@@ -26,7 +26,6 @@ public class Option {
      * No argument constructor needed for JAXB.
      */
     public Option() {
-        super();
     }
 
     /**
