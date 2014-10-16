@@ -33,6 +33,7 @@ public class AggregatorOptionListContainer extends OptionListContainer {
     public AggregatorOptionListContainer(URI baseUri) {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
+        optionList.add(new Option("Get options over Aggregators", baseUri + AGGREGATORS));
         optionList.add(new Option("Gets an Aggregator by Id", baseUri + AGGREGATORS + "/" + AGGREGATORID));
         
         setOptionList(optionList);

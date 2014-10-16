@@ -669,19 +669,22 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws DocumentException
      * @return MessageType
+     * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
      */
     public Aggregator createAggregator(String name, String nameCode, String homepageUrl) throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
         Aggregator newAggregator = new Aggregator();
         if (homepageUrl != null && !homepageUrl.equals("")) {
             try {
+                String generatedHomepageUrl = null;
                 if (!homepageUrl.startsWith("http://") && !homepageUrl.startsWith("https://")) {
-                    homepageUrl = "http://" + homepageUrl;
+                    generatedHomepageUrl = "http://" + homepageUrl;
                 }
                 // test if URL is valid
-                if (!FileUtilSecond.checkUrl(homepageUrl)) {
+                if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
                     throw new Exception();
                 }
-                newAggregator.setHomePage(new URL(homepageUrl));
+                newAggregator.setHomePage(new URL(generatedHomepageUrl));
             } catch (Exception e) {
                 throw new InvalidArgumentsException(homepageUrl);
             }

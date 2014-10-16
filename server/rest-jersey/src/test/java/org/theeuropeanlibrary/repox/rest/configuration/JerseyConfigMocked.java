@@ -6,8 +6,11 @@ import static org.mockito.Mockito.mock;
 import java.net.MalformedURLException;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.theeuropeanlibrary.repox.rest.exceptionMappers.AggregatorDoesNotExistExceptionMapper;
-import org.theeuropeanlibrary.repox.rest.exceptionMappers.AggregatorExistExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.AlreadyExistsExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.InternalServerErrorExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.InvalidArgumentsExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.MissingArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -28,8 +31,12 @@ public class JerseyConfigMocked extends ResourceConfig {
      */
     public JerseyConfigMocked() throws MalformedURLException {
         packages("org.theeuropeanlibrary.repox.rest.servlets");
-        register(AggregatorDoesNotExistExceptionMapper.class);
-        register(AggregatorExistExceptionMapper.class);
+        //Exceptions
+        register(DoesNotExistExceptionMapper.class);
+        register(AlreadyExistsExceptionMapper.class);
+        register(MissingArgumentsExceptionMapper.class);
+        register(InvalidArgumentsExceptionMapper.class);
+        register(InternalServerErrorExceptionMapper.class);
 
         //Register resource with mocks
         AggregatorsResource ar = new AggregatorsResource(dataManager);

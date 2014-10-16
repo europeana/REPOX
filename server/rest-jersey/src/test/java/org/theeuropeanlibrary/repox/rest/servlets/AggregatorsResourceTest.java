@@ -5,9 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +26,9 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContain
 
 import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.util.exceptions.AggregatorDoesNotExistException;
+import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 
 /**
  * Aggregators context path handling tests.
@@ -65,9 +69,9 @@ public class AggregatorsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
      */
     @Test
-    //    @Ignore
+    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 1;
+        int numberOfAvailableOptions = 2;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Check xml options working
@@ -75,7 +79,7 @@ public class AggregatorsResourceTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         //Check json options working
         response = target.request(MediaType.APPLICATION_JSON).options();
-        assertEquals(200, response.getStatus()); 
+        assertEquals(200, response.getStatus());
         AggregatorOptionListContainer aolc = response.readEntity(AggregatorOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
@@ -86,11 +90,12 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws MalformedURLException 
      */
     @Test
-    //    @Ignore
+    @Ignore
     public void testGetAggregator() throws MalformedURLException {
         String aggregatorId = "Austriar0";
         //Mocking
-        when(dataManager.getAggregator(aggregatorId)).thenReturn(new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
+        when(dataManager.getAggregator(aggregatorId)).thenReturn(
+                new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
 
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
         //Check xml head working
@@ -119,15 +124,44 @@ public class AggregatorsResourceTest extends JerseyTest {
         assertEquals(404, response.getStatus());
     }
 
+    @Test
+    public void testCreateAggregator() throws Exception {
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
+
+        //Mocking
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
+        Aggregator createdAggregator = new Aggregator("ValidId", "Greece", "GR", new URL("http://somepage"), null);
+        when(dataManager.createAggregator(aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
+                .thenReturn(createdAggregator).thenThrow(new AlreadyExistsException("Already exists!"))
+                .thenThrow(new InvalidArgumentsException("Invalid Argument URL")).thenThrow(new IOException());
+
+        //Valid request
+        Response response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(201, response.getStatus());
+        //Already exists
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(409, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+        //Internal Server Error        
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Missing Argument Name
+        aggregator = new Aggregator(null, null, "GR", new URL("http://somepage"), null);
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+    }
+
     /**
      * TEMPORARY TEST METHOD
      * @throws JAXBException
-     * @throws AggregatorDoesNotExistException 
+     * @throws DoesNotExistException 
      * @throws MalformedURLException 
      */
     @Test
     @Ignore
-    public final void fastTesting() throws JAXBException, AggregatorDoesNotExistException, MalformedURLException {
+    public final void fastTesting() throws JAXBException, DoesNotExistException, MalformedURLException {
 
     }
 

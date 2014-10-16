@@ -6,18 +6,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import pt.utl.ist.util.exceptions.AggregatorExistException;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 
 /**
- * Exception handler for the {@link pt.utl.ist.util.exceptions.AggregatorExistException}
+ * Exception handler for the {@link pt.utl.ist.util.exceptions.AlreadyExistsException}
  * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 10, 2014
  */
 @Provider
-public class AggregatorExistExceptionMapper implements ExceptionMapper<AggregatorExistException> {
+public class AlreadyExistsExceptionMapper implements ExceptionMapper<AlreadyExistsException> {
     @Override
-    public Response toResponse(AggregatorExistException ex) {
+    public Response toResponse(AlreadyExistsException ex) {
         //Status: 409, Info: Conflict
         return Response.status(409).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
