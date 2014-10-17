@@ -216,9 +216,11 @@ public class DefaultDataManager implements DataManager {
      * Load all aggregators from XML file
      * @param file2Read
      * @param repositoryPath
+     * @param defaultExportDir 
      * @throws DocumentException
      * @throws IOException
      * @return List<Aggregator>
+     * @throws ParseException 
      */
     public synchronized List<Aggregator> loadAggregators(File file2Read, File repositoryPath, File defaultExportDir) throws DocumentException,
             IOException, ParseException {

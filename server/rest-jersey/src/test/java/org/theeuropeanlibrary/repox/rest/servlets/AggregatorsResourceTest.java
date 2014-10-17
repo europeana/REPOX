@@ -41,7 +41,6 @@ import pt.utl.ist.util.exceptions.ObjectNotFoundException;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
-//@Ignore
 public class AggregatorsResourceTest extends JerseyTest {
 
     DefaultDataManager dataManager;
@@ -51,22 +50,9 @@ public class AggregatorsResourceTest extends JerseyTest {
         dataManager = JerseyConfigMocked.getDataManager();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
     @Before
     public void setUpBeforeMethod() throws Exception {
+    	//Reset mock before every test
         reset(dataManager);
     }
 
@@ -264,17 +250,5 @@ public class AggregatorsResourceTest extends JerseyTest {
         //Notice not mocked here cause it has to thow the exception before the call to the dataManager
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(400, response.getStatus());
-    }
-
-    /**
-     * TEMPORARY TEST METHOD
-     * @throws JAXBException
-     * @throws DoesNotExistException 
-     * @throws MalformedURLException 
-     */
-    @Test
-    @Ignore
-    public final void fastTesting() throws JAXBException, DoesNotExistException, MalformedURLException {
-
     }
 }
