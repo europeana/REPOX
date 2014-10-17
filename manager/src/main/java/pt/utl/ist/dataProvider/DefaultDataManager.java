@@ -708,12 +708,11 @@ public class DefaultDataManager implements DataManager {
      * @param nameCode
      * @param homepageUrl
      * @throws IOException
-     * @throws DocumentException
      * @return MessageType
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
-    public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws IOException, DocumentException, ObjectNotFoundException, InvalidArgumentsException {
+    public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws ObjectNotFoundException, InvalidArgumentsException, IOException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(oldAggregatorId);
 
         if (aggregator != null) {
@@ -801,8 +800,6 @@ public class DefaultDataManager implements DataManager {
      *
      * @param aggregatorId
      * @return Gets the Aggregator with aggregatorId from the configuration file if it exists or null otherwise.
-     * @throws DocumentException
-     * @throws IOException
      */
     public Aggregator getAggregator(String aggregatorId) {
         for (Aggregator currentAggregator : aggregators) {

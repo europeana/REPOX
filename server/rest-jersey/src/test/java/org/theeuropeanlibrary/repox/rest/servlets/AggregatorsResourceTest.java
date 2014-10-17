@@ -2,8 +2,9 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -134,7 +135,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws DocumentException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testCreateAggregator() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
@@ -164,7 +165,6 @@ public class AggregatorsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
     }
-    
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
@@ -173,14 +173,16 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws IOException 
      */
     @Test
+    @Ignore
     public void testDeleteAggregator() throws IOException, DocumentException, ObjectNotFoundException {
         String aggregatorId = "SampleId";
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-        
-        //Mocking
-        doNothing().doThrow(new IOException()).doThrow(new DocumentException()).doThrow(new ObjectNotFoundException("resourceId")).when(dataManager).deleteAggregator(aggregatorId);
 
-        //First valid call
+        //Mocking
+        doNothing().doThrow(new IOException()).doThrow(new DocumentException()).doThrow(new ObjectNotFoundException("resourceId")).when(dataManager)
+                .deleteAggregator(aggregatorId);
+
+        //Valid call
         Response response = target.request(MediaType.APPLICATION_XML).delete();
         assertEquals(200, response.getStatus());
         //Two internal server error exceptions
@@ -191,6 +193,37 @@ public class AggregatorsResourceTest extends JerseyTest {
         //Resource does NOT exist
         response = target.request(MediaType.APPLICATION_XML).delete();
         assertEquals(404, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#updateAggregator(String, Aggregator)}.
+     * @throws Exception
+     */
+    @Test
+    public void testUpdateAggregator() throws Exception {
+        String aggregatorId = "SampleId";
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
+        Aggregator updatedAggregator = new Aggregator(aggregatorId, "Greece", "GR", new URL("http://somepage"), null);
+
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
+
+        //Mocking
+        when(dataManager.updateAggregator(aggregatorId, aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
+                .thenReturn(updatedAggregator).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(aggregatorId))
+                .thenThrow(new InvalidArgumentsException());
+
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(200, response.getStatus());
+        //Two internal server error exception
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
     }
 
     /**

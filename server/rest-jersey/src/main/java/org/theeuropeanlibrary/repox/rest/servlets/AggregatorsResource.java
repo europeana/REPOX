@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -119,9 +120,11 @@ public class AggregatorsResource {
             }
         } else
             throw new MissingArgumentsException("Missing argument name!");
-        return Response.created(null).entity("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully").build();
+        return Response.created(null)
+                .entity("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully")
+                .build();
     }
-    
+
     /**
      * Delete an aggregator by specifying the Id.
      * Relative path : /aggregators
@@ -132,19 +135,51 @@ public class AggregatorsResource {
     @DELETE
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Response deleteAggregator(@PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException{
+    public Response deleteAggregator(@PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException {
 
-        if(aggregatorId != null && !aggregatorId.isEmpty()){
-            try {
-                dataManager.deleteAggregator(aggregatorId);
-            } catch (DocumentException | IOException e) {
-                throw new InternalServerErrorException("Error in server : " + e.getMessage());
-            } catch (ObjectNotFoundException e) {
-                throw new DoesNotExistException("A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
-            }
+        try {
+            dataManager.deleteAggregator(aggregatorId);
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException(
+                    "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
         }
-        
+
         return Response.status(200).entity("Aggregator with id " + aggregatorId + " deleted!").build();
+    }
+
+    /**
+     * Update an aggregator by specifying the Id.
+     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the update that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
+     * Relative path : /aggregators
+     * @param aggregatorId 
+     * @param aggregator 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws InvalidArgumentsException 
+     */
+    @PUT
+    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Response updateAggregator(@PathParam("aggregatorId") String aggregatorId, Aggregator aggregator) throws DoesNotExistException, InvalidArgumentsException {
+
+        String name = aggregator.getName();
+        String nameCode = aggregator.getNameCode();
+        String homePage = aggregator.getHomePage().toString();
+
+        try {
+            dataManager.updateAggregator(aggregatorId, name, nameCode, homePage);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException(
+                    "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
+        } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
+            throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+        }
+
+        return Response.status(200).entity("Aggregator with id " + aggregatorId + " updated!").build();
     }
 
     @GET
