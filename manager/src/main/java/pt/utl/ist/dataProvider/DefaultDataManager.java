@@ -62,8 +62,9 @@ public class DefaultDataManager implements DataManager {
     protected List<Object>                  allDataList;
     private DefaultRepoxConfiguration       configuration;
 
-    public DefaultDataManager(File dataFile, MetadataTransformationManager metadataTransformationManager, MetadataSchemaManager metadataSchemaManager, File repositoryPath, File oldTasksFile, File defaultExportDir, DefaultRepoxConfiguration configuration) throws DocumentException, IOException,
-                                                                                                                                                                                                                                                              ParseException {
+    public DefaultDataManager(File dataFile, MetadataTransformationManager metadataTransformationManager,
+                              MetadataSchemaManager metadataSchemaManager, File repositoryPath, File oldTasksFile, File defaultExportDir,
+                              DefaultRepoxConfiguration configuration) throws DocumentException, IOException, ParseException {
         super();
         this.configuration = configuration;
         this.dataFile = dataFile;
@@ -109,6 +110,7 @@ public class DefaultDataManager implements DataManager {
     }
 
     private class AggregatorComparator implements java.util.Comparator<Aggregator> {
+        @Override
         public int compare(Aggregator agg1, Aggregator agg2) {
             String str1 = agg1.getName().toUpperCase();
             String str2 = agg2.getName().toUpperCase();
@@ -123,10 +125,12 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
+    @Override
     public List<Object> getAllDataList() {
         return allDataList;
     }
 
+    @Override
     public int getShowSize() {
         return showSize;
     }
@@ -139,6 +143,7 @@ public class DefaultDataManager implements DataManager {
      * Save all information in a XML file
      * @throws IOException
      */
+    @Override
     public synchronized void saveData() throws IOException {
         loadAllDataList();
         Document document = DocumentHelper.createDocument();
@@ -178,7 +183,8 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @return List<Aggregator>
      */
-    public synchronized List<Aggregator> loadAggregators(File file2Read, File repositoryPath, File defaultExportDir) throws DocumentException, IOException, ParseException {
+    public synchronized List<Aggregator> loadAggregators(File file2Read, File repositoryPath, File defaultExportDir) throws DocumentException,
+            IOException, ParseException {
         List<Aggregator> aggregatorsLoaded = new ArrayList<Aggregator>();
 
         SAXReader reader = new SAXReader();
@@ -241,7 +247,8 @@ public class DefaultDataManager implements DataManager {
 
                 HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-                DefaultDataProvider dataProvider = new DefaultDataProvider(providerId, providerName, providerCountry, providerDescription, dataSourceContainers, providerNameCode, providerHomePage, ProviderType.get(providerType));
+                DefaultDataProvider dataProvider = new DefaultDataProvider(providerId, providerName, providerCountry, providerDescription,
+                        dataSourceContainers, providerNameCode, providerHomePage, ProviderType.get(providerType));
 
                 for (Iterator dataSIterator = currentElementProv.elementIterator("source"); dataSIterator.hasNext();) {
                     // read data sources inside the aggregator
@@ -318,7 +325,8 @@ public class DefaultDataManager implements DataManager {
 
                     //Create MetadataTransformations
                     Map<String, MetadataTransformation> metadataTransformations = new HashMap<String, MetadataTransformation>();
-                    for (Element metadataTransformationElement : (List<Element>)currentDataSourceElement.element("metadataTransformations").elements("metadataTransformation")) {
+                    for (Element metadataTransformationElement : (List<Element>)currentDataSourceElement.element("metadataTransformations").elements(
+                            "metadataTransformation")) {
                         String transformationId = metadataTransformationElement.getText();
                         MetadataTransformation metadataTransformation = metadataTransformationManager.loadMetadataTransformation(transformationId);
                         if (metadataTransformation != null)
@@ -332,9 +340,11 @@ public class DefaultDataManager implements DataManager {
                     if (dataSourceType.equals("DataSourceOai")) {
                         String oaiSource = currentDataSourceElement.elementText("oai-source");
                         String oaiSet = (currentDataSourceElement.element("oai-set") != null ? currentDataSourceElement.elementText("oai-set") : null);
-                        dataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSource, oaiSet, new IdProvidedRecordIdPolicy(), metadataTransformations);
+                        dataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSource, oaiSet,
+                                new IdProvidedRecordIdPolicy(), metadataTransformations);
                     } else if (dataSourceType.equals("DataSourceSruRecordUpdate")) {
-                        dataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
+                        dataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy,
+                                metadataTransformations);
                     } else if (dataSourceType.equals("DataSourceDirectoryImporter")) {
                         String sourcesDirPath = currentDataSourceElement.elementText("sourcesDirPath");
                         String extractStrategyString = currentDataSourceElement.elementText("fileExtract");
@@ -401,7 +411,9 @@ public class DefaultDataManager implements DataManager {
                                 }
                             }
                         }
-                        dataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, metadataTransformations, recordXPath, namespaces);
+                        dataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, metadataTransformations,
+                                recordXPath, namespaces);
                     } else if (dataSourceType.equals("DataSourceZ3950")) {
                         Element targetElement = currentDataSourceElement.element("target");
                         String targetAddress = targetElement.elementText("address");
@@ -412,7 +424,8 @@ public class DefaultDataManager implements DataManager {
                         String targetRecordSyntax = targetElement.elementText("recordSyntax");
                         CharacterEncoding targetCharacterEncoding = CharacterEncoding.get(targetElement.elementText("charset"));
 
-                        Target target = new Target(targetAddress, targetPort, targetDatabase, targetUser, targetPassword, targetCharacterEncoding, targetRecordSyntax);
+                        Target target = new Target(targetAddress, targetPort, targetDatabase, targetUser, targetPassword, targetCharacterEncoding,
+                                targetRecordSyntax);
 
                         Harvester harvestMethod = null;
 
@@ -441,7 +454,8 @@ public class DefaultDataManager implements DataManager {
                             harvestMethod = new IdSequenceHarvester(target, maximumId);
                         }
 
-                        dataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy, metadataTransformations);
+                        dataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy,
+                                metadataTransformations);
                     } else {
                         throw new RuntimeException("Loading configuration from Data Source of type " + dataSourceType + " not implemented");
                     }
@@ -531,7 +545,8 @@ public class DefaultDataManager implements DataManager {
                             if (externalServiceType.equals(ExternalServiceType.NO_MONITOR.name())) {
                                 externalRestService = new ExternalServiceNoMonitor(serviceId, serviceName, serviceUri, dataSource);
                             } else {
-                                externalRestService = new ExternalRestService(serviceId, serviceName, serviceUri, serviceStatusUri, serviceType, ExternalServiceType.valueOf(externalServiceType));
+                                externalRestService = new ExternalRestService(serviceId, serviceName, serviceUri, serviceStatusUri, serviceType,
+                                        ExternalServiceType.valueOf(externalServiceType));
                             }
                             externalRestService.setEnabled(isEnabled);
                             if (externalResultsUri != null && !externalResultsUri.isEmpty())
@@ -546,7 +561,8 @@ public class DefaultDataManager implements DataManager {
                                 boolean parameterRequired = Boolean.parseBoolean(parameterNode.valueOf("@required"));
                                 String exampleStr = parameterNode.valueOf("@example");
                                 String semantics = parameterNode.valueOf("@semantics");
-                                ServiceParameter serviceParameter = new ServiceParameter(parameterName, parameterType, parameterRequired, exampleStr, semantics);
+                                ServiceParameter serviceParameter = new ServiceParameter(parameterName, parameterType, parameterRequired, exampleStr,
+                                        semantics);
                                 serviceParameter.setValue(parameterValue);
                                 externalRestService.getServiceParameters().add(serviceParameter);
                             }
@@ -556,13 +572,16 @@ public class DefaultDataManager implements DataManager {
                         loadDataSourceTags(currentDataSourceElement, dataSource);
 
                         // Create DataSourceContainer
-                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, dataSourceContainerNameCode, dataSourceContainerName, "");
+                        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(dataSource, dataSourceContainerNameCode,
+                                dataSourceContainerName, "");
 
                         // export path
-                        if (currentDataSourceElement.elementText("exportDirPath") != null && !currentDataSourceElement.elementText("exportDirPath").isEmpty())
+                        if (currentDataSourceElement.elementText("exportDirPath") != null && !currentDataSourceElement.elementText("exportDirPath")
+                                .isEmpty())
                             dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
                         else {
-                            File newExportDir = new File(defaultExportDir.getAbsolutePath() + File.separator + dataSource.getId() + File.separator + "export");
+                            File newExportDir = new File(
+                                    defaultExportDir.getAbsolutePath() + File.separator + dataSource.getId() + File.separator + "export");
                             //                            FileUtils.forceMkdir(newExportDir);
                             dataSource.setExportDir(newExportDir.getAbsolutePath());
                         }
@@ -672,7 +691,8 @@ public class DefaultDataManager implements DataManager {
      * @throws InvalidArgumentsException 
      * @throws AlreadyExistsException 
      */
-    public Aggregator createAggregator(String name, String nameCode, String homepageUrl) throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
+    public Aggregator createAggregator(String name, String nameCode, String homepageUrl) throws DocumentException, IOException,
+            InvalidArgumentsException, AlreadyExistsException {
         Aggregator newAggregator = new Aggregator();
         if (homepageUrl != null && !homepageUrl.equals("")) {
             try {
@@ -697,7 +717,8 @@ public class DefaultDataManager implements DataManager {
             aggregators.add(newAggregator);
             saveData();
             return newAggregator;
-        } else //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided
+        } else
+            //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided
             throw new AlreadyExistsException(newAggregator.getName());
     }
 
@@ -712,8 +733,10 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
-    public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws ObjectNotFoundException, InvalidArgumentsException, IOException {
-        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(oldAggregatorId);
+    public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws ObjectNotFoundException,
+            InvalidArgumentsException, IOException {
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
+                .getAggregator(oldAggregatorId);
 
         if (aggregator != null) {
             // only not null fields are updated
@@ -764,7 +787,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      */
     public void deleteAggregator(String aggregatorId) throws IOException, DocumentException, ObjectNotFoundException {
-        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
+                .getAggregator(aggregatorId);
 
         if (aggregator != null) {
             for (Aggregator actualAggregator : aggregators) {
@@ -830,6 +854,23 @@ public class DefaultDataManager implements DataManager {
         return Collections.unmodifiableList(aggregators);
     }
 
+    /**
+     * Retrieves a sorted list of the number of aggregators starting from offset.
+     * @param offset
+     * @param number
+     * @return the number of aggregators requested sorted
+     */
+    public List<Aggregator> getAggregatorsListSorted(int offset, int number) throws Exception {
+        List<Aggregator> sortedList = new ArrayList<Aggregator>(aggregators);
+        Collections.sort(sortedList, new AggregatorComparator());
+
+        //Create new arrayList because of backed list
+        if (number < 0)
+            return new ArrayList<Aggregator>(sortedList);
+        else
+            return new ArrayList<Aggregator>(sortedList.subList(offset, offset + number));
+    }
+
     /******************************************************************************************************************/
     /** DATA PROVIDER's ***********************************************************************************************/
     /******************************************************************************************************************/
@@ -847,8 +888,10 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @return MessageType
      */
-    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
-        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String url,
+            String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
+                .getAggregator(aggregatorId);
 
         if (aggregator != null) {
             DefaultDataProvider newDataProvider = new DefaultDataProvider();
@@ -918,8 +961,10 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws InvalidArgumentsException
      */
-    public DataProvider createDataProvider(String aggregatorId, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
-        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);
+    public DataProvider createDataProvider(String aggregatorId, String id, String name, String country, String description, String nameCode,
+            String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
+        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
+                .getAggregator(aggregatorId);
 
         if (aggregator != null) {
             DefaultDataProvider newDataProvider = new DefaultDataProvider();
@@ -1063,7 +1108,8 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @return MessageType
      */
-    public DataProvider updateDataProvider(String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws ObjectNotFoundException, InvalidArgumentsException, IOException {
+    public DataProvider updateDataProvider(String id, String name, String country, String description, String nameCode, String url, String dataSetType)
+            throws ObjectNotFoundException, InvalidArgumentsException, IOException {
         DefaultDataProvider dataProvider = (DefaultDataProvider)getDataProvider(id);
 
         if (dataProvider != null) {
@@ -1415,7 +1461,8 @@ public class DefaultDataManager implements DataManager {
                         currentDataProvider.getDataSourceContainers().remove(oldDataSourceId).getDataSource();
                         currentDataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(), dataSourceContainer);
                         // update the data source container HashMap
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(currentDataProvider.getDataSourceContainers());
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                                .initialize(currentDataProvider.getDataSourceContainers());
 
                         saveData();
                         break;
@@ -1444,15 +1491,22 @@ public class DefaultDataManager implements DataManager {
         // dataSource.initAccessPoints();
 
         log.info("Updating Data Source with id " + oldDataSourceId + " to id " + newDataSourceId);
-        DefaultAccessPointsManager accessPointsManager = (DefaultAccessPointsManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager();
+        DefaultAccessPointsManager accessPointsManager = (DefaultAccessPointsManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager()
+                .getAccessPointsManager();
 
         //Update Access Points
-        AccessPoint defaultTimestampAP = dataSource.getAccessPoints().get(AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
-        accessPointsManager.updateDataSourceAccessPoint(dataSource, defaultTimestampAP.typeOfIndex(), AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD, AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
+        AccessPoint defaultTimestampAP = dataSource.getAccessPoints().get(
+                AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
+        accessPointsManager.updateDataSourceAccessPoint(dataSource, defaultTimestampAP.typeOfIndex(),
+                AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD,
+                AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
         log.info("Updated AccessPoint with id " + AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD + " to " + AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
 
-        AccessPoint defaultRecordAP = dataSource.getAccessPoints().get(AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
-        accessPointsManager.updateDataSourceAccessPoint(dataSource, defaultRecordAP.typeOfIndex(), AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD, AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
+        AccessPoint defaultRecordAP = dataSource.getAccessPoints().get(
+                AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
+        accessPointsManager.updateDataSourceAccessPoint(dataSource, defaultRecordAP.typeOfIndex(),
+                AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD,
+                AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
         log.info("Updated AccessPoint with id " + AccessPoint.PREFIX_INTERNAL_BD + oldDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD + " to " + AccessPoint.PREFIX_INTERNAL_BD + newDataSourceId + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
 
         // update dataSet info
@@ -1509,15 +1563,18 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @throws IOException
      */
-    public DataSource createDataSourceSruRecordUpdate(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, Map<String, MetadataTransformation> metadataTransformations,
-            List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, AlreadyExistsException, SQLException {
+    public DataSource createDataSourceSruRecordUpdate(String dataProviderId, String id, String description, String nameCode, String name,
+            String exportPath, String schema, String namespace, String metadataFormat, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException,
+            ObjectNotFoundException, AlreadyExistsException, SQLException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
 
                 if (dataProvider != null) {
 
-                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                            new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
@@ -1527,7 +1584,8 @@ public class DefaultDataManager implements DataManager {
                     newDataSource.setExportDir(exportPath);
                     newDataSource.setMarcFormat(marcFormat);
 
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                            .initialize(dataProvider.getDataSourceContainers());
                     updateDataProvider(dataProvider, dataProviderId);
                     return newDataSource;
                 } else {
@@ -1541,8 +1599,10 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource createDataSourceOai(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet, Map<String, MetadataTransformation> metadataTransformations,
-            List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, AlreadyExistsException, SQLException {
+    public DataSource createDataSourceOai(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat)
+            throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, AlreadyExistsException, SQLException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1554,7 +1614,8 @@ public class DefaultDataManager implements DataManager {
                         oaiSourceURL = "http://" + oaiSourceURL;
                     }
                     if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
-                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL,
+                                oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                         DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
@@ -1564,7 +1625,8 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setMarcFormat(marcFormat);
 
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                                .initialize(dataProvider.getDataSourceContainers());
                         updateDataProvider(dataProvider, dataProviderId);
                         return newDataSource;
                     } else {
@@ -1607,9 +1669,11 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws ParseException
      */
-    public DataSource createDataSourceZ3950IdList(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax, String charset,
-            String filePath, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices) throws DocumentException, IOException, ParseException, ObjectNotFoundException,
-            InvalidArgumentsException, AlreadyExistsException, SQLException {
+    public DataSource createDataSourceZ3950IdList(String dataProviderId, String id, String description, String nameCode, String name,
+            String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
+            String recordSyntax, String charset, String filePath, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices) throws DocumentException,
+            IOException, ParseException, ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException, SQLException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1632,7 +1696,8 @@ public class DefaultDataManager implements DataManager {
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
-                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy,
+                            new TreeMap<String, MetadataTransformation>());
 
                     newDataSource.setExportDir(exportPath);
 
@@ -1642,7 +1707,8 @@ public class DefaultDataManager implements DataManager {
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                            .initialize(dataProvider.getDataSourceContainers());
                     updateDataProvider(dataProvider, dataProviderId);
                     return newDataSource;
                 } else {
@@ -1682,9 +1748,12 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws ParseException
      */
-    public DataSource createDataSourceZ3950Timestamp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax,
-            String charset, String earliestTimestampString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices) throws DocumentException, IOException, ParseException,
-            SQLException, ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException {
+    public DataSource createDataSourceZ3950Timestamp(String dataProviderId, String id, String description, String nameCode, String name,
+            String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
+            String recordSyntax, String charset, String earliestTimestampString, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices) throws DocumentException, IOException, ParseException, SQLException,
+            ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1705,7 +1774,8 @@ public class DefaultDataManager implements DataManager {
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
-                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy,
+                            new TreeMap<String, MetadataTransformation>());
 
                     newDataSource.setExportDir(exportPath);
 
@@ -1715,7 +1785,8 @@ public class DefaultDataManager implements DataManager {
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                            .initialize(dataProvider.getDataSourceContainers());
                     updateDataProvider(dataProvider, dataProviderId);
                     return newDataSource;
                 } else {
@@ -1755,9 +1826,11 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws ParseException
      */
-    public DataSource createDataSourceZ3950IdSequence(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax,
-            String charset, String maximumIdString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices) throws DocumentException, IOException, ParseException,
-            SQLException, ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException {
+    public DataSource createDataSourceZ3950IdSequence(String dataProviderId, String id, String description, String nameCode, String name,
+            String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
+            String recordSyntax, String charset, String maximumIdString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices) throws DocumentException,
+            IOException, ParseException, SQLException, ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1774,7 +1847,8 @@ public class DefaultDataManager implements DataManager {
 
                     RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
-                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProvider, id, description, schema, namespace, harvestMethod, recordIdPolicy,
+                            new TreeMap<String, MetadataTransformation>());
 
                     newDataSource.setExportDir(exportPath);
 
@@ -1784,7 +1858,8 @@ public class DefaultDataManager implements DataManager {
                     newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                            .initialize(dataProvider.getDataSourceContainers());
                     updateDataProvider(dataProvider, dataProviderId);
                     return newDataSource;
                 } else {
@@ -1823,9 +1898,11 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @throws IOException
      */
-    public DataSource createDataSourceFtp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String server, String user, String password, String ftpPath, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException,
-            InvalidArgumentsException, ObjectNotFoundException, SQLException, AlreadyExistsException {
+    public DataSource createDataSourceFtp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String server, String user, String password, String ftpPath,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat)
+            throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, SQLException, AlreadyExistsException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1853,7 +1930,9 @@ public class DefaultDataManager implements DataManager {
                         } else if (extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id),
+                                recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
 
@@ -1864,7 +1943,8 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setExternalRestServices(externalRestServices);
                         newDataSource.setMarcFormat(marcFormat);
 
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                                .initialize(dataProvider.getDataSourceContainers());
                         updateDataProvider(dataProvider, dataProviderId);
                         return newDataSource;
                     } else {
@@ -1903,9 +1983,11 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @throws IOException
      */
-    public DataSource createDataSourceHttp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String url, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException,
-            SQLException, AlreadyExistsException {
+    public DataSource createDataSourceHttp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String url, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException,
+            ObjectNotFoundException, SQLException, AlreadyExistsException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
                 DataProvider dataProvider = getDataProvider(dataProviderId);
@@ -1929,7 +2011,9 @@ public class DefaultDataManager implements DataManager {
                         } else if (extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                extractStrategy, retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id),
+                                recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
 
@@ -1940,7 +2024,8 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setExternalRestServices(externalRestServices);
                         newDataSource.setMarcFormat(marcFormat);
 
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                                .initialize(dataProvider.getDataSourceContainers());
                         updateDataProvider(dataProvider, dataProviderId);
                         return newDataSource;
                     } else {
@@ -1979,8 +2064,10 @@ public class DefaultDataManager implements DataManager {
      * @throws DocumentException
      * @throws IOException
      */
-    public DataSource createDataSourceFolder(String dataProviderId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoVariant, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String sourcesDirPath, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException,
+    public DataSource createDataSourceFolder(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoVariant, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String sourcesDirPath, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat) throws DocumentException, IOException, InvalidArgumentsException,
             ObjectNotFoundException, AlreadyExistsException, SQLException {
         if (getDataSourceContainer(id) == null) {
             if (isIdValid(id)) {
@@ -2005,7 +2092,9 @@ public class DefaultDataManager implements DataManager {
                         } else if (extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                                extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy,
+                                new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
 
@@ -2016,7 +2105,8 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setExternalRestServices(externalRestServices);
                         newDataSource.setMarcFormat(marcFormat);
 
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().initialize(dataProvider.getDataSourceContainers());
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
+                                .initialize(dataProvider.getDataSourceContainers());
                         updateDataProvider(dataProvider, dataProviderId);
                         return newDataSource;
                     } else {
@@ -2033,8 +2123,10 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceSruRecordUpdate(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, Map<String, MetadataTransformation> metadataTransformations,
-            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException, IncompatibleInstanceException {
+    public DataSource updateDataSourceSruRecordUpdate(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException,
+            ObjectNotFoundException, InvalidArgumentsException, IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2044,7 +2136,8 @@ public class DefaultDataManager implements DataManager {
             DataProvider dataProviderParent = getDataProviderParent(oldId);
             if (dataProviderParent != null) {
                 if (!(dataSource instanceof SruRecordUpdateDataSource)) {
-                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new SruRecordUpdateDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                            new IdGeneratedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
 
@@ -2086,8 +2179,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceOai(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet, Map<String, MetadataTransformation> metadataTransformations,
-            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException, IncompatibleInstanceException {
+    public DataSource updateDataSourceOai(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat,
+            boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException,
+            IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2102,7 +2198,8 @@ public class DefaultDataManager implements DataManager {
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if (dataProviderParent != null) {
                     if (!(dataSource instanceof OaiDataSource)) {
-                        DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                        DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
+                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 
@@ -2149,9 +2246,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceZ3950Timestamp(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax, String charset,
-            String earliestTimestampString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException,
-            ParseException, ObjectNotFoundException, IncompatibleInstanceException, InvalidArgumentsException {
+    public DataSource updateDataSourceZ3950Timestamp(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax,
+            String charset, String earliestTimestampString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate)
+            throws DocumentException, IOException, ParseException, ObjectNotFoundException, IncompatibleInstanceException, InvalidArgumentsException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2175,7 +2274,8 @@ public class DefaultDataManager implements DataManager {
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                 if (!(dataSource instanceof DataSourceZ3950)) {
-                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod,
+                            recordIdPolicy, new TreeMap<String, MetadataTransformation>());
                     newDataSource.setExportDir(exportPath);
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
@@ -2217,9 +2317,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceZ3950IdList(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax, String charset,
-            String filePath, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException, ParseException,
-            InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
+    public DataSource updateDataSourceZ3950IdList(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax,
+            String charset, String filePath, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate)
+            throws DocumentException, IOException, ParseException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2234,11 +2336,13 @@ public class DefaultDataManager implements DataManager {
                 Target target = new Target(address, Integer.valueOf(port), database, user, password, targetCharacterEncoding, recordSyntax);
 
                 File file;
-                if (!filePath.isEmpty() && !filePath.startsWith(new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getXmlConfigPath()).getAbsolutePath())) {
+                if (!filePath.isEmpty() && !filePath.startsWith(new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()
+                        .getXmlConfigPath()).getAbsolutePath())) {
                     try {
                         FileUtils.forceDelete(((IdListHarvester)((DataSourceZ3950)dataSource).getHarvestMethod()).getIdListFile());
                     } catch (Exception e) {
-                        log.error("Error removing z39.50 file: " + ((IdListHarvester)((DataSourceZ3950)dataSource).getHarvestMethod()).getIdListFile());
+                        log.error("Error removing z39.50 file: " + ((IdListHarvester)((DataSourceZ3950)dataSource).getHarvestMethod())
+                                .getIdListFile());
                     }
                     file = ((IdListHarvester)((DataSourceZ3950)dataSource).getHarvestMethod()).getIdListFile();
                     FileUtils.copyFile(new File(filePath), file);
@@ -2252,7 +2356,8 @@ public class DefaultDataManager implements DataManager {
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                 if (!(dataSource instanceof DataSourceZ3950)) {
-                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod,
+                            recordIdPolicy, new TreeMap<String, MetadataTransformation>());
                     newDataSource.setExportDir(exportPath);
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
@@ -2294,9 +2399,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceZ3950IdSequence(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax, String charset,
-            String maximumIdString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate) throws DocumentException, IOException,
-            ParseException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
+    public DataSource updateDataSourceZ3950IdSequence(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String address, String port, String database, String user, String password, String recordSyntax,
+            String charset, String maximumIdString, String recordIdPolicyClass, String idXpath, Map<String, String> namespaces,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, boolean useLastIngestDate)
+            throws DocumentException, IOException, ParseException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2316,7 +2423,8 @@ public class DefaultDataManager implements DataManager {
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
                 if (!(dataSource instanceof DataSourceZ3950)) {
-                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod, recordIdPolicy, new TreeMap<String, MetadataTransformation>());
+                    DataSource newDataSource = new DataSourceZ3950(dataProviderParent, id, description, schema, namespace, harvestMethod,
+                            recordIdPolicy, new TreeMap<String, MetadataTransformation>());
                     newDataSource.setExportDir(exportPath);
                     newDataSource.setAccessPoints(dataSource.getAccessPoints());
                     newDataSource.setStatus(dataSource.getStatus());
@@ -2358,9 +2466,12 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceFtp(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String server, String user, String password, String ftpPath, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate)
-            throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
+    public DataSource updateDataSourceFtp(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String server, String user, String password, String ftpPath,
+            Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat,
+            boolean useLastIngestDate) throws DocumentException, IOException, InvalidArgumentsException, ObjectNotFoundException,
+            IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2396,7 +2507,10 @@ public class DefaultDataManager implements DataManager {
                     }
 
                     if (!(dataSource instanceof DirectoryImporterDataSource)) {
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace,
+                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(
+                                        server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
+                                new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
@@ -2448,9 +2562,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceHttp(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String url, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException, InvalidArgumentsException,
-            ObjectNotFoundException, IncompatibleInstanceException {
+    public DataSource updateDataSourceHttp(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String url, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws DocumentException, IOException,
+            InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
@@ -2478,7 +2594,10 @@ public class DefaultDataManager implements DataManager {
                     FileRetrieveStrategy retrieveStrategy = new HttpFileRetrieveStrategy(url);
 
                     if (!(dataSource instanceof DirectoryImporterDataSource)) {
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace,
+                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url,
+                                        id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
+                                new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
@@ -2531,8 +2650,10 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public DataSource updateDataSourceFolder(String oldId, String id, String description, String nameCode, String name, String exportPath, String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
-            Map<String, String> namespaces, String recordXPath, String sourcesDirPath, Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws IOException, DocumentException,
+    public DataSource updateDataSourceFolder(String oldId, String id, String description, String nameCode, String name, String exportPath,
+            String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
+            Map<String, String> namespaces, String recordXPath, String sourcesDirPath, Map<String, MetadataTransformation> metadataTransformations,
+            List<ExternalRestService> externalRestServices, String marcFormat, boolean useLastIngestDate) throws IOException, DocumentException,
             InvalidArgumentsException, ObjectNotFoundException, IncompatibleInstanceException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
@@ -2561,7 +2682,9 @@ public class DefaultDataManager implements DataManager {
                     FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
 
                     if (!(dataSource instanceof DirectoryImporterDataSource)) {
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
+                        DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace,
+                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy,
+                                new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
@@ -2625,7 +2748,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException
      * @throws AlreadyExistsException
      */
-    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException, ObjectNotFoundException, AlreadyExistsException {
+    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException,
+            ClassNotFoundException, ParseException, ObjectNotFoundException, AlreadyExistsException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
@@ -2652,7 +2776,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ClassNotFoundException
      * @throws ParseException
      */
-    public void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException, ObjectNotFoundException, ClassNotFoundException, ParseException {
+    public void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException,
+            ObjectNotFoundException, ClassNotFoundException, ParseException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             List<Task> allTasks = new ArrayList<Task>();
@@ -2699,7 +2824,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ParseException
      * @throws ObjectNotFoundException
      */
-    public void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException, AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException {
+    public void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException,
+            AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException {
         DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
@@ -2714,7 +2840,8 @@ public class DefaultDataManager implements DataManager {
                 metadataExportFormat = dataSource.getMetadataFormat();
             }
 
-            Task exportTask = new DataSourceExportTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), exportDir.getAbsolutePath(), recordsPerFile, metadataExportFormat);
+            Task exportTask = new DataSourceExportTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), exportDir.getAbsolutePath(),
+                    recordsPerFile, metadataExportFormat);
 
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(exportTask)) {
                 throw new AlreadyExistsException(dataSourceId);
@@ -2769,7 +2896,14 @@ public class DefaultDataManager implements DataManager {
             Urn recordUrn = new Urn(recordId);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().removeRecord(recordUrn);
 
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(recordUrn.getDataSourceId()).setLastLineCounted(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(recordUrn.getDataSourceId()).getLastLineCounted() - 1);
+            ConfigSingleton
+                    .getRepoxContextUtil()
+                    .getRepoxManager()
+                    .getRecordCountManager()
+                    .getRecordCount(recordUrn.getDataSourceId())
+                    .setLastLineCounted(
+                            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager()
+                                    .getRecordCount(recordUrn.getDataSourceId()).getLastLineCounted() - 1);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(recordUrn.getDataSourceId(), 1);
 
             return MessageType.OK;
@@ -2810,7 +2944,8 @@ public class DefaultDataManager implements DataManager {
 
             Element oldTaskEl = document.getRootElement().addElement("oldTask");
             oldTaskEl.addAttribute("id", oldTask.getId());
-            oldTaskEl.addElement("time").addText(oldTask.getYear() + "-" + oldTask.getMonth() + "-" + oldTask.getDay() + " " + oldTask.getHours() + ":" + oldTask.getMinutes());
+            oldTaskEl.addElement("time").addText(
+                    oldTask.getYear() + "-" + oldTask.getMonth() + "-" + oldTask.getDay() + " " + oldTask.getHours() + ":" + oldTask.getMinutes());
             oldTaskEl.addElement("dataSourceSet").addText(oldTask.getDataSource().getId());
             oldTaskEl.addElement("logName").addText(oldTask.getLogName());
             oldTaskEl.addElement("ingestType").addText(oldTask.getIngestType());
@@ -2862,9 +2997,11 @@ public class DefaultDataManager implements DataManager {
     }
 
     public void removeLogsAndOldTasks(String dataSetId) throws IOException, DocumentException {
-        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSetId).getDataSource().getOldTasksList().clear();
+        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSetId).getDataSource().getOldTasksList()
+                .clear();
         removeOldTasks(dataSetId);
-        File logsDir = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + File.separator + dataSetId, "logs");
+        File logsDir = new File(
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + File.separator + dataSetId, "logs");
         FileUtils.deleteDirectory(logsDir);
     }
 

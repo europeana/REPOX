@@ -9,9 +9,13 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
@@ -200,6 +204,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testUpdateAggregator() throws Exception {
         String aggregatorId = "SampleId";
         Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
@@ -226,6 +231,33 @@ public class AggregatorsResourceTest extends JerseyTest {
         assertEquals(400, response.getStatus());
     }
 
+    @Test
+    public void testGetAggregatorList() throws Exception {
+        int offset = 10;
+        int number = 3;
+        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", offset).queryParam("number", number);
+
+        //Mocking
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
+        Aggregator aggregator1 = new Aggregator(null, "Greece1", "GR1", new URL("http://somepage1"), null);
+        Aggregator aggregator2 = new Aggregator(null, "Greece2", "GR2", new URL("http://somepage2"), null);
+        List<Aggregator> aggregatorList = new ArrayList<Aggregator>();
+        aggregatorList.add(aggregator);
+        aggregatorList.add(aggregator1);
+        aggregatorList.add(aggregator2);
+        when(dataManager.getAggregatorsListSorted(offset, number)).thenReturn(aggregatorList).thenThrow(new Exception("Server error!"));
+        
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+        List<Aggregator> ll = response.readEntity(new GenericType<List<Aggregator>>(){});
+        //Internal Server Error
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(500, response.getStatus());
+        
+
+    }
+
     /**
      * TEMPORARY TEST METHOD
      * @throws JAXBException
@@ -237,5 +269,4 @@ public class AggregatorsResourceTest extends JerseyTest {
     public final void fastTesting() throws JAXBException, DoesNotExistException, MalformedURLException {
 
     }
-
 }

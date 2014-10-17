@@ -2,9 +2,11 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -13,7 +15,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -25,7 +29,6 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -162,7 +165,8 @@ public class AggregatorsResource {
     @PUT
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Response updateAggregator(@PathParam("aggregatorId") String aggregatorId, Aggregator aggregator) throws DoesNotExistException, InvalidArgumentsException {
+    public Response updateAggregator(@PathParam("aggregatorId") String aggregatorId, Aggregator aggregator) throws DoesNotExistException,
+            InvalidArgumentsException {
 
         String name = aggregator.getName();
         String nameCode = aggregator.getNameCode();
@@ -183,9 +187,27 @@ public class AggregatorsResource {
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Response getAggregatorList(@DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
+        
+        if(offset < 0)
+            throw new InvalidArgumentsException("Offset negative values not allowed!");
+        
+        List<Aggregator> aggregatorsListSorted;
+        try {
+            aggregatorsListSorted = dataManager.getAggregatorsListSorted(offset, number);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        return  Response.ok(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
+    }
+
+    @GET
     @Produces({ MediaType.TEXT_PLAIN })
     public String test() throws DoesNotExistException {
         throw new DoesNotExistException("AAAAA");
 
     }
+
 }
