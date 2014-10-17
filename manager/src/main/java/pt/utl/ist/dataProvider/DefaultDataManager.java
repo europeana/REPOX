@@ -697,7 +697,7 @@ public class DefaultDataManager implements DataManager {
             aggregators.add(newAggregator);
             saveData();
             return newAggregator;
-        } else
+        } else //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided
             throw new AlreadyExistsException(newAggregator.getName());
     }
 
@@ -710,6 +710,8 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws DocumentException
      * @return MessageType
+     * @throws ObjectNotFoundException 
+     * @throws InvalidArgumentsException 
      */
     public Aggregator updateAggregator(String oldAggregatorId, String name, String nameCode, String homepageUrl) throws IOException, DocumentException, ObjectNotFoundException, InvalidArgumentsException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(oldAggregatorId);
@@ -760,7 +762,7 @@ public class DefaultDataManager implements DataManager {
      * @param aggregatorId
      * @throws IOException
      * @throws DocumentException
-     * @return MessageType
+     * @throws ObjectNotFoundException 
      */
     public void deleteAggregator(String aggregatorId) throws IOException, DocumentException, ObjectNotFoundException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getAggregator(aggregatorId);

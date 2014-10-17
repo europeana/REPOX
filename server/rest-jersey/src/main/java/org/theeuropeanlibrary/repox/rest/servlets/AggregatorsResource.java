@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 import java.io.IOException;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -23,10 +24,12 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
  * Aggregators context path handling.
@@ -111,12 +114,37 @@ public class AggregatorsResource {
                 throw new InternalServerErrorException("Error in server : " + e.getMessage());
             } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
                 throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-            } catch (AlreadyExistsException e) {
-                throw new AlreadyExistsException("Aggregator already exists!", e);
+            } catch (AlreadyExistsException e) { //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided 
+                throw new AlreadyExistsException("Aggregator with name \"" + e.getMessage() + "\" already exists!");
             }
         } else
             throw new MissingArgumentsException("Missing argument name!");
         return Response.created(null).entity("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully").build();
+    }
+    
+    /**
+     * Delete an aggregator by specifying the Id.
+     * Relative path : /aggregators
+     * @param aggregatorId 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     */
+    @DELETE
+    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Response deleteAggregator(@PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException{
+
+        if(aggregatorId != null && !aggregatorId.isEmpty()){
+            try {
+                dataManager.deleteAggregator(aggregatorId);
+            } catch (DocumentException | IOException e) {
+                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            } catch (ObjectNotFoundException e) {
+                throw new DoesNotExistException("A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
+            }
+        }
+        
+        return Response.status(200).entity("Aggregator with id " + aggregatorId + " deleted!").build();
     }
 
     @GET
