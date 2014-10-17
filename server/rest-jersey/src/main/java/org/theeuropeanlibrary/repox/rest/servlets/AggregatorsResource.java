@@ -186,6 +186,16 @@ public class AggregatorsResource {
         return Response.status(200).entity("Aggregator with id " + aggregatorId + " updated!").build();
     }
 
+    /**
+     * Get a list of aggregators in the specified range.
+     * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
+     * Relative path : /aggregators
+     * @param offset 
+     * @param number 
+     * @return the list of the number of aggregators requested
+     * @throws Exception 
+     * @throws InvalidArgumentsException 
+     */
     @GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Response getAggregatorList(@DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
@@ -196,11 +206,11 @@ public class AggregatorsResource {
         List<Aggregator> aggregatorsListSorted;
         try {
             aggregatorsListSorted = dataManager.getAggregatorsListSorted(offset, number);
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
         }
 
-        return  Response.ok(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
+        return  Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
     }
 
     @GET

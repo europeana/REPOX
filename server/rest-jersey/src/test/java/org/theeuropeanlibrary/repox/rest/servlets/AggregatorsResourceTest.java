@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,7 +38,6 @@ import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
  * Aggregators context path handling tests.
- * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
@@ -172,13 +170,14 @@ public class AggregatorsResourceTest extends JerseyTest {
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
+     * @throws Exception 
      * @throws ObjectNotFoundException 
      * @throws DocumentException 
      * @throws IOException 
      */
     @Test
     @Ignore
-    public void testDeleteAggregator() throws IOException, DocumentException, ObjectNotFoundException {
+    public void testDeleteAggregator() throws Exception, DocumentException, ObjectNotFoundException  {
         String aggregatorId = "SampleId";
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
 
@@ -231,9 +230,14 @@ public class AggregatorsResourceTest extends JerseyTest {
         assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregatorList(int, int)}.
+     * @throws Exception 
+     * @throws Exception
+     */
     @Test
     public void testGetAggregatorList() throws Exception {
-        int offset = 10;
+        int offset = 0;
         int number = 3;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", offset).queryParam("number", number);
 
@@ -245,17 +249,21 @@ public class AggregatorsResourceTest extends JerseyTest {
         aggregatorList.add(aggregator);
         aggregatorList.add(aggregator1);
         aggregatorList.add(aggregator2);
-        when(dataManager.getAggregatorsListSorted(offset, number)).thenReturn(aggregatorList).thenThrow(new Exception("Server error!"));
+        when(dataManager.getAggregatorsListSorted(offset, number)).thenReturn(aggregatorList).thenThrow(new IndexOutOfBoundsException("Server error : Offset cannot be negative"));
         
         //Valid call
         Response response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(200, response.getStatus());
-        List<Aggregator> ll = response.readEntity(new GenericType<List<Aggregator>>(){});
+        List<Aggregator> subList = response.readEntity(new GenericType<List<Aggregator>>(){});
+        assertEquals(aggregatorList.size(), subList.size());
         //Internal Server Error
         response = target.request(MediaType.APPLICATION_XML).get();
-        assertEquals(500, response.getStatus());
-        
-
+        assertEquals(400, response.getStatus());
+        //Error because of index
+        target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", -1).queryParam("number", number);
+        //Notice not mocked here cause it has to thow the exception before the call to the dataManager
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(400, response.getStatus());
     }
 
     /**
