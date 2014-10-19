@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -162,6 +163,11 @@
 	</profiles>
 
 	<dependencies>
+		<!-- <dependency> -->
+		<!-- <groupId>org.kohsuke.rngom</groupId> -->
+		<!-- <artifactId>rngom</artifactId> -->
+		<!-- <version>20100718</version> -->
+		<!-- </dependency> -->
 		<!-- REPOX Core Libs -->
 		<dependency>
 			<groupId>repox</groupId>
@@ -289,6 +295,15 @@
 				<exclusion>
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
+				</exclusion>
+<!-- 				The below to exclusions need to be tested -->
+				<exclusion>
+					<groupId>org.kohsuke.rngom</groupId>
+					<artifactId>rngom</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.msv.datatype.xsd</groupId>
+					<artifactId>xsdlib</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
