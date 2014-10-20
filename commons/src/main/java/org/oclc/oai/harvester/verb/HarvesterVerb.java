@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -36,14 +35,16 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
+//import org.apache.xml.serialize.OutputFormat;
+//import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -445,19 +446,23 @@ public abstract class HarvesterVerb {
          * "yes"); idTransformer.transform(input, output); return sw.toString();
          * } catch (TransformerException e) { return e.getMessage(); }
          */
+        
 
         //Serialize DOM
-        OutputFormat format = new OutputFormat(doc);
-        // as a String
-        StringWriter stringOut = new StringWriter();
-        XMLSerializer serial = new XMLSerializer(stringOut, format);
-        try {
-            serial.serialize(doc);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        OutputFormat format = new OutputFormat(doc);
+//        // as a String
+//        StringWriter stringOut = new StringWriter();
+//        XMLSerializer serial = new XMLSerializer(stringOut, format);
+//        try {
+//            serial.serialize(doc);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        
+        DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
+        LSSerializer lsSerializer = domImplementation.createLSSerializer();   
         // Display the XML
-        return stringOut.toString();
+        return lsSerializer.writeToString(doc);
 
     }
 

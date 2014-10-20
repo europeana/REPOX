@@ -36,11 +36,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -296,7 +293,7 @@
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
 				</exclusion>
-<!-- 				The below to exclusions need to be tested -->
+				<!-- The below to exclusions need to be tested -->
 				<exclusion>
 					<groupId>org.kohsuke.rngom</groupId>
 					<artifactId>rngom</artifactId>
