@@ -10,6 +10,11 @@ import javax.ws.rs.core.UriInfo;
 
 import org.theeuropeanlibrary.repox.rest.pathOptions.RootOptionListContainer;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 /**
  * Root context path handling.
  * 
@@ -17,6 +22,7 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.RootOptionListContainer;
  * @since Oct 15, 2014
  */
 @Path("/")
+@Api(value = "/", description = "Rest api for root context")
 public class RootResource {
     @Context
     UriInfo uriInfo;
@@ -28,6 +34,10 @@ public class RootResource {
      */
     @OPTIONS
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Get options over all the conexts.", httpMethod = "OPTIONS", response = RootOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")
+          })
     public RootOptionListContainer getOptions() {
         RootOptionListContainer rootOptionListContainer = new RootOptionListContainer(uriInfo.getBaseUri());
         return rootOptionListContainer;

@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * Aggregator options.
  * Extends the {@link org.theeuropeanlibrary.repox.rest.pathOptions.OptionListContainer}, so it can override the name of the tag for JAXB.
@@ -15,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @since Oct 13, 2014
  */
 @XmlRootElement(name = "aggregatorOptions")
+@ApiModel(value = "An Option List container")
 public class AggregatorOptionListContainer extends OptionListContainer {
     public static final String AGGREGATORS = "aggregators";
     public static final String AGGREGATORID = "{aggregatorId}";

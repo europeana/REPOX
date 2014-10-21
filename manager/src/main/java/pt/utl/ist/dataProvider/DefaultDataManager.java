@@ -244,7 +244,7 @@ public class DefaultDataManager implements DataManager {
             aggregator.setId(currentElementAgg.attributeValue("id"));
 
             if (currentElementAgg.element("url") != null) {
-                aggregator.setHomePage(new URL(currentElementAgg.elementText("url")));
+                aggregator.setHomePage(currentElementAgg.elementText("url"));
             }
             if (currentElementAgg.element("name") != null) {
                 aggregator.setName(currentElementAgg.elementText("name"));
@@ -743,7 +743,7 @@ public class DefaultDataManager implements DataManager {
                 if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
                     throw new Exception();
                 }
-                newAggregator.setHomePage(new URL(generatedHomepageUrl));
+                newAggregator.setHomePage(generatedHomepageUrl);
             } catch (Exception e) {
                 throw new InvalidArgumentsException(homepageUrl);
             }
@@ -795,7 +795,7 @@ public class DefaultDataManager implements DataManager {
                     if (!FileUtilSecond.checkUrl(homepageUrl)) {
                         throw new Exception();
                     }
-                    aggregator.setHomePage(new URL(homepageUrl));
+                    aggregator.setHomePage(homepageUrl);
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(homepageUrl);
                 }

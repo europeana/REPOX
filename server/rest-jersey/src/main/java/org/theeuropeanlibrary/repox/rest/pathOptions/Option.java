@@ -7,6 +7,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  * Describes the specific option.
  * 
@@ -16,10 +19,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder={"description", "syntax"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(value = "An Option")
 public class Option {
     @XmlElement(name="description")
+    @ApiModelProperty(required=false)
     private String description;
     @XmlElement(name="syntax")
+    @ApiModelProperty(required=false)
     private String syntax;
 
     /**

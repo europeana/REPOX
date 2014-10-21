@@ -92,7 +92,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Use the below profile to clean resources folder the copy-resources 
 			was used before -->
 		<profile>
@@ -118,9 +118,63 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>generate-doc</id>
+			<build>
+				<plugins>
+					<!-- SWAGGER -->
+					<plugin>
+						<groupId>com.github.kongchen</groupId>
+						<artifactId>swagger-maven-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<apiSources>
+								<apiSource>
+									<locations>org.theeuropeanlibrary.repox.rest.servlets</locations>
+									<apiVersion>${project.version}</apiVersion>
+									<basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath>
+									<swaggerInternalFilter>com.wordnik.swagger.config.DefaultSpecFilter</swaggerInternalFilter>
+									<!---General parameters END -->
+
+									<apiInfo>
+										<title>REPOX SERVER REST JERSEY</title>
+										<description>A RESTful service implemetned using Jersey 2, for
+											accessing the repox resources.</description>
+										<!-- <termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl> -->
+										<!-- <contact>kongchen#gmail$com</contact> -->
+										<!-- <license>Apache 2.0</license> -->
+										<!-- <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl> -->
+									</apiInfo>
+
+									<!---Document generation parameters BEGIN -->
+									<outputTemplate>templates/strapdown.html.mustache</outputTemplate>
+									<mustacheFileRoot>templates/</mustacheFileRoot>
+									<outputPath>generated/document.html</outputPath>
+									<!---Document generation parameters END -->
+
+									<!---Swagger JSON parameters BEGIN -->
+									<swaggerDirectory>generated/swagger-ui</swaggerDirectory>
+									<!-- <swaggerUIDocBasePath></swaggerUIDocBasePath> -->
+									<useOutputFlatStructure>false</useOutputFlatStructure>
+								</apiSource>
+							</apiSources>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
-	
-	
+
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -134,7 +188,20 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- Copy reosurces for accessing the repox sercies -->
+		<!-- SWAGGER -->
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-jersey2-jaxrs_2.11</artifactId>
+			<scope>compile</scope>
+			<version>1.3.10</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-resources</artifactId>

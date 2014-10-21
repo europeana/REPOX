@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +16,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBException;
 
 import org.dom4j.DocumentException;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
@@ -32,7 +28,6 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContain
 import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -86,7 +81,7 @@ public class AggregatorsResourceTest extends JerseyTest {
         String aggregatorId = "SampleId";
         //Mocking
         when(dataManager.getAggregator(aggregatorId)).thenReturn(
-                new Aggregator(aggregatorId, "testName", "namecode", new URL("http://something"), null));
+                new Aggregator(aggregatorId, "testName", "namecode", "http://something", null));
 
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
         //Check xml head working
@@ -128,8 +123,8 @@ public class AggregatorsResourceTest extends JerseyTest {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Mocking
-        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
-        Aggregator createdAggregator = new Aggregator("ValidId", "Greece", "GR", new URL("http://somepage"), null);
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
+        Aggregator createdAggregator = new Aggregator("ValidId", "Greece", "GR", "http://somepage", null);
         when(dataManager.createAggregator(aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
                 .thenReturn(createdAggregator).thenThrow(new AlreadyExistsException("Already exists!"))
                 .thenThrow(new InvalidArgumentsException("Invalid Argument URL")).thenThrow(new IOException()).thenThrow(new DocumentException());
@@ -149,7 +144,7 @@ public class AggregatorsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(500, response.getStatus());
         //Missing Argument Name
-        aggregator = new Aggregator(null, null, "GR", new URL("http://somepage"), null);
+        aggregator = new Aggregator(null, null, "GR", "http://somepage", null);
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
     }
@@ -192,8 +187,8 @@ public class AggregatorsResourceTest extends JerseyTest {
     @Ignore
     public void testUpdateAggregator() throws Exception {
         String aggregatorId = "SampleId";
-        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
-        Aggregator updatedAggregator = new Aggregator(aggregatorId, "Greece", "GR", new URL("http://somepage"), null);
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
+        Aggregator updatedAggregator = new Aggregator(aggregatorId, "Greece", "GR", "http://somepage", null);
 
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
 
@@ -228,9 +223,9 @@ public class AggregatorsResourceTest extends JerseyTest {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", offset).queryParam("number", number);
 
         //Mocking
-        Aggregator aggregator = new Aggregator(null, "Greece", "GR", new URL("http://somepage"), null);
-        Aggregator aggregator1 = new Aggregator(null, "Greece1", "GR1", new URL("http://somepage1"), null);
-        Aggregator aggregator2 = new Aggregator(null, "Greece2", "GR2", new URL("http://somepage2"), null);
+        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
+        Aggregator aggregator1 = new Aggregator(null, "Greece1", "GR1", "http://somepage1", null);
+        Aggregator aggregator2 = new Aggregator(null, "Greece2", "GR2", "http://somepage2", null);
         List<Aggregator> aggregatorList = new ArrayList<Aggregator>();
         aggregatorList.add(aggregator);
         aggregatorList.add(aggregator1);
