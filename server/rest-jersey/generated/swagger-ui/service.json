@@ -2,11 +2,11 @@
   "apiVersion" : "0.0.1-SNAPSHOT",
   "swaggerVersion" : "1.2",
   "apis" : [ {
-    "path" : "/.{format}",
-    "description" : "Rest api for root context"
-  }, {
     "path" : "/aggregators.{format}",
     "description" : "Rest api for aggregators"
+  }, {
+    "path" : "/.{format}",
+    "description" : "Rest api for root context"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",

@@ -16,43 +16,8 @@
 
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<finalName>repoxCore</finalName>
+		<finalName>repoxManager</finalName>
 		<plugins>
-			<plugin>
-				<groupId>com.github.kongchen</groupId>
-				<artifactId>swagger-maven-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<apiSources>
-						<apiSource>
-							<locations>pt.utl.ist.dataProvider</locations>
-							<apiVersion>1.0</apiVersion>
-							<basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath>
-							<swaggerInternalFilter>com.wordnik.swagger.config.DefaultSpecFilter</swaggerInternalFilter>
-							<!---General parameters END -->
-
-							<!---Document generation parameters BEGIN -->
-							<outputTemplate>templates/strapdown.html.mustache</outputTemplate>
-							<mustacheFileRoot>templates/</mustacheFileRoot>
-							<outputPath>generated/document.html</outputPath>
-							<!---Document generation parameters END -->
-
-							<!---Swagger JSON parameters BEGIN -->
-							<swaggerDirectory>generated/swagger-ui</swaggerDirectory>
-							<swaggerUIDocBasePath>http://www.wordnik.com/restapi/doc</swaggerUIDocBasePath>
-							<useOutputFlatStructure>false</useOutputFlatStructure>
-						</apiSource>
-					</apiSources>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -68,6 +33,10 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
+		</dependency>
 
 		<!-- SWAGGER -->
 		<dependency>
@@ -82,11 +51,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>repox</groupId>
-			<artifactId>repox-commons</artifactId>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
