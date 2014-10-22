@@ -14,6 +14,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
+	<properties>
+		<documentation.dir>src/main/webapp/doc/</documentation.dir>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -141,7 +145,7 @@
 										<title>REPOX SERVER REST JERSEY</title>
 										<description>A RESTful service implemetned using Jersey 2, for
 											accessing the repox resources.</description>
-										<!-- <termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl> -->
+										<termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl>
 										<!-- <contact>kongchen#gmail$com</contact> -->
 										<!-- <license>Apache 2.0</license> -->
 										<!-- <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl> -->
@@ -150,11 +154,11 @@
 									<!---Document generation parameters BEGIN -->
 									<outputTemplate>templates/strapdown.html.mustache</outputTemplate>
 									<mustacheFileRoot>templates/</mustacheFileRoot>
-									<outputPath>generated/document.html</outputPath>
+									<outputPath>${documentation.dir}document.html</outputPath>
 									<!---Document generation parameters END -->
 
 									<!---Swagger JSON parameters BEGIN -->
-									<swaggerDirectory>generated/swagger-ui</swaggerDirectory>
+									<swaggerDirectory>${documentation.dir}</swaggerDirectory>
 									<!-- <swaggerUIDocBasePath></swaggerUIDocBasePath> -->
 									<useOutputFlatStructure>false</useOutputFlatStructure>
 								</apiSource>

@@ -1,0 +1,218 @@
+{
+  "apiVersion" : "0.0.1-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://localhost:8080/repox/rest",
+  "resourcePath" : "/aggregators",
+  "apis" : [ {
+    "path" : "/aggregators",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over aggregator conext.",
+      "notes" : "",
+      "type" : "aggregatorOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/xml", "application/json" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    }, {
+      "method" : "POST",
+      "summary" : "Create an aggregator.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "createAggregator",
+      "produces" : [ "application/xml", "application/json" ],
+      "consumes" : [ "application/xml", "application/json" ],
+      "parameters" : [ {
+        "name" : "body",
+        "description" : "Aggregator id is not required",
+        "required" : true,
+        "type" : "aggregator",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of aggregators.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "getAggregatorList",
+      "produces" : [ "application/xml", "application/json" ],
+      "parameters" : [ {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of aggregators)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      } ]
+    } ]
+  }, {
+    "path" : "/aggregators/{aggregatorId}",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get specific aggregator.",
+      "notes" : "",
+      "type" : "aggregator",
+      "nickname" : "getAggregator",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "Id of aggregator",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing an Aggregator)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      } ]
+    }, {
+      "method" : "DELETE",
+      "summary" : "Delete an aggregator.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "deleteAggregator",
+      "produces" : [ "application/xml", "application/json" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "Id of aggregator",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Update an aggregator.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "updateAggregator",
+      "produces" : [ "application/xml", "application/json" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "Id of aggregator",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Aggregator id is not required",
+        "required" : true,
+        "type" : "aggregator",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "Option" : {
+      "id" : "Option",
+      "description" : "",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "syntax" : {
+          "type" : "string"
+        }
+      }
+    },
+    "aggregator" : {
+      "id" : "aggregator",
+      "description" : "",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "nameCode" : {
+          "type" : "string"
+        },
+        "homePage" : {
+          "type" : "string"
+        }
+      }
+    },
+    "aggregatorOptions" : {
+      "id" : "aggregatorOptions",
+      "description" : "",
+      "required" : [ "option" ],
+      "properties" : {
+        "option" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Option"
+          }
+        }
+      }
+    }
+  }
+}

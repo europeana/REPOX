@@ -1,0 +1,48 @@
+{
+  "apiVersion" : "0.0.1-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://localhost:8080/repox/rest",
+  "resourcePath" : "/",
+  "apis" : [ {
+    "path" : "/",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over all the conexts.",
+      "notes" : "",
+      "type" : "RestOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/xml", "application/json" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "RestOptions" : {
+      "id" : "RestOptions",
+      "required" : [ "option" ],
+      "properties" : {
+        "option" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Option"
+          }
+        }
+      }
+    },
+    "Option" : {
+      "id" : "Option",
+      "description" : "",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "syntax" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<title>API Document</title>
+
+<xmp theme="united" style="display:none;">
+#REPOX SERVER REST JERSEY
+A RESTful service implemetned using Jersey 2, for&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;accessing the repox resources.
+
+Terms of Service: [http://www.github.com/kongchen/swagger-maven-plugin](http://www.github.com/kongchen/swagger-maven-plugin)
+
+Contact: [](mailto:)
+
+License: []()
+
+
+
+BasePath: http://localhost:8080/repox/rest
+
+Api Version: 0.0.1-SNAPSHOT
+
+## APIs
+### /
+
+#### **OPTIONS** `/`
+##### getOptions 
+
+Get options over all the conexts.
+
+
+###### URL
+http://localhost:8080/repox/rest/
+###### Parameters
+
+###### Response
+[RestOptions](#RestOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+### /aggregators
+
+#### **OPTIONS** `/aggregators`
+##### getOptions 
+
+Get options over aggregator conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+
+###### Response
+[aggregatorOptions](#aggregatorOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **POST** `/aggregators`
+##### createAggregator 
+
+Create an aggregator.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#aggregator">aggregator</a></td>
+        <td>true</td>
+        <td>Aggregator id is not required</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 201    | Created (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/aggregators`
+##### getAggregatorList 
+
+Get a list of aggregators.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of aggregators) | - |
+| 400    | InvalidArgumentsException | - |
+
+
+- - -
+#### **GET** `/aggregators/{aggregatorId}`
+##### getAggregator 
+
+Get specific aggregator.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators/{aggregatorId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of aggregator</td>
+    </tr>
+</table>
+
+###### Response
+[aggregator](#aggregator)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing an Aggregator) | - |
+| 404    | DoesNotExistException | - |
+
+
+- - -
+#### **DELETE** `/aggregators/{aggregatorId}`
+##### deleteAggregator 
+
+Delete an aggregator.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators/{aggregatorId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of aggregator</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+| 404    | DoesNotExistException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **PUT** `/aggregators/{aggregatorId}`
+##### updateAggregator 
+
+Update an aggregator.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators/{aggregatorId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of aggregator</td>
+    </tr>
+</table>
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#aggregator">aggregator</a></td>
+        <td>true</td>
+        <td>Aggregator id is not required</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+
+## Data Types
+
+
+## <a name="Option">Option</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>syntax</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>description</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="RestOptions">RestOptions</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>option</td>
+        <td><a href="#Option">Array[Option]</a></td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="aggregator">aggregator</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>id</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>name</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>nameCode</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>homePage</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="aggregatorOptions">aggregatorOptions</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>option</td>
+        <td><a href="#Option">Array[Option]</a></td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>
