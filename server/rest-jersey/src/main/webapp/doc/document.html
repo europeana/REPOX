@@ -6,11 +6,11 @@
 #REPOX SERVER REST JERSEY
 A RESTful service implemetned using Jersey 2, for&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;accessing the repox resources.
 
-Terms of Service: [http://www.github.com/kongchen/swagger-maven-plugin](http://www.github.com/kongchen/swagger-maven-plugin)
+Terms of Service: []()
 
 Contact: [](mailto:)
 
-License: []()
+License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
 
@@ -19,29 +19,6 @@ BasePath: http://localhost:8080/repox/rest
 Api Version: 0.0.1-SNAPSHOT
 
 ## APIs
-### /
-
-#### **OPTIONS** `/`
-##### getOptions 
-
-Get options over all the conexts.
-
-
-###### URL
-http://localhost:8080/repox/rest/
-###### Parameters
-
-###### Response
-[RestOptions](#RestOptions)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
 ### /aggregators
 
 #### **OPTIONS** `/aggregators`
@@ -280,6 +257,29 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 | 400    | InvalidArgumentsException | - |
 | 404    | DoesNotExistException | - |
 | 500    | InternalServerErrorException | - |
+
+
+- - -
+### /options
+
+#### **OPTIONS** `/options`
+##### getOptions 
+
+Get options over all the conexts.
+
+
+###### URL
+http://localhost:8080/repox/rest/options
+###### Parameters
+
+###### Response
+[RestOptions](#RestOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
 
 
 - - -

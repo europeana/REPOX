@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "RestOptions")
 public class RootOptionListContainer extends OptionListContainer {
-
+    public static final String OPTIONS = "options";
+    
     /**
      * No argument constructor needed for JAXB.
      * Generates the aggregators option list.

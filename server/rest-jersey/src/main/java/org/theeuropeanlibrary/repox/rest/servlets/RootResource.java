@@ -21,8 +21,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 15, 2014
  */
-@Path("/")
-@Api(value = "/", description = "Rest api for root context")
+@Path("/" + RootOptionListContainer.OPTIONS)
+@Api(value = "/" + RootOptionListContainer.OPTIONS, description = "Rest api for options context")
 public class RootResource {
     @Context
     UriInfo uriInfo;

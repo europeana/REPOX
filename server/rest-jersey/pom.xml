@@ -145,10 +145,10 @@
 										<title>REPOX SERVER REST JERSEY</title>
 										<description>A RESTful service implemetned using Jersey 2, for
 											accessing the repox resources.</description>
-										<termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl>
-										<!-- <contact>kongchen#gmail$com</contact> -->
-										<!-- <license>Apache 2.0</license> -->
-										<!-- <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl> -->
+<!-- 										<termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl> -->
+<!-- 										<contact>kongchen#gmail$com</contact> -->
+										<license>Apache 2.0</license>
+										<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
 									</apiInfo>
 
 									<!---Document generation parameters BEGIN -->
@@ -159,8 +159,8 @@
 
 									<!---Swagger JSON parameters BEGIN -->
 									<swaggerDirectory>${documentation.dir}</swaggerDirectory>
-									<!-- <swaggerUIDocBasePath></swaggerUIDocBasePath> -->
-									<useOutputFlatStructure>false</useOutputFlatStructure>
+									<swaggerUIDocBasePath>http://localhost:8080/repox/doc</swaggerUIDocBasePath>
+									<useOutputFlatStructure>true</useOutputFlatStructure>
 								</apiSource>
 							</apiSources>
 						</configuration>

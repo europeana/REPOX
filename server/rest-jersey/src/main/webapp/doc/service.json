@@ -5,13 +5,14 @@
     "path" : "/aggregators.{format}",
     "description" : "Rest api for aggregators"
   }, {
-    "path" : "/.{format}",
+    "path" : "/options.{format}",
     "description" : "Rest api for root context"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",
     "description" : "A RESTful service implemetned using Jersey 2, for\n\t\t\t\t\t\t\t\t\t\t\taccessing the repox resources.",
-    "termsOfServiceUrl" : "http://www.github.com/kongchen/swagger-maven-plugin"
+    "license" : "Apache 2.0",
+    "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html"
   },
-  "basePath" : "http://localhost:8080/repox/rest"
+  "basePath" : "http://localhost:8080/repox/doc"
 }
