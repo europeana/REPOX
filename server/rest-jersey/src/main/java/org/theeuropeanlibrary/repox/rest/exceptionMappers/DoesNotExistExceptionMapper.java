@@ -1,10 +1,11 @@
 /* AggregatorDoesNotExistsExceptionHandler.java - created on Oct 10, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.exceptionMappers;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 
@@ -19,6 +20,6 @@ public class DoesNotExistExceptionMapper implements ExceptionMapper<DoesNotExist
     @Override
     public Response toResponse(DoesNotExistException ex) {
         //Status: 404, Info: Not Found
-        return Response.status(404).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        return Response.status(404).entity(new Result(ex.getMessage())).build();
     }
 }

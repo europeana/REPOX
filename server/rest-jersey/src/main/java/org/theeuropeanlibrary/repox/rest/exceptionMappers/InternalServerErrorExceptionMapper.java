@@ -2,10 +2,11 @@
 package org.theeuropeanlibrary.repox.rest.exceptionMappers;
 
 import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 /**
  * Exception handler for the {@link javax.ws.rs.InternalServerErrorException}
@@ -18,6 +19,6 @@ public class InternalServerErrorExceptionMapper implements ExceptionMapper<Inter
     @Override
     public Response toResponse(InternalServerErrorException ex) {
         //Status: 500, Info: Internal Server Error
-        return Response.status(500).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        return Response.status(500).entity(new Result(ex.getMessage())).build();
     }
 }

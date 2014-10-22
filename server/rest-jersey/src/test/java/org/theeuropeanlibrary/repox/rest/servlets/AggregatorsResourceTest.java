@@ -118,7 +118,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws DocumentException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testCreateAggregator() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
@@ -217,6 +217,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testGetAggregatorList() throws Exception {
         int offset = 0;
         int number = 3;

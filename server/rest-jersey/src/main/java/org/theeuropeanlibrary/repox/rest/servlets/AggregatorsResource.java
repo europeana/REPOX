@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
@@ -148,7 +149,7 @@ public class AggregatorsResource {
         } else
             throw new MissingArgumentsException("Missing argument name!");
         return Response.created(null)
-                .entity("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully")
+                .entity(new Result("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully"))
                 .build();
     }
 
@@ -179,7 +180,7 @@ public class AggregatorsResource {
                     "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
         }
 
-        return Response.status(200).entity("Aggregator with id " + aggregatorId + " deleted!").build();
+        return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " deleted!")).build();
     }
 
     /**
@@ -207,7 +208,7 @@ public class AggregatorsResource {
 
         String name = aggregator.getName();
         String nameCode = aggregator.getNameCode();
-        String homePage = aggregator.getHomePage().toString();
+        String homePage = aggregator.getHomePage();
 
         try {
             dataManager.updateAggregator(aggregatorId, name, nameCode, homePage);
@@ -220,7 +221,7 @@ public class AggregatorsResource {
             throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
         }
 
-        return Response.status(200).entity("Aggregator with id " + aggregatorId + " updated!").build();
+        return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " updated!")).build();
     }
 
     /**

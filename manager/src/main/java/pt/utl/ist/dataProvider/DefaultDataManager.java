@@ -748,6 +748,8 @@ public class DefaultDataManager implements DataManager {
                 throw new InvalidArgumentsException(homepageUrl);
             }
         }
+        else if(homepageUrl != null && homepageUrl.equals(""))
+            newAggregator.setHomePage(homepageUrl);
         newAggregator.setName(name);
         newAggregator.setNameCode(nameCode);
         newAggregator.setId(Aggregator.generateId(newAggregator.getName()));
@@ -800,9 +802,10 @@ public class DefaultDataManager implements DataManager {
                     throw new InvalidArgumentsException(homepageUrl);
                 }
             }
-            /*else{
-                aggregatorEuropeana.setHomePage(null);
-            }*/
+            else if(homepageUrl != null && homepageUrl.equals(""))
+            {
+                aggregator.setHomePage(homepageUrl);
+            }
 
             for (Aggregator actualAggregator : aggregators) {
                 if (actualAggregator.getId().equals(oldAggregatorId)) {

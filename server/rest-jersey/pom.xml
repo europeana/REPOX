@@ -132,7 +132,8 @@
 								<apiSource>
 									<locations>org.theeuropeanlibrary.repox.rest.servlets</locations>
 									<apiVersion>${project.version}</apiVersion>
-									<basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath>
+									<basePath>http://localhost:8080/repox/rest</basePath>
+									<!-- <basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath> -->
 									<swaggerInternalFilter>com.wordnik.swagger.config.DefaultSpecFilter</swaggerInternalFilter>
 									<!---General parameters END -->
 

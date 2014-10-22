@@ -1,10 +1,11 @@
 /* MissingArgumentExceptionMapper.java - created on Oct 16, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.exceptionMappers;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
@@ -19,6 +20,6 @@ public class MissingArgumentsExceptionMapper implements ExceptionMapper<MissingA
     @Override
     public Response toResponse(MissingArgumentsException ex) {
         //Status: 406, Info: Not Acceptable
-        return Response.status(406).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        return Response.status(406).entity(new Result(ex.getMessage())).build();
     }
 }
