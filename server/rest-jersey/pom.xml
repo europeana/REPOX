@@ -145,8 +145,8 @@
 										<title>REPOX SERVER REST JERSEY</title>
 										<description>A RESTful service implemetned using Jersey 2, for
 											accessing the repox resources.</description>
-<!-- 										<termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl> -->
-<!-- 										<contact>kongchen#gmail$com</contact> -->
+										<!-- <termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl> -->
+										<!-- <contact>kongchen#gmail$com</contact> -->
 										<license>Apache 2.0</license>
 										<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
 									</apiInfo>
@@ -227,9 +227,15 @@
 		</dependency>
 
 		<!-- Media types support -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.media</groupId> -->
+		<!-- <artifactId>jersey-media-moxy</artifactId> -->
+		<!-- <version>2.13</version> -->
+		<!-- </dependency> -->
+
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
+			<artifactId>jersey-media-json-jackson</artifactId>
 		</dependency>
 
 		<!-- Test Dependencies -->
