@@ -66,7 +66,7 @@ public class AggregatorsResource {
     }
 
     /**
-     * Creates a new instance of this class.
+     * Creates a new instance by providing the DataManager.
      * @param dataManager
      */
     public AggregatorsResource(DefaultDataManager dataManager) {
