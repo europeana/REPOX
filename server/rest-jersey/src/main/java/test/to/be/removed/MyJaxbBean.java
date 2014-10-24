@@ -1,6 +1,8 @@
 /* MyJaxbBean.java - created on Oct 13, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package test.to.be.removed;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -12,6 +14,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @since Oct 13, 2014
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class MyJaxbBean {
     @XmlElement
     public String name;

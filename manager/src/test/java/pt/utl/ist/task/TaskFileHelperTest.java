@@ -48,7 +48,7 @@ public class TaskFileHelperTest {
         taskManager.stop(); //avoid starting execution of Tasks for testing purposes
 
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
-        newDP = new DataProvider("dummyDP", "dummyDP", "pt", "testing purposes only", dataSourceContainers);
+        newDP = new DataProvider("dummyDP", "dummyDP", "pt", "testing purposes only", dataSourceContainers, null, null, null);
 
         DataSource dataSourceOai = new OaiDataSource(newDP, "dummyDSIngest", "test DS", "schema", "namespace", MetadataFormat.oai_dc.toString(),
                 "http://dummy.oai.rp", "noset", new IdProvidedRecordIdPolicy(), null);

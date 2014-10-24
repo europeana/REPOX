@@ -5,21 +5,27 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.util.ProviderType;
 
 /**
+ * DataProvider type
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  */
 @XmlRootElement(name = "dataprovider")
 @XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "A Provider")
 public class DataProvider {
     @XmlElement
     private String                               id;
@@ -29,11 +35,18 @@ public class DataProvider {
     private String                               country;
     @XmlElement
     private String                               description;
-    @Transient
+    @XmlTransient
     private HashMap<String, DataSourceContainer> dataSourceContainers;
+    
+    @XmlElement
+    private String nameCode;
+    @XmlElement
+    private String homeage;
+    @XmlElement
+    private ProviderType providerType;
 
     // optional
-    @XmlElement
+//    @XmlTransient
     private String                               email;
 
     public String getId() {
@@ -66,6 +79,30 @@ public class DataProvider {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getNameCode() {
+        return nameCode;
+    }
+
+    public void setNameCode(String nameCode) {
+        this.nameCode = nameCode;
+    }
+
+    public String getHomePage() {
+        return homeage;
+    }
+
+    public void setHomePage(String homePage) {
+        this.homeage = homePage;
+    }
+
+    public ProviderType getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(ProviderType dataSetType) {
+        this.providerType = dataSetType;
     }
 
     public String getEmail() {
@@ -116,17 +153,17 @@ public class DataProvider {
         return null;
     }
 
-    /**
-     * @return Collection of DataSource
-     */
-    // todo to be removed after GWT migration
-    public Collection<DataSource> getReversedDataSourceContainers() {
-        List<DataSource> reversedDataSources = new ArrayList<DataSource>();
-        for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-            reversedDataSources.add(0, dataSourceContainer.getDataSource());
-        }
-        return reversedDataSources;
-    }
+//    /**
+//     * @return Collection of DataSource
+//     */
+//    // todo to be removed after GWT migration
+//    public Collection<DataSource> getReversedDataSourceContainers() {
+//        List<DataSource> reversedDataSources = new ArrayList<DataSource>();
+//        for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
+//            reversedDataSources.add(0, dataSourceContainer.getDataSource());
+//        }
+//        return reversedDataSources;
+//    }
 
     public HashMap<String, DataSourceContainer> getDataSourceContainers() {
         return dataSourceContainers;
@@ -140,7 +177,6 @@ public class DataProvider {
      * Creates a new instance of this class.
      */
     public DataProvider() {
-        super();
         dataSourceContainers = new HashMap<String, DataSourceContainer>();
     }
 
@@ -152,39 +188,55 @@ public class DataProvider {
      * @param country
      * @param description
      * @param dataSourceContainers
+     * @param nameCode 
+     * @param homepage 
+     * @param dataSetType 
      */
-    public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers) {
-        this();
+    public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage, ProviderType dataSetType) {
         this.id = id;
         this.name = name;
         this.country = country;
         this.description = description;
         this.dataSourceContainers = dataSourceContainers;
+        this.nameCode = nameCode;
+        this.homeage = homepage;
+        this.providerType = dataSetType;
     }
 
     /**
-     * Create Element from data provider information
+     * Create Element from data provider information.
      * 
-     * @param writeDataSources
+     * @param writeDataSources 
      * @return Document
      */
-    public Element createElement(boolean writeDataSources) {
+    public Element createElement(boolean writeDataSources){
         Element dataProviderElement = DocumentHelper.createElement("provider");
 
         dataProviderElement.addAttribute("id", this.getId());
         dataProviderElement.addElement("name").setText(this.getName());
-        if (this.getCountry() != null) {
+        if(this.getCountry() != null) {
             dataProviderElement.addElement("country").setText(this.getCountry());
         }
-        if (this.getDescription() != null) {
+        if(this.getDescription() != null) {
             dataProviderElement.addElement("description").setText(this.getDescription());
+        }
+        if(this.getProviderType() != null) {
+            dataProviderElement.addElement("type").setText(this.getProviderType().toString());
+        }
+        if(this.getNameCode() != null) {
+            dataProviderElement.addElement("nameCode").setText(this.getNameCode());
+        }
+        if(this.getHomePage() != null) {
+            dataProviderElement.addElement("url").setText(this.getHomePage().toString());
         }
         if (this.getEmail() != null && !this.getEmail().isEmpty()) {
             dataProviderElement.addElement("email").setText(this.getEmail());
         }
-        if (writeDataSources && dataSourceContainers != null) {
-            for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-                dataProviderElement.add(dataSourceContainer.createElement());
+
+        if(writeDataSources &&  this.getDataSourceContainers() != null){
+            for (DataSourceContainer dataSourceContainer : this.getDataSourceContainers().values()) {
+                DefaultDataSourceContainer dDataSourceContainer = (DefaultDataSourceContainer) dataSourceContainer;
+                dataProviderElement.add(dDataSourceContainer.createElement());
             }
         }
 

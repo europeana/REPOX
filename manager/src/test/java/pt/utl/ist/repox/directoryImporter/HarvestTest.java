@@ -52,7 +52,7 @@ public class HarvestTest {
             LightDataManager dataManager = (LightDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManagerTest().getDataManager();
 
             HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
-            DataProvider newDataProvider = new DataProvider(DATA_PROVIDER_ID, "data provider", "pt", "it's new", dataSourceContainers);
+            DataProvider newDataProvider = new DataProvider(DATA_PROVIDER_ID, "data provider", "pt", "it's new", dataSourceContainers, null, null, null);
 
             FileExtractStrategy extractStrategy = new SimpleFileExtractStrategy();
            /* String extractStrategyString = currentDataSourceElement.elementText("fileExtract");

@@ -39,7 +39,6 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
@@ -500,17 +499,17 @@ public class DefaultSaveData {
         }
 
         if(update) {
-            DefaultDataProvider dataProvider = (DefaultDataProvider)europeanaManager.getDataProvider(dataProviderUI.getId());
+            DataProvider dataProvider = europeanaManager.getDataProvider(dataProviderUI.getId());
             if(dataProvider != null) {
                 dataProvider.setCountry(dataProviderUI.getCountry());
                 dataProvider.setName(dataProviderUI.getName());
                 dataProvider.setDescription(dataProviderUI.getDescription());
                 dataProvider.setProviderType(ProviderType.valueOf(dataProviderUI.getType()));
                 dataProvider.setNameCode(dataProviderUI.getNameCode());
-                dataProvider.setHomePage(url);
+                dataProvider.setHomePage(url.toString());
 
                 try {
-                    dataProvider = (DefaultDataProvider)europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
+                    dataProvider = europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
                             dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType());
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
@@ -576,7 +575,7 @@ public class DefaultSaveData {
             List<String> setNames = map.get("setNames");
 
             DefaultDataManager europeanaManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
-            DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider)europeanaManager.getDataProvider(dataProviderID);
+            DataProvider dataProviderEuropeana = europeanaManager.getDataProvider(dataProviderID);
 
             for (int i=0; i<sets.size(); i++) {
                 String setSpec = sets.get(i);

@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.wordnik.swagger.annotations.ApiModel;
@@ -17,6 +19,7 @@ import com.wordnik.swagger.annotations.ApiModel;
  * @since Oct 13, 2014
  */
 @XmlRootElement(name = "aggregatorOptions")
+@XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An Option List container")
 public class AggregatorOptionListContainer extends OptionListContainer {
     public static final String AGGREGATORS = "aggregators";

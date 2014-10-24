@@ -279,14 +279,14 @@ public class DefaultDataManager implements DataManager {
                 if (currentElementProv.elementText("type") != null) {
                     providerType = currentElementProv.elementText("type");
                 }
-                URL providerHomePage = null;
+                String providerHomePage = null;
                 if (currentElementProv.elementText("url") != null) {
-                    providerHomePage = new URL(currentElementProv.elementText("url"));
+                    providerHomePage = currentElementProv.elementText("url");
                 }
 
                 HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-                DefaultDataProvider dataProvider = new DefaultDataProvider(providerId, providerName, providerCountry, providerDescription,
+                DataProvider dataProvider = new DataProvider(providerId, providerName, providerCountry, providerDescription,
                         dataSourceContainers, providerNameCode, providerHomePage, ProviderType.get(providerType));
 
                 for (Iterator dataSIterator = currentElementProv.elementIterator("source"); dataSIterator.hasNext();) {
@@ -942,7 +942,7 @@ public class DefaultDataManager implements DataManager {
                 .getAggregator(aggregatorId);
 
         if (aggregator != null) {
-            DefaultDataProvider newDataProvider = new DefaultDataProvider();
+            DataProvider newDataProvider = new DataProvider();
             newDataProvider.setName(name);
             newDataProvider.setCountry(country);
             newDataProvider.setDescription(description);
@@ -957,7 +957,7 @@ public class DefaultDataManager implements DataManager {
                     if (!FileUtilSecond.checkUrl(url)) {
                         throw new Exception();
                     }
-                    newDataProvider.setHomePage(new URL(url));
+                    newDataProvider.setHomePage(url);
 
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(url);
@@ -970,7 +970,7 @@ public class DefaultDataManager implements DataManager {
             }
             newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
 
-            if (nameCode != null && (DefaultDataProvider)getDataProvider(nameCode) == null) {
+            if (nameCode != null && getDataProvider(nameCode) == null) {
                 // asked by TEL (but first checks if the dataProvider with that specific ID does not exist
                 newDataProvider.setId(nameCode);
             } else {
@@ -1015,7 +1015,7 @@ public class DefaultDataManager implements DataManager {
                 .getAggregator(aggregatorId);
 
         if (aggregator != null) {
-            DefaultDataProvider newDataProvider = new DefaultDataProvider();
+            DataProvider newDataProvider = new DataProvider();
             newDataProvider.setName(name);
             newDataProvider.setCountry(country);
             newDataProvider.setDescription(description);
@@ -1030,7 +1030,7 @@ public class DefaultDataManager implements DataManager {
                     if (!FileUtilSecond.checkUrl(url)) {
                         throw new Exception();
                     }
-                    newDataProvider.setHomePage(new URL(url));
+                    newDataProvider.setHomePage(url);
 
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(url);
@@ -1061,7 +1061,7 @@ public class DefaultDataManager implements DataManager {
     }
 
     public boolean moveDataProvider(String newAggregatorId, String idDataProvider2Move) throws IOException {
-        DefaultDataProvider dataProvider = (DefaultDataProvider)getDataProvider(idDataProvider2Move);
+        DataProvider dataProvider = getDataProvider(idDataProvider2Move);
         Aggregator aggregatorParent = getAggregatorParent(dataProvider.getId());
 
         if (aggregatorParent.getId().equals(newAggregatorId)) {
@@ -1083,14 +1083,14 @@ public class DefaultDataManager implements DataManager {
 
     public boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(idDataSource2Move);
-        DefaultDataProvider dataProviderParent = (DefaultDataProvider)getDataProviderParent(dataSourceContainer.getDataSource().getId());
+        DataProvider dataProviderParent = getDataProviderParent(dataSourceContainer.getDataSource().getId());
 
         if (dataProviderParent.getId().equals(newDataProviderID)) {
             return false;
         }
 
         for (Aggregator currentAggregator : aggregators) {
-            for (DefaultDataProvider currentDataProvider : currentAggregator.getDataProviders()) {
+            for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
                 if (currentDataProvider.getId().equals(newDataProviderID)) {
                     currentDataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(), dataSourceContainer);
                     dataProviderParent.getDataSourceContainers().remove(dataSourceContainer.getDataSource().getId());
@@ -1158,7 +1158,7 @@ public class DefaultDataManager implements DataManager {
      */
     public DataProvider updateDataProvider(String id, String name, String country, String description, String nameCode, String url, String dataSetType)
             throws ObjectNotFoundException, InvalidArgumentsException, IOException {
-        DefaultDataProvider dataProvider = (DefaultDataProvider)getDataProvider(id);
+        DataProvider dataProvider = getDataProvider(id);
 
         if (dataProvider != null) {
             // only not null fields are updated
@@ -1181,7 +1181,7 @@ public class DefaultDataManager implements DataManager {
                     if (!FileUtilSecond.checkUrl(url)) {
                         throw new InvalidArgumentsException(url);
                     }
-                    dataProvider.setHomePage(new URL(url));
+                    dataProvider.setHomePage(url);
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(url);
                 }
@@ -1209,7 +1209,7 @@ public class DefaultDataManager implements DataManager {
      * @return MessageType
      */
     public synchronized void deleteDataProvider(String dataProviderId) throws ObjectNotFoundException, IOException {
-        DefaultDataProvider dataProvider2Delete = (DefaultDataProvider)getDataProvider(dataProviderId);
+        DataProvider dataProvider2Delete = getDataProvider(dataProviderId);
 
         if (dataProvider2Delete != null) {
 
@@ -1247,12 +1247,12 @@ public class DefaultDataManager implements DataManager {
     }
 
     public DataProvider updateDataProvider(DataProvider dataProvider, String oldDataProviderId) throws IOException, ObjectNotFoundException {
-        DefaultDataProvider defaultDataProvider = (DefaultDataProvider)dataProvider;
+        DataProvider defaultDataProvider = dataProvider;
         Aggregator aggregatorParent = getAggregatorParent(defaultDataProvider.getId());
 
         for (Aggregator currentAggregator : aggregators) {
             if (currentAggregator.getId().equals(aggregatorParent.getId())) {
-                Iterator<DefaultDataProvider> iteratorDataProvider = currentAggregator.getDataProviders().iterator();
+                Iterator<DataProvider> iteratorDataProvider = currentAggregator.getDataProviders().iterator();
                 while (iteratorDataProvider.hasNext()) {
                     DataProvider currentDataProvider = iteratorDataProvider.next();
                     if (currentDataProvider.getId().equals(oldDataProviderId)) {
@@ -1277,7 +1277,7 @@ public class DefaultDataManager implements DataManager {
     private boolean checkIfDataProviderExists(String aggregatorId, DataProvider dataProvider) {
         for (Aggregator currentAggregator : aggregators) {
             if (currentAggregator.getId().equals(aggregatorId)) {
-                for (DefaultDataProvider currentDataProvider : currentAggregator.getDataProviders()) {
+                for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
                     if (currentDataProvider.getId().equals(dataProvider.getId())) {
                         return true;
                     }
@@ -1287,6 +1287,7 @@ public class DefaultDataManager implements DataManager {
         return false;
     }
 
+    @Override
     public List<DataProvider> getDataProviders() throws DocumentException, IOException {
         List<DataProvider> dataProvidersList = new ArrayList<DataProvider>();
         for (Aggregator aggregator : aggregators) {
@@ -1295,9 +1296,10 @@ public class DefaultDataManager implements DataManager {
         return dataProvidersList;
     }
 
+    @Override
     public DataProvider getDataProvider(String dataProviderId) {
         for (Aggregator aggregator : aggregators) {
-            for (DefaultDataProvider dataProvider : aggregator.getDataProviders()) {
+            for (DataProvider dataProvider : aggregator.getDataProviders()) {
                 if (dataProvider.getId().equals(dataProviderId)) {
                     return dataProvider;
                 }
@@ -1315,7 +1317,7 @@ public class DefaultDataManager implements DataManager {
     public DataProvider getDataProvider(String aggregatorId, String name) {
         for (Aggregator aggregator : aggregators) {
             if (aggregator.getId().equals(aggregatorId)) {
-                for (DefaultDataProvider dataProvider : aggregator.getDataProviders()) {
+                for (DataProvider dataProvider : aggregator.getDataProviders()) {
                     if (dataProvider.getName().equals(name))
                         return dataProvider;
                 }
@@ -1324,9 +1326,10 @@ public class DefaultDataManager implements DataManager {
         return null;
     }
 
+    @Override
     public DataProvider getDataProviderParent(String dataSourceId) {
         for (Aggregator aggregator : aggregators) {
-            for (DefaultDataProvider dataProvider : aggregator.getDataProviders()) {
+            for (DataProvider dataProvider : aggregator.getDataProviders()) {
                 DataSourceContainer dataSourceContainer = dataProvider.getDataSourceContainers().get(dataSourceId);
                 if (dataSourceContainer != null) {
                     return dataProvider;
@@ -1338,7 +1341,7 @@ public class DefaultDataManager implements DataManager {
 
     public Aggregator getAggregatorParent(String dataProviderId) {
         for (Aggregator aggregator : aggregators) {
-            for (DefaultDataProvider dataProvider : aggregator.getDataProviders()) {
+            for (DataProvider dataProvider : aggregator.getDataProviders()) {
                 if (dataProvider.getId().equals(dataProviderId)) {
                     return aggregator;
                 }

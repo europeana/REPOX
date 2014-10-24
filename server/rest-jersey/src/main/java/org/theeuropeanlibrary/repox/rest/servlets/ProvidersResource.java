@@ -1,22 +1,26 @@
 /* ProvidersResource.java - created on Oct 24, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.servlets;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.util.exceptions.DoesNotExistException;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
@@ -67,30 +71,30 @@ public class ProvidersResource {
         ProviderOptionListContainer providerOptionListContainer = new ProviderOptionListContainer(uriInfo.getBaseUri());
         return providerOptionListContainer;
     }
-//
-//    /**
-//     * Retrieve the aggregator with the provided id.
-//     * Relative path : /aggregators/{aggregatorId}
-//     * @param aggregatorId
-//     * @return Aggregator information
-//     * @throws DoesNotExistException 
-//     */
-//    @GET
-//    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
-//    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    @ApiOperation(value = "Get specific aggregator.", httpMethod = "GET", response = Aggregator.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "OK (Response containing an Aggregator)"),
-//            @ApiResponse(code = 404, message = "DoesNotExistException")
-//          })
-//    public Aggregator getAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException {
-//        Aggregator aggregator = null;
-//        aggregator = dataManager.getAggregator(aggregatorId);
-//        if (aggregator == null)
-//            throw new DoesNotExistException("Aggregator does NOT exist!");
-//
-//        return aggregator;
-//    }
+
+    /**
+     * Retrieve the provider with the provided id.
+     * Relative path : /providers/{providerId}
+     * @param providerId 
+     * @return Provider information
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Path("/" + ProviderOptionListContainer.PROVIDERID)
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Get specific provider.", httpMethod = "GET", response = DataProvider.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Provider)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException")
+          })
+    public DataProvider getProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId) throws DoesNotExistException {
+        DataProvider provider = null;
+        provider = dataManager.getDataProvider(providerId);
+        if (provider == null)
+            throw new DoesNotExistException("Provider does NOT exist!");
+
+        return provider;
+    }
 //
 //    /**
 //     * Create an aggregator provided in the body of the post call.

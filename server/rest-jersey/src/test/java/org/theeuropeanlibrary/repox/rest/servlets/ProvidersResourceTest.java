@@ -2,35 +2,25 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dom4j.DocumentException;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
-import pt.utl.ist.dataProvider.Aggregator;
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+import pt.utl.ist.util.ProviderType;
 
 /**
  * Providers context path handling tests.
@@ -53,7 +43,7 @@ public class ProvidersResourceTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#getOptions()}.
      */
     @Test
     @Ignore
@@ -71,45 +61,44 @@ public class ProvidersResourceTest extends JerseyTest {
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, polc.getOptionList().size());
     }
-//
-//    /**
-//     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregator(java.lang.String)}.
-//     * @throws MalformedURLException 
-//     */
-//    @Test
-//    @Ignore
-//    public void testGetAggregator() throws MalformedURLException {
-//        String aggregatorId = "SampleId";
-//        //Mocking
-//        when(dataManager.getAggregator(aggregatorId)).thenReturn(
-//                new Aggregator(aggregatorId, "testName", "namecode", "http://something", null));
-//
-//        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-//        //Check xml head working
-//        Response response = target.request(MediaType.APPLICATION_XML).head();
-//        assertEquals(200, response.getStatus());
-//        //Check json head working
-//        response = target.request(MediaType.APPLICATION_JSON).head();
-//        assertEquals(200, response.getStatus());
-//        //Check get xml working with 200 status
-//        response = target.request(MediaType.APPLICATION_XML).get();
-//        assertEquals(200, response.getStatus());
-//        Aggregator aggregator = response.readEntity(Aggregator.class);
-//        //Check get json working with 200 status
-//        response = target.request(MediaType.APPLICATION_JSON).get();
-//        assertEquals(200, response.getStatus());
-//        aggregator = response.readEntity(Aggregator.class);
-//        assertEquals(aggregatorId, aggregator.getId());
-//
-//        //Check Errors
-//        //Check get xml working with 404 status
-//        target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + "FakeAggregatorId");
-//        response = target.request(MediaType.APPLICATION_XML).get();
-//        assertEquals(404, response.getStatus());
-//        //Check get xml working with 404 status
-//        response = target.request(MediaType.APPLICATION_JSON).get();
-//        assertEquals(404, response.getStatus());
-//    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#getProvider(java.lang.String)}.
+     * @throws MalformedURLException 
+     */
+    @Test
+    @Ignore
+    public void testGetProvider() throws MalformedURLException {
+        String providerId = "SampleId";
+        //Mocking
+        when(dataManager.getDataProvider(providerId)).thenReturn(new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY));
+
+        WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
+        //Check xml head working
+        Response response = target.request(MediaType.APPLICATION_XML).head();
+        assertEquals(200, response.getStatus());
+        //Check json head working
+        response = target.request(MediaType.APPLICATION_JSON).head();
+        assertEquals(200, response.getStatus());
+        //Check get xml working with 200 status
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+        DataProvider provider = response.readEntity(DataProvider.class);
+        //Check get json working with 200 status
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, response.getStatus());
+        provider = response.readEntity(DataProvider.class);
+        assertEquals(providerId, provider.getId());
+
+        //Check Errors
+        //Check get xml working with 404 status
+        target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + "FakeAggregatorId");
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+        //Check get xml working with 404 status
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(404, response.getStatus());
+    }
 //
 //    /**
 //     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#createAggregator(pt.utl.ist.dataProvider.Aggregator)}.

@@ -24,7 +24,6 @@ import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 
@@ -99,7 +98,7 @@ public class FilterManagementUtil {
             deleteDataProviderFromList(dataProvider, dataToRemove);
 
         if(RepoxServiceImpl.getProjectManager() instanceof DefaultProjectManager){
-            DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider) dataProvider;
+            DataProvider dataProviderEuropeana =  dataProvider;
             result = isSameDPType(dataProviderEuropeana.getProviderType().name(), filterQuery);
             if(result != null && !result)
                 deleteDataProviderFromList(dataProvider, dataToRemove);

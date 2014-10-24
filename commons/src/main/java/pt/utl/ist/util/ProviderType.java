@@ -21,11 +21,14 @@
 
 package pt.utl.ist.util;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * @author Nicola Aloia   <nicola.aloia@isti.cnr.it>
  *         Date: 22-mar-2010
  *         Time: 17.50.50
  */
+//@XmlEnum(String.class)
 public enum ProviderType {
     MUSEUM,
     ARCHIVE,

@@ -6,12 +6,13 @@ import static org.mockito.Mockito.mock;
 import java.net.MalformedURLException;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.AlreadyExistsExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.InternalServerErrorExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.InvalidArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.MissingArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource;
+import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
 
@@ -40,7 +41,9 @@ public class JerseyConfigMocked extends ResourceConfig {
 
         //Register resource with mocks
         AggregatorsResource ar = new AggregatorsResource(dataManager);
+        ProvidersResource pr = new ProvidersResource(dataManager);
         register(ar);
+        register(pr);
     }
 
     /**
@@ -50,5 +53,4 @@ public class JerseyConfigMocked extends ResourceConfig {
     public static DefaultDataManager getDataManager() {
         return dataManager;
     }
-
 }

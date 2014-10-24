@@ -255,7 +255,7 @@ public class LightDataManager implements DataManager {
 
                 HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-                DataProvider provider = new DataProvider(providerId, providerName, providerCountry, providerDescription, dataSourceContainers);
+                DataProvider provider = new DataProvider(providerId, providerName, providerCountry, providerDescription, dataSourceContainers, null, null, null);
                 for (Element currentDataSourceElement : (List<Element>)currentDataProviderElement.elements("source")) {
                     String id = currentDataSourceElement.attributeValue("id");
                     String description = currentDataSourceElement.elementText("description");

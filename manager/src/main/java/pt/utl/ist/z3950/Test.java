@@ -104,7 +104,7 @@ public class Test {
 
         HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
-        DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers);
+        DataProvider dummyDP = new DataProvider("tempDP", "tempDP", null, "temporary Data Provider - delete", dataSourceContainers, null, null, null);
         DataSourceZ3950 dataSourceZ3950 = new DataSourceZ3950(dummyDP, "tempZ3950", "tempZ3950", "", "", harvestMethod, new IdGeneratedRecordIdPolicy(), null);
 
         dataSourceContainers.put(dataSourceZ3950.getId(), new LightDataSourceContainer(dataSourceZ3950));

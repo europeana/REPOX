@@ -18,7 +18,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * @since Oct 13, 2014
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An Option List container")
 public abstract class OptionListContainer {
 

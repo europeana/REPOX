@@ -5,6 +5,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * Provider options.
  * Extends the {@link org.theeuropeanlibrary.repox.rest.pathOptions.OptionListContainer}, so it can override the name of the tag for JAXB.
@@ -12,13 +18,15 @@ import java.util.List;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 24, 2014
  */
+@XmlRootElement(name = "providerOptions")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An Option List container")
 public class ProviderOptionListContainer extends OptionListContainer {
     public static final String PROVIDERS = "providers";
     public static final String PROVIDERID = "{providerId}";
     
     /**
      * No argument constructor needed for JAXB.
-     * Creates a new instance of this class.
      */
     public ProviderOptionListContainer() {
     }

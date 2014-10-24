@@ -60,7 +60,6 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataProvider;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.rest.statistics.DefaultRepoxStatistics;
@@ -432,12 +431,12 @@ public class DefaultProjectManager extends ProjectManager {
                             countryMap.get(dataProvider.getCountry()) + "\"/> " + countryMap.get(dataProvider.getCountry());
                     values.add(new FilterAttribute(showName,dataProvider.getCountry()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
-                    DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider)dataProvider;
+                    DataProvider dataProviderEuropeana = dataProvider;
                     values.add(new FilterAttribute(dataProviderEuropeana.getProviderType().name(),dataProviderEuropeana.getProviderType().name()));
                 }
             }
             else if(object instanceof DataSourceContainer){
-                DefaultDataProvider parent = (DefaultDataProvider)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
+                DataProvider parent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
                         getDataProviderParent(((DataSourceContainer) object).getDataSource().getId());
                 if(filterType.equals(FilterType.COUNTRY)){
                     String showName = "<img src=\"resources/images/countries/" +
@@ -816,7 +815,7 @@ public class DefaultProjectManager extends ProjectManager {
     }
 
     private DataProviderUI parseDataProviderEuropeana(DataProvider dataProvider, AggregatorUI aggregatorUI)  throws ServerSideException{
-        DefaultDataProvider dataProviderEuropeana = (DefaultDataProvider) dataProvider;
+        DataProvider dataProviderEuropeana = dataProvider;
         String country;
         if(dataProviderEuropeana.getCountry() != null)
             country = dataProviderEuropeana.getCountry();
@@ -950,7 +949,7 @@ public class DefaultProjectManager extends ProjectManager {
                 }else if(data instanceof DataProvider){
                     String id = ((DataProvider) data).getId();
                     String name = ((DataProvider) data).getName();
-                    String nameCode = ((DefaultDataProvider) data).getNameCode();
+                    String nameCode = ((DataProvider) data).getNameCode();
                     String description = ((DataProvider) data).getDescription();
                     if(Util.compareStrings(searchValue, description) ||
                             Util.compareStrings(searchValue, name) || Util.compareStrings(searchValue, nameCode)){
