@@ -1,10 +1,14 @@
 /* ProvidersResource.java - created on Oct 24, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.servlets;
 
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -12,6 +16,9 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * Providers context path handling.
@@ -44,22 +51,22 @@ public class ProvidersResource {
         super();
         this.dataManager = dataManager;
     }
-//
-//    /**
-//     * Retrieve all the available options for Aggregators
-//     * Relative path : /aggregators
-//     * @return the list of the options available wrapped in a container
-//     */
-//    @OPTIONS
-//    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//    @ApiOperation(value = "Get options over aggregator conext.", httpMethod = "OPTIONS", response = AggregatorOptionListContainer.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")
-//          })
-//    public AggregatorOptionListContainer getOptions() {
-//        AggregatorOptionListContainer aggregatorOptionListContainer = new AggregatorOptionListContainer(uriInfo.getBaseUri());
-//        return aggregatorOptionListContainer;
-//    }
+
+    /**
+     * Retrieve all the available options for Providers
+     * Relative path : /providers
+     * @return the list of the options available wrapped in a container
+     */
+    @OPTIONS
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @ApiOperation(value = "Get options over provider conext.", httpMethod = "OPTIONS", response = ProviderOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")
+          })
+    public ProviderOptionListContainer getOptions() {
+        ProviderOptionListContainer providerOptionListContainer = new ProviderOptionListContainer(uriInfo.getBaseUri());
+        return providerOptionListContainer;
+    }
 //
 //    /**
 //     * Retrieve the aggregator with the provided id.
