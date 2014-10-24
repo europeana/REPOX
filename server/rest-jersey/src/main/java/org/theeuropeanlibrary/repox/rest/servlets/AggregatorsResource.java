@@ -135,6 +135,9 @@ public class AggregatorsResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException")
           })
     public Response createAggregator(@ApiParam(value = "Aggregator id is not required", required = true) Aggregator aggregator) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException {
+        if(aggregator.getId() != null)
+            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
+        
         Aggregator createdAggregator = null;
         if (aggregator.getName() != null && !aggregator.getName().isEmpty()) {
             try {
@@ -155,7 +158,7 @@ public class AggregatorsResource {
 
     /**
      * Delete an aggregator by specifying the Id.
-     * Relative path : /aggregators
+     * Relative path : /aggregators/{aggregatorId}
      * @param aggregatorId 
      * @return OK or Error Message
      * @throws DoesNotExistException 
@@ -185,8 +188,8 @@ public class AggregatorsResource {
 
     /**
      * Update an aggregator by specifying the Id.
-     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the update that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
-     * Relative path : /aggregators
+     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the updates that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
+     * Relative path : /aggregators/{aggregatorId}
      * @param aggregatorId 
      * @param aggregator 
      * @return OK or Error Message
@@ -206,6 +209,9 @@ public class AggregatorsResource {
     public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,@ApiParam(value = "Aggregator id is not required", required = true) Aggregator aggregator) throws DoesNotExistException,
             InvalidArgumentsException {
 
+        if(aggregator.getId() != null)
+            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
+        
         String name = aggregator.getName();
         String nameCode = aggregator.getNameCode();
         String homePage = aggregator.getHomePage();
@@ -228,8 +234,8 @@ public class AggregatorsResource {
      * Get a list of aggregators in the specified range.
      * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
      * Relative path : /aggregators
-     * @param offset 
-     * @param number 
+     * @param offset Query parameter on the context
+     * @param number Query parameter on the context
      * @return the list of the number of aggregators requested
      * @throws Exception 
      * @throws InvalidArgumentsException 
@@ -255,12 +261,4 @@ public class AggregatorsResource {
 
         return  Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
     }
-
-//    @GET
-//    @Produces({ MediaType.TEXT_PLAIN })
-//    public String test() throws DoesNotExistException {
-//        throw new DoesNotExistException("AAAAA");
-//
-//    }
-
 }

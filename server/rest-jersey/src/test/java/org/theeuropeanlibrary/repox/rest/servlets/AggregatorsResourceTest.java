@@ -24,6 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.Option;
 
 import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -57,7 +58,7 @@ public class AggregatorsResourceTest extends JerseyTest {
     @Test
     @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 2;
+        int numberOfAvailableOptions = 6;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Check xml options working
@@ -69,6 +70,11 @@ public class AggregatorsResourceTest extends JerseyTest {
         AggregatorOptionListContainer aolc = response.readEntity(AggregatorOptionListContainer.class);
         //Check the number of options provided
         assertEquals(numberOfAvailableOptions, aolc.getOptionList().size());
+        
+        for(Option o : aolc.getOptionList())
+        {
+            System.out.println(o.getDescription());
+        }
     }
 
     /**
@@ -118,7 +124,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws DocumentException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testCreateAggregator() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
@@ -147,6 +153,11 @@ public class AggregatorsResourceTest extends JerseyTest {
         aggregator = new Aggregator(null, null, "GR", "http://somepage", null);
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
+        
+        //Invalid request before any call to the mock
+        aggregator.setId("AnyID");
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
     }
 
     /**
@@ -184,7 +195,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateAggregator() throws Exception {
         String aggregatorId = "SampleId";
         Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
@@ -207,6 +218,11 @@ public class AggregatorsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(404, response.getStatus());
         //Invalid URL
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+        
+        //Invalid request before any call to the mock
+        aggregator.setId("AnyID");
         response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(400, response.getStatus());
     }
