@@ -1,22 +1,32 @@
 /* ProvidersResource.java - created on Oct 24, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.servlets;
 
+import java.io.IOException;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -95,45 +105,64 @@ public class ProvidersResource {
 
         return provider;
     }
-//
-//    /**
-//     * Create an aggregator provided in the body of the post call.
-//     * Relative path : /aggregators
-//     * @param aggregator 
-//     * @return OK or Error Message
-//     * @throws MissingArgumentsException 
-//     * @throws AlreadyExistsException 
-//     * @throws InvalidArgumentsException 
-//     */
-//    @POST
-//    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//    @ApiOperation(value = "Create an aggregator.", httpMethod = "POST")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
-//            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
-//            @ApiResponse(code = 406, message = "MissingArgumentsException"),
-//            @ApiResponse(code = 409, message = "AlreadyExistsException"),
-//            @ApiResponse(code = 500, message = "InternalServerErrorException")
-//          })
-//    public Response createAggregator(@ApiParam(value = "Aggregator id is not required", required = true) Aggregator aggregator) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException {
-//        Aggregator createdAggregator = null;
-//        if (aggregator.getName() != null && !aggregator.getName().isEmpty()) {
-//            try {
-//                createdAggregator = dataManager.createAggregator(aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString());
-//            } catch (DocumentException | IOException e) {
-//                throw new InternalServerErrorException("Error in server : " + e.getMessage());
-//            } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-//                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-//            } catch (AlreadyExistsException e) { //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided 
-//                throw new AlreadyExistsException("Aggregator with name \"" + e.getMessage() + "\" already exists!");
-//            }
-//        } else
-//            throw new MissingArgumentsException("Missing argument name!");
+
+    /**
+     * Create an provider provided in the body of the post call.
+     * Relative path : /providers
+     * @param provider 
+     * @return OK or Error Message
+     * @throws MissingArgumentsException 
+     * @throws AlreadyExistsException 
+     * @throws InvalidArgumentsException 
+     */
+    @POST
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @ApiOperation(value = "Create a provider.", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+          })
+    public Response createProvider(@ApiParam(value = "Provider id is not required", required = true) DataProvider provider) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException {
+        if(provider.getId() != null)
+            throw new InvalidArgumentsException("Invalid value: " + "Provider Id provided in body must be null");
+        
+        String name = provider.getName();
+        String country = provider.getCountry();
+        String description = provider.getDescription();
+        String nameCode = provider.getNameCode();
+        String homepage = provider.getHomePage();
+        String dataSetType = provider.getProviderType().toString();
+        String email = provider.getEmail();
+        
+        if(name == null || name.equals(""))
+            throw new InvalidArgumentsException("Invalid value: " + "Provider name must not be empty");
+        else if(country == null || country.equals(""))
+            throw new InvalidArgumentsException("Invalid value: " + "Provider country must not be empty");
+        else if(dataSetType == null || dataSetType.equals(""))
+            throw new InvalidArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
+        
+        DataProvider createdProvider = null;
+        if (provider.getName() != null && !provider.getName().isEmpty()) {
+            try {
+                dataManager.createDataProvider(aggregatorId, name, country, description, nameCode, homepage, dataSetType, email);
+            } catch (DocumentException | IOException e) {
+                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
+                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+            } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with both name and nameCode the same as the one provided 
+                throw new AlreadyExistsException("Provider with name \"" + e.getMessage() + "\" already exists!");
+            }
+        } else
+            throw new MissingArgumentsException("Missing argument name!");
 //        return Response.created(null)
 //                .entity(new Result("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully"))
 //                .build();
-//    }
+        return null;
+    }
 //
 //    /**
 //     * Delete an aggregator by specifying the Id.

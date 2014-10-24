@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -754,6 +753,7 @@ public class DefaultDataManager implements DataManager {
         newAggregator.setNameCode(nameCode);
         newAggregator.setId(Aggregator.generateId(newAggregator.getName()));
 
+        //Checks if another aggregator with the same name exists already and if the nameCode exists in both of the if that is as well equal then the aggregator is specified as already existent
         if (!checkIfAggregatorExists(aggregators, newAggregator)) {
             aggregators.add(newAggregator);
             saveData();
@@ -930,14 +930,17 @@ public class DefaultDataManager implements DataManager {
      * @param country
      * @param description
      * @param nameCode
-     * @param url
+     * @param homepage
      * @param dataSetType
+     * @param email 
      * @throws IOException
-     * @throws DocumentException
      * @return MessageType
+     * @throws ObjectNotFoundException 
+     * @throws AlreadyExistsException 
+     * @throws InvalidArgumentsException 
      */
-    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String url,
-            String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
+    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String homepage,
+            String dataSetType, String email) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -947,20 +950,22 @@ public class DefaultDataManager implements DataManager {
             newDataProvider.setCountry(country);
             newDataProvider.setDescription(description);
             newDataProvider.setNameCode(nameCode);
+            newDataProvider.setEmail(email);
 
-            if (url != null && !url.equals("")) {
+            if (homepage != null && !homepage.equals("")) {
                 try {
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "http://" + url;
+                    String generatedHomepageUrl = null;
+                    if (!homepage.startsWith("http://") && !homepage.startsWith("https://")) {
+                        generatedHomepageUrl = "http://" + homepage;
                     }
                     // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(url)) {
+                    if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
                         throw new Exception();
                     }
-                    newDataProvider.setHomePage(url);
+                    newDataProvider.setHomePage(generatedHomepageUrl);
 
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(url);
+                    throw new InvalidArgumentsException(homepage);
                 }
             }
             try {
@@ -970,15 +975,17 @@ public class DefaultDataManager implements DataManager {
             }
             newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
 
-            if (nameCode != null && getDataProvider(nameCode) == null) {
-                // asked by TEL (but first checks if the dataProvider with that specific ID does not exist
-                newDataProvider.setId(nameCode);
-            } else {
-                newDataProvider.setId(DataProvider.generateId(newDataProvider.getName()));
-            }
+//            if (nameCode != null && getDataProvider(nameCode) == null) {
+//                // asked by TEL (but first checks if the dataProvider with that specific ID does not exist
+//                newDataProvider.setId(nameCode);
+//            } else {
+//                newDataProvider.setId(DataProvider.generateId(newDataProvider.getName()));
+//            }
+            newDataProvider.setId(DataProvider.generateId(newDataProvider.getName()));
 
             for (Aggregator currentAggregator : aggregators) {
                 if (currentAggregator.getId().equals(aggregatorId)) {
+                    //Check if another provider with the same id exists already in the aggregator with aggregatorId
                     if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
                         throw new AlreadyExistsException(aggregatorId);
                     }
@@ -1009,56 +1016,57 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws InvalidArgumentsException
      */
-    public DataProvider createDataProvider(String aggregatorId, String id, String name, String country, String description, String nameCode,
-            String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
-        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
-                .getAggregator(aggregatorId);
-
-        if (aggregator != null) {
-            DataProvider newDataProvider = new DataProvider();
-            newDataProvider.setName(name);
-            newDataProvider.setCountry(country);
-            newDataProvider.setDescription(description);
-            newDataProvider.setNameCode(nameCode);
-
-            if (url != null && !url.equals("")) {
-                try {
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "http://" + url;
-                    }
-                    // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(url)) {
-                        throw new Exception();
-                    }
-                    newDataProvider.setHomePage(url);
-
-                } catch (Exception e) {
-                    throw new InvalidArgumentsException(url);
-                }
-            }
-            try {
-                newDataProvider.setProviderType(ProviderType.get(dataSetType));
-            } catch (Exception e) {
-                throw new InvalidArgumentsException(dataSetType);
-            }
-            newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
-            newDataProvider.setId(id);
-
-            for (Aggregator currentAggregator : aggregators) {
-                if (currentAggregator.getId().equals(aggregatorId)) {
-                    if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
-                        throw new AlreadyExistsException(aggregatorId);
-                    }
-                    currentAggregator.addDataProvider(newDataProvider);
-                    break;
-                }
-            }
-            saveData();
-            return newDataProvider;
-        } else {
-            throw new ObjectNotFoundException(aggregatorId);
-        }
-    }
+    //To be removed, Shouldn't provide the id manually, id has to be generated automatically
+//    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode,
+//            String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
+//        Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
+//                .getAggregator(aggregatorId);
+//
+//        if (aggregator != null) {
+//            DataProvider newDataProvider = new DataProvider();
+//            newDataProvider.setName(name);
+//            newDataProvider.setCountry(country);
+//            newDataProvider.setDescription(description);
+//            newDataProvider.setNameCode(nameCode);
+//
+//            if (url != null && !url.equals("")) {
+//                try {
+//                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+//                        url = "http://" + url;
+//                    }
+//                    // test if URL is valid
+//                    if (!FileUtilSecond.checkUrl(url)) {
+//                        throw new Exception();
+//                    }
+//                    newDataProvider.setHomePage(url);
+//
+//                } catch (Exception e) {
+//                    throw new InvalidArgumentsException(url);
+//                }
+//            }
+//            try {
+//                newDataProvider.setProviderType(ProviderType.get(dataSetType));
+//            } catch (Exception e) {
+//                throw new InvalidArgumentsException(dataSetType);
+//            }
+//            newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
+//            newDataProvider.setId(id);
+//
+//            for (Aggregator currentAggregator : aggregators) {
+//                if (currentAggregator.getId().equals(aggregatorId)) {
+//                    if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
+//                        throw new AlreadyExistsException(aggregatorId);
+//                    }
+//                    currentAggregator.addDataProvider(newDataProvider);
+//                    break;
+//                }
+//            }
+//            saveData();
+//            return newDataProvider;
+//        } else {
+//            throw new ObjectNotFoundException(aggregatorId);
+//        }
+//    }
 
     public boolean moveDataProvider(String newAggregatorId, String idDataProvider2Move) throws IOException {
         DataProvider dataProvider = getDataProvider(idDataProvider2Move);

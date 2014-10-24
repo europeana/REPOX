@@ -1,9 +1,6 @@
 package pt.utl.ist.dataProvider;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,10 +11,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import com.wordnik.swagger.annotations.ApiModel;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.util.ProviderType;
+
+import com.wordnik.swagger.annotations.ApiModel;
 
 /**
  * DataProvider type
@@ -41,12 +38,12 @@ public class DataProvider {
     @XmlElement
     private String nameCode;
     @XmlElement
-    private String homeage;
+    private String homepage;
     @XmlElement
     private ProviderType providerType;
 
     // optional
-//    @XmlTransient
+    @XmlElement
     private String                               email;
 
     public String getId() {
@@ -90,11 +87,11 @@ public class DataProvider {
     }
 
     public String getHomePage() {
-        return homeage;
+        return homepage;
     }
 
     public void setHomePage(String homePage) {
-        this.homeage = homePage;
+        this.homepage = homePage;
     }
 
     public ProviderType getProviderType() {
@@ -199,7 +196,7 @@ public class DataProvider {
         this.description = description;
         this.dataSourceContainers = dataSourceContainers;
         this.nameCode = nameCode;
-        this.homeage = homepage;
+        this.homepage = homepage;
         this.providerType = dataSetType;
     }
 

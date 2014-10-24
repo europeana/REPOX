@@ -527,7 +527,7 @@ public class DefaultSaveData {
             try {
                 DataProvider dataProvider = europeanaManager.createDataProvider(dataProviderUI.getParentAggregatorID(), dataProviderUI.getName(),
                         dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(),
-                        homepage, dataProviderUI.getType());
+                        homepage, dataProviderUI.getType(), null);
                 UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                 saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(),pageSize));
                 saveDataResponse.setResponseState(ResponseState.SUCCESS);
