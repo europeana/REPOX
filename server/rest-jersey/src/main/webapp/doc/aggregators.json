@@ -11,7 +11,7 @@
       "notes" : "",
       "type" : "aggregatorOptions",
       "nickname" : "getOptions",
-      "produces" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ ],
       "responseMessages" : [ {
         "code" : 200,

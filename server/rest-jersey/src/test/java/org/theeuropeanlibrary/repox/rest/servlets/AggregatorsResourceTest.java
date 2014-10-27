@@ -246,7 +246,7 @@ public class AggregatorsResourceTest extends JerseyTest {
         assertEquals(400, response.getStatus());
         //Error because of index
         target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", -1).queryParam("number", number);
-        //Notice not mocked here cause it has to thow the exception before the call to the dataManager
+        //Notice not mocked here cause it has to throw the exception before the call to the dataManager
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(400, response.getStatus());
     }

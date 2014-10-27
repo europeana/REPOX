@@ -2,9 +2,11 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -15,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -255,43 +258,36 @@ public class ProvidersResource {
         return Response.status(200).entity(new Result("DataProvider with id " + providerId + " updated!")).build();
     }
 
-    //    /**
-    //     * Get a list of aggregators in the specified range.
-    //     * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
-    //     * Relative path : /aggregators
-    //     * @param offset 
-    //     * @param number 
-    //     * @return the list of the number of aggregators requested
-    //     * @throws Exception 
-    //     * @throws InvalidArgumentsException 
-    //     */
-    //    @GET
-    //    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    //    @ApiOperation(value = "Get a list of aggregators.", httpMethod = "GET")
-    //    @ApiResponses(value = {
-    //            @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
-    //            @ApiResponse(code = 400, message = "InvalidArgumentsException")
-    //          })
-    //    public Response getAggregatorList(@ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset, @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
-    //        
-    //        if(offset < 0)
-    //            throw new InvalidArgumentsException("Offset negative values not allowed!");
-    //        
-    //        List<Aggregator> aggregatorsListSorted;
-    //        try {
-    //            aggregatorsListSorted = dataManager.getAggregatorsListSorted(offset, number);
-    //        } catch (IndexOutOfBoundsException e) {
-    //            throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
-    //        }
-    //
-    //        return  Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
-    //    }
-    //
-    ////    @GET
-    ////    @Produces({ MediaType.TEXT_PLAIN })
-    ////    public String test() throws DoesNotExistException {
-    ////        throw new DoesNotExistException("AAAAA");
-    ////
-    ////    }
-
+        /**
+         * Get a list of providers in the specified range.
+         * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
+         * Relative path : /providers
+         * @param aggregatorId 
+         * @param offset 
+         * @param number 
+         * @return the list of the number of providers requested
+         * @throws Exception 
+         * @throws InvalidArgumentsException 
+         */
+        @GET
+        @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+        @ApiOperation(value = "Get a list of providers.", httpMethod = "GET")
+        @ApiResponses(value = {
+                @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
+                @ApiResponse(code = 400, message = "InvalidArgumentsException")
+              })
+        public Response getProviderList(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId, @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset, @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
+            
+            if(offset < 0)
+                throw new InvalidArgumentsException("Offset negative values not allowed!");
+            
+            List<DataProvider> providersListSorted;
+            try {
+                providersListSorted = dataManager.getDataProvidersListSorted(aggregatorId, offset, number);
+            } catch (IndexOutOfBoundsException e) {
+                throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
+            }
+    
+            return  Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {}).build();
+        }
 }

@@ -6,9 +6,12 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -18,8 +21,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
+import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.ProviderType;
@@ -197,7 +202,7 @@ public class ProvidersResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateProvider() throws Exception {
         String providerId = "SampleProviderId";
         DataProvider dataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
@@ -233,5 +238,47 @@ public class ProvidersResourceTest extends JerseyTest {
         missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null);
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
+    }
+    
+    
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#getProviderList(String, int, int)}.
+     * @throws Exception 
+     * @throws Exception
+     */
+    @Test
+//    @Ignore
+    public void testGetProviderList() throws Exception {
+        int offset = 0;
+        int number = 3;
+        String aggregatorId = "SampleAggregatorId";
+        WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS).queryParam("aggregatorId", aggregatorId).queryParam("offset", offset).queryParam("number", number);
+
+        //Mocking
+        DataProvider provider = new DataProvider();
+        provider.setName("Name");
+        DataProvider provider1 = new DataProvider();
+        provider1.setName("Name1");
+        DataProvider provider2 = new DataProvider();
+        provider2.setName("Name2");
+        List<DataProvider> providerList = new ArrayList<DataProvider>();
+        providerList.add(provider);
+        providerList.add(provider1);
+        providerList.add(provider2);
+        when(dataManager.getDataProvidersListSorted(aggregatorId, offset, number)).thenReturn(providerList).thenThrow(new IndexOutOfBoundsException("Server error : Offset cannot be negative"));
+        
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+        List<DataProvider> subList = response.readEntity(new GenericType<List<DataProvider>>(){});
+        assertEquals(providerList.size(), subList.size());
+        //Internal Server Error
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(400, response.getStatus());
+        //Error because of index
+        target = target("/" + ProviderOptionListContainer.PROVIDERS).queryParam("offset", -1).queryParam("number", number);
+        //Notice not mocked here cause it has to throw the exception before the call to the dataManager
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(400, response.getStatus());
     }
 }
