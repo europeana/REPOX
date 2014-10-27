@@ -23,11 +23,11 @@
       "notes" : "",
       "type" : "void",
       "nickname" : "createAggregator",
-      "produces" : [ "application/xml", "application/json" ],
-      "consumes" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "body",
-        "description" : "Aggregator id is not required",
+        "description" : "Aggregator data",
         "required" : true,
         "type" : "aggregator",
         "paramType" : "body",
@@ -60,7 +60,7 @@
         "name" : "offset",
         "description" : "Index where to start from",
         "defaultValue" : "0",
-        "required" : true,
+        "required" : false,
         "type" : "integer",
         "format" : "int32",
         "paramType" : "query",
@@ -69,7 +69,7 @@
         "name" : "number",
         "description" : "Number of aggregators requested",
         "defaultValue" : "-1",
-        "required" : true,
+        "required" : false,
         "type" : "integer",
         "format" : "int32",
         "paramType" : "query",
@@ -148,7 +148,7 @@
         "allowMultiple" : false
       }, {
         "name" : "body",
-        "description" : "Aggregator id is not required",
+        "description" : "Aggregator data",
         "required" : true,
         "type" : "aggregator",
         "paramType" : "body",
@@ -196,7 +196,7 @@
         "nameCode" : {
           "type" : "string"
         },
-        "homePage" : {
+        "homepage" : {
           "type" : "string"
         }
       }

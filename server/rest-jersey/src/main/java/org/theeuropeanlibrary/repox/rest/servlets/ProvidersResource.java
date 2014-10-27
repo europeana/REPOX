@@ -127,37 +127,37 @@ public class ProvidersResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException")
           })
     public Response createProvider(@ApiParam(value = "Provider id is not required", required = true) DataProvider provider) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException {
-        if(provider.getId() != null)
-            throw new InvalidArgumentsException("Invalid value: " + "Provider Id provided in body must be null");
-        
-        String name = provider.getName();
-        String country = provider.getCountry();
-        String description = provider.getDescription();
-        String nameCode = provider.getNameCode();
-        String homepage = provider.getHomePage();
-        String dataSetType = provider.getProviderType().toString();
-        String email = provider.getEmail();
-        
-        if(name == null || name.equals(""))
-            throw new InvalidArgumentsException("Invalid value: " + "Provider name must not be empty");
-        else if(country == null || country.equals(""))
-            throw new InvalidArgumentsException("Invalid value: " + "Provider country must not be empty");
-        else if(dataSetType == null || dataSetType.equals(""))
-            throw new InvalidArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
-        
-        DataProvider createdProvider = null;
-        if (provider.getName() != null && !provider.getName().isEmpty()) {
-            try {
-                dataManager.createDataProvider(aggregatorId, name, country, description, nameCode, homepage, dataSetType, email);
-            } catch (DocumentException | IOException e) {
-                throw new InternalServerErrorException("Error in server : " + e.getMessage());
-            } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-            } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with both name and nameCode the same as the one provided 
-                throw new AlreadyExistsException("Provider with name \"" + e.getMessage() + "\" already exists!");
-            }
-        } else
-            throw new MissingArgumentsException("Missing argument name!");
+//        if(provider.getId() != null)
+//            throw new InvalidArgumentsException("Invalid value: " + "Provider Id provided in body must be null");
+//        
+//        String name = provider.getName();
+//        String country = provider.getCountry();
+//        String description = provider.getDescription();
+//        String nameCode = provider.getNameCode();
+//        String homepage = provider.getHomePage();
+//        String dataSetType = provider.getProviderType().toString();
+//        String email = provider.getEmail();
+//        
+//        if(name == null || name.equals(""))
+//            throw new InvalidArgumentsException("Invalid value: " + "Provider name must not be empty");
+//        else if(country == null || country.equals(""))
+//            throw new InvalidArgumentsException("Invalid value: " + "Provider country must not be empty");
+//        else if(dataSetType == null || dataSetType.equals(""))
+//            throw new InvalidArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
+//        
+//        DataProvider createdProvider = null;
+//        if (provider.getName() != null && !provider.getName().isEmpty()) {
+//            try {
+//                dataManager.createDataProvider(aggregatorId, name, country, description, nameCode, homepage, dataSetType, email);
+//            } catch (DocumentException | IOException e) {
+//                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+//            } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
+//                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+//            } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with both name and nameCode the same as the one provided 
+//                throw new AlreadyExistsException("Provider with name \"" + e.getMessage() + "\" already exists!");
+//            }
+//        } else
+//            throw new MissingArgumentsException("Missing argument name!");
 //        return Response.created(null)
 //                .entity(new Result("Aggregator with name = " + createdAggregator.getName() + " and id = " + createdAggregator.getId() + " created successfully"))
 //                .build();

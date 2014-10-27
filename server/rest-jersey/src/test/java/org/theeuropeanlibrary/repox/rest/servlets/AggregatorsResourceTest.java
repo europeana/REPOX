@@ -129,9 +129,9 @@ public class AggregatorsResourceTest extends JerseyTest {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Mocking
-        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
+        Aggregator aggregator = new Aggregator("ValidId", "Greece", "GR", "http://somepage", null);
         Aggregator createdAggregator = new Aggregator("ValidId", "Greece", "GR", "http://somepage", null);
-        when(dataManager.createAggregator(aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
+        when(dataManager.createAggregator(aggregator.getId(), aggregator.getName(), aggregator.getNameCode(), aggregator.getHomepage().toString()))
                 .thenReturn(createdAggregator).thenThrow(new AlreadyExistsException("Already exists!"))
                 .thenThrow(new InvalidArgumentsException("Invalid Argument URL")).thenThrow(new IOException()).thenThrow(new DocumentException());
 
@@ -198,14 +198,13 @@ public class AggregatorsResourceTest extends JerseyTest {
 //    @Ignore
     public void testUpdateAggregator() throws Exception {
         String aggregatorId = "SampleId";
-        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
-        Aggregator updatedAggregator = new Aggregator(aggregatorId, "Greece", "GR", "http://somepage", null);
+        Aggregator aggregator = new Aggregator("newId", "Greece", "GR", "http://somepage", null);
 
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
 
         //Mocking
-        when(dataManager.updateAggregator(aggregatorId, aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
-                .thenReturn(updatedAggregator).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(aggregatorId))
+        when(dataManager.updateAggregator(aggregatorId, aggregator.getId(), aggregator.getName(), aggregator.getNameCode(), aggregator.getHomepage().toString()))
+                .thenReturn(aggregator).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(aggregatorId))
                 .thenThrow(new InvalidArgumentsException());
 
         //Valid call

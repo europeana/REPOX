@@ -121,7 +121,7 @@ public class DefaultWebServices implements WebServices {
 
     public void createAggregator(OutputStream out, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            Aggregator aggregator = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(name, nameCode, homepageUrl);
+            Aggregator aggregator = ((DefaultDataManager) ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createAggregator(null, name, nameCode, homepageUrl);
             RestUtils.writeRestResponse(out, aggregator.createElement(false));
         } catch (InvalidArgumentsException e) {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error creating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
@@ -134,7 +134,7 @@ public class DefaultWebServices implements WebServices {
 
     public void updateAggregator(OutputStream out, String id, String name, String nameCode, String homepageUrl) throws DocumentException, IOException {
         try {
-            Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, name, nameCode, homepageUrl);
+            Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateAggregator(id, null, name, nameCode, homepageUrl);
             RestUtils.writeRestResponse(out, aggregator.createElement(false));
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Aggregator: id \"" + id + "\" was not found.");

@@ -64,7 +64,7 @@ http://localhost:8080/repox/rest/aggregators
         <th>body</th>
         <td><a href="#aggregator">aggregator</a></td>
         <td>true</td>
-        <td>Aggregator id is not required</td>
+        <td>Aggregator data</td>
     </tr>
 </table>
 
@@ -104,13 +104,13 @@ http://localhost:8080/repox/rest/aggregators
     <tr>
         <th>offset</th>
         <td>int</td>
-        <td>true</td>
+        <td>false</td>
         <td>Index where to start from</td>
     </tr>
     <tr>
         <th>number</th>
         <td>int</td>
-        <td>true</td>
+        <td>false</td>
         <td>Number of aggregators requested</td>
     </tr>
 </table>
@@ -242,7 +242,7 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
         <th>body</th>
         <td><a href="#aggregator">aggregator</a></td>
         <td>true</td>
-        <td>Aggregator id is not required</td>
+        <td>Aggregator data</td>
     </tr>
 </table>
 
@@ -280,6 +280,108 @@ http://localhost:8080/repox/rest/options
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+### /providers
+
+#### **OPTIONS** `/providers`
+##### getOptions 
+
+Get options over provider conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+
+###### Response
+[providerOptions](#providerOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **POST** `/providers`
+##### createProvider 
+
+Create a provider.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#dataprovider">dataprovider</a></td>
+        <td>true</td>
+        <td>Provider id is not required</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 201    | Created (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/providers/{providerId}`
+##### getProvider 
+
+Get specific provider.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers/{providerId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>providerId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of provider</td>
+    </tr>
+</table>
+
+###### Response
+[dataprovider](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing an Provider) | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -368,7 +470,7 @@ http://localhost:8080/repox/rest/options
         <td>any</td>
     </tr>
     <tr>
-    	<td>homePage</td>
+    	<td>homepage</td>
         <td>string</td>
         <td>optional</td>
         <td>-</td>
@@ -379,6 +481,97 @@ http://localhost:8080/repox/rest/options
 
 
 ## <a name="aggregatorOptions">aggregatorOptions</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>option</td>
+        <td><a href="#Option">Array[Option]</a></td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="dataprovider">dataprovider</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>country</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>description</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>providerType</td>
+        <td><a href="#ProviderType">ProviderType</a></td>
+        <td>optional</td>
+        <td>-</td>
+        <td>MUSEUM, ARCHIVE, LIBRARY, AUDIO_VISUAL_ARCHIVE, RESEARCH_EDUCATIONAL, CROSS_SECTOR, PUBLISHER, PRIVATE, AGGREGATOR, UNKNOWN</td>
+    </tr>
+    <tr>
+    	<td>nameCode</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>name</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>email</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>homePage</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>id</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="providerOptions">providerOptions</a>
 
 <table border="1">
     <tr>

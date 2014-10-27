@@ -806,8 +806,8 @@ public class DefaultProjectManager extends ProjectManager {
 
     private AggregatorUI parseAggregatorEuropeana(Aggregator aggregatorEuropeana)  throws ServerSideException{
         String url;
-        if(aggregatorEuropeana.getHomePage() != null)
-            url = aggregatorEuropeana.getHomePage().toString();
+        if(aggregatorEuropeana.getHomepage() != null)
+            url = aggregatorEuropeana.getHomepage().toString();
         else
             url = "";
         return new AggregatorUI(aggregatorEuropeana.getId(),
@@ -865,6 +865,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public SaveDataResponse saveAggregator(boolean update, AggregatorUI aggregatorUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
@@ -883,19 +884,19 @@ public class DefaultProjectManager extends ProjectManager {
             }
 
             if(update) {
-                DefaultDataManager europeanaManager = (DefaultDataManager)RepoxServiceImpl.getRepoxManager().getDataManager();
+                DefaultDataManager defaultDataManager = (DefaultDataManager)RepoxServiceImpl.getRepoxManager().getDataManager();
 
-                Aggregator aggregatorEuropeana = europeanaManager.getAggregator(aggregatorUI.getId());
-                aggregatorEuropeana = europeanaManager.updateAggregator(aggregatorEuropeana.getId(), aggregatorUI.getName(),
+                Aggregator aggregator = defaultDataManager.getAggregator(aggregatorUI.getId());
+                aggregator = defaultDataManager.updateAggregator(aggregator.getId(), null, aggregatorUI.getName(),
                         aggregatorUI.getNameCode(), aggregatorUI.getHomepage());
 
-                saveDataResponse.setPage(PagingUtil.getDataPage(aggregatorEuropeana.getId(), pageSize));
+                saveDataResponse.setPage(PagingUtil.getDataPage(aggregator.getId(), pageSize));
                 saveDataResponse.setResponseState(ResponseState.SUCCESS);
                 return saveDataResponse;
             }
             else {
                 DefaultDataManager europeanaManager = (DefaultDataManager)RepoxServiceImpl.getRepoxManager().getDataManager();
-                Aggregator aggregatorEuropeana = europeanaManager.createAggregator(aggregatorUI.getName(),
+                Aggregator aggregatorEuropeana = europeanaManager.createAggregator(null, aggregatorUI.getName(),
                         aggregatorUI.getNameCode(), aggregatorUI.getHomepage());
 
                 saveDataResponse.setPage(PagingUtil.getDataPage(aggregatorEuropeana.getId(),pageSize));
