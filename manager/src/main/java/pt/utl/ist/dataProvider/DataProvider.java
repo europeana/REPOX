@@ -46,8 +46,6 @@ public class DataProvider {
     @XmlElement
     @ApiModelProperty(required = true, position = 6)
     private ProviderType                         providerType;
-
-    // optional
     @XmlElement
     @ApiModelProperty(required = false, position = 7)
     private String                               email;

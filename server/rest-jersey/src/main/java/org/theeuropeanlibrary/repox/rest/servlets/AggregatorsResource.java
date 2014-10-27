@@ -84,7 +84,7 @@ public class AggregatorsResource {
     @ApiOperation(value = "Get options over aggregator conext.", httpMethod = "OPTIONS", response = AggregatorOptionListContainer.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")
-          })
+    })
     public AggregatorOptionListContainer getOptions() {
         AggregatorOptionListContainer aggregatorOptionListContainer = new AggregatorOptionListContainer(uriInfo.getBaseUri());
         return aggregatorOptionListContainer;
@@ -99,12 +99,12 @@ public class AggregatorsResource {
      */
     @GET
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get specific aggregator.", httpMethod = "GET", response = Aggregator.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing an Aggregator)"),
             @ApiResponse(code = 404, message = "DoesNotExistException")
-          })
+    })
     public Aggregator getAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException {
         Aggregator aggregator = null;
         aggregator = dataManager.getAggregator(aggregatorId);
@@ -133,11 +133,11 @@ public class AggregatorsResource {
             @ApiResponse(code = 406, message = "MissingArgumentsException"),
             @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
-          })
+    })
     public Response createAggregator(@ApiParam(value = "Aggregator data", required = true) Aggregator aggregator) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException {
-//        if(aggregator.getId() != null)
-//            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
-        
+        //        if(aggregator.getId() != null)
+        //            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
+
         Aggregator createdAggregator = null;
         if (aggregator.getName() != null && !aggregator.getName().isEmpty()) {
             try {
@@ -171,7 +171,7 @@ public class AggregatorsResource {
             @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
-          })
+    })
     public Response deleteAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException {
 
         try {
@@ -205,13 +205,14 @@ public class AggregatorsResource {
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
-          })
-    public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,@ApiParam(value = "Aggregator data", required = true) Aggregator aggregator) throws DoesNotExistException,
+    })
+    public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,
+            @ApiParam(value = "Aggregator data", required = true) Aggregator aggregator) throws DoesNotExistException,
             InvalidArgumentsException {
 
-//        if(aggregator.getId() != null)
-//            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
-        
+        //        if(aggregator.getId() != null)
+        //            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
+
         String newAggregatorId = aggregator.getId();
         String name = aggregator.getName();
         String nameCode = aggregator.getNameCode();
@@ -247,12 +248,13 @@ public class AggregatorsResource {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException")
-          })
-    public Response getAggregatorList(@ApiParam(value = "Index where to start from", required = false) @DefaultValue("0") @QueryParam("offset") int offset, @ApiParam(value = "Number of aggregators requested", required = false) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
-        
-        if(offset < 0)
+    })
+    public Response getAggregatorList(@ApiParam(value = "Index where to start from", required = false) @DefaultValue("0") @QueryParam("offset") int offset,
+            @ApiParam(value = "Number of aggregators requested", required = false) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
+
+        if (offset < 0)
             throw new InvalidArgumentsException("Offset negative values not allowed!");
-        
+
         List<Aggregator> aggregatorsListSorted;
         try {
             aggregatorsListSorted = dataManager.getAggregatorsListSorted(offset, number);
@@ -260,6 +262,7 @@ public class AggregatorsResource {
             throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
         }
 
-        return  Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {}).build();
+        return Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {
+        }).build();
     }
 }

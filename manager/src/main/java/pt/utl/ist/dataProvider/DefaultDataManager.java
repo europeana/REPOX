@@ -1243,15 +1243,13 @@ public class DefaultDataManager implements DataManager {
     /**
      * Delete data provider from REPOX
      * @param dataProviderId
-     * @return MessageType
      */
+    @Override
     public synchronized void deleteDataProvider(String dataProviderId) throws ObjectNotFoundException, IOException {
         DataProvider dataProvider2Delete = getDataProvider(dataProviderId);
 
         if (dataProvider2Delete != null) {
-
             for (Aggregator currentAggregator : aggregators) {
-
                 Iterator iteratorDP = currentAggregator.getDataProviders().iterator();
                 while (iteratorDP.hasNext()) {
                     DataProvider dataProvider = (DataProvider)iteratorDP.next();

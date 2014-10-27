@@ -4,7 +4,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 import java.io.IOException;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -78,7 +79,8 @@ public class ProvidersResource {
     @OPTIONS
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get options over provider conext.", httpMethod = "OPTIONS", response = ProviderOptionListContainer.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
+    @ApiResponses(value = { 
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
     public ProviderOptionListContainer getOptions() {
         ProviderOptionListContainer providerOptionListContainer = new ProviderOptionListContainer(uriInfo.getBaseUri());
         return providerOptionListContainer;
@@ -95,9 +97,10 @@ public class ProvidersResource {
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get specific provider.", httpMethod = "GET", response = DataProvider.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK (Response containing an Provider)"), @ApiResponse(code = 404, message = "DoesNotExistException") })
-    public DataProvider getProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId)
-            throws DoesNotExistException {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Provider)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException") })
+    public DataProvider getProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId) throws DoesNotExistException {
         DataProvider provider = null;
         provider = dataManager.getDataProvider(providerId);
         if (provider == null)
@@ -121,10 +124,14 @@ public class ProvidersResource {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Create a provider.", httpMethod = "POST")
-    @ApiResponses(value = { @ApiResponse(code = 201, message = "Created (Response containing a String message)"), @ApiResponse(code = 400, message = "InvalidArgumentsException"), @ApiResponse(code = 406, message = "MissingArgumentsException"), @ApiResponse(code = 409, message = "AlreadyExistsException"), @ApiResponse(code = 500, message = "InternalServerErrorException") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException") })
     public Response createProvider(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId,
-            @ApiParam(value = "Provider data", required = true) DataProvider provider) throws MissingArgumentsException, AlreadyExistsException,
-            InvalidArgumentsException, DoesNotExistException {
+            @ApiParam(value = "Provider data", required = true) DataProvider provider) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException, DoesNotExistException {
         //        if(provider.getId() != null)
         //            throw new InvalidArgumentsException("Invalid value: " + "Provider Id provided in body must be null");
 
@@ -160,42 +167,36 @@ public class ProvidersResource {
         } catch (ObjectNotFoundException e) {
             throw new DoesNotExistException("A resource of the aggregator or the aggregator itself with id " + e.getMessage() + " does NOT exist!");
         }
-        
-        return Response.created(null)
-                .entity(new Result("DataProvider with id = " + createdProvider.getId() + " and name = " + createdProvider.getName() + " created successfully"))
-                .build();
+
+        return Response.created(null).entity(new Result("DataProvider with id = " + createdProvider.getId() + " and name = " + createdProvider.getName() + " created successfully")).build();
     }
-    //
-    //    /**
-    //     * Delete an aggregator by specifying the Id.
-    //     * Relative path : /aggregators
-    //     * @param aggregatorId 
-    //     * @return OK or Error Message
-    //     * @throws DoesNotExistException 
-    //     */
-    //    @DELETE
-    //    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
-    //    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    //    @ApiOperation(value = "Delete an aggregator.", httpMethod = "DELETE")
-    //    @ApiResponses(value = {
-    //            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
-    //            @ApiResponse(code = 404, message = "DoesNotExistException"),
-    //            @ApiResponse(code = 500, message = "InternalServerErrorException")
-    //          })
-    //    public Response deleteAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId) throws DoesNotExistException {
-    //
-    //        try {
-    //            dataManager.deleteAggregator(aggregatorId);
-    //        } catch (DocumentException | IOException e) {
-    //            throw new InternalServerErrorException("Error in server : " + e.getMessage());
-    //        } catch (ObjectNotFoundException e) {
-    //            throw new DoesNotExistException(
-    //                    "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
-    //        }
-    //
-    //        return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " deleted!")).build();
-    //    }
-    //
+
+    /**
+     * Delete an aggregator by specifying the Id.
+     * Relative path : /aggregators
+     * @param dataProviderId 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     */
+    @DELETE
+    @Path("/" + ProviderOptionListContainer.PROVIDERID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Delete a provider.", httpMethod = "DELETE")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException") })
+    public Response deleteProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String dataProviderId) throws DoesNotExistException {
+        try {
+            dataManager.deleteDataProvider(dataProviderId);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("A resource of the dataProvider with id " + e.getMessage() + " does NOT exist!");
+        }
+
+        return Response.status(200).entity(new Result("DataProvider with id " + dataProviderId + " deleted!")).build();
+    }
+
     //    /**
     //     * Update an aggregator by specifying the Id.
     //     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the update that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null

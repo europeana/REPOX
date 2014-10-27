@@ -2,8 +2,7 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,12 +20,10 @@ import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
-import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -164,37 +161,35 @@ public class ProvidersResourceTest extends JerseyTest {
         assertEquals(406, response.getStatus());
 
     }
-    //
-    //    /**
-    //     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
-    //     * @throws Exception 
-    //     * @throws ObjectNotFoundException 
-    //     * @throws DocumentException 
-    //     * @throws IOException 
-    //     */
-    //    @Test
-    //    @Ignore
-    //    public void testDeleteAggregator() throws Exception, DocumentException, ObjectNotFoundException  {
-    //        String aggregatorId = "SampleId";
-    //        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-    //
-    //        //Mocking
-    //        doNothing().doThrow(new IOException()).doThrow(new DocumentException()).doThrow(new ObjectNotFoundException("resourceId")).when(dataManager)
-    //                .deleteAggregator(aggregatorId);
-    //
-    //        //Valid call
-    //        Response response = target.request(MediaType.APPLICATION_XML).delete();
-    //        assertEquals(200, response.getStatus());
-    //        //Two internal server error exceptions
-    //        response = target.request(MediaType.APPLICATION_XML).delete();
-    //        assertEquals(500, response.getStatus());
-    //        response = target.request(MediaType.APPLICATION_XML).delete();
-    //        assertEquals(500, response.getStatus());
-    //        //Resource does NOT exist
-    //        response = target.request(MediaType.APPLICATION_XML).delete();
-    //        assertEquals(404, response.getStatus());
-    //    }
-    //
+    
+        /**
+         * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
+         * @throws Exception 
+         * @throws ObjectNotFoundException 
+         * @throws DocumentException 
+         * @throws IOException 
+         */
+        @Test
+//        @Ignore
+        public void testDeleteAggregator() throws Exception, DocumentException, ObjectNotFoundException  {
+            String providerId = "SampleProviderId";
+            WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS  + "/" + providerId);
+    
+            //Mocking
+            doNothing().doThrow(new IOException()).doThrow(new ObjectNotFoundException(providerId)).when(dataManager)
+                    .deleteDataProvider(providerId);
+    
+            //Valid call
+            Response response = target.request(MediaType.APPLICATION_XML).delete();
+            assertEquals(200, response.getStatus());
+            //Two internal server error exceptions
+            response = target.request(MediaType.APPLICATION_XML).delete();
+            assertEquals(500, response.getStatus());
+            //Resource does NOT exist
+            response = target.request(MediaType.APPLICATION_JSON).delete();
+            assertEquals(404, response.getStatus());
+        }
+    
     //    /**
     //     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#updateAggregator(String, Aggregator)}.
     //     * @throws Exception
