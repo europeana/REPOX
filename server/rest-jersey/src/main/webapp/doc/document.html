@@ -315,6 +315,22 @@ Create a provider.
 ###### URL
 http://localhost:8080/repox/rest/providers
 ###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+</table>
 - body
 
 <table border="1">
@@ -328,7 +344,7 @@ http://localhost:8080/repox/rest/providers
         <th>body</th>
         <td><a href="#dataprovider">dataprovider</a></td>
         <td>true</td>
-        <td>Provider id is not required</td>
+        <td>Provider data</td>
     </tr>
 </table>
 
@@ -382,6 +398,118 @@ http://localhost:8080/repox/rest/providers/{providerId}
 |-------------|-------------|----------------|
 | 200    | OK (Response containing an Provider) | - |
 | 404    | DoesNotExistException | - |
+
+
+- - -
+#### **DELETE** `/providers/{providerId}`
+##### deleteProvider 
+
+Delete a provider.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers/{providerId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>providerId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of provider</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+| 404    | DoesNotExistException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **PUT** `/providers/{providerId}`
+##### updateProvider 
+
+Update a provider.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers/{providerId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>providerId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of provider</td>
+    </tr>
+</table>
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>false</td>
+        <td>AggregatorId</td>
+    </tr>
+</table>
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#dataprovider">dataprovider</a></td>
+        <td>true</td>
+        <td>Provider data</td>
+    </tr>
+</table>
+
+###### Response
+[](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
+| 406    | MissingArgumentsException | - |
+| 500    | InternalServerErrorException | - |
 
 
 - - -

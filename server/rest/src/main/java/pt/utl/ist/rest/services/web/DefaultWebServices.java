@@ -271,8 +271,8 @@ public class DefaultWebServices implements WebServices {
 
     public void updateDataProvider(OutputStream out, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(id,
-                    name, country, description, nameCode, url, dataSetType);
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(null, id, null,
+                    name, country, description, nameCode, url, dataSetType, null);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
         } catch (ObjectNotFoundException e) {
             String list = "";

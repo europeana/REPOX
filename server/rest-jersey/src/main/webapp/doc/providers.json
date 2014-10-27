@@ -11,7 +11,7 @@
       "notes" : "",
       "type" : "providerOptions",
       "nickname" : "getOptions",
-      "produces" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ ],
       "responseMessages" : [ {
         "code" : 200,
@@ -23,11 +23,18 @@
       "notes" : "",
       "type" : "void",
       "nickname" : "createProvider",
-      "produces" : [ "application/xml", "application/json" ],
-      "consumes" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
         "name" : "body",
-        "description" : "Provider id is not required",
+        "description" : "Provider data",
         "required" : true,
         "type" : "dataprovider",
         "paramType" : "body",
@@ -58,7 +65,7 @@
       "notes" : "",
       "type" : "dataprovider",
       "nickname" : "getProvider",
-      "produces" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "providerId",
         "description" : "Id of provider",
@@ -73,6 +80,76 @@
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
+      } ]
+    }, {
+      "method" : "DELETE",
+      "summary" : "Delete a provider.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "deleteProvider",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "Id of provider",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Update a provider.",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "updateProvider",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "Id of provider",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Provider data",
+        "required" : true,
+        "type" : "dataprovider",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
     } ]
   } ],

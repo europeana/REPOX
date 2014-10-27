@@ -38,8 +38,12 @@ public class ProviderOptionListContainer extends OptionListContainer {
     public ProviderOptionListContainer(URI baseUri) {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
-        optionList.add(new Option("Get options over Provider", baseUri + PROVIDERS));
-        optionList.add(new Option("Gets an provider by Id", baseUri + PROVIDERS + "/" + PROVIDERID));
+        optionList.add(new Option("[OPTIONS]Get options over provider.", baseUri + PROVIDERS));
+        optionList.add(new Option("[GET]Gets a provider by Id.", baseUri + PROVIDERS + "/" + PROVIDERID));
+        optionList.add(new Option("[POST]Create a provider provided in the body of the post call.", baseUri + PROVIDERS));
+        optionList.add(new Option("[DELETE]Delete a provider by specifying the Id.", baseUri + PROVIDERS + "/" + PROVIDERID));
+        optionList.add(new Option("[PUT]Update aprovider by specifying the Id on the context path.", baseUri + PROVIDERS + "/" + PROVIDERID));
+        optionList.add(new Option("[GET]Get a list of providers by specifying a range.", baseUri + PROVIDERS));
         
         setOptionList(optionList);
     }

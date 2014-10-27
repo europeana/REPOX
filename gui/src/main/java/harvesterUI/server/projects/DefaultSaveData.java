@@ -509,8 +509,8 @@ public class DefaultSaveData {
                 dataProvider.setHomePage(url.toString());
 
                 try {
-                    dataProvider = europeanaManager.updateDataProvider(dataProvider.getId(), dataProviderUI.getName(),
-                            dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType());
+                    dataProvider = europeanaManager.updateDataProvider(null, dataProvider.getId(), null, dataProviderUI.getName(),
+                            dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType(), null);
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
                     saveDataResponse.setResponseState(ResponseState.SUCCESS);

@@ -25,6 +25,7 @@ import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
@@ -107,7 +108,7 @@ public class ProvidersResourceTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#createAggregator(pt.utl.ist.dataProvider.Aggregator)}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#createProvider(String, DataProvider)}.
      * @throws AlreadyExistsException 
      * @throws InvalidArgumentsException 
      * @throws IOException 
@@ -116,7 +117,7 @@ public class ProvidersResourceTest extends JerseyTest {
      */
     @Test
     @Ignore
-    public void testCreateAggregator() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException {
+    public void testCreateProvider() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException {
         String aggregatorId = "SampleAggregatorId";
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS).queryParam("aggregatorId", aggregatorId);
 
@@ -161,101 +162,76 @@ public class ProvidersResourceTest extends JerseyTest {
         assertEquals(406, response.getStatus());
 
     }
-    
-        /**
-         * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
-         * @throws Exception 
-         * @throws ObjectNotFoundException 
-         * @throws DocumentException 
-         * @throws IOException 
-         */
-        @Test
-//        @Ignore
-        public void testDeleteAggregator() throws Exception, DocumentException, ObjectNotFoundException  {
-            String providerId = "SampleProviderId";
-            WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS  + "/" + providerId);
-    
-            //Mocking
-            doNothing().doThrow(new IOException()).doThrow(new ObjectNotFoundException(providerId)).when(dataManager)
-                    .deleteDataProvider(providerId);
-    
-            //Valid call
-            Response response = target.request(MediaType.APPLICATION_XML).delete();
-            assertEquals(200, response.getStatus());
-            //Two internal server error exceptions
-            response = target.request(MediaType.APPLICATION_XML).delete();
-            assertEquals(500, response.getStatus());
-            //Resource does NOT exist
-            response = target.request(MediaType.APPLICATION_JSON).delete();
-            assertEquals(404, response.getStatus());
-        }
-    
-    //    /**
-    //     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#updateAggregator(String, Aggregator)}.
-    //     * @throws Exception
-    //     */
-    //    @Test
-    //    @Ignore
-    //    public void testUpdateAggregator() throws Exception {
-    //        String aggregatorId = "SampleId";
-    //        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
-    //        Aggregator updatedAggregator = new Aggregator(aggregatorId, "Greece", "GR", "http://somepage", null);
-    //
-    //        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
-    //
-    //        //Mocking
-    //        when(dataManager.updateAggregator(aggregatorId, aggregator.getName(), aggregator.getNameCode(), aggregator.getHomePage().toString()))
-    //                .thenReturn(updatedAggregator).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(aggregatorId))
-    //                .thenThrow(new InvalidArgumentsException());
-    //
-    //        //Valid call
-    //        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-    //        assertEquals(200, response.getStatus());
-    //        //Two internal server error exception
-    //        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-    //        assertEquals(500, response.getStatus());
-    //        //Resource does NOT exist
-    //        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-    //        assertEquals(404, response.getStatus());
-    //        //Invalid URL
-    //        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-    //        assertEquals(400, response.getStatus());
-    //    }
-    //
-    //    /**
-    //     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getAggregatorList(int, int)}.
-    //     * @throws Exception 
-    //     * @throws Exception
-    //     */
-    //    @Test
-    //    @Ignore
-    //    public void testGetAggregatorList() throws Exception {
-    //        int offset = 0;
-    //        int number = 3;
-    //        WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", offset).queryParam("number", number);
-    //
-    //        //Mocking
-    //        Aggregator aggregator = new Aggregator(null, "Greece", "GR", "http://somepage", null);
-    //        Aggregator aggregator1 = new Aggregator(null, "Greece1", "GR1", "http://somepage1", null);
-    //        Aggregator aggregator2 = new Aggregator(null, "Greece2", "GR2", "http://somepage2", null);
-    //        List<Aggregator> aggregatorList = new ArrayList<Aggregator>();
-    //        aggregatorList.add(aggregator);
-    //        aggregatorList.add(aggregator1);
-    //        aggregatorList.add(aggregator2);
-    //        when(dataManager.getAggregatorsListSorted(offset, number)).thenReturn(aggregatorList).thenThrow(new IndexOutOfBoundsException("Server error : Offset cannot be negative"));
-    //        
-    //        //Valid call
-    //        Response response = target.request(MediaType.APPLICATION_XML).get();
-    //        assertEquals(200, response.getStatus());
-    //        List<Aggregator> subList = response.readEntity(new GenericType<List<Aggregator>>(){});
-    //        assertEquals(aggregatorList.size(), subList.size());
-    //        //Internal Server Error
-    //        response = target.request(MediaType.APPLICATION_XML).get();
-    //        assertEquals(400, response.getStatus());
-    //        //Error because of index
-    //        target = target("/" + AggregatorOptionListContainer.AGGREGATORS).queryParam("offset", -1).queryParam("number", number);
-    //        //Notice not mocked here cause it has to thow the exception before the call to the dataManager
-    //        response = target.request(MediaType.APPLICATION_XML).get();
-    //        assertEquals(400, response.getStatus());
-    //    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#deleteAggregator(String)}.
+     * @throws Exception 
+     * @throws ObjectNotFoundException 
+     * @throws DocumentException 
+     * @throws IOException 
+     */
+    @Test
+    @Ignore
+    public void testDeleteProvider() throws Exception, DocumentException, ObjectNotFoundException {
+        String providerId = "SampleProviderId";
+        WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
+
+        //Mocking
+        doNothing().doThrow(new IOException()).doThrow(new ObjectNotFoundException(providerId)).when(dataManager)
+                .deleteDataProvider(providerId);
+
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(200, response.getStatus());
+        //Two internal server error exceptions
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_JSON).delete();
+        assertEquals(404, response.getStatus());
+    }
+
+    /**
+     * 
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#updateProvider(String, String, DataProvider)}.
+     * @throws Exception
+     */
+    @Test
+//    @Ignore
+    public void testUpdateProvider() throws Exception {
+        String providerId = "SampleProviderId";
+        DataProvider dataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
+
+        //Mocking
+        when(dataManager.updateDataProvider(null, providerId, dataProvider.getId(), dataProvider.getName(), dataProvider.getCountry(), dataProvider.getDescription(), dataProvider.getNameCode(),
+                        dataProvider.getHomePage(), dataProvider.getProviderType().toString(), dataProvider.getEmail()))
+                .thenReturn(dataProvider).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(providerId))
+                .thenThrow(new InvalidArgumentsException());
+
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(200, response.getStatus());
+        //Two internal server error exception
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+        //Missing name
+        DataProvider missingArgDataProvider = new DataProvider("NewSampleId", null, "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+        //Missing country
+        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", null, "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+        //Missing providerType
+        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+    }
 }

@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,8 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.dom4j.DocumentException;
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -79,7 +78,7 @@ public class ProvidersResource {
     @OPTIONS
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get options over provider conext.", httpMethod = "OPTIONS", response = ProviderOptionListContainer.class)
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
     public ProviderOptionListContainer getOptions() {
         ProviderOptionListContainer providerOptionListContainer = new ProviderOptionListContainer(uriInfo.getBaseUri());
@@ -172,8 +171,8 @@ public class ProvidersResource {
     }
 
     /**
-     * Delete an aggregator by specifying the Id.
-     * Relative path : /aggregators
+     * Delete a provider by specifying the Id.
+     * Relative path : /providers
      * @param dataProviderId 
      * @return OK or Error Message
      * @throws DoesNotExistException 
@@ -197,47 +196,65 @@ public class ProvidersResource {
         return Response.status(200).entity(new Result("DataProvider with id " + dataProviderId + " deleted!")).build();
     }
 
-    //    /**
-    //     * Update an aggregator by specifying the Id.
-    //     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the update that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
-    //     * Relative path : /aggregators
-    //     * @param aggregatorId 
-    //     * @param aggregator 
-    //     * @return OK or Error Message
-    //     * @throws DoesNotExistException 
-    //     * @throws InvalidArgumentsException 
-    //     */
-    //    @PUT
-    //    @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
-    //    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    //    @ApiOperation(value = "Update an aggregator.", httpMethod = "PUT")
-    //    @ApiResponses(value = {
-    //            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
-    //            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
-    //            @ApiResponse(code = 404, message = "DoesNotExistException"),
-    //            @ApiResponse(code = 500, message = "InternalServerErrorException")
-    //          })
-    //    public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,@ApiParam(value = "Aggregator id is not required", required = true) Aggregator aggregator) throws DoesNotExistException,
-    //            InvalidArgumentsException {
-    //
-    //        String name = aggregator.getName();
-    //        String nameCode = aggregator.getNameCode();
-    //        String homePage = aggregator.getHomePage();
-    //
-    //        try {
-    //            dataManager.updateAggregator(aggregatorId, name, nameCode, homePage);
-    //        } catch (IOException e) {
-    //            throw new InternalServerErrorException("Error in server : " + e.getMessage());
-    //        } catch (ObjectNotFoundException e) {
-    //            throw new DoesNotExistException(
-    //                    "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
-    //        } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-    //            throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-    //        }
-    //
-    //        return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " updated!")).build();
-    //    }
-    //
+    /**
+     * Update a provider by specifying the Id.
+     * Relative path : /providers
+     * @param providerId 
+     * @param aggregatorId 
+     * @param provider 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws InvalidArgumentsException 
+     * @throws MissingArgumentsException 
+     */
+    @PUT
+    @Path("/" + ProviderOptionListContainer.PROVIDERID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Update a provider.", httpMethod = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response updateProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId,
+            @ApiParam(value = "AggregatorId", required = false) @QueryParam("aggregatorId") String aggregatorId,
+            @ApiParam(value = "Provider data", required = true) DataProvider provider) throws DoesNotExistException,
+            InvalidArgumentsException, MissingArgumentsException {
+
+        //        if (aggregatorId == null || aggregatorId.equals(""))
+        //            throw new MissingArgumentsException("Missing argument aggregatorId!");
+
+        String newProviderId = provider.getId();
+        String name = provider.getName();
+        String country = provider.getCountry();
+        String description = provider.getDescription();
+        String nameCode = provider.getNameCode();
+        String homepage = provider.getHomePage();
+        String dataSetType = null;
+        if (provider.getProviderType() != null)
+            dataSetType = provider.getProviderType().toString();
+        String email = provider.getEmail();
+
+        if (name == null || name.isEmpty())
+            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty");
+        else if (country == null || country.equals(""))
+            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty");
+        else if (dataSetType == null || dataSetType.equals(""))
+            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
+
+        try {
+            dataManager.updateDataProvider(aggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, dataSetType, email);
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("A resource of the dataProvider with id " + e.getMessage() + " does NOT exist!");
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        return Response.status(200).entity(new Result("DataProvider with id " + providerId + " updated!")).build();
+    }
+
     //    /**
     //     * Get a list of aggregators in the specified range.
     //     * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.

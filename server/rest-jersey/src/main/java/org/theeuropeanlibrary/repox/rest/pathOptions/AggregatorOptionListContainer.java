@@ -43,7 +43,7 @@ public class AggregatorOptionListContainer extends OptionListContainer {
         optionList.add(new Option("[GET]Gets an Aggregator by Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
         optionList.add(new Option("[POST]Create an aggregator provided in the body of the post call.", baseUri + AGGREGATORS));
         optionList.add(new Option("[DELETE]Delete an aggregator by specifying the Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
-        optionList.add(new Option("[PUT]Update an aggregator by specifying the Id on the context path. Id of the provided in body aggregator can a be different one.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
+        optionList.add(new Option("[PUT]Update an aggregator by specifying the Id on the context path.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
         optionList.add(new Option("[GET]Get a list of aggregators by specifying a range.", baseUri + AGGREGATORS));
         
         setOptionList(optionList);

@@ -188,7 +188,7 @@ public class AggregatorsResource {
 
     /**
      * Update an aggregator by specifying the Id.
-     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the updates that are requested(name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
+     * The Id of the aggregator is provided as a path parameter and in request body there is an aggregator with the updates that are requested(id, name, nameCode, homePage) the remaining fields of the Aggregator class provided can be null
      * Relative path : /aggregators/{aggregatorId}
      * @param aggregatorId 
      * @param aggregator 
