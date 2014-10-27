@@ -146,8 +146,8 @@ public class AggregatorsResource {
                 throw new InternalServerErrorException("Error in server : " + e.getMessage());
             } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
                 throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-            } catch (AlreadyExistsException e) { //This basically happens if and aggregator already exists with both name and nameCode the same as the one provided 
-                throw new AlreadyExistsException("Aggregator with name " + e.getMessage() + " already exists!");
+            } catch (AlreadyExistsException e) { //This basically happens if and aggregator already exists with the same Id 
+                throw new AlreadyExistsException("Aggregator with id " + e.getMessage() + " already exists!");
             }
         } else
             throw new MissingArgumentsException("Missing argument name!");

@@ -33,7 +33,7 @@ public class RootResource {
      * @return the list of the options available wrapped in a container
      */
     @OPTIONS
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @ApiOperation(value = "Get options over all the conexts.", httpMethod = "OPTIONS", response = RootOptionListContainer.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")

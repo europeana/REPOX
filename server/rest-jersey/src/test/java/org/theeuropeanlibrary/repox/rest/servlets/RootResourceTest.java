@@ -36,13 +36,13 @@ public class RootResourceTest extends JerseyTest {
     @Test
     public void testGetOptions() {
         int numberOfAvailableOptions = 2;
-        WebTarget target = target("/");
+        WebTarget target = target("/" + RootOptionListContainer.OPTIONS);
 
         //Check xml options working
         Response response = target.request(MediaType.APPLICATION_XML).options();
         assertEquals(200, response.getStatus());
         //Check json options working
-        response = target("/").request(MediaType.APPLICATION_JSON).options();
+        response = target.request(MediaType.APPLICATION_JSON).options();
         assertEquals(200, response.getStatus());
         RootOptionListContainer rolc = response.readEntity(RootOptionListContainer.class);
         //Check the number of options provided

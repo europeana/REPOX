@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import org.dom4j.DocumentException;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
@@ -56,7 +55,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {
         int numberOfAvailableOptions = 6;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
@@ -82,7 +81,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws MalformedURLException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetAggregator() throws MalformedURLException {
         String aggregatorId = "SampleId";
         //Mocking
@@ -124,15 +123,14 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws DocumentException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testCreateAggregator() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException {
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Mocking
         Aggregator aggregator = new Aggregator("ValidId", "Greece", "GR", "http://somepage", null);
-        Aggregator createdAggregator = new Aggregator("ValidId", "Greece", "GR", "http://somepage", null);
         when(dataManager.createAggregator(aggregator.getId(), aggregator.getName(), aggregator.getNameCode(), aggregator.getHomepage().toString()))
-                .thenReturn(createdAggregator).thenThrow(new AlreadyExistsException("Already exists!"))
+                .thenReturn(aggregator).thenThrow(new AlreadyExistsException("Already exists!"))
                 .thenThrow(new InvalidArgumentsException("Invalid Argument URL")).thenThrow(new IOException()).thenThrow(new DocumentException());
 
         //Valid request created
@@ -153,11 +151,6 @@ public class AggregatorsResourceTest extends JerseyTest {
         aggregator = new Aggregator(null, null, "GR", "http://somepage", null);
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
-        
-        //Invalid request before any call to the mock
-        aggregator.setId("AnyID");
-        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-        assertEquals(400, response.getStatus());
     }
 
     /**
@@ -168,7 +161,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws IOException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testDeleteAggregator() throws Exception, DocumentException, ObjectNotFoundException  {
         String aggregatorId = "SampleId";
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS + "/" + aggregatorId);
@@ -219,11 +212,6 @@ public class AggregatorsResourceTest extends JerseyTest {
         //Invalid URL
         response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
         assertEquals(400, response.getStatus());
-        
-        //Invalid request before any call to the mock
-        aggregator.setId("AnyID");
-        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(aggregator, MediaType.APPLICATION_XML), Response.class);
-        assertEquals(400, response.getStatus());
     }
 
     /**
@@ -232,7 +220,7 @@ public class AggregatorsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetAggregatorList() throws Exception {
         int offset = 0;
         int number = 3;

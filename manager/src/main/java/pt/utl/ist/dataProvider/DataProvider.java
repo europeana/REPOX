@@ -15,6 +15,7 @@ import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.util.ProviderType;
 
 import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  * DataProvider type
@@ -25,26 +26,34 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel(value = "A Provider")
 public class DataProvider {
     @XmlElement
+    @ApiModelProperty(required = false, position = 0)
     private String                               id;
     @XmlElement
+    @ApiModelProperty(required = true, position = 1)
     private String                               name;
     @XmlElement
+    @ApiModelProperty(required = true, position = 2)
     private String                               country;
     @XmlElement
+    @ApiModelProperty(required = false, position = 3)
     private String                               description;
-    @XmlTransient
-    private HashMap<String, DataSourceContainer> dataSourceContainers;
-    
     @XmlElement
-    private String nameCode;
+    @ApiModelProperty(required = false, position = 4)
+    private String                               nameCode;
     @XmlElement
-    private String homepage;
+    @ApiModelProperty(required = false, position = 5)
+    private String                               homepage;
     @XmlElement
-    private ProviderType providerType;
+    @ApiModelProperty(required = true, position = 6)
+    private ProviderType                         providerType;
 
     // optional
     @XmlElement
+    @ApiModelProperty(required = false, position = 7)
     private String                               email;
+
+    @XmlTransient
+    private HashMap<String, DataSourceContainer> dataSourceContainers;
 
     public String getId() {
         return id;
@@ -77,7 +86,7 @@ public class DataProvider {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public String getNameCode() {
         return nameCode;
     }
@@ -114,7 +123,7 @@ public class DataProvider {
         String generatedIdPrefix = "";
 
         for (int i = 0; (i < name.length() && i < 32); i++) {
-            if ((name.charAt(i) >= 'a' && name.charAt(i) <= 'z') || (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z')) {
+            if ((name.charAt(i) >= 'a' && name.charAt(i) <= 'z') || (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z') || (name.charAt(i) >= '0' && name.charAt(i) <= '9')) {
                 generatedIdPrefix += name.charAt(i);
             }
         }
@@ -146,21 +155,23 @@ public class DataProvider {
      * @return DataSource with id dataSourceId or null otherwise
      */
     public DataSource getDataSource(String dataSourceId) {
-        if (dataSourceContainers.get(dataSourceId) != null) { return dataSourceContainers.get(dataSourceId).getDataSource(); }
+        if (dataSourceContainers.get(dataSourceId) != null) {
+            return dataSourceContainers.get(dataSourceId).getDataSource();
+        }
         return null;
     }
 
-//    /**
-//     * @return Collection of DataSource
-//     */
-//    // todo to be removed after GWT migration
-//    public Collection<DataSource> getReversedDataSourceContainers() {
-//        List<DataSource> reversedDataSources = new ArrayList<DataSource>();
-//        for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-//            reversedDataSources.add(0, dataSourceContainer.getDataSource());
-//        }
-//        return reversedDataSources;
-//    }
+    //    /**
+    //     * @return Collection of DataSource
+    //     */
+    //    // todo to be removed after GWT migration
+    //    public Collection<DataSource> getReversedDataSourceContainers() {
+    //        List<DataSource> reversedDataSources = new ArrayList<DataSource>();
+    //        for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
+    //            reversedDataSources.add(0, dataSourceContainer.getDataSource());
+    //        }
+    //        return reversedDataSources;
+    //    }
 
     public HashMap<String, DataSourceContainer> getDataSourceContainers() {
         return dataSourceContainers;
@@ -189,7 +200,8 @@ public class DataProvider {
      * @param homepage 
      * @param dataSetType 
      */
-    public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage, ProviderType dataSetType) {
+    public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage,
+                        ProviderType dataSetType) {
         this.id = id;
         this.name = name;
         this.country = country;
@@ -206,33 +218,33 @@ public class DataProvider {
      * @param writeDataSources 
      * @return Document
      */
-    public Element createElement(boolean writeDataSources){
+    public Element createElement(boolean writeDataSources) {
         Element dataProviderElement = DocumentHelper.createElement("provider");
 
         dataProviderElement.addAttribute("id", this.getId());
         dataProviderElement.addElement("name").setText(this.getName());
-        if(this.getCountry() != null) {
+        if (this.getCountry() != null) {
             dataProviderElement.addElement("country").setText(this.getCountry());
         }
-        if(this.getDescription() != null) {
+        if (this.getDescription() != null) {
             dataProviderElement.addElement("description").setText(this.getDescription());
         }
-        if(this.getProviderType() != null) {
+        if (this.getProviderType() != null) {
             dataProviderElement.addElement("type").setText(this.getProviderType().toString());
         }
-        if(this.getNameCode() != null) {
+        if (this.getNameCode() != null) {
             dataProviderElement.addElement("nameCode").setText(this.getNameCode());
         }
-        if(this.getHomePage() != null) {
+        if (this.getHomePage() != null) {
             dataProviderElement.addElement("url").setText(this.getHomePage().toString());
         }
         if (this.getEmail() != null && !this.getEmail().isEmpty()) {
             dataProviderElement.addElement("email").setText(this.getEmail());
         }
 
-        if(writeDataSources &&  this.getDataSourceContainers() != null){
+        if (writeDataSources && this.getDataSourceContainers() != null) {
             for (DataSourceContainer dataSourceContainer : this.getDataSourceContainers().values()) {
-                DefaultDataSourceContainer dDataSourceContainer = (DefaultDataSourceContainer) dataSourceContainer;
+                DefaultDataSourceContainer dDataSourceContainer = (DefaultDataSourceContainer)dataSourceContainer;
                 dataProviderElement.add(dDataSourceContainer.createElement());
             }
         }

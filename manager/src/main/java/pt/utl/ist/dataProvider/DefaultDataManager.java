@@ -739,9 +739,9 @@ public class DefaultDataManager implements DataManager {
                 String generatedHomepageUrl = null;
                 if (!homepageUrl.startsWith("http://") && !homepageUrl.startsWith("https://")) {
                     generatedHomepageUrl = "http://" + homepageUrl;
-                }
-                else
+                } else
                     generatedHomepageUrl = homepageUrl;
+
                 // test if URL is valid
                 if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
                     throw new Exception();
@@ -784,16 +784,15 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
-    public Aggregator updateAggregator(String oldAggregatorId, String newAggregatorId, String name, String nameCode, String homepageUrl) throws ObjectNotFoundException,
-            InvalidArgumentsException, IOException {
+    public Aggregator updateAggregator(String oldAggregatorId, String newAggregatorId, String name, String nameCode, String homepageUrl)
+            throws ObjectNotFoundException, InvalidArgumentsException, IOException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(oldAggregatorId);
 
         if (aggregator != null) {
             // only not null fields are updated
-            
-            if(newAggregatorId != null && !newAggregatorId.equals(""))
-            {
+
+            if (newAggregatorId != null && !newAggregatorId.equals("")) {
                 Aggregator aggregatorIdTest = new Aggregator(newAggregatorId, null, null, null, null);
                 if (checkIfAggregatorExists(aggregators, aggregatorIdTest))
                     throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " already exists!");
@@ -810,10 +809,9 @@ public class DefaultDataManager implements DataManager {
                 try {
                     if (!homepageUrl.startsWith("http://") && !homepageUrl.startsWith("https://")) {
                         newHomepageUrl = "http://" + homepageUrl;
-                    }
-                    else
+                    } else
                         newHomepageUrl = homepageUrl;
-                    
+
                     // test if URL is valid
                     if (!FileUtilSecond.checkUrl(newHomepageUrl)) {
                         throw new Exception();
@@ -832,11 +830,11 @@ public class DefaultDataManager implements DataManager {
                     break;
                 }
             }
-            
+
             //Need to set it here cause else the above remove will not happen correctly
-            if(newAggregatorId != null && !newAggregatorId.equals(""))
+            if (newAggregatorId != null && !newAggregatorId.equals(""))
                 aggregator.setId(newAggregatorId);
-            
+
             aggregators.add(aggregator);
             saveData();
             return aggregator;
@@ -952,6 +950,7 @@ public class DefaultDataManager implements DataManager {
     /**
      * Add a new Data Provider
      * @param aggregatorId
+     * @param providerId 
      * @param name
      * @param country
      * @param description
@@ -965,8 +964,9 @@ public class DefaultDataManager implements DataManager {
      * @throws AlreadyExistsException 
      * @throws InvalidArgumentsException 
      */
-    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode, String homepage,
-            String dataSetType, String email) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
+    public DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String description, String nameCode,
+            String homepage, String dataSetType, String email) throws ObjectNotFoundException, AlreadyExistsException, IOException,
+            InvalidArgumentsException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -979,21 +979,24 @@ public class DefaultDataManager implements DataManager {
             newDataProvider.setEmail(email);
 
             if (homepage != null && !homepage.equals("")) {
+                String generatedHomepage = null;
                 try {
-                    String generatedHomepageUrl = null;
                     if (!homepage.startsWith("http://") && !homepage.startsWith("https://")) {
-                        generatedHomepageUrl = "http://" + homepage;
-                    }
+                        generatedHomepage = "http://" + homepage;
+                    } else
+                        generatedHomepage = homepage;
+
                     // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
+                    if (!FileUtilSecond.checkUrl(generatedHomepage)) {
                         throw new Exception();
                     }
-                    newDataProvider.setHomePage(generatedHomepageUrl);
-
+                    newDataProvider.setHomePage(generatedHomepage);
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(homepage);
+                    throw new InvalidArgumentsException(generatedHomepage);
                 }
-            }
+            } else if (homepage != null && homepage.equals(""))
+                newDataProvider.setHomePage(homepage);
+
             try {
                 newDataProvider.setProviderType(ProviderType.get(dataSetType));
             } catch (Exception e) {
@@ -1001,19 +1004,19 @@ public class DefaultDataManager implements DataManager {
             }
             newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
 
-            //            if (nameCode != null && getDataProvider(nameCode) == null) {
-            //                // asked by TEL (but first checks if the dataProvider with that specific ID does not exist
-            //                newDataProvider.setId(nameCode);
-            //            } else {
-            //                newDataProvider.setId(DataProvider.generateId(newDataProvider.getName()));
-            //            }
-            newDataProvider.setId(DataProvider.generateId(newDataProvider.getName()));
+            //DataProvider Id is specified and if not first generated by the nameCode and last from the Name
+            if (providerId != null && !providerId.equals("")) {
+                newDataProvider.setId(providerId);
+            } else if (nameCode != null && !nameCode.equals("")) {
+                newDataProvider.setId(DataProvider.generateId(nameCode));
+            } else
+                newDataProvider.setId(DataProvider.generateId(name));
 
             for (Aggregator currentAggregator : aggregators) {
                 if (currentAggregator.getId().equals(aggregatorId)) {
-                    //Check if another provider with the same id exists already in the aggregator with aggregatorId
+                    //Check if dataProvider already exists with the same Id, this check is for when the Id is provided and not generated
                     if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
-                        throw new AlreadyExistsException(aggregatorId);
+                        throw new AlreadyExistsException(newDataProvider.getId());
                     }
                     currentAggregator.addDataProvider(newDataProvider);
                     break;

@@ -525,7 +525,7 @@ public class DefaultSaveData {
             }
         } else {
             try {
-                DataProvider dataProvider = europeanaManager.createDataProvider(dataProviderUI.getParentAggregatorID(), dataProviderUI.getName(),
+                DataProvider dataProvider = europeanaManager.createDataProvider(dataProviderUI.getParentAggregatorID(), null, dataProviderUI.getName(),
                         dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(),
                         homepage, dataProviderUI.getType(), null);
                 UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());

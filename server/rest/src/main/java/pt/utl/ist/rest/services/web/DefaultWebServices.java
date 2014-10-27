@@ -211,7 +211,7 @@ public class DefaultWebServices implements WebServices {
     public void createDataProvider(OutputStream out, String aggregatorId, String name, String country, String description,
                                    String nameCode, String url, String dataSetType) throws DocumentException, IOException {
         try {
-            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,
+            DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId, null,
                     name, country, description, nameCode, url, dataSetType, null);
             RestUtils.writeRestResponse(out, dataProvider.createElement(false));
         } catch (ObjectNotFoundException e) {
@@ -243,7 +243,7 @@ public class DefaultWebServices implements WebServices {
         else{
             try {
                 //Removed call that sets the providerId
-                dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId,name, country, description, nameCode, url, dataSetType, null);
+                dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).createDataProvider(aggregatorId, null, name, country, description, nameCode, url, dataSetType, null);
                 RestUtils.writeRestResponse(out, dataProvider.createElement(false));
             } catch (ObjectNotFoundException e) {
                 createErrorMessage(out, MessageType.NOT_FOUND, "Error creating Data Provider. Data provider with id \"" + aggregatorId + "\" was not found.");
