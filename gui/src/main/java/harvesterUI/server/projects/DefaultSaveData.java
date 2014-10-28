@@ -506,7 +506,7 @@ public class DefaultSaveData {
                 dataProvider.setDescription(dataProviderUI.getDescription());
                 dataProvider.setProviderType(ProviderType.valueOf(dataProviderUI.getType()));
                 dataProvider.setNameCode(dataProviderUI.getNameCode());
-                dataProvider.setHomePage(url.toString());
+                dataProvider.setHomepage(url.toString());
 
                 try {
                     dataProvider = europeanaManager.updateDataProvider(null, dataProvider.getId(), null, dataProviderUI.getName(),

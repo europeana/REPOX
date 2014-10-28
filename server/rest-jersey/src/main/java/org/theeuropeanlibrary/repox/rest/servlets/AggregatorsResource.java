@@ -126,7 +126,7 @@ public class AggregatorsResource {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation(value = "Create an aggregator.", httpMethod = "POST")
+    @ApiOperation(value = "Create an aggregator.", httpMethod = "POST", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
@@ -166,7 +166,7 @@ public class AggregatorsResource {
     @DELETE
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @ApiOperation(value = "Delete an aggregator.", httpMethod = "DELETE")
+    @ApiOperation(value = "Delete an aggregator.", httpMethod = "DELETE", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
@@ -195,41 +195,50 @@ public class AggregatorsResource {
      * @return OK or Error Message
      * @throws DoesNotExistException 
      * @throws InvalidArgumentsException 
+     * @throws MissingArgumentsException 
      */
     @PUT
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @ApiOperation(value = "Update an aggregator.", httpMethod = "PUT")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Update an aggregator.", httpMethod = "PUT", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
     public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,
             @ApiParam(value = "Aggregator data", required = true) Aggregator aggregator) throws DoesNotExistException,
-            InvalidArgumentsException {
+            InvalidArgumentsException, MissingArgumentsException {
 
         //        if(aggregator.getId() != null)
         //            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
-
         String newAggregatorId = aggregator.getId();
         String name = aggregator.getName();
         String nameCode = aggregator.getNameCode();
         String homePage = aggregator.getHomepage();
 
-        try {
-            dataManager.updateAggregator(aggregatorId, newAggregatorId, name, nameCode, homePage);
-        } catch (IOException e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
-        } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException(
-                    "A resource of the aggregator or the aggregator itself with id \"" + e.getMessage() + "\" does NOT exist!");
-        } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-            throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-        }
+        if (aggregator.getName() != null && !aggregator.getName().isEmpty()) {
+            try {
+                dataManager.updateAggregator(aggregatorId, newAggregatorId, name, nameCode, homePage);
+            } catch (IOException e) {
+                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            } catch (ObjectNotFoundException e) {
+                throw new DoesNotExistException(
+                        "A resource of the aggregator or the aggregator itself with id " + e.getMessage() + " does NOT exist!");
+            } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
+                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+            }
+        } else
+            throw new MissingArgumentsException("Missing argument name!");
 
-        return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " updated!")).build();
+        if (newAggregatorId != null && !newAggregatorId.isEmpty() && !aggregatorId.equals(newAggregatorId))
+            return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " updated and has now id : " + newAggregatorId + "!")).build();
+        else
+            return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " updated!")).build();
+
     }
 
     /**
@@ -243,8 +252,8 @@ public class AggregatorsResource {
      * @throws InvalidArgumentsException 
      */
     @GET
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @ApiOperation(value = "Get a list of aggregators.", httpMethod = "GET")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get a list of aggregators.", httpMethod = "GET", response = Aggregator.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException")

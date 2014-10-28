@@ -1,12 +1,12 @@
 package pt.utl.ist.util;
 
-import com.ibm.icu.util.Calendar;
-
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import pt.utl.ist.util.CompareUtil;
+import com.ibm.icu.util.Calendar;
 
+@Ignore
 public class CompareUtilTest {
 
 	@Test

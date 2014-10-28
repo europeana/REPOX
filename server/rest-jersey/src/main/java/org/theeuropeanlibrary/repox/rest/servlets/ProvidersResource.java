@@ -106,7 +106,7 @@ public class ProvidersResource {
         DataProvider provider = null;
         provider = dataManager.getDataProvider(providerId);
         if (provider == null)
-            throw new DoesNotExistException("Provider does NOT exist!");
+            throw new DoesNotExistException("Provider with id " + providerId + " does NOT exist!");
 
         return provider;
     }
@@ -125,7 +125,7 @@ public class ProvidersResource {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation(value = "Create a provider.", httpMethod = "POST")
+    @ApiOperation(value = "Create a provider.", httpMethod = "POST", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
@@ -145,29 +145,31 @@ public class ProvidersResource {
         String country = provider.getCountry();
         String description = provider.getDescription();
         String nameCode = provider.getNameCode();
-        String homepage = provider.getHomePage();
-        String dataSetType = provider.getProviderType().toString();
+        String homepage = provider.getHomepage();
+        String providerType = null;
+        if (provider.getProviderType() != null)
+            providerType = provider.getProviderType().toString();
         String email = provider.getEmail();
 
         if (name == null || name.isEmpty())
             throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty");
         else if (country == null || country.equals(""))
             throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty");
-        else if (dataSetType == null || dataSetType.equals(""))
+        else if (providerType == null || providerType.equals(""))
             throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
 
         DataProvider createdProvider = null;
 
         try {
-            createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, dataSetType, email);
+            createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, providerType, email);
         } catch (IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
         } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
             throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
         } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with the same Id 
-            throw new AlreadyExistsException("Provider with id \"" + e.getMessage() + "\" already exists!");
+            throw new AlreadyExistsException("Provider with id " + e.getMessage() + " already exists!");
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("A resource of the aggregator or the aggregator itself with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Aggregator with id " + e.getMessage() + " does NOT exist!");
         }
 
         return Response.created(null).entity(new Result("DataProvider with id = " + createdProvider.getId() + " and name = " + createdProvider.getName() + " created successfully")).build();
@@ -183,7 +185,7 @@ public class ProvidersResource {
     @DELETE
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation(value = "Delete a provider.", httpMethod = "DELETE")
+    @ApiOperation(value = "Delete a provider.", httpMethod = "DELETE", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
@@ -196,14 +198,14 @@ public class ProvidersResource {
             throw new DoesNotExistException("A resource of the dataProvider with id " + e.getMessage() + " does NOT exist!");
         }
 
-        return Response.status(200).entity(new Result("DataProvider with id " + dataProviderId + " deleted!")).build();
+        return Response.status(200).entity(new Result("Provider with id " + dataProviderId + " deleted!")).build();
     }
 
     /**
      * Update a provider by specifying the Id.
      * Relative path : /providers
      * @param providerId 
-     * @param aggregatorId 
+     * @param newAggregatorId 
      * @param provider 
      * @return OK or Error Message
      * @throws DoesNotExistException 
@@ -212,8 +214,9 @@ public class ProvidersResource {
      */
     @PUT
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation(value = "Update a provider.", httpMethod = "PUT")
+    @ApiOperation(value = "Update a provider.", httpMethod = "PUT", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
@@ -222,72 +225,77 @@ public class ProvidersResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
     public Response updateProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId,
-            @ApiParam(value = "AggregatorId", required = false) @QueryParam("aggregatorId") String aggregatorId,
+            @ApiParam(value = "Aggregator Id", required = false) @QueryParam("newAggregatorId") String newAggregatorId,
             @ApiParam(value = "Provider data", required = true) DataProvider provider) throws DoesNotExistException,
             InvalidArgumentsException, MissingArgumentsException {
-
-        //        if (aggregatorId == null || aggregatorId.equals(""))
-        //            throw new MissingArgumentsException("Missing argument aggregatorId!");
 
         String newProviderId = provider.getId();
         String name = provider.getName();
         String country = provider.getCountry();
         String description = provider.getDescription();
         String nameCode = provider.getNameCode();
-        String homepage = provider.getHomePage();
-        String dataSetType = null;
+        String homepage = provider.getHomepage();
+        String providerType = null;
         if (provider.getProviderType() != null)
-            dataSetType = provider.getProviderType().toString();
+            providerType = provider.getProviderType().toString();
         String email = provider.getEmail();
 
         if (name == null || name.isEmpty())
-            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty");
+            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty.");
         else if (country == null || country.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty");
-        else if (dataSetType == null || dataSetType.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
+            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty.");
+        else if (providerType == null || providerType.equals(""))
+            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty.");
 
         try {
-            dataManager.updateDataProvider(aggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, dataSetType, email);
+            dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, providerType, email);
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("A resource of the dataProvider with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
         } catch (IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
         }
 
-        return Response.status(200).entity(new Result("DataProvider with id " + providerId + " updated!")).build();
+        if (newProviderId != null && !newProviderId.isEmpty() && !providerId.equals(newProviderId))
+            return Response.status(200).entity(new Result("Provider with id " + providerId + " updated and has now id : " + newProviderId + "!")).build();
+        else
+            return Response.status(200).entity(new Result("Provider with id " + providerId + " updated!")).build();
     }
 
-        /**
-         * Get a list of providers in the specified range.
-         * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
-         * Relative path : /providers
-         * @param aggregatorId 
-         * @param offset 
-         * @param number 
-         * @return the list of the number of providers requested
-         * @throws Exception 
-         * @throws InvalidArgumentsException 
-         */
-        @GET
-        @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-        @ApiOperation(value = "Get a list of providers.", httpMethod = "GET")
-        @ApiResponses(value = {
-                @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
-                @ApiResponse(code = 400, message = "InvalidArgumentsException")
-              })
-        public Response getProviderList(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId, @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset, @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
-            
-            if(offset < 0)
-                throw new InvalidArgumentsException("Offset negative values not allowed!");
-            
-            List<DataProvider> providersListSorted;
-            try {
-                providersListSorted = dataManager.getDataProvidersListSorted(aggregatorId, offset, number);
-            } catch (IndexOutOfBoundsException e) {
-                throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
-            }
-    
-            return  Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {}).build();
+    /**
+     * Get a list of providers in the specified range.
+     * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
+     * Relative path : /providers
+     * @param aggregatorId 
+     * @param offset 
+     * @param number 
+     * @return the list of the number of providers requested
+     * @throws InvalidArgumentsException 
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get a list of providers.", httpMethod = "GET", response = DataProvider.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException")
+    })
+    public Response getProviderList(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId,
+            @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset,
+            @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws InvalidArgumentsException, DoesNotExistException {
+
+        if (offset < 0)
+            throw new InvalidArgumentsException("Offset negative values not allowed!");
+
+        List<DataProvider> providersListSorted;
+
+        try {
+            providersListSorted = dataManager.getDataProvidersListSorted(aggregatorId, offset, number);
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Aggregator with id " + e.getMessage() + " does NOT exist!");
         }
+
+        return Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {
+        }).build();
+    }
 }

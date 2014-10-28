@@ -1,10 +1,12 @@
 /* Option.java - created on Oct 13, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.pathOptions;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
 import com.wordnik.swagger.annotations.ApiModel;
@@ -16,17 +18,21 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 13, 2014
  */
-@XmlRootElement
-@XmlType(propOrder={"description", "syntax"})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "description", "syntax", "queryParameters" })
+@XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An Option")
 public class Option {
-    @XmlElement(name="description")
-    @ApiModelProperty(required=false)
-    private String description;
-    @XmlElement(name="syntax")
-    @ApiModelProperty(required=false)
-    private String syntax;
+    @XmlElement(name = "description")
+    @ApiModelProperty
+    private String       description;
+    @XmlElement(name = "syntax")
+    @ApiModelProperty
+    private String       syntax;
+    
+    @XmlElementWrapper(name="queryParameters")
+    @XmlElement(name = "queryParameter")
+    @ApiModelProperty
+    private List<String> queryParameters;
 
     /**
      * No argument constructor needed for JAXB.
@@ -38,13 +44,15 @@ public class Option {
      * Creates a new instance of this class.
      * @param description
      * @param syntax
+     * @param queryParameters 
      */
-    public Option(String description, String syntax) {
+    public Option(String description, String syntax, List<String> queryParameters) {
         super();
         this.description = description;
         this.syntax = syntax;
+        this.queryParameters = queryParameters;
     }
-    
+
     public String getDescription() {
         return this.description;
     }
@@ -59,5 +67,21 @@ public class Option {
 
     public void setSyntax(String syntax) {
         this.syntax = syntax;
+    }
+
+    /**
+     * Returns the queryParameters.
+     * @return the queryParameters
+     */
+    public List<String> getQueryParameters() {
+        return queryParameters;
+    }
+
+    /**
+     * Sets the queryParameters to the given value.
+     * @param queryParameters the queryParameters to set
+     */
+    public void setQueryParameters(List<String> queryParameters) {
+        this.queryParameters = queryParameters;
     }
 }

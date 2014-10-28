@@ -21,7 +21,7 @@
       "method" : "POST",
       "summary" : "Create a provider.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "createProvider",
       "produces" : [ "application/json", "application/xml" ],
       "consumes" : [ "application/json", "application/xml" ],
@@ -56,6 +56,49 @@
         "code" : 500,
         "message" : "InternalServerErrorException"
       } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of providers.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "dataprovider"
+      },
+      "nickname" : "getProviderList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of aggregators)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      } ]
     } ]
   }, {
     "path" : "/providers/{providerId}",
@@ -85,7 +128,7 @@
       "method" : "DELETE",
       "summary" : "Delete a provider.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "deleteProvider",
       "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ {
@@ -110,9 +153,10 @@
       "method" : "PUT",
       "summary" : "Update a provider.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "updateProvider",
       "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "providerId",
         "description" : "Id of provider",
@@ -121,8 +165,8 @@
         "paramType" : "path",
         "allowMultiple" : false
       }, {
-        "name" : "aggregatorId",
-        "description" : "AggregatorId",
+        "name" : "newAggregatorId",
+        "description" : "Aggregator Id",
         "required" : false,
         "type" : "string",
         "paramType" : "query",
@@ -157,6 +201,7 @@
     "dataprovider" : {
       "id" : "dataprovider",
       "description" : "",
+      "required" : [ "name", "country", "providerType" ],
       "properties" : {
         "id" : {
           "type" : "string"
@@ -173,14 +218,14 @@
         "nameCode" : {
           "type" : "string"
         },
+        "homepage" : {
+          "type" : "string"
+        },
         "providerType" : {
-          "$ref" : "ProviderType",
+          "type" : "string",
           "enum" : [ "MUSEUM", "ARCHIVE", "LIBRARY", "AUDIO_VISUAL_ARCHIVE", "RESEARCH_EDUCATIONAL", "CROSS_SECTOR", "PUBLISHER", "PRIVATE", "AGGREGATOR", "UNKNOWN" ]
         },
         "email" : {
-          "type" : "string"
-        },
-        "homePage" : {
           "type" : "string"
         }
       }
@@ -194,6 +239,12 @@
         },
         "syntax" : {
           "type" : "string"
+        },
+        "queryParameter" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },

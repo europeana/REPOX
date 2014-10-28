@@ -3,6 +3,7 @@ package org.theeuropeanlibrary.repox.rest.pathOptions;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,6 +25,9 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class AggregatorOptionListContainer extends OptionListContainer {
     public static final String AGGREGATORS = "aggregators";
     public static final String AGGREGATORID = "{aggregatorId}";
+    //Query parameters
+    public static final String OFFSET = "offset";
+    public static final String NUMBER = "number";
 
     /**
      * No argument constructor needed for JAXB.
@@ -39,12 +43,12 @@ public class AggregatorOptionListContainer extends OptionListContainer {
     public AggregatorOptionListContainer(URI baseUri) {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
-        optionList.add(new Option("[OPTIONS]Get options over Aggregators.", baseUri + AGGREGATORS));
-        optionList.add(new Option("[GET]Gets an Aggregator by Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
-        optionList.add(new Option("[POST]Create an aggregator provided in the body of the post call.", baseUri + AGGREGATORS));
-        optionList.add(new Option("[DELETE]Delete an aggregator by specifying the Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
-        optionList.add(new Option("[PUT]Update an aggregator by specifying the Id on the context path.", baseUri + AGGREGATORS + "/" + AGGREGATORID));
-        optionList.add(new Option("[GET]Get a list of aggregators by specifying a range.", baseUri + AGGREGATORS));
+        optionList.add(new Option("[OPTIONS]Get options over Aggregators.", baseUri + AGGREGATORS, null));
+        optionList.add(new Option("[GET]Gets an Aggregator by Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID, null));
+        optionList.add(new Option("[POST]Create an aggregator provided in the body of the post call.", baseUri + AGGREGATORS, null));
+        optionList.add(new Option("[DELETE]Delete an aggregator by specifying the Id.", baseUri + AGGREGATORS + "/" + AGGREGATORID, null));
+        optionList.add(new Option("[PUT]Update an aggregator by specifying the Id on the context path.", baseUri + AGGREGATORS + "/" + AGGREGATORID, null));
+        optionList.add(new Option("[GET]Get a list of aggregators by specifying a range.", baseUri + AGGREGATORS, new ArrayList<String>(Arrays.asList(OFFSET, NUMBER))));
         
         setOptionList(optionList);
     }

@@ -2,7 +2,9 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,19 +20,15 @@ import javax.ws.rs.core.Response;
 import org.dom4j.DocumentException;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
-import pt.utl.ist.dataProvider.Aggregator;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
-import pt.utl.ist.util.exceptions.MissingArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
@@ -57,9 +55,9 @@ public class ProvidersResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 2;
+        int numberOfAvailableOptions = 6;
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS);
 
         //Check xml options working
@@ -78,12 +76,12 @@ public class ProvidersResourceTest extends JerseyTest {
      * @throws MalformedURLException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetProvider() throws MalformedURLException {
         String providerId = "SampleId";
         //Mocking
         when(dataManager.getDataProvider(providerId))
-                .thenReturn(new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY));
+                .thenReturn(new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail"));
 
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
         //Check xml head working
@@ -121,16 +119,16 @@ public class ProvidersResourceTest extends JerseyTest {
      * @throws ObjectNotFoundException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testCreateProvider() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException {
         String aggregatorId = "SampleAggregatorId";
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS).queryParam("aggregatorId", aggregatorId);
 
         //Mocking
-        DataProvider dataProvider = new DataProvider("SampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        DataProvider dataProvider = new DataProvider("SampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         when(
                 dataManager.createDataProvider(aggregatorId, dataProvider.getId(), dataProvider.getName(), dataProvider.getCountry(), dataProvider.getDescription(), dataProvider.getNameCode(),
-                        dataProvider.getHomePage(), dataProvider.getProviderType().toString(), dataProvider.getEmail())).thenReturn(dataProvider).thenThrow(new ObjectNotFoundException(aggregatorId))
+                        dataProvider.getHomepage(), dataProvider.getProviderType().toString(), dataProvider.getEmail())).thenReturn(dataProvider).thenThrow(new ObjectNotFoundException(aggregatorId))
                 .thenThrow(new AlreadyExistsException("DataProvider " + dataProvider.getId() + " already exists!")).thenThrow(new InvalidArgumentsException("Invalid Argument URL"))
                 .thenThrow(new IOException());
 
@@ -154,15 +152,15 @@ public class ProvidersResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
         //Missing argument name
-        dataProvider = new DataProvider("SampleId", null, "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        dataProvider = new DataProvider("SampleId", null, "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
         //Missing argument country
-        dataProvider = new DataProvider("SampleId", "SampleName", null, "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        dataProvider = new DataProvider("SampleId", "SampleName", null, "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
         //Missing argument provider type
-        dataProvider = new DataProvider("SampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null);
+        dataProvider = new DataProvider("SampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null, "SampleEmail");
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
 
@@ -176,7 +174,7 @@ public class ProvidersResourceTest extends JerseyTest {
      * @throws IOException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testDeleteProvider() throws Exception, DocumentException, ObjectNotFoundException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
@@ -202,15 +200,15 @@ public class ProvidersResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateProvider() throws Exception {
         String providerId = "SampleProviderId";
-        DataProvider dataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        DataProvider dataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + providerId);
 
         //Mocking
         when(dataManager.updateDataProvider(null, providerId, dataProvider.getId(), dataProvider.getName(), dataProvider.getCountry(), dataProvider.getDescription(), dataProvider.getNameCode(),
-                        dataProvider.getHomePage(), dataProvider.getProviderType().toString(), dataProvider.getEmail()))
+                        dataProvider.getHomepage(), dataProvider.getProviderType().toString(), dataProvider.getEmail()))
                 .thenReturn(dataProvider).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException(providerId))
                 .thenThrow(new InvalidArgumentsException());
 
@@ -227,17 +225,17 @@ public class ProvidersResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(dataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(400, response.getStatus());
         //Missing name
-        DataProvider missingArgDataProvider = new DataProvider("NewSampleId", null, "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        DataProvider missingArgDataProvider = new DataProvider("NewSampleId", null, "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
         //Missing country
-        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", null, "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY);
+        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", null, "SampleDescription", null, "SampleNameCode", "http://example.com", ProviderType.LIBRARY, "SampleEmail");
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
-        //Missing providerType
-        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null);
+        //Missing providerType should be also valid
+        missingArgDataProvider = new DataProvider("NewSampleId", "SampleName", "SampleCounty", "SampleDescription", null, "SampleNameCode", "http://example.com", null, "SampleEmail");
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(missingArgDataProvider, MediaType.APPLICATION_XML), Response.class);
-        assertEquals(406, response.getStatus());
+        assertEquals(200, response.getStatus());
     }
     
     
@@ -265,7 +263,7 @@ public class ProvidersResourceTest extends JerseyTest {
         providerList.add(provider);
         providerList.add(provider1);
         providerList.add(provider2);
-        when(dataManager.getDataProvidersListSorted(aggregatorId, offset, number)).thenReturn(providerList).thenThrow(new IndexOutOfBoundsException("Server error : Offset cannot be negative"));
+        when(dataManager.getDataProvidersListSorted(aggregatorId, offset, number)).thenReturn(providerList).thenThrow(new ObjectNotFoundException(aggregatorId));
         
         //Valid call
         Response response = target.request(MediaType.APPLICATION_XML).get();
@@ -274,7 +272,7 @@ public class ProvidersResourceTest extends JerseyTest {
         assertEquals(providerList.size(), subList.size());
         //Internal Server Error
         response = target.request(MediaType.APPLICATION_XML).get();
-        assertEquals(400, response.getStatus());
+        assertEquals(404, response.getStatus());
         //Error because of index
         target = target("/" + ProviderOptionListContainer.PROVIDERS).queryParam("offset", -1).queryParam("number", number);
         //Notice not mocked here cause it has to throw the exception before the call to the dataManager

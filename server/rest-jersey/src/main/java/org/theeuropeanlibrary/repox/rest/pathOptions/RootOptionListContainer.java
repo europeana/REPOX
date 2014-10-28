@@ -32,8 +32,9 @@ public class RootOptionListContainer extends OptionListContainer {
     public RootOptionListContainer(URI baseUri) {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
-        optionList.add(new Option("Get information about all the options provided ", baseUri + RootOptionListContainer.OPTIONS));
-        optionList.add(new Option("Get further options over Aggregators ", baseUri + AggregatorOptionListContainer.AGGREGATORS));
+        optionList.add(new Option("[OPTIONS]Get information about all the options provided ", baseUri + RootOptionListContainer.OPTIONS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Aggregators ", baseUri + AggregatorOptionListContainer.AGGREGATORS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Aggregators ", baseUri + ProviderOptionListContainer.PROVIDERS, null));
         
         setOptionList(optionList);
     }

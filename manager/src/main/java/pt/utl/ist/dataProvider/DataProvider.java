@@ -93,12 +93,12 @@ public class DataProvider {
         this.nameCode = nameCode;
     }
 
-    public String getHomePage() {
+    public String getHomepage() {
         return homepage;
     }
 
-    public void setHomePage(String homePage) {
-        this.homepage = homePage;
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
 
     public ProviderType getProviderType() {
@@ -159,18 +159,6 @@ public class DataProvider {
         return null;
     }
 
-    //    /**
-    //     * @return Collection of DataSource
-    //     */
-    //    // todo to be removed after GWT migration
-    //    public Collection<DataSource> getReversedDataSourceContainers() {
-    //        List<DataSource> reversedDataSources = new ArrayList<DataSource>();
-    //        for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-    //            reversedDataSources.add(0, dataSourceContainer.getDataSource());
-    //        }
-    //        return reversedDataSources;
-    //    }
-
     public HashMap<String, DataSourceContainer> getDataSourceContainers() {
         return dataSourceContainers;
     }
@@ -196,18 +184,47 @@ public class DataProvider {
      * @param dataSourceContainers
      * @param nameCode 
      * @param homepage 
-     * @param dataSetType 
+     * @param providerType 
+     * @param email 
      */
     public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage,
-                        ProviderType dataSetType) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-        this.description = description;
+                        ProviderType providerType, String email) {
+        
+        //Setting to "" is required for the response of a rest service.
+        if (id != null)
+            this.id = id;
+        else
+            this.id = "";
+        if (name != null)
+            this.name = name;
+        else
+            this.name = "";
+        if (country != null)
+            this.country = country;
+        else
+            this.country = "";
+        if (description != null)
+            this.description = description;
+        else
+            this.description = "";
+        if (nameCode != null)
+            this.nameCode = nameCode;
+        else
+            this.nameCode = "";
+        if (homepage != null)
+            this.homepage = homepage;
+        else
+            this.homepage = "";
+        if (providerType != null)
+            this.providerType = providerType;
+        else
+            this.providerType = ProviderType.UNKNOWN;
+        if (email != null)
+            this.email = email;
+        else
+            this.email = "";
+
         this.dataSourceContainers = dataSourceContainers;
-        this.nameCode = nameCode;
-        this.homepage = homepage;
-        this.providerType = dataSetType;
     }
 
     /**
@@ -233,8 +250,8 @@ public class DataProvider {
         if (this.getNameCode() != null) {
             dataProviderElement.addElement("nameCode").setText(this.getNameCode());
         }
-        if (this.getHomePage() != null) {
-            dataProviderElement.addElement("url").setText(this.getHomePage().toString());
+        if (this.getHomepage() != null) {
+            dataProviderElement.addElement("url").setText(this.getHomepage().toString());
         }
         if (this.getEmail() != null && !this.getEmail().isEmpty()) {
             dataProviderElement.addElement("email").setText(this.getEmail());

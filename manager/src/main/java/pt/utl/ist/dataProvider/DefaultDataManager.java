@@ -286,7 +286,7 @@ public class DefaultDataManager implements DataManager {
                 HashMap<String, DataSourceContainer> dataSourceContainers = new HashMap<String, DataSourceContainer>();
 
                 DataProvider dataProvider = new DataProvider(providerId, providerName, providerCountry, providerDescription, dataSourceContainers,
-                        providerNameCode, providerHomePage, ProviderType.get(providerType));
+                        providerNameCode, providerHomePage, ProviderType.get(providerType), null);
 
                 for (Iterator dataSIterator = currentElementProv.elementIterator("source"); dataSIterator.hasNext();) {
                     // read data sources inside the aggregator
@@ -774,7 +774,7 @@ public class DefaultDataManager implements DataManager {
 
     /**
      * Update Aggregator
-     * @param oldAggregatorId
+     * @param aggregatorId
      * @param newAggregatorId 
      * @param name
      * @param nameCode
@@ -784,15 +784,15 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
-    public Aggregator updateAggregator(String oldAggregatorId, String newAggregatorId, String name, String nameCode, String homepage)
+    public Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage)
             throws ObjectNotFoundException, InvalidArgumentsException, IOException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
-                .getAggregator(oldAggregatorId);
+                .getAggregator(aggregatorId);
 
         if (aggregator != null) {
             // only not null fields are updated
 
-            if (newAggregatorId != null && !newAggregatorId.equals("")) {
+            if (newAggregatorId != null && !newAggregatorId.equals("") && !aggregatorId.equals(newAggregatorId)) {
                 Aggregator aggregatorIdTest = new Aggregator(newAggregatorId, null, null, null, null);
                 if (checkIfAggregatorExists(aggregators, aggregatorIdTest))
                     throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " already exists!");
@@ -825,7 +825,7 @@ public class DefaultDataManager implements DataManager {
             }
 
             for (Aggregator actualAggregator : aggregators) {
-                if (actualAggregator.getId().equals(oldAggregatorId)) {
+                if (actualAggregator.getId().equals(aggregatorId)) {
                     aggregators.remove(actualAggregator);
                     break;
                 }
@@ -839,7 +839,7 @@ public class DefaultDataManager implements DataManager {
             saveData();
             return aggregator;
         } else {
-            throw new ObjectNotFoundException(oldAggregatorId);
+            throw new ObjectNotFoundException(aggregatorId);
         }
     }
 
@@ -1006,12 +1006,12 @@ public class DefaultDataManager implements DataManager {
                     if (!FileUtilSecond.checkUrl(generatedHomepage)) {
                         throw new Exception();
                     }
-                    newDataProvider.setHomePage(generatedHomepage);
+                    newDataProvider.setHomepage(generatedHomepage);
                 } catch (Exception e) {
                     throw new InvalidArgumentsException(generatedHomepage);
                 }
             } else if (homepage != null && homepage.equals(""))
-                newDataProvider.setHomePage(homepage);
+                newDataProvider.setHomepage(homepage);
 
             try {
                 newDataProvider.setProviderType(ProviderType.get(dataSetType));
@@ -1221,9 +1221,9 @@ public class DefaultDataManager implements DataManager {
         if (dataProvider != null) {
             // only not null fields are updated
 
-            if (newProviderId != null && !newProviderId.equals("")) {
+            if (newProviderId != null && !newProviderId.equals("") && !providerId.equals(newProviderId)) {
                 if (getDataProvider(newProviderId) != null)
-                    throw new InvalidArgumentsException("DataProvider with id: " + newProviderId + " already exists!");
+                    throw new InvalidArgumentsException("Provider with id: " + newProviderId + " already exists!");
             }
 
             if (name != null)
@@ -1249,12 +1249,12 @@ public class DefaultDataManager implements DataManager {
                         if (!FileUtilSecond.checkUrl(newHomepageUrl)) {
                             throw new Exception();
                         }
-                        dataProvider.setHomePage(newHomepageUrl);
+                        dataProvider.setHomepage(newHomepageUrl);
                     } catch (Exception e) {
                         throw new InvalidArgumentsException(newHomepageUrl);
                     }
                 } else if (homepage != null && homepage.equals("")) {
-                    dataProvider.setHomePage(homepage);
+                    dataProvider.setHomepage(homepage);
                 }
 
             if (dataSetType != null) {
@@ -1284,8 +1284,8 @@ public class DefaultDataManager implements DataManager {
                             if (newAggregatorId != null && !newAggregatorId.equals(""))
                             {
                                 Aggregator aggregatorIdTest = new Aggregator(newAggregatorId, null, null, null, null);
-                                if (checkIfAggregatorExists(aggregators, aggregatorIdTest))
-                                    throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " already exists!");
+                                if (!checkIfAggregatorExists(aggregators, aggregatorIdTest))
+                                    throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " does NOT exists!");
                                 Aggregator parentAggregator = getAggregator(newAggregatorId);
 
                                 parentAggregator.getDataProviders().add(defaultDataProvider);
@@ -1385,10 +1385,14 @@ public class DefaultDataManager implements DataManager {
      * @param offset
      * @param number
      * @return the number of aggregators requested sorted
+     * @throws ObjectNotFoundException 
      * @throws IndexOutOfBoundsException 
      */
-    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number)
+    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
     {
+        if(getAggregator(aggregatorId) == null)
+            throw new ObjectNotFoundException(aggregatorId);
+        
         List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
         Collections.sort(sortedList, new DataProviderComparator());
         

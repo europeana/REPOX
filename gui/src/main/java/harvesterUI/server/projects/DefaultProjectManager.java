@@ -827,8 +827,8 @@ public class DefaultProjectManager extends ProjectManager {
         newDataProviderUI.setName(dataProviderEuropeana.getName());
         newDataProviderUI.setNameCode(dataProviderEuropeana.getNameCode());
         newDataProviderUI.setDescription(dataProviderEuropeana.getDescription());
-        if(dataProviderEuropeana.getHomePage() != null)
-            newDataProviderUI.setHomepage(dataProviderEuropeana.getHomePage().toString());
+        if(dataProviderEuropeana.getHomepage() != null)
+            newDataProviderUI.setHomepage(dataProviderEuropeana.getHomepage().toString());
         newDataProviderUI.setType(dataProviderEuropeana.getProviderType().name());
         newDataProviderUI.setParentAggregatorID(aggregatorUI.getId());
         return newDataProviderUI;

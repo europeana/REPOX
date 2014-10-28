@@ -41,6 +41,12 @@
         },
         "syntax" : {
           "type" : "string"
+        },
+        "queryParameter" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     }

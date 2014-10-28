@@ -21,7 +21,7 @@
       "method" : "POST",
       "summary" : "Create an aggregator.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "createAggregator",
       "produces" : [ "application/json", "application/xml" ],
       "consumes" : [ "application/json", "application/xml" ],
@@ -53,9 +53,12 @@
       "method" : "GET",
       "summary" : "Get a list of aggregators.",
       "notes" : "",
-      "type" : "void",
+      "type" : "array",
+      "items" : {
+        "$ref" : "aggregator"
+      },
       "nickname" : "getAggregatorList",
-      "produces" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "offset",
         "description" : "Index where to start from",
@@ -111,7 +114,7 @@
       "method" : "DELETE",
       "summary" : "Delete an aggregator.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "deleteAggregator",
       "produces" : [ "application/xml", "application/json" ],
       "parameters" : [ {
@@ -136,9 +139,10 @@
       "method" : "PUT",
       "summary" : "Update an aggregator.",
       "notes" : "",
-      "type" : "void",
+      "type" : "string",
       "nickname" : "updateAggregator",
-      "produces" : [ "application/xml", "application/json" ],
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "aggregatorId",
         "description" : "Id of aggregator",
@@ -164,6 +168,9 @@
         "code" : 404,
         "message" : "DoesNotExistException"
       }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
       } ]
@@ -179,6 +186,12 @@
         },
         "syntax" : {
           "type" : "string"
+        },
+        "queryParameter" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },

@@ -69,7 +69,7 @@ http://localhost:8080/repox/rest/aggregators
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -116,7 +116,7 @@ http://localhost:8080/repox/rest/aggregators
 </table>
 
 ###### Response
-[](#)
+[List[aggregator]](#aggregator)
 
 
 ###### Response Codes
@@ -192,7 +192,7 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -247,7 +247,7 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -256,6 +256,7 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 | 200    | OK (Response containing a String message) | - |
 | 400    | InvalidArgumentsException | - |
 | 404    | DoesNotExistException | - |
+| 406    | MissingArgumentsException | - |
 | 500    | InternalServerErrorException | - |
 
 
@@ -349,7 +350,7 @@ http://localhost:8080/repox/rest/providers
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -360,6 +361,56 @@ http://localhost:8080/repox/rest/providers
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of aggregators) | - |
+| 400    | InvalidArgumentsException | - |
 
 
 - - -
@@ -428,7 +479,7 @@ http://localhost:8080/repox/rest/providers/{providerId}
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -475,10 +526,10 @@ http://localhost:8080/repox/rest/providers/{providerId}
         <th>Description</th>
     </tr>
     <tr>
-        <th>aggregatorId</th>
+        <th>newAggregatorId</th>
         <td>string</td>
         <td>false</td>
-        <td>AggregatorId</td>
+        <td>Aggregator Id</td>
     </tr>
 </table>
 - body
@@ -499,7 +550,7 @@ http://localhost:8080/repox/rest/providers/{providerId}
 </table>
 
 ###### Response
-[](#)
+[string](#)
 
 
 ###### Response Codes
@@ -530,6 +581,13 @@ http://localhost:8080/repox/rest/providers/{providerId}
     <tr>
     	<td>syntax</td>
         <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>queryParameter</td>
+        <td>Array[string]</td>
         <td>optional</td>
         <td>-</td>
         <td>any</td>
@@ -640,9 +698,23 @@ http://localhost:8080/repox/rest/providers/{providerId}
         <th>allowedValues</th>
     </tr>
     <tr>
-    	<td>country</td>
+    	<td>id</td>
         <td>string</td>
         <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>name</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>country</td>
+        <td>string</td>
+        <td>required</td>
         <td>-</td>
         <td>any</td>
     </tr>
@@ -654,13 +726,6 @@ http://localhost:8080/repox/rest/providers/{providerId}
         <td>any</td>
     </tr>
     <tr>
-    	<td>providerType</td>
-        <td><a href="#ProviderType">ProviderType</a></td>
-        <td>optional</td>
-        <td>-</td>
-        <td>MUSEUM, ARCHIVE, LIBRARY, AUDIO_VISUAL_ARCHIVE, RESEARCH_EDUCATIONAL, CROSS_SECTOR, PUBLISHER, PRIVATE, AGGREGATOR, UNKNOWN</td>
-    </tr>
-    <tr>
     	<td>nameCode</td>
         <td>string</td>
         <td>optional</td>
@@ -668,28 +733,21 @@ http://localhost:8080/repox/rest/providers/{providerId}
         <td>any</td>
     </tr>
     <tr>
-    	<td>name</td>
+    	<td>homepage</td>
         <td>string</td>
         <td>optional</td>
         <td>-</td>
         <td>any</td>
+    </tr>
+    <tr>
+    	<td>providerType</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>MUSEUM, ARCHIVE, LIBRARY, AUDIO_VISUAL_ARCHIVE, RESEARCH_EDUCATIONAL, CROSS_SECTOR, PUBLISHER, PRIVATE, AGGREGATOR, UNKNOWN</td>
     </tr>
     <tr>
     	<td>email</td>
-        <td>string</td>
-        <td>optional</td>
-        <td>-</td>
-        <td>any</td>
-    </tr>
-    <tr>
-    	<td>homePage</td>
-        <td>string</td>
-        <td>optional</td>
-        <td>-</td>
-        <td>any</td>
-    </tr>
-    <tr>
-    	<td>id</td>
         <td>string</td>
         <td>optional</td>
         <td>-</td>
