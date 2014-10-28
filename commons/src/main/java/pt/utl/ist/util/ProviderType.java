@@ -29,7 +29,6 @@ import javax.xml.bind.annotation.XmlType;
  *         Date: 22-mar-2010
  *         Time: 17.50.50
  */
-@XmlType(name = "some")
 @XmlEnum(String.class)
 public enum ProviderType {
     MUSEUM,

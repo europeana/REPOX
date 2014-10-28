@@ -23,15 +23,15 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "An Option")
 public class Option {
     @XmlElement(name = "description")
-    @ApiModelProperty
+    @ApiModelProperty(position = 0)
     private String       description;
     @XmlElement(name = "syntax")
-    @ApiModelProperty
+    @ApiModelProperty(position = 1)
     private String       syntax;
     
     @XmlElementWrapper(name="queryParameters")
     @XmlElement(name = "queryParameter")
-    @ApiModelProperty
+    @ApiModelProperty(position = 2)
     private List<String> queryParameters;
 
     /**

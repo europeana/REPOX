@@ -98,6 +98,9 @@
       }, {
         "code" : 400,
         "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     } ]
   }, {
