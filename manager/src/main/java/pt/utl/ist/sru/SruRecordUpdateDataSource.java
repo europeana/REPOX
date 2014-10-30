@@ -3,6 +3,8 @@ package pt.utl.ist.sru;
 
 import org.dom4j.Element;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
@@ -13,10 +15,17 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 24 de Abr de 2013
  */
+@XmlRootElement(name = "SruDatasource")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An SruDataset")
 public class SruRecordUpdateDataSource extends DataSource {
     /**
      * Creates a new instance of this class.

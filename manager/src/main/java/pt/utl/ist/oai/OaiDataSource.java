@@ -7,6 +7,9 @@ import org.dom4j.Element;
 import org.oclc.oai.harvester.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -39,17 +42,19 @@ import java.util.*;
  * Implementation of a DataSource that makes requests to a OAI-PMH Provider and
  * harvests its Records into the DataSource
  */
-@XmlRootElement(name = "datasource")
+@XmlRootElement(name = "OaiDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An OaiDataset")
 public class OaiDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(OaiDataSource.class);
 
     @XmlElement
+    @ApiModelProperty(position = 0)
     private String               oaiSourceURL;
     @XmlElement
+    @ApiModelProperty(position = 1)
     private String               oaiSet;
 
-    @Transient
     private FileRetrieveStrategy retrieveStrategy;
 
     public FileRetrieveStrategy getRetrieveStrategy() {

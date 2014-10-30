@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -37,8 +39,15 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "DirectoryDatasource")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "A DirectoryDataset")
 public class DirectoryImporterDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(DirectoryImporterDataSource.class);
 

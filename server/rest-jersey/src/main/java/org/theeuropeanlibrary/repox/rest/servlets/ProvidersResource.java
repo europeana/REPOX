@@ -65,7 +65,7 @@ public class ProvidersResource {
     }
 
     /**
-     * Creates a new instance by providing the DataManager.
+     * Creates a new instance by providing the DataManager. (For Tests)
      * @param dataManager
      */
     public ProvidersResource(DefaultDataManager dataManager) {
@@ -74,13 +74,13 @@ public class ProvidersResource {
     }
 
     /**
-     * Retrieve all the available options for Providers
+     * Retrieve all the available options for Providers.
      * Relative path : /providers
      * @return the list of the options available wrapped in a container
      */
     @OPTIONS
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @ApiOperation(value = "Get options over provider conext.", httpMethod = "OPTIONS", response = ProviderOptionListContainer.class)
+    @ApiOperation(value = "Get options over providers conext.", httpMethod = "OPTIONS", response = ProviderOptionListContainer.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
     public ProviderOptionListContainer getOptions() {

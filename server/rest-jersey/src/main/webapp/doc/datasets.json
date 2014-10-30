@@ -1,0 +1,131 @@
+{
+  "apiVersion" : "0.0.1-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://localhost:8080/repox/rest",
+  "resourcePath" : "/datasets",
+  "apis" : [ {
+    "path" : "/datasets",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over datasets conext.",
+      "notes" : "",
+      "type" : "datasetOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets/{datasetId}",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get specific dataset.",
+      "notes" : "",
+      "type" : "datasetTypeContainer",
+      "nickname" : "getDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing an Dataset)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "Option" : {
+      "id" : "Option",
+      "description" : "",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "syntax" : {
+          "type" : "string"
+        },
+        "queryParameter" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "dataset" : {
+      "id" : "dataset",
+      "description" : "",
+      "properties" : {
+        "sample" : {
+          "type" : "boolean"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "schema" : {
+          "type" : "string"
+        },
+        "namespace" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "lastRunResult" : {
+          "type" : "string"
+        },
+        "metadataFormat" : {
+          "type" : "string"
+        },
+        "marcFormat" : {
+          "type" : "string"
+        },
+        "maxRecord4Sample" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "RUNNING", "ERROR", "OK", "WARNING", "CANCELED", "PRE_PROCESSING", "POST_PROCESSING", "PRE_PROCESS_ERROR", "POST_PROCESS_ERROR" ]
+        }
+      }
+    },
+    "datasetOptions" : {
+      "id" : "datasetOptions",
+      "description" : "",
+      "required" : [ "option" ],
+      "properties" : {
+        "option" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Option"
+          }
+        }
+      }
+    },
+    "datasetTypeContainer" : {
+      "id" : "datasetTypeContainer",
+      "description" : "",
+      "properties" : {
+        "datasource" : {
+          "$ref" : "dataset"
+        },
+        "dataSourceType" : {
+          "type" : "string",
+          "enum" : [ "OAI", "Z3950", "DIR", "SRU" ]
+        }
+      }
+    }
+  }
+}

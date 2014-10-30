@@ -31,6 +31,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.mail.MessagingException;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -66,6 +72,7 @@ import pt.utl.ist.externalServices.ExternalServiceNoMonitor;
 import pt.utl.ist.externalServices.ExternalServiceStates;
 import pt.utl.ist.externalServices.ServiceParameter;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.statistics.RecordCount;
@@ -80,7 +87,11 @@ import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ibm.icu.util.Calendar;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import freemarker.template.TemplateException;
 
@@ -89,7 +100,15 @@ import freemarker.template.TemplateException;
  * ingest them. Known implementations are: DataSourceOai,
  * DataSourceDirectoryImporter
  */
+@XmlRootElement(name = "dataset")
+@XmlAccessorType(XmlAccessType.NONE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = OaiDataSource.class),
+})
+@ApiModel(value = "A Dataset")
 public abstract class DataSource {
+    @XmlEnum(String.class)
     public enum StatusDS {
         RUNNING, ERROR, OK, WARNING, CANCELED, PRE_PROCESSING, POST_PROCESSING, PRE_PROCESS_ERROR, POST_PROCESS_ERROR
     }
@@ -102,31 +121,69 @@ public abstract class DataSource {
     protected static final int                    RECORDS_BATCH_SIZE         = 1000;
     /** DataSource LAST_TASK_FILENAME */
     protected static final String                 LAST_TASK_FILENAME         = "lastTask.txt";
-    protected HashMap<String, AccessPoint>        accessPoints               = new HashMap<String, AccessPoint>(); // AccessPoints for this Data Source
-    protected Map<String, MetadataTransformation> metadataTransformations;                                        // Map of source -> destination MetadataFormat
-    protected List<ExternalRestService>           externalRestServices;
-    protected List<OldTask>                       oldTasksList               = new ArrayList<OldTask>();
+    @XmlElement
+    @ApiModelProperty(position = 1)
     protected String                              id;
+    @XmlElement
+    @ApiModelProperty(position = 2)
     protected String                              schema;
+    @XmlElement
+    @ApiModelProperty(position = 3)
     protected String                              namespace;
-    protected RecordIdPolicy                      recordIdPolicy;
+    @XmlElement
+    @ApiModelProperty(position = 4)
     protected String                              description;
-    protected StatusDS                            status;
+    @XmlElement
+    @ApiModelProperty(position = 5)
     protected String                              lastRunResult;
-    protected Date                                lastUpdate;
+    @XmlElement
+    @ApiModelProperty(position = 6)
     protected String                              metadataFormat;
+    @XmlElement
+    @ApiModelProperty(position = 7)
     protected String                              marcFormat;
-    protected boolean                             stopExecution              = false;
-    protected boolean                             forceStopExecution         = false;
+    @XmlElement
+    @ApiModelProperty(position = 8)
     protected int                                 maxRecord4Sample           = -1;
+    @XmlElement
+    @ApiModelProperty(position = 9)
     protected int                                 numberOfRecords2Harvest    = -1;
+    @XmlElement
+    @ApiModelProperty(position = 10)
     protected int                                 numberOfRecordsPerResponse = -1;
-    protected ArrayList<Long>                     statisticsHarvester        = new ArrayList<Long>();
-    protected ExternalServiceStates.ContainerType externalServicesRunType;
-    protected File                                exportDir;
+    @XmlElement
+    @ApiModelProperty(position = 11)
     protected boolean                             isSample                   = false;
+    @XmlElement
+    @ApiModelProperty(position = 12)
+    protected StatusDS                            status;
+
+    @ApiModelProperty(hidden = true)
+    protected File                                exportDir;
+    @ApiModelProperty(hidden = true)
+    protected Date                                lastUpdate;
+    @ApiModelProperty(hidden = true)
+    protected boolean                             stopExecution              = false;
+    @ApiModelProperty(hidden = true)
+    protected boolean                             forceStopExecution         = false;
+    @ApiModelProperty(hidden = true)
     protected int                                 lastIngestCount, lastIngestDeletedCount;
+    @ApiModelProperty(hidden = true)
     protected List<DataSourceTag>                 tags;
+    @ApiModelProperty(hidden = true)
+    protected HashMap<String, AccessPoint>        accessPoints               = new HashMap<String, AccessPoint>(); // AccessPoints for this Data Source
+    @ApiModelProperty(hidden = true)
+    protected Map<String, MetadataTransformation> metadataTransformations;                                        // Map of source -> destination MetadataFormat
+    @ApiModelProperty(hidden = true)
+    protected List<ExternalRestService>           externalRestServices;
+    @ApiModelProperty(hidden = true)
+    protected List<OldTask>                       oldTasksList               = new ArrayList<OldTask>();
+    @ApiModelProperty(hidden = true)
+    protected RecordIdPolicy                      recordIdPolicy;
+    @ApiModelProperty(hidden = true)
+    protected ExternalServiceStates.ContainerType externalServicesRunType;
+    @ApiModelProperty(hidden = true)
+    protected ArrayList<Long>                     statisticsHarvester        = new ArrayList<Long>();
 
     public int getMaxRecord4Sample() {
         return maxRecord4Sample;
@@ -169,7 +226,8 @@ public abstract class DataSource {
     }
 
     public List<ExternalRestService> getExternalRestServices() {
-        if (externalRestServices == null) externalRestServices = new ArrayList<ExternalRestService>();
+        if (externalRestServices == null)
+            externalRestServices = new ArrayList<ExternalRestService>();
         return externalRestServices;
     }
 
@@ -223,7 +281,8 @@ public abstract class DataSource {
     }
 
     public List<DataSourceTag> getTags() {
-        if (tags == null) tags = new ArrayList<DataSourceTag>();
+        if (tags == null)
+            tags = new ArrayList<DataSourceTag>();
         return tags;
     }
 
@@ -234,8 +293,11 @@ public abstract class DataSource {
     /**
      * Obtains the current status of this DataSource
      */
+    @ApiModelProperty(hidden = true)
     public String getStatusString() throws IOException {
-        if (status != null) { return status.toString(); }
+        if (status != null) {
+            return status.toString();
+        }
         return "";
     }
 
@@ -310,7 +372,8 @@ public abstract class DataSource {
      * @param recordIdPolicy
      * @param metadataTransformations
      */
-    public DataSource(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations) {
+    public DataSource(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, RecordIdPolicy recordIdPolicy,
+                      Map<String, MetadataTransformation> metadataTransformations) {
         this();
         this.id = id;
         this.description = description;
@@ -330,7 +393,9 @@ public abstract class DataSource {
 
     private void sendEmail(Task.Status exitStatus, File logFile) throws FileNotFoundException, MessagingException {
         String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
-        if (smtpServer == null || smtpServer.isEmpty()) { return; }
+        if (smtpServer == null || smtpServer.isEmpty()) {
+            return;
+        }
 
         String fromEmail = "repox@noreply.eu";
         String subject = "REPOX Data Source ingesting finished. Exit status: " + exitStatus.toString();
@@ -433,7 +498,8 @@ public abstract class DataSource {
 
         } catch (MessagingException e) {
             log.warn(e.getMessage(), e);
-            if (status != null && status == StatusDS.OK) status = StatusDS.WARNING;
+            if (status != null && status == StatusDS.OK)
+                status = StatusDS.WARNING;
             try {
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().saveData();
             } catch (IOException e1) {
@@ -519,7 +585,8 @@ public abstract class DataSource {
             int d = cal.get(GregorianCalendar.DATE);
             String mm = Integer.toString(m);
             String dd = Integer.toString(d);
-            String dateString = "" + cal.get(GregorianCalendar.YEAR) + "-" + (m < 10 ? "0" + mm : mm) + "-" + (d < 10 ? "0" + dd : dd) + " " + cal.get(GregorianCalendar.HOUR_OF_DAY) + ":" + cal.get(GregorianCalendar.MINUTE);
+            String dateString = "" + cal.get(GregorianCalendar.YEAR) + "-" + (m < 10 ? "0" + mm : mm) + "-" + (d < 10 ? "0" + dd : dd) + " " + cal.get(GregorianCalendar.HOUR_OF_DAY) + ":" + cal
+                    .get(GregorianCalendar.MINUTE);
 
             String logName = dataSource.getLogFilenames().get(0);
             String ingestType;
@@ -528,7 +595,8 @@ public abstract class DataSource {
             else
                 ingestType = "incrementalIngest";
 
-            OldTask newOldTask = new OldTask(dataSource, taskID, logName, ingestType, dataSource.getStatusString(), String.valueOf(retries), String.valueOf(maxRetries), String.valueOf(retryDelay), dateString, dataSource.getNumberRecords()[0]);
+            OldTask newOldTask = new OldTask(dataSource, taskID, logName, ingestType, dataSource.getStatusString(), String.valueOf(retries), String.valueOf(maxRetries), String.valueOf(retryDelay),
+                    dateString, dataSource.getNumberRecords()[0]);
 
             dataSource.getOldTasksList().add(newOldTask);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().saveOldTask(newOldTask);
@@ -573,6 +641,7 @@ public abstract class DataSource {
      * @throws DocumentException
      * @throws SQLException
      */
+    @ApiModelProperty(hidden = true)
     public String[] getNumberRecords() throws IOException, DocumentException, SQLException {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMAN);
         RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, getStatus() == StatusDS.RUNNING);
@@ -589,6 +658,7 @@ public abstract class DataSource {
      * @throws DocumentException
      * @throws SQLException
      */
+    @ApiModelProperty(hidden = true)
     public int getIntNumberRecords() throws IOException, DocumentException, SQLException {
         RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, getStatus() == StatusDS.RUNNING);
         return (dataSourceCount == null ? 0 : dataSourceCount.getCount());
@@ -600,6 +670,7 @@ public abstract class DataSource {
      * @throws DocumentException
      * @throws SQLException
      */
+    @ApiModelProperty(hidden = true)
     public int getIntNumberDeletedRecords() throws IOException, DocumentException, SQLException {
         RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, getStatus() == StatusDS.RUNNING);
         return (dataSourceCount == null ? 0 : dataSourceCount.getDeleted());
@@ -608,6 +679,7 @@ public abstract class DataSource {
     /**
      * @return List of log file names
      */
+    @ApiModelProperty(hidden = true)
     public List<String> getLogFilenames() {
         File logDir = getLogsDir();
         List<File> logDirnames = Arrays.asList(logDir.listFiles());
@@ -632,6 +704,7 @@ public abstract class DataSource {
     /**
      * @return File
      */
+    @ApiModelProperty(hidden = true)
     public File getOutputDir() {
         File outputDir = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath(), id);
         outputDir.mkdir();
@@ -641,6 +714,7 @@ public abstract class DataSource {
     /**
      * @return File of logs dircetory
      */
+    @ApiModelProperty(hidden = true)
     public File getLogsDir() {
         File logDir = new File(getOutputDir(), "logs");
         logDir.mkdir();
@@ -650,6 +724,7 @@ public abstract class DataSource {
     /**
      * @return File of tasks directory
      */
+    @ApiModelProperty(hidden = true)
     public File getTasksDir() {
         File tasksDir = new File(getOutputDir(), "tasks");
         tasksDir.mkdir();
@@ -675,6 +750,7 @@ public abstract class DataSource {
      * @return String of new task id
      * @throws IOException
      */
+    @ApiModelProperty(hidden = true)
     public String getNewTaskId() throws IOException {
         int nextId = getLastTaskId() + 1;
         setLastTaskId(nextId);
@@ -757,7 +833,9 @@ public abstract class DataSource {
     private boolean equalsAccessPoints(HashMap<String, AccessPoint> accessPoints) {
         if (this.accessPoints == null && accessPoints == null) {
             return true;
-        } else if (this.accessPoints == null || accessPoints == null || this.accessPoints.size() != accessPoints.size()) { return false; }
+        } else if (this.accessPoints == null || accessPoints == null || this.accessPoints.size() != accessPoints.size()) {
+            return false;
+        }
 
         Set<String> localAccessPointsIds = this.accessPoints.keySet();
         Set<String> otherAccessPointsIds = accessPoints.keySet();
@@ -770,7 +848,9 @@ public abstract class DataSource {
      * @return boolean
      */
     protected boolean equalsBaseProperties(DataSource dataSource) {
-        return CompareUtil.compareObjectsAndNull(this.id, dataSource.getId()) && CompareUtil.compareObjectsAndNull(this.status, dataSource.getStatus()) && CompareUtil.compareObjectsAndNull(this.lastRunResult, dataSource.getLastRunResult()) && CompareUtil.compareObjectsAndNull(this.lastUpdate, dataSource.getLastUpdate()) && this.equalsAccessPoints(dataSource.getAccessPoints());
+        return CompareUtil.compareObjectsAndNull(this.id, dataSource.getId()) && CompareUtil.compareObjectsAndNull(this.status, dataSource.getStatus()) && CompareUtil.compareObjectsAndNull(
+                this.lastRunResult, dataSource.getLastRunResult()) && CompareUtil.compareObjectsAndNull(this.lastUpdate, dataSource.getLastUpdate()) && this.equalsAccessPoints(dataSource
+                .getAccessPoints());
     }
 
     /**
@@ -808,11 +888,13 @@ public abstract class DataSource {
     /**
      * @return boolean
      */
+    @ApiModelProperty(hidden = true)
     public abstract boolean isWorking();
 
     /**
      * @return The class of the local IDs of this Data Source.
      */
+    @ApiModelProperty(hidden = true)
     public Class getClassOfLocalId() {
         return String.class;
     }
@@ -823,8 +905,11 @@ public abstract class DataSource {
      * @param syncDateFile
      * @return String of the synchronization date
      */
+    @ApiModelProperty(hidden = true)
     public String getSynchronizationDate(File syncDateFile) {
-        if (!syncDateFile.exists()) { return ""; }
+        if (!syncDateFile.exists()) {
+            return "";
+        }
         String dateString = FileUtilSecond.readFile(syncDateFile, 0);
         try {
             return dateString;
@@ -837,6 +922,7 @@ public abstract class DataSource {
      * @return String of the synchronization date
      * @throws IOException
      */
+    @ApiModelProperty(hidden = true)
     public String getSynchronizationDateString() throws IOException {
         return DateUtil.date2String(lastUpdate, TimeUtil.LONG_DATE_FORMAT);
     }
@@ -844,9 +930,12 @@ public abstract class DataSource {
     /**
      * @return Get a sample number
      */
+    @ApiModelProperty(hidden = true)
     public int getSampleNumber() {
         File syncDateFile = getSyncDateFile();
-        if (!syncDateFile.exists()) { return -1; }
+        if (!syncDateFile.exists()) {
+            return -1;
+        }
         String sample = FileUtilSecond.readFile(syncDateFile, 1);
         return Integer.valueOf(sample);
     }
@@ -856,7 +945,9 @@ public abstract class DataSource {
      * @return Get a sample number
      */
     public int getSampleNumber(File syncDateFile) {
-        if (!syncDateFile.exists()) { return -1; }
+        if (!syncDateFile.exists()) {
+            return -1;
+        }
         String sample = FileUtilSecond.readFile(syncDateFile, 1);
         try {
             return Integer.valueOf(sample);
@@ -868,6 +959,7 @@ public abstract class DataSource {
     /**
      * @return File
      */
+    @ApiModelProperty(hidden = true)
     public File getSyncDateFile() {
         return new File(getOutputDir(), "synchronization-date.txt");
     }
@@ -891,6 +983,7 @@ public abstract class DataSource {
     /**
      * @return File
      */
+    @ApiModelProperty(hidden = true)
     public File getDataSourceDir() {
         return getDataSourceDir(id);
     }
@@ -910,6 +1003,7 @@ public abstract class DataSource {
      * @param dataSourceId
      * @return File
      */
+    @ApiModelProperty(hidden = true)
     public File getDataSourceLogsDir(String dataSourceId) {
         File logDir = new File(getDataSourceDir(dataSourceId), "logs");
         logDir.mkdir();
@@ -921,6 +1015,7 @@ public abstract class DataSource {
      * @param startDate
      * @return File
      */
+    @ApiModelProperty(hidden = true)
     public File getNewDataSourceLogFile(String dataSourceId, Date startDate) {
         String currentTime = new SimpleDateFormat(TimeUtil.LONG_DATE_FORMAT_COMPACT).format(startDate);
         return new File(getDataSourceLogsDir(dataSourceId), currentTime + ".log");
@@ -1002,7 +1097,8 @@ public abstract class DataSource {
             sourceElement.addAttribute("id", getId());
             sourceElement.addAttribute("metadataFormat", getMetadataFormat());
 
-            if (getMarcFormat() != null && !getMarcFormat().isEmpty()) sourceElement.addAttribute("marcFormat", getMarcFormat());
+            if (getMarcFormat() != null && !getMarcFormat().isEmpty())
+                sourceElement.addAttribute("marcFormat", getMarcFormat());
 
             sourceElement.addAttribute("schema", getSchema());
             sourceElement.addAttribute("namespace", getNamespace());
@@ -1011,7 +1107,10 @@ public abstract class DataSource {
             sourceElement.addAttribute("sample", String.valueOf(getMaxRecord4Sample()));
             sourceElement.addAttribute("status", getStatus() != null ? getStatus().toString() : "");
             sourceElement.addElement("description").setText(getDescription());
-            sourceElement.addElement("exportDirPath").setText(getExportDir() != null ? getExportDir().getAbsolutePath() : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + "/" + getId() + "/" + "export");
+            sourceElement
+                    .addElement("exportDirPath")
+                    .setText(
+                            getExportDir() != null ? getExportDir().getAbsolutePath() : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + "/" + getId() + "/" + "export");
 
             Element recordIdPolicyNode = sourceElement.addElement("recordIdPolicy");
             recordIdPolicyNode.addAttribute("type", getRecordIdPolicy().getClass().getSimpleName());
@@ -1048,7 +1147,8 @@ public abstract class DataSource {
 
             //Add ExternalServices
             Element externalServicesNode = sourceElement.addElement("restServices");
-            if (externalServicesRunType != null && getExternalRestServices().size() > 0) externalServicesNode.addAttribute("executeType", externalServicesRunType.name());
+            if (externalServicesRunType != null && getExternalRestServices().size() > 0)
+                externalServicesNode.addAttribute("executeType", externalServicesRunType.name());
             if (getExternalRestServices().size() > 0) {
                 for (ExternalRestService externalRestService : getExternalRestServices()) {
                     if (externalRestService != null) {
@@ -1096,10 +1196,13 @@ public abstract class DataSource {
         }
     }
 
+    @ApiModelProperty(hidden = true)
     public abstract int getTotalRecords2Harvest();
 
+    @ApiModelProperty(hidden = true)
     public abstract String getNumberOfRecords2HarvestStr();
 
+    @ApiModelProperty(hidden = true)
     public abstract int getRecordsPerResponse();
 
     public abstract List<Long> getStatisticsHarvester();
@@ -1107,6 +1210,7 @@ public abstract class DataSource {
     /**
      * @return percentage
      */
+    @ApiModelProperty(hidden = true)
     public float getPercentage() {
         try {
             if (getTotalRecords2Harvest() == 0)
@@ -1122,6 +1226,7 @@ public abstract class DataSource {
     /**
      * @return time left
      */
+    @ApiModelProperty(hidden = true)
     public long getTimeLeft() {
         try {
             int recordsLeft = getTotalRecords2Harvest() - getIntNumberRecords();
@@ -1158,7 +1263,8 @@ public abstract class DataSource {
                 status = StatusDS.POST_PROCESSING;
 
             // Special case for only 1 post_process no monitor process
-            if (type.equals("POST_PROCESS") && runNoMonitorProcesses(logFile)) return ExternalServiceStates.ServiceExitState.SUCCESS;
+            if (type.equals("POST_PROCESS") && runNoMonitorProcesses(logFile))
+                return ExternalServiceStates.ServiceExitState.SUCCESS;
 
             if (containsExternalServicesOfType(type)) {
                 ExternalRestServiceContainer externalRestServiceContainer = new ExternalRestServiceContainer(externalServicesRunType);
@@ -1226,7 +1332,9 @@ public abstract class DataSource {
      */
     public boolean hasTransformation(String format) {
         for (MetadataTransformation metadataTransformation : getMetadataTransformations().values()) {
-            if (metadataTransformation.getDestinationFormat().equals(format)) { return true; }
+            if (metadataTransformation.getDestinationFormat().equals(format)) {
+                return true;
+            }
         }
         return false;
     }
@@ -1236,7 +1344,8 @@ public abstract class DataSource {
      */
     protected void addDeletedRecords(List<RecordRepox> batchRecords) {
         for (RecordRepox recordRepox : batchRecords) {
-            if (recordRepox.isDeleted()) lastIngestDeletedCount++;
+            if (recordRepox.isDeleted())
+                lastIngestDeletedCount++;
         }
     }
 

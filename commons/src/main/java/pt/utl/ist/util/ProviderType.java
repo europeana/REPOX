@@ -22,12 +22,12 @@
 package pt.utl.ist.util;
 
 import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlType;
 
 /**
+ * Data provider types.
+ * 
  * @author Nicola Aloia   <nicola.aloia@isti.cnr.it>
- *         Date: 22-mar-2010
- *         Time: 17.50.50
+ * @since Mar 22, 2010
  */
 @XmlEnum(String.class)
 public enum ProviderType {

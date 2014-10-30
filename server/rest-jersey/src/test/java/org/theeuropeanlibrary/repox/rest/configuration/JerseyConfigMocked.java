@@ -12,6 +12,7 @@ import org.theeuropeanlibrary.repox.rest.exceptionMappers.InternalServerErrorExc
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.InvalidArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.MissingArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource;
+import org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource;
 import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -42,8 +43,10 @@ public class JerseyConfigMocked extends ResourceConfig {
         //Register resource with mocks
         AggregatorsResource ar = new AggregatorsResource(dataManager);
         ProvidersResource pr = new ProvidersResource(dataManager);
+        DatasetsResource dr = new DatasetsResource(dataManager);
         register(ar);
         register(pr);
+        register(dr);
     }
 
     /**

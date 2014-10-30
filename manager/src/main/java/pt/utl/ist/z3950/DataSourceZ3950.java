@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -24,8 +26,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "z3950Datasource")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "A z3950Dataset")
 public class DataSourceZ3950 extends DataSource {
     private static final Logger log = Logger.getLogger(DataSourceZ3950.class);
 

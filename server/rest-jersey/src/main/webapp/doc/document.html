@@ -261,6 +261,67 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 
 
 - - -
+### /datasets
+
+#### **OPTIONS** `/datasets`
+##### getOptions 
+
+Get options over datasets conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets
+###### Parameters
+
+###### Response
+[datasetOptions](#datasetOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **GET** `/datasets/{datasetId}`
+##### getDataset 
+
+Get specific dataset.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets/{datasetId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>datasetId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of dataset</td>
+    </tr>
+</table>
+
+###### Response
+[datasetTypeContainer](#datasetTypeContainer)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing an Dataset) | - |
+| 404    | DoesNotExistException | - |
+
+
+- - -
 ### /options
 
 #### **OPTIONS** `/options`
@@ -289,7 +350,7 @@ http://localhost:8080/repox/rest/options
 #### **OPTIONS** `/providers`
 ##### getOptions 
 
-Get options over provider conext.
+Get options over providers conext.
 
 
 ###### URL
@@ -304,6 +365,57 @@ http://localhost:8080/repox/rest/providers
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of aggregators) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -361,57 +473,6 @@ http://localhost:8080/repox/rest/providers
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
-
-
-- - -
-#### **GET** `/providers`
-##### getProviderList 
-
-Get a list of providers.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[dataprovider]](#dataprovider)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of aggregators) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -753,6 +814,139 @@ http://localhost:8080/repox/rest/providers/{providerId}
         <td>optional</td>
         <td>-</td>
         <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="dataset">dataset</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>sample</td>
+        <td>boolean</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>id</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>schema</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>namespace</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>description</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>lastRunResult</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>metadataFormat</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>marcFormat</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>maxRecord4Sample</td>
+        <td>int</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>status</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>RUNNING, ERROR, OK, WARNING, CANCELED, PRE_PROCESSING, POST_PROCESSING, PRE_PROCESS_ERROR, POST_PROCESS_ERROR</td>
+    </tr>
+</table>
+
+
+
+## <a name="datasetOptions">datasetOptions</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>option</td>
+        <td><a href="#Option">Array[Option]</a></td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="datasetTypeContainer">datasetTypeContainer</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>datasource</td>
+        <td><a href="#dataset">dataset</a></td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>dataSourceType</td>
+        <td>string</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>OAI, Z3950, DIR, SRU</td>
     </tr>
 </table>
 

@@ -26,28 +26,28 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "A Provider")
 public class DataProvider {
     @XmlElement
-    @ApiModelProperty(required = false, position = 0)
+    @ApiModelProperty(position = 1)
     private String                               id;
     @XmlElement
-    @ApiModelProperty(required = true, position = 1)
+    @ApiModelProperty(position = 2, required = true)
     private String                               name;
     @XmlElement
-    @ApiModelProperty(required = true, position = 2)
+    @ApiModelProperty(position = 3, required = true)
     private String                               country;
     @XmlElement
-    @ApiModelProperty(required = false, position = 3)
+    @ApiModelProperty(position = 4)
     private String                               description;
     @XmlElement
-    @ApiModelProperty(required = false, position = 4)
+    @ApiModelProperty(position = 5)
     private String                               nameCode;
     @XmlElement
-    @ApiModelProperty(required = false, position = 5)
+    @ApiModelProperty(position = 6)
     private String                               homepage;
     @XmlElement
-    @ApiModelProperty(required = true, position = 6)
+    @ApiModelProperty(position = 7, required = true)
     private ProviderType                         providerType;
     @XmlElement
-    @ApiModelProperty(required = false, position = 7)
+    @ApiModelProperty(position = 8)
     private String                               email;
 
     @XmlTransient
