@@ -76,31 +76,24 @@ public class DatasetsResourceTest extends JerseyTest {
 //    @Ignore
     public void testGetDataset() throws DocumentException, IOException {
         String datasetId = "SampleId";
-        OaiDataSource oaiDataSource = new OaiDataSource(null, "someId", "description", "schem", "namesp", "format", "oaiURL", "set",  null, null);
+        OaiDataSource oaiDataSource = new OaiDataSource(null, "SampleId", "description", "schem", "namesp", "format", "oaiURL", "set",  null, null);
         oaiDataSource.setStatus(StatusDS.OK);
         //Mocking
         when(dataManager.getDataSourceContainer(datasetId))
-        .thenReturn(new DefaultDataSourceContainer(oaiDataSource, null, null, null));
+        .thenReturn(new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", null)).thenReturn(null);
 
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
 
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        Response response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(200, response.getStatus());
         DatasetTypeContainer datasetTypeContainer = response.readEntity(DatasetTypeContainer.class);
 
         if(datasetTypeContainer.getDataSourceType() == DataSourceType.OAI)
-            System.out.println(((OaiDataSource)datasetTypeContainer.getDatasource()).getNamespace());
-
-//        System.out.println(response.readEntity(String.class));
+            assertEquals(((OaiDataSource)datasetTypeContainer.getDatasource()).getId(), datasetId);
         
-
-//        //Check Errors
-//        //Check get xml working with 404 status
-//        target = target("/" + ProviderOptionListContainer.PROVIDERS + "/" + "FakeAggregatorId");
-//        response = target.request(MediaType.APPLICATION_XML).get();
-//        assertEquals(404, response.getStatus());
-//        //Check get xml working with 404 status
-//        response = target.request(MediaType.APPLICATION_JSON).get();
-//        assertEquals(404, response.getStatus());
+        //Check Errors
+        //Check get json working with 404 status
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(404, response.getStatus());
     }
 }

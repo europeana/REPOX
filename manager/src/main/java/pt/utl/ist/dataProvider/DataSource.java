@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -106,6 +106,7 @@ import freemarker.template.TemplateException;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OaiDataSource.class),
 })
+@XmlSeeAlso({ OaiDataSource.class })
 @ApiModel(value = "A Dataset")
 public abstract class DataSource {
     @XmlEnum(String.class)
@@ -1196,10 +1197,8 @@ public abstract class DataSource {
         }
     }
 
-    @ApiModelProperty(hidden = true)
     public abstract int getTotalRecords2Harvest();
 
-    @ApiModelProperty(hidden = true)
     public abstract String getNumberOfRecords2HarvestStr();
 
     @ApiModelProperty(hidden = true)

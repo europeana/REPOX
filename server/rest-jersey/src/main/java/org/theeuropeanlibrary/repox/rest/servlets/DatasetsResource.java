@@ -16,14 +16,11 @@ import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.data.DataSourceType;
 import org.theeuropeanlibrary.repox.rest.data.DatasetTypeContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
-import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 
 import com.wordnik.swagger.annotations.Api;
@@ -96,16 +93,13 @@ public class DatasetsResource {
             @ApiResponse(code = 404, message = "DoesNotExistException") })
     public DatasetTypeContainer getDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException, DocumentException, IOException {
         
-        
         DataSourceContainer datasourceContainer = null;
         datasourceContainer = dataManager.getDataSourceContainer(datasetId);
-//        if (datasource == null)
-//            throw new DoesNotExistException("Provider with id " + providerId + " does NOT exist!");
-        
+        if (datasourceContainer == null)
+            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
 
         DatasetTypeContainer datasetTypeContainer = new DatasetTypeContainer(datasourceContainer.getDataSource(), DataSourceType.OAI);
         return datasetTypeContainer;
-//        return null;
     }
 
 }
