@@ -374,7 +374,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
 
     public String getExportPath(String dataSourceID) throws ServerSideException{
         try {
-            File exportFile = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceID).getDataSource().getExportDir();
+            File exportFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceID).getDataSource().getExportDir());
 
             if(exportFile == null)
                 return "NOT_FOUND";

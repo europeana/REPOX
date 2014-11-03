@@ -2993,7 +2993,7 @@ public class DefaultDataManager implements DataManager {
         DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
-            File exportDir = new File(dataSource.getExportDir().getAbsolutePath());
+            File exportDir = new File(dataSource.getExportDir());
             FileUtils.forceMkdir(exportDir);
 
             if (recordsPerFile.equals("All"))

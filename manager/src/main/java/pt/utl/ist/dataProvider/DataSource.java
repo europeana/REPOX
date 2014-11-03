@@ -113,7 +113,7 @@ import freemarker.template.TemplateException;
         @JsonSubTypes.Type(value = DataSourceZ3950.class, name = "Z3950"),
         @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
 })
-@XmlSeeAlso({ OaiDataSource.class})
+@XmlSeeAlso({ OaiDataSource.class })
 @ApiModel(value = "A Dataset")
 public abstract class DataSource {
     @XmlEnum(String.class)
@@ -165,9 +165,10 @@ public abstract class DataSource {
     @XmlElement
     @ApiModelProperty(position = 12)
     protected StatusDS                            status;
-
-    @ApiModelProperty(hidden = true)
-    protected File                                exportDir;
+    @XmlElement
+    @ApiModelProperty(position = 13)
+    protected String                              exportDir;
+    
     @ApiModelProperty(hidden = true)
     protected Date                                lastUpdate;
     @ApiModelProperty(hidden = true)
@@ -740,9 +741,9 @@ public abstract class DataSource {
     }
 
     /**
-     * @return File of export drectory
+     * @return File of export directory
      */
-    public File getExportDir() {
+    public String getExportDir() {
         return exportDir;
     }
 
@@ -750,7 +751,8 @@ public abstract class DataSource {
      * @param exportDirPath
      */
     public void setExportDir(String exportDirPath) {
-        exportDir = new File(exportDirPath);
+        File file = new File(exportDirPath);
+        exportDir = exportDirPath;
         //        exportDir.mkdir();
     }
 
@@ -1118,7 +1120,7 @@ public abstract class DataSource {
             sourceElement
                     .addElement("exportDirPath")
                     .setText(
-                            getExportDir() != null ? getExportDir().getAbsolutePath() : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + "/" + getId() + "/" + "export");
+                            getExportDir() != null ? getExportDir() : ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getRepositoryPath() + "/" + getId() + "/" + "export");
 
             Element recordIdPolicyNode = sourceElement.addElement("recordIdPolicy");
             recordIdPolicyNode.addAttribute("type", getRecordIdPolicy().getClass().getSimpleName());

@@ -173,7 +173,7 @@ public class TaskManagementServiceImpl extends RemoteServiceServlet implements T
                     scheduledTaskUI.createDateString(1);
                     scheduledTaskUI.setScheduleType("Data Set Export");
                     DataSourceContainer dataSourceContainer = RepoxServiceImpl.getRepoxManager().getDataManager().getDataSourceContainer(dataSetId);
-                    String exportDir = dataSourceContainer.getDataSource().getExportDir().getAbsolutePath();
+                    String exportDir = dataSourceContainer.getDataSource().getExportDir();
                     scheduledTaskUI.setParameters("Data Set: " + dataSetId + " -- Folder: " + exportDir);
                     scheduledTaskUI.setRecordsPerFile(recordsPerFile);
                     scheduledTaskUI.setExportDirectory(exportDirectory);

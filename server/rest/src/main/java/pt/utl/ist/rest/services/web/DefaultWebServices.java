@@ -744,7 +744,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -809,7 +809,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -907,7 +907,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1114,7 +1114,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1285,7 +1285,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1469,7 +1469,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1662,7 +1662,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)
@@ -1842,7 +1842,7 @@ public class DefaultWebServices implements WebServices {
                 if(name == null)
                     name = dataSourceContainerOld.getName();
                 if(exportPath == null)
-                    exportPath = dataSourceOld.getExportDir().getAbsolutePath();
+                    exportPath = dataSourceOld.getExportDir();
                 if(schema == null)
                     schema = dataSourceOld.getSchema();
                 if(namespace == null)

@@ -497,7 +497,7 @@ public class EuDMLAndLightManager extends ProjectManager {
 
         newDataSourceUI.setType(dataProviderUI.getType());
 
-        newDataSourceUI.setExportDirectory(dataSource.getExportDir() != null ? dataSource.getExportDir().getAbsolutePath() : "");
+        newDataSourceUI.setExportDirectory(dataSource.getExportDir() != null ? dataSource.getExportDir() : "");
 
         String marcFormat = dataSource.getMarcFormat();
         if(marcFormat != null && !marcFormat.isEmpty())

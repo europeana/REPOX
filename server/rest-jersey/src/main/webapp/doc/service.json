@@ -8,11 +8,11 @@
     "path" : "/providers.{format}",
     "description" : "Rest api for providers"
   }, {
-    "path" : "/datasets.{format}",
-    "description" : "Rest api for datasets"
-  }, {
     "path" : "/options.{format}",
     "description" : "Rest api for options context"
+  }, {
+    "path" : "/datasets.{format}",
+    "description" : "Rest api for datasets"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",

@@ -2585,7 +2585,7 @@ public class LightDataManager implements DataManager {
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
 
-            FileUtils.forceMkdir(dataSource.getExportDir());
+            FileUtils.forceMkdir(new File(dataSource.getExportDir()));
 
             if (metadataExportFormat == null) {
                 // this is a non mandatory field for REST (if it is not defined by user, it uses the default format)
@@ -2594,7 +2594,7 @@ public class LightDataManager implements DataManager {
 
             if (recordsPerFile.equals("All")) recordsPerFile = "-1";
 
-            Task exportTask = new DataSourceExportTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), dataSource.getExportDir().getAbsolutePath(), recordsPerFile, metadataExportFormat);
+            Task exportTask = new DataSourceExportTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), dataSource.getExportDir(), recordsPerFile, metadataExportFormat);
 
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(exportTask)) { throw new AlreadyExistsException(dataSourceId); }
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(exportTask);
