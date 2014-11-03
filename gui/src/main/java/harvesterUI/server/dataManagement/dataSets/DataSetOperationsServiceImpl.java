@@ -262,7 +262,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             if((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
                     && dataSource.getStatusString().equals("RUNNING")) {
                 try{
-                    data.set("totalRecordNum",dataSource.getTotalRecords2Harvest());
+                    data.set("totalRecordNum",dataSource.getNumberOfRecords2Harvest());
                     data.set("totalRecordNumStr",dataSource.getNumberOfRecords2HarvestStr());
                     data.set("ingestPercentage", dataSource.getPercentage());
                     data.set("ingestTimeLeft", dataSource.getTimeLeft());

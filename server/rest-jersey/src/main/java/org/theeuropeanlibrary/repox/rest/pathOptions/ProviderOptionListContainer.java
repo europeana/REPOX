@@ -19,7 +19,7 @@ import com.wordnik.swagger.annotations.ApiModel;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 24, 2014
  */
-@XmlRootElement(name = "providerOptions")
+@XmlRootElement(name = "ProviderOptions")
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An Option List container")
 public class ProviderOptionListContainer extends OptionListContainer {

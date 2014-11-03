@@ -216,7 +216,7 @@ public class RepoxDataExchangeManager {
             if((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
                     && dataSource.getStatusString().equals("RUNNING")) {
                 try{
-                    newDataSourceUI.setTotalRecords(dataSource.getTotalRecords2Harvest());
+                    newDataSourceUI.setTotalRecords(dataSource.getNumberOfRecords2Harvest());
                     newDataSourceUI.setTotalRecordsStr(dataSource.getNumberOfRecords2HarvestStr());
                     newDataSourceUI.setIngestPercentage(dataSource.getPercentage());
                     newDataSourceUI.setIngestTimeLeft(dataSource.getTimeLeft());

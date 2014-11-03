@@ -4,21 +4,6 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/datasets",
   "apis" : [ {
-    "path" : "/datasets",
-    "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over datasets conext.",
-      "notes" : "",
-      "type" : "datasetOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
-      } ]
-    } ]
-  }, {
     "path" : "/datasets/{datasetId}",
     "operations" : [ {
       "method" : "GET",
@@ -43,6 +28,21 @@
         "message" : "DoesNotExistException"
       } ]
     } ]
+  }, {
+    "path" : "/datasets",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over datasets conext.",
+      "notes" : "",
+      "type" : "DatasetOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
   } ],
   "models" : {
     "Option" : {
@@ -59,6 +59,19 @@
           "type" : "array",
           "items" : {
             "type" : "string"
+          }
+        }
+      }
+    },
+    "DatasetOptions" : {
+      "id" : "DatasetOptions",
+      "description" : "",
+      "required" : [ "option" ],
+      "properties" : {
+        "option" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Option"
           }
         }
       }
@@ -95,22 +108,17 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfRecords2Harvest" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "numberOfRecordsPerResponse" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "status" : {
           "type" : "string",
           "enum" : [ "RUNNING", "ERROR", "OK", "WARNING", "CANCELED", "PRE_PROCESSING", "POST_PROCESSING", "PRE_PROCESS_ERROR", "POST_PROCESS_ERROR" ]
-        }
-      }
-    },
-    "datasetOptions" : {
-      "id" : "datasetOptions",
-      "description" : "",
-      "required" : [ "option" ],
-      "properties" : {
-        "option" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "Option"
-          }
         }
       }
     },

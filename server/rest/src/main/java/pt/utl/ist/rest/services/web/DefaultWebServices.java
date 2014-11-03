@@ -2174,7 +2174,7 @@ public class DefaultWebServices implements WebServices {
                         harvestingStatus.add(percentageMessage);
                     }
 
-                    float totalRecords = dataSource.getTotalRecords2Harvest();
+                    float totalRecords = dataSource.getNumberOfRecords2Harvest();
                     if(totalRecords > 0){
                         Element recordsMessage = DocumentHelper.createElement("records");
                         try {

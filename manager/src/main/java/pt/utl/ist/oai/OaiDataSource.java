@@ -1,14 +1,34 @@
 package pt.utl.ist.oai;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.transform.TransformerConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.oclc.oai.harvester.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
-
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
@@ -26,17 +46,8 @@ import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.transform.TransformerConfigurationException;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.util.*;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  * Implementation of a DataSource that makes requests to a OAI-PMH Provider and
@@ -45,14 +56,15 @@ import java.util.*;
 @XmlRootElement(name = "OaiDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An OaiDataset")
+//@XmlType(name="some_item")
 public class OaiDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(OaiDataSource.class);
 
     @XmlElement
-    @ApiModelProperty(position = 0)
+    @ApiModelProperty(position = 1)
     private String               oaiSourceURL;
     @XmlElement
-    @ApiModelProperty(position = 1)
+    @ApiModelProperty(position = 2)
     private String               oaiSet;
 
     private FileRetrieveStrategy retrieveStrategy;
@@ -380,7 +392,7 @@ public class OaiDataSource extends DataSource {
     }
 
     @Override
-    public int getTotalRecords2Harvest() {
+    public int getNumberOfRecords2Harvest() {
         return numberOfRecords2Harvest;
     }
 
@@ -392,7 +404,7 @@ public class OaiDataSource extends DataSource {
     }
 
     @Override
-    public int getRecordsPerResponse() {
+    public int getNumberOfRecordsPerResponse() {
         return numberOfRecordsPerResponse;
     }
 

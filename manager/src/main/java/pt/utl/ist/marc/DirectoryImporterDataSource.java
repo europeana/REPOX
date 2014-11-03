@@ -51,13 +51,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DirectoryImporterDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(DirectoryImporterDataSource.class);
 
-    private FileExtractStrategy  extractStrategy;
+    private String               idTypePolicy;
     private FileRetrieveStrategy retrieveStrategy;
-    private CharacterEncoding    characterEncoding;
     private String               sourcesDirPath;
     private String               recordXPath;
+    
     private Map<String, String>  namespaces;
-    private String               idTypePolicy;
+    
+    private CharacterEncoding    characterEncoding;
+    private FileExtractStrategy  extractStrategy;
 
     public String getIdTypePolicy() {
         return idTypePolicy;
@@ -627,7 +629,7 @@ public class DirectoryImporterDataSource extends DataSource {
     }
 
     @Override
-    public int getTotalRecords2Harvest() {
+    public int getNumberOfRecords2Harvest() {
         try {
             if (numberOfRecords2Harvest == -1) {
                 File sourcesDir = new File(sourcesDirPath);
@@ -664,12 +666,12 @@ public class DirectoryImporterDataSource extends DataSource {
     @Override
     public String getNumberOfRecords2HarvestStr() {
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.GERMAN);
-        return numberFormat.format(getTotalRecords2Harvest());
+        return numberFormat.format(getNumberOfRecords2Harvest());
         //        return String.valueOf(new File(sourcesDirPath).listFiles().length);
     }
 
     @Override
-    public int getRecordsPerResponse() {
+    public int getNumberOfRecordsPerResponse() {
         return RECORDS_BATCH_SIZE;
     }
 

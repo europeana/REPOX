@@ -59,7 +59,7 @@ public class SruRecordUpdateDataSource extends DataSource {
     }
 
     @Override
-    public int getTotalRecords2Harvest() {
+    public int getNumberOfRecords2Harvest() {
         return 0;
     }
 
@@ -69,7 +69,7 @@ public class SruRecordUpdateDataSource extends DataSource {
     }
 
     @Override
-    public int getRecordsPerResponse() {
+    public int getNumberOfRecordsPerResponse() {
         return 1;
     }
 

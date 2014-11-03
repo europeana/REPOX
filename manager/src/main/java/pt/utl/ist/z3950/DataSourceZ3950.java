@@ -262,7 +262,7 @@ public class DataSourceZ3950 extends DataSource {
     }
 
     @Override
-    public int getTotalRecords2Harvest() {
+    public int getNumberOfRecords2Harvest() {
         return 0;
     }
 
@@ -272,7 +272,7 @@ public class DataSourceZ3950 extends DataSource {
     }
 
     @Override
-    public int getRecordsPerResponse() {
+    public int getNumberOfRecordsPerResponse() {
         return -1;
     }
 

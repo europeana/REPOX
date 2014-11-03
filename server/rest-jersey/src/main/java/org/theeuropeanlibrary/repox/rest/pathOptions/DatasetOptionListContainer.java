@@ -18,7 +18,7 @@ import com.wordnik.swagger.annotations.ApiModel;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 30, 2014
  */
-@XmlRootElement(name = "datasetOptions")
+@XmlRootElement(name = "DatasetOptions")
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "An Option List container")
 public class DatasetOptionListContainer extends OptionListContainer {
