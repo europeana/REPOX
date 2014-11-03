@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
@@ -121,7 +123,7 @@ public class DatasetsResource {
      * Create an dataset provided in the body of the post call.
      * Relative path : /datasets
      * @param providerId 
-     * @param dataSource 
+     * @param dataSourceContainer 
      * @return OK or Error Message
      * @throws MissingArgumentsException 
      * @throws AlreadyExistsException 
@@ -135,11 +137,12 @@ public class DatasetsResource {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 406, message = "MissingArgumentsException"),
             @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
-    public Response createProvider(@ApiParam(value = "ProviderId", required = true) @QueryParam("providerId") String providerId,
-            @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException,
+    public Response createDataset(@ApiParam(value = "ProviderId", required = true) @QueryParam("providerId") String providerId,
+            @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws AlreadyExistsException, MissingArgumentsException, InvalidArgumentsException,
             DoesNotExistException {
 
         if (providerId == null || providerId.equals(""))
@@ -161,63 +164,42 @@ public class DatasetsResource {
             String marcFormat = dataSource.getMarcFormat();
             Map<String, MetadataTransformation> metadataTransformations = null;
             List<ExternalRestService> externalRestServices = null;
+            
+            if (id == null || id.isEmpty())
+                throw new MissingArgumentsException("Invalid value: " + "Dataset id must not be empty");
+            else if (schema == null || schema.equals(""))
+                throw new MissingArgumentsException("Invalid value: " + "Dataset schema must not be empty");
+            else if (namespace == null || namespace.equals(""))
+                throw new MissingArgumentsException("Invalid value: " + "Dataset namespace must not be empty");
 
             if (dataSource instanceof OaiDataSource)
             {
                 OaiDataSource oaiDataSource = (OaiDataSource)dataSource;
                 String oaiSourceURL = oaiDataSource.getOaiSourceURL();
                 String oaiSet = oaiDataSource.getOaiSet();
+                
+                if (oaiSourceURL == null || oaiSourceURL.isEmpty())
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset oaiSourceURL must not be empty");
+                else if (oaiSet == null || oaiSet.equals(""))
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset oaiSet must not be empty");
 
                 try {
-                    dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, metadataTransformations, externalRestServices, marcFormat);
-                } catch (DocumentException e) {
-                    throw new RuntimeException("Caused by DocumentException", e);
-                } catch (IOException e) {
-                    throw new RuntimeException("Caused by IOException", e);
+                    dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
+                            oaiSourceURL, oaiSet, metadataTransformations,
+                            externalRestServices, marcFormat);
+                } catch (InvalidArgumentsException e) {
+                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
-                    throw new RuntimeException("Caused by ObjectNotFoundException", e);
-                } catch (SQLException e) {
-                    throw new RuntimeException("Caused by SQLException", e);
+                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                } catch (AlreadyExistsException e) {
+                    throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                } catch (SQLException | DocumentException | IOException e) {
+                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
                 }
             }
+            return Response.created(null).entity(new Result("DataProvider with id = " + id + " and name = " + name + " created successfully")).build();
         }
-
         return null;
-
-        //
-        //        String providerId = provider.getId();
-        //        String name = provider.getName();
-        //        String country = provider.getCountry();
-        //        String description = provider.getDescription();
-        //        String nameCode = provider.getNameCode();
-        //        String homepage = provider.getHomepage();
-        //        String providerType = null;
-        //        if (provider.getProviderType() != null)
-        //            providerType = provider.getProviderType().toString();
-        //        String email = provider.getEmail();
-        //
-        //        if (name == null || name.isEmpty())
-        //            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty");
-        //        else if (country == null || country.equals(""))
-        //            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty");
-        //        else if (providerType == null || providerType.equals(""))
-        //            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
-        //
-        //        DataProvider createdProvider = null;
-        //
-        //        try {
-        //            createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, providerType, email);
-        //        } catch (IOException e) {
-        //            throw new InternalServerErrorException("Error in server : " + e.getMessage());
-        //        } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-        //            throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-        //        } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with the same Id 
-        //            throw new AlreadyExistsException("Provider with id " + e.getMessage() + " already exists!");
-        //        } catch (ObjectNotFoundException e) {
-        //            throw new DoesNotExistException("Aggregator with id " + e.getMessage() + " does NOT exist!");
-        //        }
-        //
-        //        return Response.created(null).entity(new Result("DataProvider with id = " + createdProvider.getId() + " and name = " + createdProvider.getName() + " created successfully")).build();
     }
 
 }

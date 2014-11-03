@@ -114,7 +114,7 @@ import freemarker.template.TemplateException;
         @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
 })
 @XmlSeeAlso({ OaiDataSource.class })
-@ApiModel(value = "A Dataset")
+@ApiModel(value = "A Dataset", discriminator="class", subTypes={OaiDataSource.class, DirectoryImporterDataSource.class, DataSourceZ3950.class, SruRecordUpdateDataSource.class})
 public abstract class DataSource {
     @XmlEnum(String.class)
     public enum StatusDS {
@@ -130,13 +130,13 @@ public abstract class DataSource {
     /** DataSource LAST_TASK_FILENAME */
     protected static final String                 LAST_TASK_FILENAME         = "lastTask.txt";
     @XmlElement
-    @ApiModelProperty(position = 1)
+    @ApiModelProperty(position = 1, required = true)
     protected String                              id;
     @XmlElement
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 2, required = true)
     protected String                              schema;
     @XmlElement
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(position = 3, required = true)
     protected String                              namespace;
     @XmlElement
     @ApiModelProperty(position = 4)

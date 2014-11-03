@@ -1723,9 +1723,15 @@ public class DefaultDataManager implements DataManager {
      * @param namespace
      * @param metadataFormat
      * @param metadataTransformations
+     * @param externalRestServices 
+     * @param marcFormat 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
+     * @throws InvalidArgumentsException 
+     * @throws ObjectNotFoundException 
+     * @throws AlreadyExistsException 
+     * @throws SQLException 
      */
     public DataSource createDataSourceSruRecordUpdate(String dataProviderId, String id, String description, String nameCode, String name,
             String exportPath, String schema, String namespace, String metadataFormat, Map<String, MetadataTransformation> metadataTransformations,
@@ -1774,11 +1780,12 @@ public class DefaultDataManager implements DataManager {
                 if (dataProvider != null) {
 
                     //validate the URL server
-                    if (!oaiSourceURL.startsWith("http://") && !oaiSourceURL.startsWith("https://")) {
-                        oaiSourceURL = "http://" + oaiSourceURL;
+                    String newOaiSourceURL = oaiSourceURL;
+                    if (!newOaiSourceURL.startsWith("http://") && !newOaiSourceURL.startsWith("https://")) {
+                        newOaiSourceURL = "http://" + newOaiSourceURL;
                     }
-                    if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
-                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, oaiSourceURL,
+                    if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(newOaiSourceURL)) {
+                        DataSource newDataSource = new OaiDataSource(dataProvider, id, description, schema, namespace, metadataFormat, newOaiSourceURL,
                                 oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
                         DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);

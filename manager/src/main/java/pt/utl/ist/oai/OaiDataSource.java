@@ -61,10 +61,10 @@ public class OaiDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(OaiDataSource.class);
 
     @XmlElement
-    @ApiModelProperty(position = 1)
+    @ApiModelProperty(position = 1, required = true)
     private String               oaiSourceURL;
     @XmlElement
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 2, required = true)
     private String               oaiSet;
 
     private FileRetrieveStrategy retrieveStrategy;

@@ -22,7 +22,7 @@
       "summary" : "Create a dataset.",
       "notes" : "",
       "type" : "string",
-      "nickname" : "createProvider",
+      "nickname" : "createDataset",
       "produces" : [ "application/json", "application/xml" ],
       "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
@@ -46,6 +46,9 @@
       }, {
         "code" : 400,
         "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       }, {
         "code" : 406,
         "message" : "MissingArgumentsException"
@@ -84,67 +87,31 @@
     } ]
   } ],
   "models" : {
-    "File" : {
-      "id" : "File",
+    "defaultDatasetContainer" : {
+      "id" : "defaultDatasetContainer",
+      "description" : "",
       "properties" : {
-        "path" : {
+        "dataSource" : {
+          "$ref" : "dataset"
+        },
+        "nameCode" : {
           "type" : "string"
         },
         "name" : {
           "type" : "string"
-        },
-        "parent" : {
-          "type" : "string"
-        },
-        "absolute" : {
-          "type" : "boolean"
-        },
-        "canonicalPath" : {
-          "type" : "string"
-        },
-        "parentFile" : {
-          "$ref" : "File"
-        },
-        "absolutePath" : {
-          "type" : "string"
-        },
-        "absoluteFile" : {
-          "$ref" : "File"
-        },
-        "canonicalFile" : {
-          "$ref" : "File"
-        },
-        "directory" : {
-          "type" : "boolean"
-        },
-        "file" : {
-          "type" : "boolean"
-        },
-        "hidden" : {
-          "type" : "boolean"
-        },
-        "totalSpace" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "freeSpace" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "usableSpace" : {
-          "type" : "integer",
-          "format" : "int64"
         }
       }
     },
     "datasetContainer" : {
       "id" : "datasetContainer",
       "description" : "",
+      "discriminator" : "class",
       "properties" : {
         "dataSource" : {
           "$ref" : "dataset"
         }
-      }
+      },
+      "subTypes" : [ "defaultDatasetContainer" ]
     },
     "Option" : {
       "id" : "Option",
@@ -167,6 +134,8 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
+      "required" : [ "id", "schema", "namespace" ],
+      "discriminator" : "class",
       "properties" : {
         "sample" : {
           "type" : "boolean"
@@ -209,9 +178,10 @@
           "enum" : [ "RUNNING", "ERROR", "OK", "WARNING", "CANCELED", "PRE_PROCESSING", "POST_PROCESSING", "PRE_PROCESS_ERROR", "POST_PROCESS_ERROR" ]
         },
         "exportDir" : {
-          "$ref" : "File"
+          "type" : "string"
         }
-      }
+      },
+      "subTypes" : [ "OaiDatasource", "DirectoryDatasource", "z3950Datasource", "SruDatasource" ]
     },
     "DatasetOptions" : {
       "id" : "DatasetOptions",
