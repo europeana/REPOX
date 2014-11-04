@@ -18,48 +18,6 @@
         "message" : "OK (Response containing a list of all available options)"
       } ]
     }, {
-      "method" : "POST",
-      "summary" : "Create a provider.",
-      "notes" : "",
-      "type" : "string",
-      "nickname" : "createProvider",
-      "produces" : [ "application/json", "application/xml" ],
-      "consumes" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "aggregatorId",
-        "description" : "AggregatorId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "body",
-        "description" : "Provider data",
-        "required" : true,
-        "type" : "dataprovider",
-        "paramType" : "body",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 201,
-        "message" : "Created (Response containing a String message)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 406,
-        "message" : "MissingArgumentsException"
-      }, {
-        "code" : 409,
-        "message" : "AlreadyExistsException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
-      } ]
-    }, {
       "method" : "GET",
       "summary" : "Get a list of providers.",
       "notes" : "",
@@ -104,6 +62,48 @@
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
+      } ]
+    }, {
+      "method" : "POST",
+      "summary" : "Create a provider.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "createProvider",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Provider data",
+        "required" : true,
+        "type" : "dataprovider",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
     } ]
   }, {
