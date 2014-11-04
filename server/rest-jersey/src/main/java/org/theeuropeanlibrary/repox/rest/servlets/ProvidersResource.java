@@ -187,7 +187,8 @@ public class ProvidersResource {
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Delete a provider.", httpMethod = "DELETE", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+    @ApiResponses(value = { 
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
     public Response deleteProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String dataProviderId) throws DoesNotExistException {

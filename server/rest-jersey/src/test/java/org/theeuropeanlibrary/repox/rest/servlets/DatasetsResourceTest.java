@@ -2,6 +2,7 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -21,20 +22,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
-import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSource.StatusDS;
-import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
-import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
-import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -126,7 +125,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-    //    @Ignore
+    @Ignore
     public void testCreateDataset() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -159,5 +158,31 @@ public class DatasetsResourceTest extends JerseyTest {
         //Internal Server Error        
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(500, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#deleteDataset(String)}.
+     * @throws Exception 
+     * @throws DocumentException 
+     * @throws ObjectNotFoundException 
+     */
+    @Test
+    //    @Ignore
+    public void testDeleteProvider() throws Exception, DocumentException, ObjectNotFoundException {
+        String datasetId = "SampleDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
+
+        //Mocking
+        doNothing().doThrow(new IOException()).doThrow(new ObjectNotFoundException(datasetId)).when(dataManager).deleteDataSourceContainer(datasetId);
+
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(200, response.getStatus());
+        //Two internal server error exceptions
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_JSON).delete();
+        assertEquals(404, response.getStatus());
     }
 }

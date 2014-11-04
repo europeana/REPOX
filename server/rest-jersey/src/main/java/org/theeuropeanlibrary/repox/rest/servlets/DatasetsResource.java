@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -164,7 +166,7 @@ public class DatasetsResource {
             String marcFormat = dataSource.getMarcFormat();
             Map<String, MetadataTransformation> metadataTransformations = null;
             List<ExternalRestService> externalRestServices = null;
-            
+
             if (id == null || id.isEmpty())
                 throw new MissingArgumentsException("Invalid value: " + "Dataset id must not be empty");
             else if (schema == null || schema.equals(""))
@@ -177,7 +179,7 @@ public class DatasetsResource {
                 OaiDataSource oaiDataSource = (OaiDataSource)dataSource;
                 String oaiSourceURL = oaiDataSource.getOaiSourceURL();
                 String oaiSet = oaiDataSource.getOaiSet();
-                
+
                 if (oaiSourceURL == null || oaiSourceURL.isEmpty())
                     throw new MissingArgumentsException("Invalid value: " + "Dataset oaiSourceURL must not be empty");
                 else if (oaiSet == null || oaiSet.equals(""))
@@ -200,6 +202,34 @@ public class DatasetsResource {
             return Response.created(null).entity(new Result("DataProvider with id = " + id + " and name = " + name + " created successfully")).build();
         }
         return null;
+    }
+
+    /**
+     * Delete a dataset by specifying the Id.
+     * Relative path : /datasets
+     * @param datasetId 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     */
+    @DELETE
+    @Path("/" + DatasetOptionListContainer.DATASETID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Delete a dataset.", httpMethod = "DELETE", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException") })
+    public Response deleteDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
+        
+        try {
+            dataManager.deleteDataSourceContainer(datasetId);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("A resource or the dataset with id " + e.getMessage() + " does NOT exist!");
+        }
+
+        return Response.status(200).entity(new Result("Dataset with id " + datasetId + " deleted!")).build();
     }
 
 }
