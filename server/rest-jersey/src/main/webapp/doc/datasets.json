@@ -4,20 +4,58 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/datasets",
   "apis" : [ {
-    "path" : "/datasets",
+    "path" : "/datasets/{datasetId}",
     "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over datasets conext.",
+      "method" : "GET",
+      "summary" : "Get specific dataset.",
       "notes" : "",
-      "type" : "DatasetOptions",
-      "nickname" : "getOptions",
+      "type" : "datasetContainer",
+      "nickname" : "getDataset",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
+        "message" : "OK (Response containing an Dataset)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     }, {
+      "method" : "DELETE",
+      "summary" : "Delete a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "deleteDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets",
+    "operations" : [ {
       "method" : "POST",
       "summary" : "Create a dataset.",
       "notes" : "",
@@ -105,55 +143,17 @@
         "code" : 404,
         "message" : "DoesNotExistException"
       } ]
-    } ]
-  }, {
-    "path" : "/datasets/{datasetId}",
-    "operations" : [ {
-      "method" : "GET",
-      "summary" : "Get specific dataset.",
-      "notes" : "",
-      "type" : "datasetContainer",
-      "nickname" : "getDataset",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "datasetId",
-        "description" : "Id of dataset",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing an Dataset)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
     }, {
-      "method" : "DELETE",
-      "summary" : "Delete a dataset.",
+      "method" : "OPTIONS",
+      "summary" : "Get options over datasets conext.",
       "notes" : "",
-      "type" : "string",
-      "nickname" : "deleteDataset",
+      "type" : "DatasetOptions",
+      "nickname" : "getOptions",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "datasetId",
-        "description" : "Id of dataset",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      } ],
+      "parameters" : [ ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a String message)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
+        "message" : "OK (Response containing a list of all available options)"
       } ]
     } ]
   } ],
@@ -205,28 +205,10 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "dataSourceType", "id", "schema", "namespace" ],
+      "required" : [ "id", "namespace", "schema" ],
       "discriminator" : "dataSourceType",
       "properties" : {
-        "dataSourceType" : {
-          "type" : "string"
-        },
-        "sample" : {
-          "type" : "boolean"
-        },
-        "id" : {
-          "type" : "string"
-        },
-        "schema" : {
-          "type" : "string"
-        },
-        "namespace" : {
-          "type" : "string"
-        },
-        "description" : {
-          "type" : "string"
-        },
-        "lastRunResult" : {
+        "exportDir" : {
           "type" : "string"
         },
         "metadataFormat" : {
@@ -235,24 +217,20 @@
         "marcFormat" : {
           "type" : "string"
         },
-        "maxRecord4Sample" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "numberOfRecords2Harvest" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "numberOfRecordsPerResponse" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "status" : {
-          "type" : "string",
-          "enum" : [ "RUNNING", "ERROR", "OK", "WARNING", "CANCELED", "PRE_PROCESSING", "POST_PROCESSING", "PRE_PROCESS_ERROR", "POST_PROCESS_ERROR" ]
-        },
-        "exportDir" : {
+        "id" : {
           "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "namespace" : {
+          "type" : "string"
+        },
+        "schema" : {
+          "type" : "string"
+        },
+        "sample" : {
+          "type" : "boolean"
         }
       },
       "subTypes" : [ "OaiDatasource" ]

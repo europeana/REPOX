@@ -108,10 +108,10 @@ import freemarker.template.TemplateException;
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = OaiDataSource.class, name = "OAI"),
-        @JsonSubTypes.Type(value = DirectoryImporterDataSource.class, name = "DIR"),
-        @JsonSubTypes.Type(value = DataSourceZ3950.class, name = "Z3950"),
-        @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
+        @JsonSubTypes.Type(value = OaiDataSource.class, name = "OAI")
+//        @JsonSubTypes.Type(value = DirectoryImporterDataSource.class, name = "DIR"),
+//        @JsonSubTypes.Type(value = DataSourceZ3950.class, name = "Z3950"),
+//        @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
 })
 @XmlSeeAlso({ OaiDataSource.class })
 @ApiModel(value = "A Dataset", discriminator="dataSourceType", subTypes={OaiDataSource.class})
@@ -132,64 +132,37 @@ public abstract class DataSource {
     
     @XmlElement
     @ApiModelProperty(required = true)
-    protected String dataSourceType;
-    
-    /**
-     * Returns the dataSourceType.
-     * @return the dataSourceType
-     */
-    public String getDataSourceType() {
-        return dataSourceType;
-    }
-
-    /**
-     * Sets the dataSourceType to the given value.
-     * @param dataSourceType the dataSourceType to set
-     */
-    public void setDataSourceType(String dataSourceType) {
-        this.dataSourceType = dataSourceType;
-    }
-
-    @XmlElement
-    @ApiModelProperty(position = 1, required = true)
     protected String                              id;
     @XmlElement
-    @ApiModelProperty(position = 2, required = true)
+    @ApiModelProperty(required = true)
     protected String                              schema;
     @XmlElement
-    @ApiModelProperty(position = 3, required = true)
+    @ApiModelProperty(required = true)
     protected String                              namespace;
     @XmlElement
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty
     protected String                              description;
     @XmlElement
-    @ApiModelProperty(position = 5)
-    protected String                              lastRunResult;
-    @XmlElement
-    @ApiModelProperty(position = 6)
+    @ApiModelProperty
     protected String                              metadataFormat;
     @XmlElement
-    @ApiModelProperty(position = 7)
-    protected String                              marcFormat;
-    @XmlElement
-    @ApiModelProperty(position = 8)
-    protected int                                 maxRecord4Sample           = -1;
-    @XmlElement
-    @ApiModelProperty(position = 9)
-    protected int                                 numberOfRecords2Harvest    = -1;
-    @XmlElement
-    @ApiModelProperty(position = 10)
-    protected int                                 numberOfRecordsPerResponse = -1;
-    @XmlElement
-    @ApiModelProperty(position = 11)
+    @ApiModelProperty
     protected boolean                             isSample                   = false;
     @XmlElement
-    @ApiModelProperty(position = 12)
-    protected StatusDS                            status;
-    @XmlElement
-    @ApiModelProperty(position = 13)
+    @ApiModelProperty
     protected String                              exportDir;
     
+    protected String                              marcFormat;
+    @ApiModelProperty(hidden = true)
+    protected StatusDS                            status;
+    @ApiModelProperty(hidden = true)
+    protected String                              lastRunResult;
+    @ApiModelProperty(hidden = true)
+    protected int                                 maxRecord4Sample           = -1;
+    @ApiModelProperty(hidden = true)
+    protected int                                 numberOfRecords2Harvest    = -1;
+    @ApiModelProperty(hidden = true)
+    protected int                                 numberOfRecordsPerResponse = -1;
     @ApiModelProperty(hidden = true)
     protected Date                                lastUpdate;
     @ApiModelProperty(hidden = true)
