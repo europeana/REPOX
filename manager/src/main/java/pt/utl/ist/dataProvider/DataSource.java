@@ -114,7 +114,7 @@ import freemarker.template.TemplateException;
         @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
 })
 @XmlSeeAlso({ OaiDataSource.class })
-@ApiModel(value = "A Dataset", discriminator="class", subTypes={OaiDataSource.class, DirectoryImporterDataSource.class, DataSourceZ3950.class, SruRecordUpdateDataSource.class})
+@ApiModel(value = "A Dataset", discriminator="dataSourceType", subTypes={OaiDataSource.class, DirectoryImporterDataSource.class, DataSourceZ3950.class, SruRecordUpdateDataSource.class})
 public abstract class DataSource {
     @XmlEnum(String.class)
     public enum StatusDS {

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -18,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -29,6 +31,7 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -230,6 +233,47 @@ public class DatasetsResource {
         }
 
         return Response.status(200).entity(new Result("Dataset with id " + datasetId + " deleted!")).build();
+    }
+    
+    
+    //TODO UPDATE METHOD
+    
+    
+    /**
+     * Get a list of datasets in the specified range.
+     * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
+     * Relative path : /datasets
+     * @param providerId 
+     * @param offset 
+     * @param number 
+     * @return the list of the number of datasets requested
+     * @throws DoesNotExistException 
+     * @throws InvalidArgumentsException 
+     */
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get a list of datasets.", httpMethod = "GET", response = DataSourceContainer.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of datasets)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException")
+    })
+    public Response getDatasetList(@ApiParam(value = "ProviderId", required = true) @QueryParam("providerId") String providerId,
+            @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset,
+            @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws DoesNotExistException, InvalidArgumentsException{
+
+        if (offset < 0)
+            throw new InvalidArgumentsException("Offset negative values not allowed!");
+
+        List<DataSourceContainer> dataSourceContainerListSorted;
+
+        try {
+            dataSourceContainerListSorted = dataManager.getDataSourceContainerListSorted(providerId, offset, number);
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+        }
+        
+        return Response.status(200).entity(new GenericEntity<List<DataSourceContainer>>(dataSourceContainerListSorted) {}).build();
     }
 
 }

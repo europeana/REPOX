@@ -18,52 +18,6 @@
         "message" : "OK (Response containing a list of all available options)"
       } ]
     }, {
-      "method" : "GET",
-      "summary" : "Get a list of providers.",
-      "notes" : "",
-      "type" : "array",
-      "items" : {
-        "$ref" : "dataprovider"
-      },
-      "nickname" : "getProviderList",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "aggregatorId",
-        "description" : "AggregatorId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "offset",
-        "description" : "Index where to start from",
-        "defaultValue" : "0",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "number",
-        "description" : "Number of aggregators requested",
-        "defaultValue" : "-1",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of aggregators)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
-    }, {
       "method" : "POST",
       "summary" : "Create a provider.",
       "notes" : "",
@@ -104,6 +58,52 @@
       }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of providers.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "dataprovider"
+      },
+      "nickname" : "getProviderList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of providers)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     } ]
   }, {

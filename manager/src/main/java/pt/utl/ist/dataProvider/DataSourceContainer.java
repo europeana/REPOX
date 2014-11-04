@@ -30,7 +30,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
         @JsonSubTypes.Type(value = DefaultDataSourceContainer.class, name = "DEFAULT")
 })
 @XmlSeeAlso({ DefaultDataSourceContainer.class})
-@ApiModel(value = "A Dataset Container", discriminator="class", subTypes={DefaultDataSourceContainer.class})
+@ApiModel(value = "A Dataset Container", discriminator="dataSourceContainerType", subTypes={DefaultDataSourceContainer.class})
 public abstract class DataSourceContainer {
     @XmlElement
     @ApiModelProperty(position = 1)

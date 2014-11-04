@@ -278,7 +278,7 @@ public class ProvidersResource {
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get a list of providers.", httpMethod = "GET", response = DataProvider.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
+            @ApiResponse(code = 200, message = "OK (Response containing a list of providers)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
             @ApiResponse(code = 404, message = "DoesNotExistException")
     })

@@ -949,9 +949,9 @@ public class DefaultDataManager implements DataManager {
     
     private class DataProviderComparator implements java.util.Comparator<DataProvider> {
         @Override
-        public int compare(DataProvider agg1, DataProvider agg2) {
-            String str1 = agg1.getName().toUpperCase();
-            String str2 = agg2.getName().toUpperCase();
+        public int compare(DataProvider pr1, DataProvider pr2) {
+            String str1 = pr1.getName().toUpperCase();
+            String str2 = pr2.getName().toUpperCase();
 
             if (str1.compareTo(str2) < 0)
                 return -1;
@@ -1466,6 +1466,22 @@ public class DefaultDataManager implements DataManager {
     /******************************************************************************************************************/
     /** DATA SOURCE CONTAINER *****************************************************************************************/
     /******************************************************************************************************************/
+    
+    private class DataSourceContainerComparator implements java.util.Comparator<DataSourceContainer> {
+        @Override
+        public int compare(DataSourceContainer dsc1, DataSourceContainer dsc2) {
+            String str1 = ((DefaultDataSourceContainer)dsc1).getName().toUpperCase();
+            String str2 = ((DefaultDataSourceContainer)dsc2).getName().toUpperCase();
+
+            if (str1.compareTo(str2) < 0)
+                return -1;
+            else {
+                if (str1.compareTo(str2) > 0)
+                    return 1;
+            }
+            return 0;
+        }
+    }
 
     /**
      * Add Data Source Container
@@ -1613,6 +1629,57 @@ public class DefaultDataManager implements DataManager {
         }
         return null;
     }
+    
+    public List<DataSourceContainer> getDataSourceContainerListSorted(String providerId, int offset, int number) throws ObjectNotFoundException
+    {
+        if(getDataProvider(providerId) == null)
+          throw new ObjectNotFoundException(providerId);
+        
+        List<DataSourceContainer> sortedList = new ArrayList<DataSourceContainer>(getDataProvider(providerId).getDataSourceContainers().values());
+        Collections.sort(sortedList, new DataSourceContainerComparator());
+        
+      //Create new arrayList because of backed list
+      if (offset >= 0 && number < 0) //From offset until the end of the list
+          return new ArrayList<DataSourceContainer>(sortedList.subList(offset, sortedList.size()));
+      else if (offset >= 0)
+          if ((offset + number) > sortedList.size())
+              return new ArrayList<DataSourceContainer>(sortedList.subList(offset, sortedList.size()));
+          else
+              return new ArrayList<DataSourceContainer>(sortedList.subList(offset, offset + number));
+      else
+          //offset < 0
+          throw new IndexOutOfBoundsException("Offset cannot be negative!");
+    }
+    
+//    /**
+//     * Retrieves a sorted list of the number of providers from the specified aggregator starting from offset.
+//     * @param aggregatorId 
+//     * @param offset
+//     * @param number
+//     * @return the number of aggregators requested sorted
+//     * @throws ObjectNotFoundException 
+//     * @throws IndexOutOfBoundsException 
+//     */
+//    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
+//    {
+//        if(getAggregator(aggregatorId) == null)
+//            throw new ObjectNotFoundException(aggregatorId);
+//        
+//        List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
+//        Collections.sort(sortedList, new DataProviderComparator());
+//        
+//      //Create new arrayList because of backed list
+//        if (offset >= 0 && number < 0) //From offset until the end of the list
+//            return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
+//        else if (offset >= 0)
+//            if ((offset + number) > sortedList.size())
+//                return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
+//            else
+//                return new ArrayList<DataProvider>(sortedList.subList(offset, offset + number));
+//        else
+//            //offset < 0
+//            throw new IndexOutOfBoundsException("Offset cannot be negative!");
+//    }
 
     @Override
     public MessageType updateDataSourceContainer(DataSourceContainer dataSourceContainer, String oldDataSourceId) {
@@ -1802,7 +1869,7 @@ public class DefaultDataManager implements DataManager {
 
                         ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
                                 .initialize(dataProvider.getDataSourceContainers());
-                        updateDataProvider(dataProvider, dataProviderId);
+                        saveData();
                         return newDataSource;
                     } else {
                         throw new InvalidArgumentsException(oaiSourceURL);

@@ -59,6 +59,52 @@
         "code" : 500,
         "message" : "InternalServerErrorException"
       } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of datasets.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "datasetContainer"
+      },
+      "nickname" : "getDatasetList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "ProviderId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of datasets)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      } ]
     } ]
   }, {
     "path" : "/datasets/{datasetId}",
@@ -84,6 +130,31 @@
         "code" : 404,
         "message" : "DoesNotExistException"
       } ]
+    }, {
+      "method" : "DELETE",
+      "summary" : "Delete a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "deleteDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
     } ]
   } ],
   "models" : {
@@ -105,7 +176,7 @@
     "datasetContainer" : {
       "id" : "datasetContainer",
       "description" : "",
-      "discriminator" : "class",
+      "discriminator" : "dataSourceContainerType",
       "properties" : {
         "dataSource" : {
           "$ref" : "dataset"
@@ -135,7 +206,7 @@
       "id" : "dataset",
       "description" : "",
       "required" : [ "id", "schema", "namespace" ],
-      "discriminator" : "class",
+      "discriminator" : "dataSourceType",
       "properties" : {
         "sample" : {
           "type" : "boolean"

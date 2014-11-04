@@ -8,10 +8,13 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,6 +25,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -167,8 +171,8 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws ObjectNotFoundException 
      */
     @Test
-    //    @Ignore
-    public void testDeleteProvider() throws Exception, DocumentException, ObjectNotFoundException {
+    @Ignore
+    public void testDeleteDataset() throws Exception, DocumentException, ObjectNotFoundException {
         String datasetId = "SampleDatasetId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
 
@@ -185,4 +189,58 @@ public class DatasetsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_JSON).delete();
         assertEquals(404, response.getStatus());
     }
+    
+    //TODO Update tests
+    
+    
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getDatasetList(String, int, int)}.
+     * @throws Exception 
+     * @throws Exception
+     */
+    @Test
+//    @Ignore
+    public void testGetDatasetList() throws Exception {
+        int offset = 0;
+        int number = 3;
+        String providerId = "SampleProviderId";
+        
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId).queryParam("offset", offset).queryParam("number", number);
+
+        //Mocking
+        OaiDataSource oaiDataSource1 = new OaiDataSource();
+        DefaultDataSourceContainer defaultDataSourceContainer1 = new DefaultDataSourceContainer();
+        defaultDataSourceContainer1.setDataSource(oaiDataSource1);
+        defaultDataSourceContainer1.setName("Name1");
+        OaiDataSource oaiDataSource2 = new OaiDataSource();
+        DefaultDataSourceContainer defaultDataSourceContainer2 = new DefaultDataSourceContainer();
+        defaultDataSourceContainer2.setDataSource(oaiDataSource2);
+        defaultDataSourceContainer2.setName("Name2");
+        OaiDataSource oaiDataSource3 = new OaiDataSource();
+        DefaultDataSourceContainer defaultDataSourceContainer3 = new DefaultDataSourceContainer();
+        defaultDataSourceContainer3.setDataSource(oaiDataSource3);
+        defaultDataSourceContainer3.setName("Name3");
+        List<DataSourceContainer> datasetList = new ArrayList<DataSourceContainer>();
+        datasetList.add(defaultDataSourceContainer1);
+        datasetList.add(defaultDataSourceContainer2);
+        datasetList.add(defaultDataSourceContainer3);
+        
+        when(dataManager.getDataSourceContainerListSorted(providerId, offset, number)).thenReturn(datasetList).thenThrow(new ObjectNotFoundException(providerId));
+        
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+        List<DataSourceContainer> subList = response.readEntity(new GenericType<List<DataSourceContainer>>(){});
+        assertEquals(datasetList.size(), subList.size());
+        
+        //Internal Server Error
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+        //Error because of index
+        target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("offset", -1).queryParam("number", number);
+        //Notice not mocked here cause it has to throw the exception before the call to the dataManager
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(400, response.getStatus());
+    }
+    
 }
