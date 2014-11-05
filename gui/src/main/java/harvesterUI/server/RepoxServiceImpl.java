@@ -4,7 +4,6 @@ import harvesterUI.client.servlets.RepoxService;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
 import harvesterUI.server.projects.DefaultProjectManager;
 import harvesterUI.server.projects.ProjectManager;
-import harvesterUI.server.projects.Light.LightManager;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.ServerSideException;
@@ -46,9 +45,9 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
         ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type"));
 
         switch (projectType){
-            case LIGHT:
-                projectManager = new LightManager();
-                break;
+//            case LIGHT:
+//                projectManager = new LightManager();
+//                break;
             case DEFAULT:
                 projectManager = new DefaultProjectManager();
                 break;

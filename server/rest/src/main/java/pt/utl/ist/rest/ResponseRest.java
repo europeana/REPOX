@@ -1,18 +1,17 @@
 package pt.utl.ist.rest;
 
-import org.dom4j.DocumentException;
-
-import pt.utl.ist.rest.services.web.LightWebServices;
-import pt.utl.ist.rest.services.web.WebServices;
-import pt.utl.ist.util.InvalidInputException;
-import pt.utl.ist.util.exceptions.InvalidRequestException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
+import org.dom4j.DocumentException;
+
+import pt.utl.ist.rest.services.web.WebServices;
+import pt.utl.ist.util.InvalidInputException;
+import pt.utl.ist.util.exceptions.InvalidRequestException;
 
 /**
  * Created with IntelliJ IDEA.

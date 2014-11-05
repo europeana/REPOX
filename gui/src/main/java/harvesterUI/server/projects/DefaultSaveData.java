@@ -2,7 +2,6 @@ package harvesterUI.server.projects;
 
 import harvesterUI.server.dataManagement.dataSets.DataSetOperationsServiceImpl;
 import harvesterUI.server.dataManagement.dataSets.Z39FileUpload;
-import harvesterUI.server.projects.Light.LightSaveData;
 import harvesterUI.server.userManagement.UserManagementServiceImpl;
 import harvesterUI.server.util.PagingUtil;
 import harvesterUI.server.util.Util;
@@ -12,6 +11,8 @@ import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
+import harvesterUI.shared.externalServices.ExternalServiceUI;
+import harvesterUI.shared.externalServices.ServiceParameterUI;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +45,10 @@ import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
+import pt.utl.ist.externalServices.ExternalServiceNoMonitor;
 import pt.utl.ist.externalServices.ExternalServiceStates;
+import pt.utl.ist.externalServices.ExternalServiceType;
+import pt.utl.ist.externalServices.ServiceParameter;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.oai.OaiDataSource;
@@ -99,7 +104,7 @@ public class DefaultSaveData {
             }
 
             // Save external services
-            List<ExternalRestService> externalRestServices = LightSaveData.saveExternalServices(dataSourceUI);
+            List<ExternalRestService> externalRestServices = saveExternalServices(dataSourceUI);
 
             if(update) {
                 // Check if the id already exists
@@ -258,7 +263,7 @@ public class DefaultSaveData {
                         createdDataSource.setExternalServicesRunType(
                                 ExternalServiceStates.ContainerType.valueOf(dataSourceUI.getExternalServicesRunType()));
 
-                    LightSaveData.replaceExportPathWithUpdatedId(originalDSset,dataSourceUI,createdDataSource);
+                    replaceExportPathWithUpdatedId(originalDSset,dataSourceUI,createdDataSource);
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(dataSourceUI.isSample(),createdDataSource);
 
                     // Save Tags
@@ -543,6 +548,46 @@ public class DefaultSaveData {
         }
         return saveDataResponse;
     }
+    
+    public static List<ExternalRestService> saveExternalServices(DataSourceUI dataSourceUI){
+        List<ExternalRestService> externalRestServices = new ArrayList<ExternalRestService>();
+        // Rest Service Data
+        if(dataSourceUI.getRestServiceUIList().size() > 0) {
+            for(ExternalServiceUI externalServiceUI : dataSourceUI.getRestServiceUIList()){
+                ExternalRestService externalRestService = null;
+                if(externalServiceUI.getExternalServiceType().equals("MONITORED")){
+                    externalRestService = new ExternalRestService(externalServiceUI.getId(),
+                            externalServiceUI.getName(),externalServiceUI.getUri(),
+                            externalServiceUI.getStatusUri(),externalServiceUI.getType(), ExternalServiceType.valueOf(externalServiceUI.getExternalServiceType()));
+                    externalRestService.setEnabled(externalServiceUI.isEnabled());
+                } else if(externalServiceUI.getExternalServiceType().equals("NO_MONITOR")){
+                    try {
+                        externalRestService = new ExternalServiceNoMonitor(externalServiceUI.getId(),
+                                externalServiceUI.getName(),externalServiceUI.getUri(),
+                                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
+                                        getDataSourceContainer(dataSourceUI.getDataSourceSet()).getDataSource());
+                    } catch (DocumentException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (IOException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+                for(ServiceParameterUI serviceParameterUI : externalServiceUI.getServiceParameters()){
+                    ServiceParameter serviceParameter = new ServiceParameter(serviceParameterUI.getName(),
+                            serviceParameterUI.getType(),serviceParameterUI.getRequired(),serviceParameterUI.getExample(),
+                            serviceParameterUI.getSemantics());
+                    serviceParameter.setValue(serviceParameterUI.getValue());
+                    externalRestService.getServiceParameters().add(serviceParameter);
+                }
+
+                if(externalServiceUI.getExternalResultUI() != null)
+                    externalRestService.setExternalResultsUri(externalServiceUI.getExternalResultUI());
+                externalRestServices.add(externalRestService);
+            }
+        }
+
+        return externalRestServices;
+    }
 
     public static String deleteDataSources(List<DataSourceUI> dataSourceUIs) {
         Iterator<DataSourceUI> dataSourceUIIterator = dataSourceUIs.iterator();
@@ -637,5 +682,12 @@ public class DefaultSaveData {
 
     public static String getDirPathFtp(String dataSourceId){
         return ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDirPathFtp(dataSourceId);
+    }
+    
+    public static void replaceExportPathWithUpdatedId(String originalDSset, DataSourceUI dataSourceUI, DataSource createdDataSource){
+        if(!originalDSset.equals(dataSourceUI.getDataSourceSet())){
+            createdDataSource.setExportDir(dataSourceUI.getExportDirectory().replace(originalDSset,dataSourceUI.getDataSourceSet()));
+        }else
+            createdDataSource.setExportDir(dataSourceUI.getExportDirectory());
     }
 }

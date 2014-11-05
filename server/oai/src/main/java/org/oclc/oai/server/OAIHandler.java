@@ -46,7 +46,6 @@ import org.oclc.oai.server.verb.ServerVerb;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.configuration.LightRepoxContextUtil;
 import pt.utl.ist.util.ProjectType;
 import pt.utl.ist.util.PropertyUtil;
 
@@ -95,11 +94,13 @@ public class OAIHandler extends HttpServlet {
         Properties propertiesGui = PropertyUtil.loadGuiConfiguration("gui.properties");
         projectType = ProjectType.valueOf(propertiesGui.getProperty("project.type"));
 
-        if (projectType == ProjectType.LIGHT) {
-            ConfigSingleton.setRepoxContextUtil(new LightRepoxContextUtil());
-        } else if (projectType == ProjectType.DEFAULT) {
+        if (projectType == ProjectType.DEFAULT) {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
-        }
+        } 
+//        else if (projectType == ProjectType.LIGHT) {
+//            ConfigSingleton.setRepoxContextUtil(new LightRepoxContextUtil());
+//        }
+        
         try {
             Map<String, Object> attributes = null;
             ServletContext context = getServletContext();

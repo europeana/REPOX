@@ -90,7 +90,7 @@ import pt.utl.ist.z3950.TimestampHarvester;
  * To change this template use File | Settings | File Templates.
  */
 public class DefaultWebServices implements WebServices {
-    private static final Logger log = Logger.getLogger(LightWebServices.class);
+    private static final Logger log = Logger.getLogger(DefaultWebServices.class);
 
     private String requestURI;
 
