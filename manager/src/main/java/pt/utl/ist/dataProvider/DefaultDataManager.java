@@ -200,8 +200,11 @@ public class DefaultDataManager implements DataManager {
 
     /**
      * Load all aggregators from XML file
+     * @param repositoryPath 
+     * @param defaultExportDir 
      * @throws DocumentException
      * @throws IOException
+     * @throws ParseException 
      */
     protected synchronized void loadAggregators(File repositoryPath, File defaultExportDir) throws DocumentException, IOException, ParseException {
         aggregators = new ArrayList<Aggregator>();
@@ -694,7 +697,8 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public void removeOldTasks(String dataSourceId) {
+    
+    private void removeOldTasks(String dataSourceId) {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(oldTasksFile);
@@ -730,8 +734,8 @@ public class DefaultDataManager implements DataManager {
      * @throws InvalidArgumentsException 
      * @throws AlreadyExistsException 
      */
-    public Aggregator createAggregator(String aggregatorId, String name, String nameCode, String homepageUrl) throws DocumentException, IOException,
-            InvalidArgumentsException, AlreadyExistsException {
+    @Override
+    public Aggregator createAggregator(String aggregatorId, String name, String nameCode, String homepageUrl) throws InvalidArgumentsException, DocumentException, IOException, AlreadyExistsException {
 
         Aggregator newAggregator = new Aggregator();
         if (homepageUrl != null && !homepageUrl.equals("")) {
@@ -784,8 +788,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
-    public Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage)
-            throws ObjectNotFoundException, InvalidArgumentsException, IOException {
+    @Override
+    public Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage) throws InvalidArgumentsException, IOException, ObjectNotFoundException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -847,10 +851,10 @@ public class DefaultDataManager implements DataManager {
      * Delete aggregator from REPOX
      * @param aggregatorId
      * @throws IOException
-     * @throws DocumentException
      * @throws ObjectNotFoundException 
      */
-    public void deleteAggregator(String aggregatorId) throws IOException, DocumentException, ObjectNotFoundException {
+    @Override
+    public void deleteAggregator(String aggregatorId) throws ObjectNotFoundException, IOException, DocumentException{
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -889,10 +893,23 @@ public class DefaultDataManager implements DataManager {
      * @param aggregatorId
      * @return Gets the Aggregator with aggregatorId from the configuration file if it exists or null otherwise.
      */
+    @Override
     public Aggregator getAggregator(String aggregatorId) {
         for (Aggregator currentAggregator : aggregators) {
             if (currentAggregator.getId().equals(aggregatorId)) {
                 return currentAggregator;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Aggregator getAggregatorParent(String dataProviderId) {
+        for (Aggregator aggregator : aggregators) {
+            for (DataProvider dataProvider : aggregator.getDataProviders()) {
+                if (dataProvider.getId().equals(dataProviderId)) {
+                    return aggregator;
+                }
             }
         }
         return null;
@@ -904,7 +921,8 @@ public class DefaultDataManager implements DataManager {
      * @param aggregatorToCheck
      * @return boolean
      */
-    private boolean checkIfAggregatorExists(List<Aggregator> aggregators, Aggregator aggregatorToCheck) {
+    @Override
+    public boolean checkIfAggregatorExists(List<Aggregator> aggregators, Aggregator aggregatorToCheck) {
         for (Aggregator aggregator : aggregators) {
             //            if (aggregatorToCheck.getName().equalsIgnoreCase(aggregator.getName()))
             //                if (aggregatorToCheck.getNameCode() != null && aggregator.getNameCode() != null)
@@ -915,7 +933,8 @@ public class DefaultDataManager implements DataManager {
         return false;
     }
 
-    public synchronized List<Aggregator> getAggregators() throws DocumentException, IOException {
+    @Override
+    public synchronized List<Aggregator> getAggregators() {
         return Collections.unmodifiableList(aggregators);
     }
 
@@ -926,6 +945,7 @@ public class DefaultDataManager implements DataManager {
      * @return the number of aggregators requested sorted
      * @throws IndexOutOfBoundsException 
      */
+    @Override
     public List<Aggregator> getAggregatorsListSorted(int offset, int number) throws IndexOutOfBoundsException {
         List<Aggregator> sortedList = new ArrayList<Aggregator>(aggregators);
         Collections.sort(sortedList, new AggregatorComparator());
@@ -980,9 +1000,9 @@ public class DefaultDataManager implements DataManager {
      * @throws AlreadyExistsException 
      * @throws InvalidArgumentsException 
      */
+    @Override
     public DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String description, String nameCode,
-            String homepage, String dataSetType, String email) throws ObjectNotFoundException, AlreadyExistsException, IOException,
-            InvalidArgumentsException {
+            String homepage, String dataSetType, String email) throws InvalidArgumentsException, AlreadyExistsException, IOException, ObjectNotFoundException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -1044,23 +1064,29 @@ public class DefaultDataManager implements DataManager {
             throw new ObjectNotFoundException(aggregatorId);
         }
     }
+    
+    @Override
+    @Deprecated
+    public DataProvider createDataProvider(String aggregatorId, String name, String country) {
+        return null;
+    }
 
-    /**
-     * Add a new Data Provider (used by REST)
-     * @param aggregatorId
-     * @param id
-     * @param name
-     * @param country
-     * @param description
-     * @param nameCode
-     * @param url
-     * @param dataSetType
-     * @return
-     * @throws ObjectNotFoundException
-     * @throws AlreadyExistsException
-     * @throws IOException
-     * @throws InvalidArgumentsException
-     */
+//    /**
+//     * Add a new Data Provider (used by REST)
+//     * @param aggregatorId
+//     * @param id
+//     * @param name
+//     * @param country
+//     * @param description
+//     * @param nameCode
+//     * @param url
+//     * @param dataSetType
+//     * @return
+//     * @throws ObjectNotFoundException
+//     * @throws AlreadyExistsException
+//     * @throws IOException
+//     * @throws InvalidArgumentsException
+//     */
     //To be removed, Shouldn't provide the id manually, id has to be generated automatically
     //    public DataProvider createDataProvider(String aggregatorId, String name, String country, String description, String nameCode,
     //            String url, String dataSetType) throws ObjectNotFoundException, AlreadyExistsException, IOException, InvalidArgumentsException {
@@ -1112,90 +1138,7 @@ public class DefaultDataManager implements DataManager {
     //            throw new ObjectNotFoundException(aggregatorId);
     //        }
     //    }
-
-    public boolean moveDataProvider(String newAggregatorId, String idDataProvider2Move) throws IOException {
-        DataProvider dataProvider = getDataProvider(idDataProvider2Move);
-        Aggregator aggregatorParent = getAggregatorParent(dataProvider.getId());
-
-        if (aggregatorParent.getId().equals(newAggregatorId)) {
-            return false;
-        }
-
-        for (Aggregator currentAggregator : aggregators) {
-            if (currentAggregator.getId().equals(newAggregatorId)) {
-                currentAggregator.addDataProvider(dataProvider);
-                aggregatorParent.getDataProviders().remove(dataProvider);
-
-                saveData();
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException {
-        DataSourceContainer dataSourceContainer = getDataSourceContainer(idDataSource2Move);
-        DataProvider dataProviderParent = getDataProviderParent(dataSourceContainer.getDataSource().getId());
-
-        if (dataProviderParent.getId().equals(newDataProviderID)) {
-            return false;
-        }
-
-        for (Aggregator currentAggregator : aggregators) {
-            for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
-                if (currentDataProvider.getId().equals(newDataProviderID)) {
-                    currentDataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(), dataSourceContainer);
-                    dataProviderParent.getDataSourceContainers().remove(dataSourceContainer.getDataSource().getId());
-
-                    saveData();
-
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void setDataSetSampleState(boolean isSample, DataSource dataSource) {
-        dataSource.setIsSample(isSample);
-        try {
-            saveData();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    public synchronized MessageType removeTransformationFromDataSource(String transformationId) {
-        try {
-            HashMap<String, DataSourceContainer> dataSourceContainers = loadDataSourceContainers();
-
-            for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
-                DataSource currentDataSource = dataSourceContainer.getDataSource();
-                MetadataTransformation metadataTransformation = currentDataSource.getMetadataTransformations().get(transformationId);
-                if (metadataTransformation != null) {
-                    currentDataSource.getMetadataTransformations().remove(metadataTransformation.getId());
-                }
-            }
-            saveData();
-            return MessageType.OK;
-        } catch (DocumentException e) {
-            return MessageType.OTHER;
-        } catch (IOException e) {
-            return MessageType.OTHER;
-        }
-    }
-
-    @Deprecated
-    public DataProvider createDataProvider(String aggregatorId, String name, String country) {
-        return null;
-    }
-
-    @Deprecated
-    public DataProvider updateDataProvider(String id, String name, String country, String description) {
-        return null;
-    }
-
+    
     /**
      * Update Data Provider
      * @param newAggregatorId 
@@ -1213,9 +1156,10 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
      */
+    @Override
     public DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String description, String nameCode, String homepage,
-            String dataSetType, String email)
-            throws ObjectNotFoundException, InvalidArgumentsException, IOException {
+            String dataSetType, String email) throws InvalidArgumentsException, IOException, ObjectNotFoundException
+             {
         DataProvider dataProvider = getDataProvider(providerId);
 
         if (dataProvider != null) {
@@ -1304,10 +1248,39 @@ public class DefaultDataManager implements DataManager {
             throw new ObjectNotFoundException(providerId);
         }
     }
-
+    
+    @Override
     @Deprecated
-    public DataProvider updateDataProvider(DataProvider dataProvider, String oldDataProviderId) throws IOException, ObjectNotFoundException {
+    public DataProvider updateDataProvider(String id, String name, String country, String description) {
         return null;
+    }
+
+    @Override
+    @Deprecated
+    public DataProvider updateDataProvider(DataProvider dataProvider, String oldDataProviderId) throws ObjectNotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean moveDataProvider(String newAggregatorId, String idDataProvider2Move) throws IOException {
+        DataProvider dataProvider = getDataProvider(idDataProvider2Move);
+        Aggregator aggregatorParent = getAggregatorParent(dataProvider.getId());
+
+        if (aggregatorParent.getId().equals(newAggregatorId)) {
+            return false;
+        }
+
+        for (Aggregator currentAggregator : aggregators) {
+            if (currentAggregator.getId().equals(newAggregatorId)) {
+                currentAggregator.addDataProvider(dataProvider);
+                aggregatorParent.getDataProviders().remove(dataProvider);
+
+                saveData();
+
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1349,66 +1322,8 @@ public class DefaultDataManager implements DataManager {
             }
         }
         throw new ObjectNotFoundException(dataProviderId);
-    }
-
-    /**
-     * Check if data provider exists inside a aggregator
-     * @param aggregatorId
-     * @param dataProvider
-     * @return boolean
-     */
-    private boolean checkIfDataProviderExists(String aggregatorId, DataProvider dataProvider) {
-        for (Aggregator currentAggregator : aggregators) {
-            if (currentAggregator.getId().equals(aggregatorId)) {
-                for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
-                    if (currentDataProvider.getId().equals(dataProvider.getId())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public List<DataProvider> getDataProviders() throws DocumentException, IOException {
-        List<DataProvider> dataProvidersList = new ArrayList<DataProvider>();
-        for (Aggregator aggregator : aggregators) {
-            dataProvidersList.addAll(aggregator.getDataProviders());
-        }
-        return dataProvidersList;
-    }
+    } 
     
-    /**
-     * Retrieves a sorted list of the number of providers from the specified aggregator starting from offset.
-     * @param aggregatorId 
-     * @param offset
-     * @param number
-     * @return the number of aggregators requested sorted
-     * @throws ObjectNotFoundException 
-     * @throws IndexOutOfBoundsException 
-     */
-    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
-    {
-        if(getAggregator(aggregatorId) == null)
-            throw new ObjectNotFoundException(aggregatorId);
-        
-        List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
-        Collections.sort(sortedList, new DataProviderComparator());
-        
-      //Create new arrayList because of backed list
-        if (offset >= 0 && number < 0) //From offset until the end of the list
-            return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
-        else if (offset >= 0)
-            if ((offset + number) > sortedList.size())
-                return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
-            else
-                return new ArrayList<DataProvider>(sortedList.subList(offset, offset + number));
-        else
-            //offset < 0
-            throw new IndexOutOfBoundsException("Offset cannot be negative!");
-    }
-
     @Override
     public DataProvider getDataProvider(String dataProviderId) {
         for (Aggregator aggregator : aggregators) {
@@ -1427,6 +1342,7 @@ public class DefaultDataManager implements DataManager {
      * @param name
      * @return DataProvider
      */
+    @Override
     public DataProvider getDataProvider(String aggregatorId, String name) {
         for (Aggregator aggregator : aggregators) {
             if (aggregator.getId().equals(aggregatorId)) {
@@ -1451,18 +1367,80 @@ public class DefaultDataManager implements DataManager {
         }
         return null;
     }
-
-    public Aggregator getAggregatorParent(String dataProviderId) {
+    
+    @Override
+    public List<DataProvider> getDataProviders() throws DocumentException, IOException {
+        List<DataProvider> dataProvidersList = new ArrayList<DataProvider>();
         for (Aggregator aggregator : aggregators) {
-            for (DataProvider dataProvider : aggregator.getDataProviders()) {
-                if (dataProvider.getId().equals(dataProviderId)) {
-                    return aggregator;
+            dataProvidersList.addAll(aggregator.getDataProviders());
+        }
+        return dataProvidersList;
+    }
+    
+    /**
+     * Retrieves a sorted list of the number of providers from the specified aggregator starting from offset.
+     * @param aggregatorId 
+     * @param offset
+     * @param number
+     * @return the number of aggregators requested sorted
+     * @throws ObjectNotFoundException 
+     * @throws IndexOutOfBoundsException 
+     */
+    @Override
+    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
+    {
+        if(getAggregator(aggregatorId) == null)
+            throw new ObjectNotFoundException(aggregatorId);
+        
+        List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
+        Collections.sort(sortedList, new DataProviderComparator());
+        
+      //Create new arrayList because of backed list
+        if (offset >= 0 && number < 0) //From offset until the end of the list
+            return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
+        else if (offset >= 0)
+            if ((offset + number) > sortedList.size())
+                return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
+            else
+                return new ArrayList<DataProvider>(sortedList.subList(offset, offset + number));
+        else
+            //offset < 0
+            throw new IndexOutOfBoundsException("Offset cannot be negative!");
+    }
+    
+    /**
+     * Check if data provider exists inside a aggregator
+     * @param aggregatorId
+     * @param dataProvider
+     * @return boolean
+     */
+    @Override
+    public boolean checkIfDataProviderExists(String aggregatorId, DataProvider dataProvider) {
+        for (Aggregator currentAggregator : aggregators) {
+            if (currentAggregator.getId().equals(aggregatorId)) {
+                for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
+                    if (currentDataProvider.getId().equals(dataProvider.getId())) {
+                        return true;
+                    }
                 }
             }
         }
-        return null;
+        return false;
+    }
+    
+    @Override
+    public MessageType importDataProviders(File file2read, File repoPath) {
+        //todo
+        return null; //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public List<DataProvider> loadDataProvidersFromFile(File file2read, File repoPath) {
+        //todo
+        return null; //To change body of implemented methods use File | Settings | File Templates.
+    }
+    
+    
     /******************************************************************************************************************/
     /** DATA SOURCE CONTAINER *****************************************************************************************/
     /******************************************************************************************************************/
@@ -1482,15 +1460,70 @@ public class DefaultDataManager implements DataManager {
             return 0;
         }
     }
+    
+    
+    @Override
+    public boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws DocumentException, IOException {
+        DataSourceContainer dataSourceContainer = getDataSourceContainer(idDataSource2Move);
+        DataProvider dataProviderParent = getDataProviderParent(dataSourceContainer.getDataSource().getId());
+
+        if (dataProviderParent.getId().equals(newDataProviderID)) {
+            return false;
+        }
+
+        for (Aggregator currentAggregator : aggregators) {
+            for (DataProvider currentDataProvider : currentAggregator.getDataProviders()) {
+                if (currentDataProvider.getId().equals(newDataProviderID)) {
+                    currentDataProvider.getDataSourceContainers().put(dataSourceContainer.getDataSource().getId(), dataSourceContainer);
+                    dataProviderParent.getDataSourceContainers().remove(dataSourceContainer.getDataSource().getId());
+
+                    saveData();
+
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setDataSetSampleState(boolean isSample, DataSource dataSource) {
+        dataSource.setIsSample(isSample);
+        try {
+            saveData();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public synchronized MessageType removeTransformationFromDataSource(String transformationId) {
+        try {
+            HashMap<String, DataSourceContainer> dataSourceContainers = loadDataSourceContainers();
+
+            for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
+                DataSource currentDataSource = dataSourceContainer.getDataSource();
+                MetadataTransformation metadataTransformation = currentDataSource.getMetadataTransformations().get(transformationId);
+                if (metadataTransformation != null) {
+                    currentDataSource.getMetadataTransformations().remove(metadataTransformation.getId());
+                }
+            }
+            saveData();
+            return MessageType.OK;
+        } catch (DocumentException e) {
+            return MessageType.OTHER;
+        } catch (IOException e) {
+            return MessageType.OTHER;
+        }
+    }
 
     /**
      * Add Data Source Container
      * @param dataSourceContainer
      * @param dataProviderId
      * @return MessageType
-     * @throws IOException
-     * @throws DocumentException
      */
+    @Override
     public MessageType addDataSourceContainer(DataSourceContainer dataSourceContainer, String dataProviderId) {
         try {
             for (Aggregator currentAggregator : aggregators) {
@@ -1509,7 +1542,7 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
-    public synchronized MessageType deleteDataSource(String dataSourceId) throws ObjectNotFoundException {
+    private synchronized MessageType deleteDataSource(String dataSourceId) throws ObjectNotFoundException {
         DataProvider dataProviderParent = getDataProviderParent(dataSourceId);
 
         if (dataProviderParent == null)
@@ -1630,6 +1663,7 @@ public class DefaultDataManager implements DataManager {
         return null;
     }
     
+    @Override
     public List<DataSourceContainer> getDataSourceContainerListSorted(String providerId, int offset, int number) throws ObjectNotFoundException
     {
         if(getDataProvider(providerId) == null)
@@ -1650,36 +1684,6 @@ public class DefaultDataManager implements DataManager {
           //offset < 0
           throw new IndexOutOfBoundsException("Offset cannot be negative!");
     }
-    
-//    /**
-//     * Retrieves a sorted list of the number of providers from the specified aggregator starting from offset.
-//     * @param aggregatorId 
-//     * @param offset
-//     * @param number
-//     * @return the number of aggregators requested sorted
-//     * @throws ObjectNotFoundException 
-//     * @throws IndexOutOfBoundsException 
-//     */
-//    public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
-//    {
-//        if(getAggregator(aggregatorId) == null)
-//            throw new ObjectNotFoundException(aggregatorId);
-//        
-//        List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
-//        Collections.sort(sortedList, new DataProviderComparator());
-//        
-//      //Create new arrayList because of backed list
-//        if (offset >= 0 && number < 0) //From offset until the end of the list
-//            return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
-//        else if (offset >= 0)
-//            if ((offset + number) > sortedList.size())
-//                return new ArrayList<DataProvider>(sortedList.subList(offset, sortedList.size()));
-//            else
-//                return new ArrayList<DataProvider>(sortedList.subList(offset, offset + number));
-//        else
-//            //offset < 0
-//            throw new IndexOutOfBoundsException("Offset cannot be negative!");
-//    }
 
     @Override
     public MessageType updateDataSourceContainer(DataSourceContainer dataSourceContainer, String oldDataSourceId) {
@@ -1716,12 +1720,14 @@ public class DefaultDataManager implements DataManager {
 
     /**
      * Updates the Data Source with id newDataSourceId from oldDataSourceId.
-     *
-     * @param oldDataSourceId, newDataSourceId
-     * @return true if deletion was completely successful, false otherwise.
+     * @param oldDataSourceId 
+     * @param newDataSourceId 
+     * @throws IOException 
      * @throws DocumentException
+     * @throws SQLException 
      */
-    protected void updateDataSourceId(String oldDataSourceId, String newDataSourceId) throws IOException, DocumentException, SQLException {
+    @Override
+    public void updateDataSourceId(String oldDataSourceId, String newDataSourceId) throws IOException, DocumentException, SQLException {
         DataSource dataSource = getDataSource(oldDataSourceId);
         // dataSource.initAccessPoints();
 
@@ -1905,11 +1911,17 @@ public class DefaultDataManager implements DataManager {
      * @param filePath
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param metadataTransformations
+     * @param externalRestServices 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
      * @throws ParseException
+     * @throws ObjectNotFoundException 
+     * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
+     * @throws SQLException 
      */
     public DataSource createDataSourceZ3950IdList(String dataProviderId, String id, String description, String nameCode, String name,
             String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
@@ -1984,11 +1996,17 @@ public class DefaultDataManager implements DataManager {
      * @param earliestTimestampString
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param metadataTransformations
+     * @param externalRestServices 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
      * @throws ParseException
+     * @throws SQLException 
+     * @throws ObjectNotFoundException 
+     * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
      */
     public DataSource createDataSourceZ3950Timestamp(String dataProviderId, String id, String description, String nameCode, String name,
             String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
@@ -2062,11 +2080,17 @@ public class DefaultDataManager implements DataManager {
      * @param maximumIdString
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param metadataTransformations
+     * @param externalRestServices 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
      * @throws ParseException
+     * @throws SQLException 
+     * @throws ObjectNotFoundException 
+     * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
      */
     public DataSource createDataSourceZ3950IdSequence(String dataProviderId, String id, String description, String nameCode, String name,
             String exportPath, String schema, String namespace, String address, String port, String database, String user, String password,
@@ -2130,15 +2154,22 @@ public class DefaultDataManager implements DataManager {
      * @param charset
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param recordXPath
      * @param server
      * @param user
      * @param password
      * @param ftpPath
      * @param metadataTransformations
+     * @param externalRestServices 
+     * @param marcFormat 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
+     * @throws InvalidArgumentsException 
+     * @throws ObjectNotFoundException 
+     * @throws SQLException 
+     * @throws AlreadyExistsException 
      */
     public DataSource createDataSourceFtp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
             String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
@@ -2218,12 +2249,19 @@ public class DefaultDataManager implements DataManager {
      * @param charset
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param recordXPath
      * @param url
      * @param metadataTransformations
+     * @param externalRestServices 
+     * @param marcFormat 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
+     * @throws InvalidArgumentsException 
+     * @throws ObjectNotFoundException 
+     * @throws SQLException 
+     * @throws AlreadyExistsException 
      */
     public DataSource createDataSourceHttp(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
             String schema, String namespace, String metadataFormat, String isoFormat, String charset, String recordIdPolicyClass, String idXpath,
@@ -2299,12 +2337,19 @@ public class DefaultDataManager implements DataManager {
      * @param charset
      * @param recordIdPolicyClass
      * @param idXpath
+     * @param namespaces 
      * @param recordXPath
      * @param sourcesDirPath
      * @param metadataTransformations
+     * @param externalRestServices 
+     * @param marcFormat 
      * @return MessageType
      * @throws DocumentException
      * @throws IOException
+     * @throws InvalidArgumentsException 
+     * @throws ObjectNotFoundException 
+     * @throws AlreadyExistsException 
+     * @throws SQLException 
      */
     public DataSource createDataSourceFolder(String dataProviderId, String id, String description, String nameCode, String name, String exportPath,
             String schema, String namespace, String metadataFormat, String isoVariant, String charset, String recordIdPolicyClass, String idXpath,
@@ -2982,6 +3027,7 @@ public class DefaultDataManager implements DataManager {
      * Start the data source ingestion
      * @param dataSourceId
      * @param fullIngest
+     * @throws SecurityException 
      * @throws DocumentException
      * @throws IOException
      * @throws NoSuchMethodException
@@ -2990,8 +3036,8 @@ public class DefaultDataManager implements DataManager {
      * @throws ObjectNotFoundException
      * @throws AlreadyExistsException
      */
-    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException,
-            ClassNotFoundException, ParseException, ObjectNotFoundException, AlreadyExistsException {
+    @Override
+    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws SecurityException, NoSuchMethodException, DocumentException, IOException, AlreadyExistsException, ClassNotFoundException, ParseException, ObjectNotFoundException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
@@ -3018,6 +3064,7 @@ public class DefaultDataManager implements DataManager {
      * @throws ClassNotFoundException
      * @throws ParseException
      */
+    @Override
     public void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException,
             ObjectNotFoundException, ClassNotFoundException, ParseException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
@@ -3066,6 +3113,7 @@ public class DefaultDataManager implements DataManager {
      * @throws ParseException
      * @throws ObjectNotFoundException
      */
+    @Override
     public void startExportDataSource(String dataSourceId, String recordsPerFile, String metadataExportFormat) throws DocumentException,
             AlreadyExistsException, IOException, ClassNotFoundException, NoSuchMethodException, ParseException, ObjectNotFoundException {
         DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(dataSourceId);
@@ -3094,8 +3142,34 @@ public class DefaultDataManager implements DataManager {
             throw new ObjectNotFoundException(dataSourceId);
         }
     }
+    
+    @Override
+    public String getDirPathFtp(String dataSourceId) {
+        try {
+            DataSource dataSource = null;
+            while (dataSource == null) {
+                dataSource = getDataSource(dataSourceId);
+                if (dataSource != null && ((DirectoryImporterDataSource)dataSource).getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
+                    return ((DirectoryImporterDataSource)dataSource).getSourcesDirPath();
+                }
+            }
+        } catch (DocumentException e) {
+            log.error(e.getMessage());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return null;
+    }
 
     /**** RECORDS *****************************************************************************************************/
+    /**
+     * @param recordUrn
+     * @return the node with the record
+     * @throws IOException
+     * @throws DocumentException
+     * @throws SQLException
+     */
+    @Override
     public Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException {
         byte[] recordMetadata = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().getRecord(recordUrn).getMetadata();
         SAXReader reader = new SAXReader();
@@ -3103,6 +3177,7 @@ public class DefaultDataManager implements DataManager {
         return recordDocument.getRootElement().detach();
     }
 
+    @Override
     public MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
@@ -3121,6 +3196,7 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
+    @Override
     public MessageType deleteRecord(String recordId) throws IOException {
         try {
             Urn recordUrn = new Urn(recordId);
@@ -3133,6 +3209,7 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
+    @Override
     public MessageType eraseRecord(String recordId) throws IOException {
         try {
             Urn recordUrn = new Urn(recordId);
@@ -3155,16 +3232,7 @@ public class DefaultDataManager implements DataManager {
 
     }
 
-    public MessageType importDataProviders(File file2read, File repoPath) {
-        //todo
-        return null; //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public List<DataProvider> loadDataProvidersFromFile(File file2read, File repoPath) {
-        //todo
-        return null; //To change body of implemented methods use File | Settings | File Templates.
-    }
-
+    @Override
     public MetadataTransformationManager getMetadataTransformationManager() {
         //todo
         return null; //To change body of implemented methods use File | Settings | File Templates.
@@ -3172,6 +3240,7 @@ public class DefaultDataManager implements DataManager {
 
     /**** TASKS *****************************************************************************************************/
 
+    @Override
     public synchronized void saveOldTask(OldTask oldTask) {
         try {
             SAXReader reader = new SAXReader();
@@ -3208,26 +3277,11 @@ public class DefaultDataManager implements DataManager {
         }
     }
 
+    @Override
     public boolean isIdValid(String id) {
         return (id.length() <= ID_MAX_SIZE) && Pattern.compile(ID_REGULAR_EXPRESSION).matcher(id).matches();
     }
 
-    public String getDirPathFtp(String dataSourceId) {
-        try {
-            DataSource dataSource = null;
-            while (dataSource == null) {
-                dataSource = getDataSource(dataSourceId);
-                if (dataSource != null && ((DirectoryImporterDataSource)dataSource).getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
-                    return ((DirectoryImporterDataSource)dataSource).getSourcesDirPath();
-                }
-            }
-        } catch (DocumentException e) {
-            log.error(e.getMessage());
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
 
     private void setLastIngestDate(boolean useLastIngestDate, DataSource originalDataSet, DataSource targetDataSet) {
         if (!useLastIngestDate && originalDataSet.getLastUpdate() != null) {
@@ -3238,6 +3292,7 @@ public class DefaultDataManager implements DataManager {
             targetDataSet.setLastUpdate(originalDataSet.getLastUpdate());
     }
 
+    @Override
     public void removeLogsAndOldTasks(String dataSetId) throws IOException, DocumentException {
         ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSetId).getDataSource().getOldTasksList()
                 .clear();

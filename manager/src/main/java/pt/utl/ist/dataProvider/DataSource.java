@@ -101,8 +101,9 @@ import freemarker.template.TemplateException;
 
 /**
  * Represents a Data Source in REPOX. It will be used to harvest records and
- * ingest them. Known implementations are: DataSourceOai,
- * DataSourceDirectoryImporter
+ * ingest them. 
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
+ * @since Nov 01, 2014
  */
 @XmlRootElement(name = "dataset")
 @XmlAccessorType(XmlAccessType.NONE)

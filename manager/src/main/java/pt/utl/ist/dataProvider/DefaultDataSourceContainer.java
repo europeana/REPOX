@@ -34,11 +34,9 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Gilberto Pedrosa
- * Date: 27-06-2011
- * Time: 17:32
- * To change this template use File | Settings | File Templates.
+ * @author Gilberto Pedrosa
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
+ * @since Nov 01, 2014
  */
 @XmlRootElement(name = "defaultDatasetContainer")
 @XmlAccessorType(XmlAccessType.NONE)
