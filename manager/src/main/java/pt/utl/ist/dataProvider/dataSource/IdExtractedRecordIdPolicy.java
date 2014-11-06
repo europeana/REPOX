@@ -19,6 +19,7 @@ import java.util.Set;
  */
 public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     private static final Logger log = Logger.getLogger(IdExtractedRecordIdPolicy.class);
+    public static final String IDEXTRACTED = "IdExtracted";
 
     private Map<String, String> namespaces;
     private String              identifierXpath;                          //private String identifierXpath = "/record/identifier"; OAI-DC

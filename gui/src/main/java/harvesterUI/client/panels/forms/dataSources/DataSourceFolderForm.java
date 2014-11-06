@@ -12,6 +12,12 @@ import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 
 import java.util.List;
 
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.http.HttpFileRetrieveStrategy;
+import pt.utl.ist.marc.FolderFileRetrieveStrategy;
+
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
@@ -417,10 +423,10 @@ public class DataSourceFolderForm extends DataSourceForm {
         }
 
         String idPolicy = dataSourceUI.getRecordIdPolicy();
-        if(idPolicy.equals("IdGenerated")){
+        if(idPolicy.equals(IdGeneratedRecordIdPolicy.IDGENERATED)){
             idPolicyCombo.setValue(idPolicyCombo.getStore().getAt(0));
         }
-        else if(idPolicy.equals("IdExtracted")){
+        else if(idPolicy.equals(IdExtractedRecordIdPolicy.IDEXTRACTED)){
             idPolicyCombo.setValue(idPolicyCombo.getStore().getAt(1));
             idXPathField.setValue(dataSourceUI.getIdXPath());
             setEditNamespaces(dataSourceUI);
@@ -541,22 +547,23 @@ public class DataSourceFolderForm extends DataSourceForm {
     }
 
     public void saveData(){
+        System.out.println("Hello");
         String metadataFormat = dataSourceSchemaForm.getMetadataFormatCombo().getValue().getShortDesignation();
         String charEnc = characterEncoding.getValue().get("value");
         String idPolicy;
         if(idPolicyCombo.getValue().get("value").equals("ID Generated"))
-            idPolicy = "IdGenerated";
+            idPolicy = IdGeneratedRecordIdPolicy.IDGENERATED;
         else
-            idPolicy = "IdExtracted";
+            idPolicy = IdExtractedRecordIdPolicy.IDEXTRACTED;
         String idXPath = idXPathField.getValue();
         String variant = retrieveVariantCombo.getValue().get("value");
         String dsRetrieveStrat = "";
         if(variant.equals("Folder"))
-            dsRetrieveStrat = "pt.utl.ist.repox.marc.DataSourceFolder";
+            dsRetrieveStrat = FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY;
         else if(variant.equals("FTP")) {
-            dsRetrieveStrat = "pt.utl.ist.repox.ftp.DataSourceFtp";
+            dsRetrieveStrat = FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY;
         } else if(variant.equals("HTTP")) {
-            dsRetrieveStrat = "pt.utl.ist.repox.ftp.DataSourceHTTP";
+            dsRetrieveStrat = HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY;
         }
         String serverUrl = server.getValue();
         String userId = user.getValue();

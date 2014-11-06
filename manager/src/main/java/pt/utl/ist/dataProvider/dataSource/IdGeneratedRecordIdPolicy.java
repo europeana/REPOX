@@ -12,6 +12,7 @@ import java.util.UUID;
  */
 public class IdGeneratedRecordIdPolicy implements RecordIdPolicy {
     private static final Logger log = Logger.getLogger(IdGeneratedRecordIdPolicy.class);
+    public static final String IDGENERATED = "IdGenerated";
 
     /**
      * Creates a new instance of this class.

@@ -14,6 +14,8 @@ import harvesterUI.shared.mdr.SchemaUI;
 import java.util.List;
 import java.util.Map;
 
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
@@ -383,7 +385,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         if(dataSourceUI == null) {
             dataSourceUI = new DataSourceUI(parent, desc.trim(), "", metadataFormat + " | ese", "OAI-PMH " + metadataFormat.trim(),
                     parent.getCountry(),desc.trim(), "", oai_url.trim(), oai_set != null ? oai_set.trim() : "",
-                    "", "IdGenerated",metadataFormat);
+                    "", IdGeneratedRecordIdPolicy.IDGENERATED,metadataFormat);
         }
 
         dataSourceUI.setIngest("OAI-PMH " + metadataFormat.trim());

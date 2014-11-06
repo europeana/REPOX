@@ -9,6 +9,7 @@ import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.user.client.Element;
+
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
@@ -17,6 +18,8 @@ import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 
 import java.util.List;
+
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 
 /**
  * Created to REPOX.
@@ -170,7 +173,7 @@ public class DataSourceYaddaForm extends DataSourceForm {
 
     public void saveData(){
         String metadataFormat = dataSourceSchemaForm.getMetadataFormatCombo().getValue().getShortDesignation();
-        String idPolicy = "IdGenerated";
+        String idPolicy = IdGeneratedRecordIdPolicy.IDGENERATED;
         String dsRetrieveStrat = "pt.utl.ist.repox.marc.DataSourceFolder";
         String record_set = recordSet.getValue();
         String desc = description.getValue();

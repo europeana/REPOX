@@ -9,6 +9,7 @@ import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 /**
  */
 public class FolderFileRetrieveStrategy implements FileRetrieveStrategy {
+    public static final String FOLDERFILERETRIEVESTRATEGY = "FolderFileRetrieveStrategy";
 
     @Override
     public boolean retrieveFiles(String dataSourceId) {

@@ -2391,7 +2391,7 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
                         newDataSource.setMarcFormat(marcFormat);
-
+                        
                         ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
                                 .initialize(dataProvider.getDataSourceContainers());
                         updateDataProvider(dataProvider, dataProviderId);

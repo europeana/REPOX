@@ -61,6 +61,7 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.rest.statistics.DefaultRepoxStatistics;
 import pt.utl.ist.rest.statistics.DefaultStatisticsManager;
@@ -715,9 +716,9 @@ public class DefaultProjectManager extends ProjectManager {
 
         String recordPolicy;
         if(dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy)
-            recordPolicy = "IdExtracted";
+            recordPolicy = IdExtractedRecordIdPolicy.IDEXTRACTED;
         else
-            recordPolicy = "IdGenerated";
+            recordPolicy = IdGeneratedRecordIdPolicy.IDGENERATED;
 
         DataSourceUI newDataSourceUI = new DataSourceUI(dataProviderUI,dataSource.getDescription(),
                 dataSource.getId(),oaiSchemas,"TODO","",

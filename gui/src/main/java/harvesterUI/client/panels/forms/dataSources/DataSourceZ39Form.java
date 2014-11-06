@@ -13,6 +13,9 @@ import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 import java.util.Date;
 import java.util.List;
 
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
@@ -112,9 +115,9 @@ public class DataSourceZ39Form extends DataSourceForm {
     public void saveData(){
         String idPolicy;
         if(idPolicyCombo.getValue().get("value").equals("ID Generated"))
-            idPolicy = "IdGenerated";
+            idPolicy = IdGeneratedRecordIdPolicy.IDGENERATED;
         else
-            idPolicy = "IdExtracted";
+            idPolicy = IdExtractedRecordIdPolicy.IDEXTRACTED;
         String idXPath = idXPathField.getValue();
         String harvestMethod = "";
         if(harvestMethodCombo.getValue().get("value").equals("ID Sequence"))
@@ -413,10 +416,10 @@ public class DataSourceZ39Form extends DataSourceForm {
         characterEncoding.getStore().clearFilters();
 
         String idPolicy = dataSourceUI.getRecordIdPolicy();
-        if(idPolicy.equals("IdGenerated")) {
+        if(idPolicy.equals(IdGeneratedRecordIdPolicy.IDGENERATED)) {
             idPolicyCombo.setValue(idPolicyCombo.getStore().getAt(0));
         }
-        else if(idPolicy.equals("IdExtracted")) {
+        else if(idPolicy.equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
             idPolicyCombo.setValue(idPolicyCombo.getStore().getAt(1));
             idXPathField.setValue(dataSourceUI.getIdXPath());
             setEditNamespaces(dataSourceUI);

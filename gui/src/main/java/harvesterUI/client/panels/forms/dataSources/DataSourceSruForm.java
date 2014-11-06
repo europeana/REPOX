@@ -1,5 +1,6 @@
 package harvesterUI.client.panels.forms.dataSources;
 
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
@@ -181,7 +182,7 @@ public class DataSourceSruForm extends DataSourceForm {
         String desc = description.getValue();
         if(dataSourceUI == null) {
             dataSourceUI = new DataSourceUI(parent, desc.trim(), "", metadataFormat + " | ese", "SRU " + metadataFormat.trim(),
-                    parent.getCountry(),desc.trim(), "", "", "","", "IdGenerated",metadataFormat);
+                    parent.getCountry(),desc.trim(), "", "", "","", IdGeneratedRecordIdPolicy.IDGENERATED,metadataFormat);
         }
 
         dataSourceUI.setIngest("SRU " + metadataFormat.trim());

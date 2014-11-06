@@ -23,6 +23,7 @@ import java.net.URLConnection;
  */
 public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log = Logger.getLogger(HttpFileRetrieveStrategy.class);
+    public static final String HTTPFILERETRIEVESTRATEGY = "HttpFileRetrieveStrategy";
 
     private String              url;
 

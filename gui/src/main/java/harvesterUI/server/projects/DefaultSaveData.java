@@ -43,12 +43,16 @@ import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
 import pt.utl.ist.externalServices.ExternalServiceNoMonitor;
 import pt.utl.ist.externalServices.ExternalServiceStates;
 import pt.utl.ist.externalServices.ExternalServiceType;
 import pt.utl.ist.externalServices.ServiceParameter;
+import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.http.HttpFileRetrieveStrategy;
+import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.oai.OaiDataSource;
@@ -133,9 +137,9 @@ public class DefaultSaveData {
                                 dataSourceUI.getSourceMDFormat(), metadataTransformations,externalRestServices,
                                 dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
                     } else if(type == DatasetType.FOLDER) {
-                        if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.marc.DataSourceFolder")) {
+                        if(dataSourceUI.getRetrieveStartegy().equals(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY)) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -149,7 +153,7 @@ public class DefaultSaveData {
                                     dataSourceUI.getRecordIdPolicy(), dataSourceUI.getIdXPath(),
                                     namespaces, dataSourceUI.getRecordRootName(), dataSourceUI.getDirPath(),
                                     metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
-                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
+                        } else if(dataSourceUI.getRetrieveStartegy().equals(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY)) {
                             // Check FTP connection
                             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty()) {
                                 if(!FileUtilSecond.checkFtpServer(dataSourceUI.getServer(),"Normal",dataSourceUI.getFolderPath(),
@@ -160,7 +164,7 @@ public class DefaultSaveData {
                             }
 
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -175,9 +179,9 @@ public class DefaultSaveData {
                                     namespaces, dataSourceUI.getRecordRootName(), dataSourceUI.getServer(),
                                     dataSourceUI.getUser(), dataSourceUI.getPassword(), dataSourceUI.getFolderPath(),
                                     metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
-                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceHTTP")) {
+                        } else if(dataSourceUI.getRetrieveStartegy().equals(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY)) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -196,7 +200,7 @@ public class DefaultSaveData {
                         // Harvest Method differences
                         if(dataSourceUI.getZ39HarvestMethod().equals("IdSequenceHarvester")) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -220,7 +224,7 @@ public class DefaultSaveData {
                             }
 
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -240,7 +244,7 @@ public class DefaultSaveData {
                             String earliestDateString = formatter.format(dataSourceUI.getZ39EarlistDate());
 
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -311,9 +315,9 @@ public class DefaultSaveData {
                                 dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
                                 dataSourceUI.getSourceMDFormat(), metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat());
                     } else if(type == DatasetType.FOLDER) {
-                        if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.marc.DataSourceFolder")) {
+                        if(dataSourceUI.getRetrieveStartegy().equals(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY)) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -327,9 +331,9 @@ public class DefaultSaveData {
                                     dataSourceUI.getRecordIdPolicy(), dataSourceUI.getIdXPath(),
                                     namespaces, dataSourceUI.getRecordRootName(), dataSourceUI.getDirPath(),
                                     metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat());
-                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
+                        } else if(dataSourceUI.getRetrieveStartegy().equals(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY)) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -353,9 +357,9 @@ public class DefaultSaveData {
                                     namespaces, dataSourceUI.getRecordRootName(), dataSourceUI.getServer(),
                                     dataSourceUI.getUser(), dataSourceUI.getPassword(), dataSourceUI.getFolderPath(),
                                     metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat());
-                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceHTTP")) {
+                        } else if(dataSourceUI.getRetrieveStartegy().equals(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY)) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -374,7 +378,7 @@ public class DefaultSaveData {
                         // Harvest Method differences
                         if(dataSourceUI.getZ39HarvestMethod().equals("IdSequenceHarvester")) {
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -398,7 +402,7 @@ public class DefaultSaveData {
                             }
 
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));
@@ -417,7 +421,7 @@ public class DefaultSaveData {
                             Format formatter = new SimpleDateFormat("yyyyMMdd");
                             String earliestDateString = formatter.format(dataSourceUI.getZ39EarlistDate());
                             Map<String, String> namespaces = new HashMap<String, String>();
-                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                                 for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
                                     namespaces.put(dataSourceUI.getNamespaceList().get(i),
                                             dataSourceUI.getNamespaceList().get(i+1));

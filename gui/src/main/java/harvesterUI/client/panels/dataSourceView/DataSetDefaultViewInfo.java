@@ -1,5 +1,6 @@
 package harvesterUI.client.panels.dataSourceView;
 
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.servlets.RepoxServiceAsync;
 import harvesterUI.client.util.ImageButton;
@@ -108,7 +109,7 @@ public class DataSetDefaultViewInfo {
         isSample.setValue(dataSourceUI.isSample());
         idPolicy.setValue(dataSourceUI.getRecordIdPolicy());
         tags.setValue(loadTags(dataSourceUI));
-        if(idPolicy.getValue().toString().equals("IdExtracted")) {
+        if(idPolicy.getValue().toString().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
             LabelField idXPath = new LabelField();
             idXPath.setId("idxpath");
             idXPath.setValue(dataSourceUI.getIdXPath());

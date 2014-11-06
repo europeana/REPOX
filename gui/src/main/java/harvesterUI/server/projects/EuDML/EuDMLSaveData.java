@@ -1,5 +1,7 @@
 //package harvesterUI.server.projects.EuDML;
 //
+//import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+//
 //import harvesterUI.server.dataManagement.dataSets.Z39FileUpload;
 //import harvesterUI.server.projects.Light.LightSaveData;
 //import harvesterUI.server.userManagement.UserManagementServiceImpl;
@@ -147,7 +149,7 @@
 //                    } else if(type == DatasetType.FOLDER) {
 //                        if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.marc.DataSourceFolder")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -162,7 +164,7 @@
 //                                    externalRestServices,dataSourceUI.isStoreInYadda(),dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
 //                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -188,7 +190,7 @@
 //                                    dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
 //                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceHTTP")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -207,7 +209,7 @@
 //                        // Harvest Method differences
 //                        if(dataSourceUI.getZ39HarvestMethod().equals("IdSequenceHarvester")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -231,7 +233,7 @@
 //                            }
 //
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -250,7 +252,7 @@
 //                            Format formatter = new SimpleDateFormat("yyyyMMdd");
 //                            String earliestDateString = formatter.format(dataSourceUI.getZ39EarlistDate());
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -326,7 +328,7 @@
 //                    } else if(type == DatasetType.FOLDER) {
 //                        if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.marc.DataSourceFolder")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -341,7 +343,7 @@
 //                                    metadataTransformations,externalRestServices,dataSourceUI.isStoreInYadda(),dataSourceUI.getMarcFormat());
 //                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -366,7 +368,7 @@
 //                                    metadataTransformations,externalRestServices,dataSourceUI.isStoreInYadda(),dataSourceUI.getMarcFormat());
 //                        } else if(dataSourceUI.getRetrieveStartegy().equals("pt.utl.ist.repox.ftp.DataSourceHTTP")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -384,7 +386,7 @@
 //                        // Harvest Method differences
 //                        if(dataSourceUI.getZ39HarvestMethod().equals("IdSequenceHarvester")) {
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -407,7 +409,7 @@
 //                            }
 //
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));
@@ -425,7 +427,7 @@
 //                            Format formatter = new SimpleDateFormat("yyyyMMdd");
 //                            String earliestDateString = formatter.format(dataSourceUI.getZ39EarlistDate());
 //                            Map<String, String> namespaces = new HashMap<String, String>();
-//                            if(dataSourceUI.getRecordIdPolicy().equals("IdExtracted")) {
+//                            if(dataSourceUI.getRecordIdPolicy().equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
 //                                for(int i=0; i<dataSourceUI.getNamespaceList().size(); i+=2) {
 //                                    namespaces.put(dataSourceUI.getNamespaceList().get(i),
 //                                            dataSourceUI.getNamespaceList().get(i+1));

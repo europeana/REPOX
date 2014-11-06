@@ -1,3 +1,5 @@
+//import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+
 //package pt.utl.ist.repox.dataSource;
 //
 //import java.io.File;
@@ -41,7 +43,7 @@
 //    private final String SOURCE_CHARSET = "UTF-8";
 //    private final String SOURCE_SYNTAX = "usmarc";
 //    private final String SOURCE_MAXIMUMID = "10";
-//    private final String SOURCE_ID_POLICYCLASS = "IdGenerated";
+//    private final String SOURCE_ID_POLICYCLASS = IdGeneratedRecordIdPolicy.IDGENERATED;
 //
 //    private final String SOURCE_IDXPATH = "";
 //    private final String SOURCE_NAMESPACEURI ="";

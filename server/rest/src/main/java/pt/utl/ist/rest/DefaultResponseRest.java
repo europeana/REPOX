@@ -5,6 +5,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.rest.services.web.DefaultWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
@@ -571,7 +572,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
+                                (!recordIdPolicy.equals(IdExtractedRecordIdPolicy.IDEXTRACTED) ||
                                         (idXpath != null && !idXpath.isEmpty() &&
                                                 namespacePrefix != null && !namespacePrefix.isEmpty() &&
                                                 namespaceUri != null && !namespaceUri.isEmpty())) &&
@@ -633,7 +634,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
+                                (!recordIdPolicy.equals(IdExtractedRecordIdPolicy.IDEXTRACTED) ||
                                         (idXpath != null && !idXpath.isEmpty() &&
                                                 namespacePrefix != null && !namespacePrefix.isEmpty() &&
                                                 namespaceUri != null && !namespaceUri.isEmpty())) &&
@@ -691,7 +692,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                                 namespace != null && !namespace.isEmpty() &&
                                 metadataFormat != null && !metadataFormat.isEmpty() &&
                                 recordIdPolicy != null && !recordIdPolicy.isEmpty() &&
-                                (!recordIdPolicy.equals("IdExtracted") ||
+                                (!recordIdPolicy.equals(IdExtractedRecordIdPolicy.IDEXTRACTED) ||
                                         (idXpath != null && !idXpath.isEmpty() &&
                                                 namespacePrefix != null && !namespacePrefix.isEmpty() &&
                                                 namespaceUri != null && !namespaceUri.isEmpty())) &&

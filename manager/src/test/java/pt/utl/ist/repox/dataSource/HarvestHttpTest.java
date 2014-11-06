@@ -1,3 +1,5 @@
+//import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+
 //package pt.utl.ist.repox.dataSource;
 //
 //import java.io.IOException;
@@ -33,7 +35,7 @@
 //    private final String SOURCE_METADATA_FORMAT = MetadataFormat.ese.name();
 //
 //    private final String SOURCE_CHARSET = "";
-//    private final String SOURCE_ID_POLICYCLASS = "IdGenerated";
+//    private final String SOURCE_ID_POLICYCLASS = IdGeneratedRecordIdPolicy.IDGENERATED;
 //    private final String SOURCE_ISO_FORMAT = " ";
 //
 //    private final String SOURCE_IDXPATH = "";

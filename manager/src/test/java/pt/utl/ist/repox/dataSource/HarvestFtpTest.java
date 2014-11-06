@@ -1,3 +1,5 @@
+//import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+
 //package pt.utl.ist.repox.dataSource;
 //
 //import java.io.File;
@@ -39,7 +41,7 @@
 //    private final String SOURCE_PASSWORD = "pmath2010.";
 //    private final String SOURCE_ftpPATH= "Lizbeth";
 //    private final String SOURCE_CHARSET = "";
-//    private final String SOURCE_ID_POLICYCLASS = "IdGenerated";
+//    private final String SOURCE_ID_POLICYCLASS = IdGeneratedRecordIdPolicy.IDGENERATED;
 //    private final String SOURCE_ISO_FORMAT = " ";
 //
 //    private final String SOURCE_IDXPATH = "";

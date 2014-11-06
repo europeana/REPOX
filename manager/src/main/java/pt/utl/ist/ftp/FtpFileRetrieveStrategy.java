@@ -21,6 +21,8 @@ import java.io.IOException;
  */
 public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log       = Logger.getLogger(FtpFileRetrieveStrategy.class);
+    public static final String FTPFILERETRIEVESTRATEGY = "FtpFileRetrieveStrategy";
+    
     /** DataSourceFtp NORMAL */
     public static final String  NORMAL    = "Normal";
     /** DataSourceFtp ANONYMOUS */

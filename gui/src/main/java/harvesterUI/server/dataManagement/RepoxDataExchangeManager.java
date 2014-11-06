@@ -32,6 +32,7 @@ import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
 import pt.utl.ist.externalServices.ServiceParameter;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
@@ -297,7 +298,7 @@ public class RepoxDataExchangeManager {
         if(dataSourceDirectoryImporter.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy) {
             IdExtractedRecordIdPolicy idExtracted = (IdExtractedRecordIdPolicy) dataSource.getRecordIdPolicy();
             dataSourceUI.setIdXPath(idExtracted.getIdentifierXpath());
-            dataSourceUI.setRecordIdPolicy("IdExtracted");
+            dataSourceUI.setRecordIdPolicy(IdExtractedRecordIdPolicy.IDEXTRACTED);
             Map<String,String> namespaces = idExtracted.getNamespaces();
             Iterator iterator=namespaces.entrySet().iterator();
             while(iterator.hasNext()){
@@ -306,7 +307,7 @@ public class RepoxDataExchangeManager {
                 dataSourceUI.getNamespaceList().add("" +mapEntry.getValue());
             }
         } else
-            dataSourceUI.setRecordIdPolicy("IdGenerated");
+            dataSourceUI.setRecordIdPolicy(IdGeneratedRecordIdPolicy.IDGENERATED);
     }
 
     public static DataProviderUI parseDataProvider(DataProvider dataProvider)  throws ServerSideException{
