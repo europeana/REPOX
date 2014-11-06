@@ -547,7 +547,6 @@ public class DataSourceFolderForm extends DataSourceForm {
     }
 
     public void saveData(){
-        System.out.println("Hello");
         String metadataFormat = dataSourceSchemaForm.getMetadataFormatCombo().getValue().getShortDesignation();
         String charEnc = characterEncoding.getValue().get("value");
         String idPolicy;
