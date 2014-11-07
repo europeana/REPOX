@@ -17,6 +17,8 @@ import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.marc.iso2709.Iso2709Types;
+import pt.utl.ist.marc.iso2709.Iso2709Variant;
 
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -579,11 +581,11 @@ public class DataSourceFolderForm extends DataSourceForm {
 
         String isoVariantStr = "";
         if(isoVariant.getValue().get("value").equals("Standard"))
-            isoVariantStr = "pt.utl.ist.marc.iso2709.IteratorIso2709";
+            isoVariantStr = Iso2709Variant.STANDARD.getIsoVariant();
         else if(isoVariant.getValue().get("value").equals("Variant From Albania")) {
-            isoVariantStr = "pt.utl.ist.marc.iso2709.IteratorIso2709Albania";
+            isoVariantStr = Iso2709Variant.ALBANIA.getIsoVariant();
         } else if(isoVariant.getValue().get("value").equals("Variant From Ukraine")) {
-            isoVariantStr = "pt.utl.ist.marc.iso2709.IteratorIso2709Ukraine";
+            isoVariantStr = Iso2709Variant.UKRAINE.getIsoVariant();
         }
 
         if(dataSourceUI == null) {
