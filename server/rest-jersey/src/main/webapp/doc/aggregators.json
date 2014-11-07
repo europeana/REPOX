@@ -4,6 +4,89 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/aggregators",
   "apis" : [ {
+    "path" : "/aggregators",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over aggregator conext.",
+      "notes" : "",
+      "type" : "AggregatorOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    }, {
+      "method" : "POST",
+      "summary" : "Create an aggregator.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "createAggregator",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "body",
+        "description" : "Aggregator data",
+        "required" : true,
+        "type" : "aggregator",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of aggregators.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "aggregator"
+      },
+      "nickname" : "getAggregatorList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : false,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : false,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of aggregators)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      } ]
+    } ]
+  }, {
     "path" : "/aggregators/{aggregatorId}",
     "operations" : [ {
       "method" : "GET",
@@ -90,89 +173,6 @@
       }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
-      } ]
-    } ]
-  }, {
-    "path" : "/aggregators",
-    "operations" : [ {
-      "method" : "POST",
-      "summary" : "Create an aggregator.",
-      "notes" : "",
-      "type" : "string",
-      "nickname" : "createAggregator",
-      "produces" : [ "application/json", "application/xml" ],
-      "consumes" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "body",
-        "description" : "Aggregator data",
-        "required" : true,
-        "type" : "aggregator",
-        "paramType" : "body",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 201,
-        "message" : "Created (Response containing a String message)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 406,
-        "message" : "MissingArgumentsException"
-      }, {
-        "code" : 409,
-        "message" : "AlreadyExistsException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
-      } ]
-    }, {
-      "method" : "GET",
-      "summary" : "Get a list of aggregators.",
-      "notes" : "",
-      "type" : "array",
-      "items" : {
-        "$ref" : "aggregator"
-      },
-      "nickname" : "getAggregatorList",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "offset",
-        "description" : "Index where to start from",
-        "defaultValue" : "0",
-        "required" : false,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "number",
-        "description" : "Number of aggregators requested",
-        "defaultValue" : "-1",
-        "required" : false,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of aggregators)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      } ]
-    }, {
-      "method" : "OPTIONS",
-      "summary" : "Get options over aggregator conext.",
-      "notes" : "",
-      "type" : "AggregatorOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
       } ]
     } ]
   } ],

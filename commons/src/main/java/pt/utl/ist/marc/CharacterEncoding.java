@@ -1,7 +1,10 @@
 package pt.utl.ist.marc;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  */
+@XmlEnum(String.class)
 public enum CharacterEncoding {
     /** CharacterEncoding UTF_8 */
     UTF_8,

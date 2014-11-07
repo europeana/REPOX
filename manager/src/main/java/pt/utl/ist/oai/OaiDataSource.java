@@ -54,8 +54,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  */
 @XmlRootElement(name = "OaiDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
-@ApiModel(value = "An OaiDataset")
-//@XmlType(name="some_item")
+@ApiModel(value = "An OaiDatasource")
 public class OaiDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(OaiDataSource.class);
 

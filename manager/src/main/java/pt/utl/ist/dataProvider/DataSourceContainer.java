@@ -21,7 +21,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 
 @XmlRootElement(name = "datasetContainer")
 @XmlAccessorType(XmlAccessType.NONE)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "containerType")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = DefaultDataSourceContainer.class, name = "DEFAULT")
 })

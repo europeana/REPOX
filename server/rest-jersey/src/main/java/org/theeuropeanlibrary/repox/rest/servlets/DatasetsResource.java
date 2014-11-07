@@ -4,6 +4,8 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +38,15 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
+import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.marc.DirectoryImporterDataSource;
+import pt.utl.ist.marc.iso2709.Iso2709Variant;
+import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
@@ -176,6 +186,8 @@ public class DatasetsResource {
                 throw new MissingArgumentsException("Invalid value: " + "Dataset schema must not be empty");
             else if (namespace == null || namespace.equals(""))
                 throw new MissingArgumentsException("Invalid value: " + "Dataset namespace must not be empty");
+            else if (metadataFormat == null || metadataFormat.equals(""))
+                throw new MissingArgumentsException("Invalid value: " + "Dataset metadataFormat must not be empty");
 
             if (dataSource instanceof OaiDataSource)
             {
@@ -192,6 +204,56 @@ public class DatasetsResource {
                     dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
                             oaiSourceURL, oaiSet, metadataTransformations,
                             externalRestServices, marcFormat);
+                } catch (InvalidArgumentsException e) {
+                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                } catch (ObjectNotFoundException e) {
+                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                } catch (AlreadyExistsException e) {
+                    throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                } catch (SQLException | DocumentException | IOException e) {
+                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                }
+            }
+            else if(dataSource instanceof DirectoryImporterDataSource)
+            {
+                DirectoryImporterDataSource directoryImporterDataSource = (DirectoryImporterDataSource)dataSource;
+                String sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
+                String recordXPath = directoryImporterDataSource.getRecordXPath();
+                CharacterEncoding characterEncoding = directoryImporterDataSource.getCharacterEncoding();
+                Iso2709Variant isoVariant = directoryImporterDataSource.getIsoVariant();
+                RecordIdPolicy recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
+                String recordIdPolicyString = null;
+                String idXpath = null;
+                if (recordIdPolicy == null)
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset recordIdPolicy must not be empty");
+                
+                if (recordIdPolicy instanceof IdGeneratedRecordIdPolicy)
+                    recordIdPolicyString = IdGeneratedRecordIdPolicy.IDGENERATED;
+                else if (recordIdPolicy instanceof IdProvidedRecordIdPolicy)
+                    recordIdPolicyString = IdProvidedRecordIdPolicy.IDPROVIDED;
+                else if (recordIdPolicy instanceof IdExtractedRecordIdPolicy)
+                {
+                    recordIdPolicyString = IdExtractedRecordIdPolicy.IDEXTRACTED;
+                    idXpath = ((IdExtractedRecordIdPolicy)recordIdPolicy).getIdentifierXpath();
+                    
+                    if (idXpath == null || idXpath.isEmpty())
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset idXpath must not be empty");
+                }
+                    
+                Map<String, String> namespaces = new HashMap<String, String>();
+                
+                if (sourcesDirPath == null || sourcesDirPath.isEmpty())
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
+                
+                if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
+                    if (isoVariant == null)
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset isoVariant must not be empty");
+                    else if (characterEncoding == null)
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset characterEncoding must not be empty");
+                }
+                
+                try {
+                    dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariant.getIsoVariant(), characterEncoding.toString(), recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
                 } catch (InvalidArgumentsException e) {
                     throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {

@@ -1,0 +1,27 @@
+/* IsoVariant.java - created on Nov 7, 2014, Copyright (c) 2011 The European Library, all rights reserved */
+package pt.utl.ist.marc.iso2709;
+
+import javax.xml.bind.annotation.XmlEnum;
+
+/**
+ * Enumeration of Iso2709 variants
+ * 
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
+ * @since Nov 7, 2014
+ */
+@XmlEnum(String.class)
+public enum Iso2709Variant {
+    STANDARD("pt.utl.ist.marc.iso2709.IteratorIso2709"),
+    ALBANIA("pt.utl.ist.marc.iso2709.IteratorIso2709Albania"),
+    UKRAINE("pt.utl.ist.marc.iso2709.IteratorIso2709Ukraine");
+    
+    private final String isoVariant;
+
+    private Iso2709Variant(final String isoVariant) {
+        this.isoVariant = isoVariant;
+    }
+    
+    public String getIsoVariant() {
+        return isoVariant;
+    }
+}

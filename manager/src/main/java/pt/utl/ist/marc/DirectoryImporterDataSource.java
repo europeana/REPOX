@@ -11,6 +11,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
@@ -19,6 +20,7 @@ import pt.utl.ist.dataProvider.dataSource.*;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.marc.iso2709.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
@@ -41,25 +43,46 @@ import java.util.zip.ZipInputStream;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  */
 @XmlRootElement(name = "DirectoryDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
-@ApiModel(value = "A DirectoryDataset")
+@ApiModel(value = "A DirectoryDatasource")
 public class DirectoryImporterDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(DirectoryImporterDataSource.class);
 
-    private String               idTypePolicy;
-    private FileRetrieveStrategy retrieveStrategy;
+    @XmlElement
+    @ApiModelProperty(required = true)
     private String               sourcesDirPath;
+    @XmlElement
+    @ApiModelProperty
     private String               recordXPath;
-    
-    private Map<String, String>  namespaces;
-    
+    @XmlElement
+    @ApiModelProperty
     private CharacterEncoding    characterEncoding;
+    @XmlElement
+    @ApiModelProperty
+    private Iso2709Variant       isoVariant;
+
+    @ApiModelProperty(hidden = true)
+    private String               idTypePolicy;
+    @ApiModelProperty(hidden = true)
+    private FileRetrieveStrategy retrieveStrategy;
+    @ApiModelProperty(hidden = true)
+    private Map<String, String>  namespaces;
+    @ApiModelProperty(hidden = true)
     private FileExtractStrategy  extractStrategy;
+
+    public Iso2709Variant getIsoVariant() {
+        return isoVariant;
+    }
+
+    public void setIsoVariant(Iso2709Variant isoVariant) {
+        this.isoVariant = isoVariant;
+    }
 
     public String getIdTypePolicy() {
         return idTypePolicy;
@@ -142,7 +165,8 @@ public class DirectoryImporterDataSource extends DataSource {
      * @param recordXPath
      * @param namespacesMap
      */
-    public DirectoryImporterDataSource(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, String sourcesDirPath,
+    public DirectoryImporterDataSource(DataProvider dataProvider, String id, String description, String schema, String namespace, String metadataFormat, FileExtractStrategy extractStrategy,
+                                       FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, String sourcesDirPath,
                                        RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations, String recordXPath, Map<String, String> namespacesMap) {
         super(dataProvider, id, description, schema, namespace, metadataFormat, recordIdPolicy, metadataTransformations);
         this.characterEncoding = characterEncoding;
@@ -544,7 +568,9 @@ public class DirectoryImporterDataSource extends DataSource {
 
         @Override
         public void handleRecord(RecordRepox record) {
-            if (stopExecution) { return; }
+            if (stopExecution) {
+                return;
+            }
 
             try {
                 batchRecords.add(record);
@@ -586,7 +612,9 @@ public class DirectoryImporterDataSource extends DataSource {
         }
 
         public void savePendingRecords() {
-            if (stopExecution) { return; }
+            if (stopExecution) {
+                return;
+            }
 
             try {
                 if (batchRecords.size() > 0) {

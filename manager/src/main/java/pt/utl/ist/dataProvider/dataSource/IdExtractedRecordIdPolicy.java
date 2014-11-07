@@ -5,6 +5,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.XPath;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.recordPackage.RecordRepoxExternalId;
 import pt.utl.ist.recordPackage.RecordRepoxXpathId;
@@ -15,13 +18,23 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "IdExtractedRecordIdPolicy")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An IdExtractedRecordIdPolicy")
 public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     private static final Logger log = Logger.getLogger(IdExtractedRecordIdPolicy.class);
     public static final String IDEXTRACTED = "IdExtracted";
 
     private Map<String, String> namespaces;
+    @XmlElement
+    @ApiModelProperty(required = true)
     private String              identifierXpath;                          //private String identifierXpath = "/record/identifier"; OAI-DC
 
     public Map<String, String> getNamespaces() {

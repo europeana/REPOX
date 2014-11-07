@@ -34,10 +34,12 @@ import javax.mail.MessagingException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -77,7 +79,6 @@ import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
-import pt.utl.ist.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.statistics.RecordCount;
 import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.OldTask;
@@ -89,7 +90,6 @@ import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
-import pt.utl.ist.z3950.DataSourceZ3950;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -107,15 +107,15 @@ import freemarker.template.TemplateException;
  */
 @XmlRootElement(name = "dataset")
 @XmlAccessorType(XmlAccessType.NONE)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "dataSetType")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = OaiDataSource.class, name = "OAI")
-//        @JsonSubTypes.Type(value = DirectoryImporterDataSource.class, name = "DIR"),
+        @JsonSubTypes.Type(value = OaiDataSource.class, name = "OAI"),
+        @JsonSubTypes.Type(value = DirectoryImporterDataSource.class, name = "DIR")
 //        @JsonSubTypes.Type(value = DataSourceZ3950.class, name = "Z3950"),
 //        @JsonSubTypes.Type(value = SruRecordUpdateDataSource.class, name = "SRU")
 })
-@XmlSeeAlso({ OaiDataSource.class })
-@ApiModel(value = "A Dataset", discriminator="dataSourceType", subTypes={OaiDataSource.class})
+@XmlSeeAlso({ OaiDataSource.class, DirectoryImporterDataSource.class })
+@ApiModel(value = "A Dataset", discriminator = "dataSourceType", subTypes = { OaiDataSource.class, DirectoryImporterDataSource.class })
 public abstract class DataSource {
     @XmlEnum(String.class)
     public enum StatusDS {
@@ -130,7 +130,7 @@ public abstract class DataSource {
     protected static final int                    RECORDS_BATCH_SIZE         = 1000;
     /** DataSource LAST_TASK_FILENAME */
     protected static final String                 LAST_TASK_FILENAME         = "lastTask.txt";
-    
+
     @XmlElement
     @ApiModelProperty(required = true)
     protected String                              id;
@@ -144,7 +144,7 @@ public abstract class DataSource {
     @ApiModelProperty
     protected String                              description;
     @XmlElement
-    @ApiModelProperty
+    @ApiModelProperty(required = true)
     protected String                              metadataFormat;
     @XmlElement
     @ApiModelProperty
@@ -152,8 +152,23 @@ public abstract class DataSource {
     @XmlElement
     @ApiModelProperty
     protected String                              exportDir;
-    
+    @XmlElement
+    @ApiModelProperty
     protected String                              marcFormat;
+
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = IdGeneratedRecordIdPolicy.class, name = "IdGenerated"),
+            @JsonSubTypes.Type(value = IdExtractedRecordIdPolicy.class, name = "IdExtracted"),
+            @JsonSubTypes.Type(value = IdProvidedRecordIdPolicy.class, name = "IdProvided")
+    })
+    @XmlElementRefs({
+            @XmlElementRef(type = IdGeneratedRecordIdPolicy.class),
+            @XmlElementRef(type = IdExtractedRecordIdPolicy.class),
+            @XmlElementRef(type = IdProvidedRecordIdPolicy.class)
+    })
+    @ApiModelProperty
+    protected RecordIdPolicy                      recordIdPolicy;
+
     @ApiModelProperty(hidden = true)
     protected StatusDS                            status;
     @ApiModelProperty(hidden = true)
@@ -182,8 +197,6 @@ public abstract class DataSource {
     protected List<ExternalRestService>           externalRestServices;
     @ApiModelProperty(hidden = true)
     protected List<OldTask>                       oldTasksList               = new ArrayList<OldTask>();
-    @ApiModelProperty(hidden = true)
-    protected RecordIdPolicy                      recordIdPolicy;
     @ApiModelProperty(hidden = true)
     protected ExternalServiceStates.ContainerType externalServicesRunType;
     @ApiModelProperty(hidden = true)
