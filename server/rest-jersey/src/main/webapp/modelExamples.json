@@ -4,27 +4,30 @@
 
 #Example for OAIdataset(containerType=DEFAULT,datasetType=OAI)
 #id must validate against the regular expression"[a-zA-Z_0-9]*".
-
 {
-	"containerType":"DEFAULT",
-	"dataSource":{
-		"dataSetType":"OAI",
-		"id":"a0660",
-		"schema":"http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
-		"namespace":"http://www.europeana.eu/schemas/ese/",
-		"description":"NONE",
-		"metadataFormat":"ese",
-		"isSample":true,
-		"exportDir":"/tmp/example/oai",
-		"oaiSourceURL":"http://valid/oai/url",
-		"oaiSet":"oaiSet"
-	},
-	"nameCode":"a0660",
-	"name":"Austrian Books Online"
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "OAI",
+      "id": "a0660",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": true,
+      "exportDir": "/tmp/example/oai",
+      "recordIdPolicy": {
+        "IdProvided": {}
+      },
+      "oaiSourceURL": "http://valid/oai/url",
+      "oaiSet": "oaiSet"
+    },
+    "nameCode": "a0660",
+    "name": "Austrian Books Online"
 }
+#################################################################
 
-
-#Example for OAIdataset(containerType=DEFAULT,datasetType=DIR)
+#Example for DIRdataset(containerType=DEFAULT,datasetType=DIR)
+#This example is for folder dataset.
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -36,9 +39,65 @@
       "metadataFormat": "ese",
       "isSample": true,
       "exportDir": "/tmp/export",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
       "sourcesDirPath": "/tmp/example/a",
       "recordXPath": "/rec"
     },
     "nameCode": "a1010",
     "name": "NormalFolder"
 }
+
+#Example with IdExtracted recordIdPolicy
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1111",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": true,
+      "exportDir": "/tmp/export",
+      "recordIdPolicy": {
+        "IdExtracted": {
+			"identifierXpath": "/recId"
+		}
+      },
+      "sourcesDirPath": "/tmp/example/a",
+      "recordXPath": "/rec"
+    },
+    "nameCode": "a1010",
+    "name": "NormalFolder"
+}
+
+#Example for ISO2709
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1112",
+      "schema": "info:lc/xmlns/marcxchange-v1.xsd",
+      "namespace": "info:lc/xmlns/marcxchange-v1",
+      "description": "NONE",
+      "metadataFormat": "ISO2709",
+      "isSample": false,
+      "exportDir": "/data/repoxData/export/a1011",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "/tmp/ex",
+      "characterEncoding": "UTF_8",
+      "isoVariant": "STANDARD"
+    },
+    "nameCode": "a1011",
+    "name": "IsoFolder"
+}
+#################################################################
+
+
+
+
+

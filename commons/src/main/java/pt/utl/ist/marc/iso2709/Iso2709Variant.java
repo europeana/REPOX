@@ -24,4 +24,15 @@ public enum Iso2709Variant {
     public String getIsoVariant() {
         return isoVariant;
     }
+    
+    public static Iso2709Variant fromString(String isoVariant) {
+        if (isoVariant != null) {
+          for (Iso2709Variant b : Iso2709Variant.values()) {
+            if (isoVariant.equalsIgnoreCase(b.isoVariant)) {
+              return b;
+            }
+          }
+        }
+        return null;
+      }
 }

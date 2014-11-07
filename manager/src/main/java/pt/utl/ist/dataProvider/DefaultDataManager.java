@@ -51,6 +51,7 @@ import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.Iso2709FileExtractStrategy;
 import pt.utl.ist.marc.MarcXchangeFileExtractStrategy;
+import pt.utl.ist.marc.iso2709.Iso2709Variant;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
@@ -2379,11 +2380,12 @@ public class DefaultDataManager implements DataManager {
                         } else if (extractStrategy.getClass() == SimpleFileExtractStrategy.class) {
                         }
 
-                        DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
+                        DirectoryImporterDataSource newDataSource = new DirectoryImporterDataSource(dataProvider, id, description, schema, namespace, metadataFormat,
                                 extractStrategy, retrieveStrategy, characterEncoding, sourcesDirPath, recordIdPolicy,
                                 new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                         newDataSource.setExportDir(exportPath);
+                        newDataSource.setIsoVariant(Iso2709Variant.fromString(isoVariant));
 
                         DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                         dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
@@ -2391,6 +2393,7 @@ public class DefaultDataManager implements DataManager {
                         newDataSource.setMetadataTransformations(metadataTransformations);
                         newDataSource.setExternalRestServices(externalRestServices);
                         newDataSource.setMarcFormat(marcFormat);
+                        
                         
                         ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
                                 .initialize(dataProvider.getDataSourceContainers());

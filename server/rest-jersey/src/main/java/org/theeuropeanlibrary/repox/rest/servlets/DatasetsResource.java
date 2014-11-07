@@ -220,7 +220,13 @@ public class DatasetsResource {
                 String sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
                 String recordXPath = directoryImporterDataSource.getRecordXPath();
                 CharacterEncoding characterEncoding = directoryImporterDataSource.getCharacterEncoding();
+                String characterEncodingString = "";
+                if(characterEncoding != null)
+                    characterEncodingString = characterEncoding.toString();
                 Iso2709Variant isoVariant = directoryImporterDataSource.getIsoVariant();
+                String isoVariantString = "";
+                if(isoVariant != null)
+                    isoVariantString = isoVariant.getIsoVariant();
                 RecordIdPolicy recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
                 String recordIdPolicyString = null;
                 String idXpath = null;
@@ -237,7 +243,7 @@ public class DatasetsResource {
                     idXpath = ((IdExtractedRecordIdPolicy)recordIdPolicy).getIdentifierXpath();
                     
                     if (idXpath == null || idXpath.isEmpty())
-                        throw new MissingArgumentsException("Invalid value: " + "Dataset idXpath must not be empty");
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset identifierXpath must not be empty");
                 }
                     
                 Map<String, String> namespaces = new HashMap<String, String>();
@@ -253,7 +259,7 @@ public class DatasetsResource {
                 }
                 
                 try {
-                    dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariant.getIsoVariant(), characterEncoding.toString(), recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
+                    dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
                 } catch (InvalidArgumentsException e) {
                     throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
