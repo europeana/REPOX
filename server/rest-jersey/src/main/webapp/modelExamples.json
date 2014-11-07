@@ -73,7 +73,7 @@
     "name": "NormalFolder"
 }
 
-#Example for ISO2709
+#Example for ISO2709 format
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -94,6 +94,27 @@
     },
     "nameCode": "a1011",
     "name": "IsoFolder"
+}
+#Example for MarcXchange format
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1113",
+      "schema": "info:lc/xmlns/marcxchange-v1.xsd",
+      "namespace": "info:lc/xmlns/marcxchange-v1",
+      "description": "NONE",
+      "metadataFormat": "MarcXchange",
+      "isSample": false,
+      "exportDir": "/data/export/a1113",
+      "marcFormat": "MARC21",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "/tmp/mar"
+    },
+    "nameCode": "a1113",
+    "name": "MarcFolder"
 }
 #################################################################
 

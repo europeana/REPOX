@@ -181,13 +181,19 @@ public class DatasetsResource {
             List<ExternalRestService> externalRestServices = null;
 
             if (id == null || id.isEmpty())
-                throw new MissingArgumentsException("Invalid value: " + "Dataset id must not be empty");
+                throw new MissingArgumentsException("Missing value: " + "Dataset id must not be empty");
             else if (schema == null || schema.equals(""))
-                throw new MissingArgumentsException("Invalid value: " + "Dataset schema must not be empty");
+                throw new MissingArgumentsException("Missing value: " + "Dataset schema must not be empty");
             else if (namespace == null || namespace.equals(""))
-                throw new MissingArgumentsException("Invalid value: " + "Dataset namespace must not be empty");
+                throw new MissingArgumentsException("Missing value: " + "Dataset namespace must not be empty");
             else if (metadataFormat == null || metadataFormat.equals(""))
-                throw new MissingArgumentsException("Invalid value: " + "Dataset metadataFormat must not be empty");
+                throw new MissingArgumentsException("Missing value: " + "Dataset metadataFormat must not be empty");
+            
+            if(metadataFormat.equals(MetadataFormat.MarcXchange.toString()))
+            {
+                if(marcFormat == null || marcFormat.isEmpty())
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset marcFormat must not be empty");
+            }
 
             if (dataSource instanceof OaiDataSource)
             {
@@ -196,9 +202,9 @@ public class DatasetsResource {
                 String oaiSet = oaiDataSource.getOaiSet();
 
                 if (oaiSourceURL == null || oaiSourceURL.isEmpty())
-                    throw new MissingArgumentsException("Invalid value: " + "Dataset oaiSourceURL must not be empty");
+                    throw new MissingArgumentsException("Missing value: " + "Dataset oaiSourceURL must not be empty");
                 else if (oaiSet == null || oaiSet.equals(""))
-                    throw new MissingArgumentsException("Invalid value: " + "Dataset oaiSet must not be empty");
+                    throw new MissingArgumentsException("Missing value: " + "Dataset oaiSet must not be empty");
 
                 try {
                     dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
@@ -231,7 +237,7 @@ public class DatasetsResource {
                 String recordIdPolicyString = null;
                 String idXpath = null;
                 if (recordIdPolicy == null)
-                    throw new MissingArgumentsException("Invalid value: " + "Dataset recordIdPolicy must not be empty");
+                    throw new MissingArgumentsException("Missing value: " + "Dataset recordIdPolicy must not be empty");
                 
                 if (recordIdPolicy instanceof IdGeneratedRecordIdPolicy)
                     recordIdPolicyString = IdGeneratedRecordIdPolicy.IDGENERATED;
@@ -243,7 +249,7 @@ public class DatasetsResource {
                     idXpath = ((IdExtractedRecordIdPolicy)recordIdPolicy).getIdentifierXpath();
                     
                     if (idXpath == null || idXpath.isEmpty())
-                        throw new MissingArgumentsException("Invalid value: " + "Dataset identifierXpath must not be empty");
+                        throw new MissingArgumentsException("Missing value: " + "Dataset identifierXpath must not be empty");
                 }
                     
                 Map<String, String> namespaces = new HashMap<String, String>();
@@ -253,9 +259,9 @@ public class DatasetsResource {
                 
                 if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
                     if (isoVariant == null)
-                        throw new MissingArgumentsException("Invalid value: " + "Dataset isoVariant must not be empty");
+                        throw new MissingArgumentsException("Missing value: " + "Dataset isoVariant must not be empty");
                     else if (characterEncoding == null)
-                        throw new MissingArgumentsException("Invalid value: " + "Dataset characterEncoding must not be empty");
+                        throw new MissingArgumentsException("Missing value: " + "Dataset characterEncoding must not be empty");
                 }
                 
                 try {

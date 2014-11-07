@@ -153,11 +153,11 @@ public class ProvidersResource {
         String email = provider.getEmail();
 
         if (name == null || name.isEmpty())
-            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty");
+            throw new MissingArgumentsException("Missing value: " + "Provider name must not be empty");
         else if (country == null || country.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty");
+            throw new MissingArgumentsException("Missing value: " + "Provider country must not be empty");
         else if (providerType == null || providerType.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty");
+            throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty");
 
         DataProvider createdProvider = null;
 
@@ -243,11 +243,11 @@ public class ProvidersResource {
         String email = provider.getEmail();
 
         if (name == null || name.isEmpty())
-            throw new MissingArgumentsException("Invalid value: " + "Provider name must not be empty.");
+            throw new MissingArgumentsException("Missing value: " + "Provider name must not be empty.");
         else if (country == null || country.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider country must not be empty.");
+            throw new MissingArgumentsException("Missing value: " + "Provider country must not be empty.");
         else if (providerType == null || providerType.equals(""))
-            throw new MissingArgumentsException("Invalid value: " + "Provider dataSetType must not be empty.");
+            throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty.");
 
         try {
             dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, providerType, email);
