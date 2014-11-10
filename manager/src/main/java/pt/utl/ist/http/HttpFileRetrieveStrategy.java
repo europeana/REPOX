@@ -7,6 +7,9 @@ package pt.utl.ist.http;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.util.FileUtil;
@@ -19,13 +22,30 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "HttpFileRetrieveStrategy")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An HttpFileRetrieveStrategy")
 public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log = Logger.getLogger(HttpFileRetrieveStrategy.class);
     public static final String HTTPFILERETRIEVESTRATEGY = "HttpFileRetrieveStrategy";
 
+    @XmlElement
+    @ApiModelProperty(required = true)
     private String              url;
+
+    /**
+     * Reaquired from JAXB
+     */
+    public HttpFileRetrieveStrategy() {
+        super();
+    }
 
     public String getUrl() {
         return url;

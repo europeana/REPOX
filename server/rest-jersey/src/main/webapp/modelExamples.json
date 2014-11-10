@@ -116,6 +116,40 @@
     "nameCode": "a1113",
     "name": "MarcFolder"
 }
+
+
+
+#Example for FTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=FTP)
+#This example is for dataset over ftp.
+#Required fields(server)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a2021",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": false,
+      "exportDir": "/data/repoxData/export/a2021",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FTP": {
+          "server": "valid.server.host.example",
+          "user": "username",
+          "password": "password",
+          "ftpPath": "tmp"
+        }
+      }
+    },
+    "nameCode": "a2021",
+    "name": "FTP Example"
+  }
 #################################################################
 
 

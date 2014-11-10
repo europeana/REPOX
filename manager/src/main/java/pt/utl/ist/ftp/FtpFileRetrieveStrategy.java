@@ -9,6 +9,9 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.util.FileUtil;
@@ -17,8 +20,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "FtpFileRetrieveStrategy")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An FtpFileRetrieveStrategy")
 public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log       = Logger.getLogger(FtpFileRetrieveStrategy.class);
     public static final String FTPFILERETRIEVESTRATEGY = "FtpFileRetrieveStrategy";
@@ -28,11 +39,29 @@ public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     /** DataSourceFtp ANONYMOUS */
     public static final String  ANONYMOUS = "Anonymous";
 
+    @XmlElement
+    @ApiModelProperty(required = true)
     private String              server;
+    @XmlElement
+    @ApiModelProperty
     private String              user;
+    @XmlElement
+    @ApiModelProperty
     private String              password;
+//    @XmlElement
+//    @ApiModelProperty(required = true)
     private String              idTypeAccess;                                     // "Normal" or "Anonymous
+    @XmlElement
+    @ApiModelProperty
     private String              ftpPath;
+    
+
+    /**
+     * Required for JAXB.
+     */
+    public FtpFileRetrieveStrategy() {
+        super();
+    }
 
     public String getServer() {
         return server;

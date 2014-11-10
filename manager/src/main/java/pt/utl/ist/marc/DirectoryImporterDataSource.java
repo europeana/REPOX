@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
@@ -44,6 +45,8 @@ import java.util.zip.ZipInputStream;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -67,10 +70,20 @@ public class DirectoryImporterDataSource extends DataSource {
     @ApiModelProperty
     private Iso2709Variant       isoVariant;
 
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = FolderFileRetrieveStrategy.class, name = "FOLDER"),
+            @JsonSubTypes.Type(value = FtpFileRetrieveStrategy.class, name = "FTP"),
+            @JsonSubTypes.Type(value = HttpFileRetrieveStrategy.class, name = "HTTP")
+    })
+    @XmlElementRefs({
+            @XmlElementRef(type = FolderFileRetrieveStrategy.class),
+            @XmlElementRef(type = FtpFileRetrieveStrategy.class),
+            @XmlElementRef(type = HttpFileRetrieveStrategy.class)
+    })
+    private FileRetrieveStrategy retrieveStrategy;
+
     @ApiModelProperty(hidden = true)
     private String               idTypePolicy;
-    @ApiModelProperty(hidden = true)
-    private FileRetrieveStrategy retrieveStrategy;
     @ApiModelProperty(hidden = true)
     private Map<String, String>  namespaces;
     @ApiModelProperty(hidden = true)

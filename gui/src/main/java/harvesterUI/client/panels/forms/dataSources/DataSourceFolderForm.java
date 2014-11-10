@@ -5,6 +5,7 @@ import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.models.Attribute;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
+import harvesterUI.shared.Iso2709Variant;
 import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
@@ -17,8 +18,6 @@ import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
-import pt.utl.ist.marc.iso2709.Iso2709Types;
-import pt.utl.ist.marc.iso2709.Iso2709Variant;
 
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -444,15 +443,15 @@ public class DataSourceFolderForm extends DataSourceForm {
         }
 
         String dsRetriveStrat = dataSourceUI.getRetrieveStartegy();
-        if(dsRetriveStrat == null || dsRetriveStrat.equals("pt.utl.ist.repox.marc.DataSourceFolder")) {
+        if(dsRetriveStrat == null || dsRetriveStrat.equals(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY)) {
             retrieveVariantCombo.setValue(retrieveVariantCombo.getStore().getAt(0));
             folderPath.setValue(dataSourceUI.getDirPath());
         }
-        else if(dsRetriveStrat.equals("pt.utl.ist.repox.ftp.DataSourceHttp")) {
+        else if(dsRetriveStrat.equals(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY)) {
             retrieveVariantCombo.setValue(retrieveVariantCombo.getStore().getAt(2));
             httpUrl.setValue(dataSourceUI.getHttpURL().trim());
         }
-        else if(dsRetriveStrat.equals("pt.utl.ist.repox.ftp.DataSourceFtp")) {
+        else if(dsRetriveStrat.equals(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY)) {
             server.setValue(dataSourceUI.getServer());
             retrieveVariantCombo.setValue(retrieveVariantCombo.getStore().getAt(1));
             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty() &&

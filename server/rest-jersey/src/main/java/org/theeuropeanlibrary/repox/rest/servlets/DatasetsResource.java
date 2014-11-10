@@ -38,13 +38,16 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
+import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
+import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.iso2709.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
@@ -188,10 +191,10 @@ public class DatasetsResource {
                 throw new MissingArgumentsException("Missing value: " + "Dataset namespace must not be empty");
             else if (metadataFormat == null || metadataFormat.equals(""))
                 throw new MissingArgumentsException("Missing value: " + "Dataset metadataFormat must not be empty");
-            
-            if(metadataFormat.equals(MetadataFormat.MarcXchange.toString()))
+
+            if (metadataFormat.equals(MetadataFormat.MarcXchange.toString()))
             {
-                if(marcFormat == null || marcFormat.isEmpty())
+                if (marcFormat == null || marcFormat.isEmpty())
                     throw new MissingArgumentsException("Invalid value: " + "Dataset marcFormat must not be empty");
             }
 
@@ -220,25 +223,26 @@ public class DatasetsResource {
                     throw new InternalServerErrorException("Error in server : " + e.getMessage());
                 }
             }
-            else if(dataSource instanceof DirectoryImporterDataSource)
+            else if (dataSource instanceof DirectoryImporterDataSource)
             {
                 DirectoryImporterDataSource directoryImporterDataSource = (DirectoryImporterDataSource)dataSource;
                 String sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
                 String recordXPath = directoryImporterDataSource.getRecordXPath();
                 CharacterEncoding characterEncoding = directoryImporterDataSource.getCharacterEncoding();
+                FileRetrieveStrategy retrieveStrategy = directoryImporterDataSource.getRetrieveStrategy();
                 String characterEncodingString = "";
-                if(characterEncoding != null)
+                if (characterEncoding != null)
                     characterEncodingString = characterEncoding.toString();
                 Iso2709Variant isoVariant = directoryImporterDataSource.getIsoVariant();
                 String isoVariantString = "";
-                if(isoVariant != null)
+                if (isoVariant != null)
                     isoVariantString = isoVariant.getIsoVariant();
                 RecordIdPolicy recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
                 String recordIdPolicyString = null;
                 String idXpath = null;
                 if (recordIdPolicy == null)
                     throw new MissingArgumentsException("Missing value: " + "Dataset recordIdPolicy must not be empty");
-                
+
                 if (recordIdPolicy instanceof IdGeneratedRecordIdPolicy)
                     recordIdPolicyString = IdGeneratedRecordIdPolicy.IDGENERATED;
                 else if (recordIdPolicy instanceof IdProvidedRecordIdPolicy)
@@ -247,33 +251,61 @@ public class DatasetsResource {
                 {
                     recordIdPolicyString = IdExtractedRecordIdPolicy.IDEXTRACTED;
                     idXpath = ((IdExtractedRecordIdPolicy)recordIdPolicy).getIdentifierXpath();
-                    
+
                     if (idXpath == null || idXpath.isEmpty())
                         throw new MissingArgumentsException("Missing value: " + "Dataset identifierXpath must not be empty");
                 }
-                    
+
                 Map<String, String> namespaces = new HashMap<String, String>();
-                
-                if (sourcesDirPath == null || sourcesDirPath.isEmpty())
-                    throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
-                
+
                 if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
                     if (isoVariant == null)
                         throw new MissingArgumentsException("Missing value: " + "Dataset isoVariant must not be empty");
                     else if (characterEncoding == null)
                         throw new MissingArgumentsException("Missing value: " + "Dataset characterEncoding must not be empty");
                 }
-                
-                try {
-                    dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
-                } catch (InvalidArgumentsException e) {
-                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
-                } catch (ObjectNotFoundException e) {
-                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
-                } catch (AlreadyExistsException e) {
-                    throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
-                } catch (SQLException | DocumentException | IOException e) {
-                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
+
+                if (retrieveStrategy instanceof FolderFileRetrieveStrategy)
+                {
+                    if (sourcesDirPath == null || sourcesDirPath.isEmpty())
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
+                    
+                    try {
+                        dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    } catch (SQLException | DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
+                }
+                else if(retrieveStrategy instanceof FtpFileRetrieveStrategy)
+                {
+                    FtpFileRetrieveStrategy ftpRetrieveStrategy = (FtpFileRetrieveStrategy)retrieveStrategy;
+                    String server = ftpRetrieveStrategy.getServer();
+//                    String authentication = ftpRetrieveStrategy.getIdTypeAccess();
+                    String userName = ftpRetrieveStrategy.getUser();
+                    String password = ftpRetrieveStrategy.getPassword();
+                    String ftpPath = ftpRetrieveStrategy.getFtpPath();
+                    
+                    if (server == null || server.isEmpty())
+                        throw new MissingArgumentsException("Missing value: " + "FTP server must not be empty");
+                    
+                    try {
+                        dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    } catch (SQLException | DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
                 }
             }
             return Response.created(null).entity(new Result("DataProvider with id = " + id + " and name = " + name + " created successfully")).build();
@@ -297,7 +329,7 @@ public class DatasetsResource {
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
     public Response deleteDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
-        
+
         try {
             dataManager.deleteDataSourceContainer(datasetId);
         } catch (IOException e) {
@@ -308,11 +340,9 @@ public class DatasetsResource {
 
         return Response.status(200).entity(new Result("Dataset with id " + datasetId + " deleted!")).build();
     }
-    
-    
+
     //TODO UPDATE METHOD
-    
-    
+
     /**
      * Get a list of datasets in the specified range.
      * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
@@ -334,7 +364,7 @@ public class DatasetsResource {
     })
     public Response getDatasetList(@ApiParam(value = "ProviderId", required = true) @QueryParam("providerId") String providerId,
             @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset,
-            @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws DoesNotExistException, InvalidArgumentsException{
+            @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws DoesNotExistException, InvalidArgumentsException {
 
         if (offset < 0)
             throw new InvalidArgumentsException("Offset negative values not allowed!");
@@ -346,8 +376,9 @@ public class DatasetsResource {
         } catch (ObjectNotFoundException e) {
             throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
         }
-        
-        return Response.status(200).entity(new GenericEntity<List<DataSourceContainer>>(dataSourceContainerListSorted) {}).build();
+
+        return Response.status(200).entity(new GenericEntity<List<DataSourceContainer>>(dataSourceContainerListSorted) {
+        }).build();
     }
 
 }

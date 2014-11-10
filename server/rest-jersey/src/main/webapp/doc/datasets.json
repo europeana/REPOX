@@ -205,19 +205,19 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "schema", "id", "namespace", "metadataFormat" ],
+      "required" : [ "namespace", "schema", "id", "metadataFormat" ],
       "discriminator" : "dataSourceType",
       "properties" : {
-        "schema" : {
-          "type" : "string"
-        },
-        "id" : {
-          "type" : "string"
-        },
         "description" : {
           "type" : "string"
         },
         "namespace" : {
+          "type" : "string"
+        },
+        "schema" : {
+          "type" : "string"
+        },
+        "id" : {
           "type" : "string"
         },
         "exportDir" : {
