@@ -45,6 +45,7 @@ import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
 import pt.utl.ist.externalServices.ExternalRestService;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
@@ -295,6 +296,26 @@ public class DatasetsResource {
                     
                     try {
                         dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    } catch (SQLException | DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
+                }
+                else if(retrieveStrategy instanceof HttpFileRetrieveStrategy)
+                {
+                    HttpFileRetrieveStrategy httpFileRetrieveStrategy = (HttpFileRetrieveStrategy)retrieveStrategy;
+                    String httpUrl = httpFileRetrieveStrategy.getUrl();
+                    
+                    if (httpUrl == null || httpUrl.isEmpty())
+                        throw new MissingArgumentsException("Missing value: " + "HTTP Url must not be empty");
+                    
+                    try {
+                        dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {

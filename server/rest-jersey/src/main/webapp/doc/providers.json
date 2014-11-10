@@ -4,133 +4,8 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/providers",
   "apis" : [ {
-    "path" : "/providers",
-    "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over providers conext.",
-      "notes" : "",
-      "type" : "ProviderOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
-      } ]
-    }, {
-      "method" : "GET",
-      "summary" : "Get a list of providers.",
-      "notes" : "",
-      "type" : "array",
-      "items" : {
-        "$ref" : "dataprovider"
-      },
-      "nickname" : "getProviderList",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "aggregatorId",
-        "description" : "AggregatorId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "offset",
-        "description" : "Index where to start from",
-        "defaultValue" : "0",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "number",
-        "description" : "Number of aggregators requested",
-        "defaultValue" : "-1",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of providers)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
-    }, {
-      "method" : "POST",
-      "summary" : "Create a provider.",
-      "notes" : "",
-      "type" : "string",
-      "nickname" : "createProvider",
-      "produces" : [ "application/json", "application/xml" ],
-      "consumes" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "aggregatorId",
-        "description" : "AggregatorId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "body",
-        "description" : "Provider data",
-        "required" : true,
-        "type" : "dataprovider",
-        "paramType" : "body",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 201,
-        "message" : "Created (Response containing a String message)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 406,
-        "message" : "MissingArgumentsException"
-      }, {
-        "code" : 409,
-        "message" : "AlreadyExistsException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
-      } ]
-    } ]
-  }, {
     "path" : "/providers/{providerId}",
     "operations" : [ {
-      "method" : "GET",
-      "summary" : "Get specific provider.",
-      "notes" : "",
-      "type" : "dataprovider",
-      "nickname" : "getProvider",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "providerId",
-        "description" : "Id of provider",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing an Provider)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
-    }, {
       "method" : "DELETE",
       "summary" : "Delete a provider.",
       "notes" : "",
@@ -200,6 +75,131 @@
       }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get specific provider.",
+      "notes" : "",
+      "type" : "dataprovider",
+      "nickname" : "getProvider",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "Id of provider",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing an Provider)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      } ]
+    } ]
+  }, {
+    "path" : "/providers",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create a provider.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "createProvider",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Provider data",
+        "required" : true,
+        "type" : "dataprovider",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "OPTIONS",
+      "summary" : "Get options over providers conext.",
+      "notes" : "",
+      "type" : "ProviderOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of providers.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "dataprovider"
+      },
+      "nickname" : "getProviderList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "aggregatorId",
+        "description" : "AggregatorId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of providers)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     } ]
   } ],

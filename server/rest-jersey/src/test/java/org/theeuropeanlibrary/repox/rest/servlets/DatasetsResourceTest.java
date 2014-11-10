@@ -26,7 +26,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
-import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -35,10 +34,10 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
-import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
@@ -184,7 +183,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-//    @Ignore
+    //    @Ignore
     public void testCreateDatasetFolder() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -247,11 +246,13 @@ public class DatasetsResourceTest extends JerseyTest {
         folderDataSourceFtp.setIsoVariant(Iso2709Variant.STANDARD);
         DefaultDataSourceContainer defaultDataSourceContainerFtp = new DefaultDataSourceContainer(folderDataSourceFtp, "SampleNameCode", "SampleName", "/Sample/Export/Path");
 
-        when(dataManager.createDataSourceFtp(providerId, folderDataSourceFtp.getId(), folderDataSourceFtp.getDescription(), defaultDataSourceContainerFtp.getNameCode(),
-                defaultDataSourceContainerFtp.getName(), folderDataSourceFtp.getExportDir(), folderDataSourceFtp.getSchema(), folderDataSourceFtp.getNamespace(), folderDataSourceFtp.getMetadataFormat(),
-                Iso2709Variant.STANDARD.getIsoVariant(), folderDataSourceFtp.getCharacterEncoding().toString(), IdProvidedRecordIdPolicy.IDPROVIDED, null, new HashMap<String, String>(),
-                folderDataSourceFtp.getRecordXPath(), ftpFileRetrieveStrategy.getServer(), ftpFileRetrieveStrategy.getUser(), ftpFileRetrieveStrategy.getPassword(),
-                ftpFileRetrieveStrategy.getFtpPath(), null, null, folderDataSourceFtp.getMarcFormat()))
+        when(
+                dataManager.createDataSourceFtp(providerId, folderDataSourceFtp.getId(), folderDataSourceFtp.getDescription(), defaultDataSourceContainerFtp.getNameCode(),
+                        defaultDataSourceContainerFtp.getName(), folderDataSourceFtp.getExportDir(), folderDataSourceFtp.getSchema(), folderDataSourceFtp.getNamespace(),
+                        folderDataSourceFtp.getMetadataFormat(),
+                        Iso2709Variant.STANDARD.getIsoVariant(), folderDataSourceFtp.getCharacterEncoding().toString(), IdProvidedRecordIdPolicy.IDPROVIDED, null, new HashMap<String, String>(),
+                        folderDataSourceFtp.getRecordXPath(), ftpFileRetrieveStrategy.getServer(), ftpFileRetrieveStrategy.getUser(), ftpFileRetrieveStrategy.getPassword(),
+                        ftpFileRetrieveStrategy.getFtpPath(), null, null, folderDataSourceFtp.getMarcFormat()))
                 .thenReturn(folderDataSourceFtp)
                 .thenThrow(new InvalidArgumentsException("Invalid Argument"))
                 .thenThrow(new ObjectNotFoundException("Object not found"))
@@ -278,6 +279,46 @@ public class DatasetsResourceTest extends JerseyTest {
         //Missing server
         ftpFileRetrieveStrategy.setServer(null);
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainerFtp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+
+        //FTP tests
+        HttpFileRetrieveStrategy httpFileRetrieveStrategy = new HttpFileRetrieveStrategy("example.com");
+        DirectoryImporterDataSource folderDataSourceHttp = new DirectoryImporterDataSource(dataProvider, "SampleId", "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat",
+                new SimpleFileExtractStrategy(), httpFileRetrieveStrategy, CharacterEncoding.UTF_8, "/sample/dir", new IdProvidedRecordIdPolicy(),
+                new TreeMap<String, MetadataTransformation>(), "SamplerecordXPath", new HashMap<String, String>());
+        folderDataSourceHttp.setIsoVariant(Iso2709Variant.STANDARD);
+        DefaultDataSourceContainer defaultDataSourceContainerHttp = new DefaultDataSourceContainer(folderDataSourceHttp, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.createDataSourceHttp(providerId, folderDataSourceHttp.getId(), folderDataSourceHttp.getDescription(), defaultDataSourceContainerHttp.getNameCode(),
+                        defaultDataSourceContainerHttp.getName(), folderDataSourceHttp.getExportDir(), folderDataSourceHttp.getSchema(), folderDataSourceHttp.getNamespace(),
+                        folderDataSourceHttp.getMetadataFormat(), Iso2709Variant.STANDARD.getIsoVariant(), folderDataSourceHttp.getCharacterEncoding().toString(), IdProvidedRecordIdPolicy.IDPROVIDED,
+                        null, new HashMap<String, String>(), folderDataSourceHttp.getRecordXPath(), httpFileRetrieveStrategy.getUrl(), null, null, folderDataSourceHttp.getMarcFormat()))
+                .thenReturn(folderDataSourceHttp)
+                .thenThrow(new InvalidArgumentsException("Invalid Argument"))
+                .thenThrow(new ObjectNotFoundException("Object not found"))
+                .thenThrow(new AlreadyExistsException("Already Exists!"))
+                .thenThrow(new SQLException("Exception in SQL"));
+        
+      //Valid request created
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(201, response.getStatus());
+        //Invalid Argument
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+        //Provider not existent
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Already exists
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(409, response.getStatus());
+        //Internal Server Error        
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        
+        //Non Mocked errors
+        //Missing server
+        httpFileRetrieveStrategy.setUrl(null);
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
 
     }
