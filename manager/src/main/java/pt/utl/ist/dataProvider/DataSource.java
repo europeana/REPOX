@@ -132,7 +132,7 @@ public abstract class DataSource {
     protected static final String                 LAST_TASK_FILENAME         = "lastTask.txt";
 
     @XmlElement
-    @ApiModelProperty(required = true)
+    @ApiModelProperty
     protected String                              id;
     @XmlElement
     @ApiModelProperty(required = true)
@@ -1365,6 +1365,40 @@ public abstract class DataSource {
         }
     }
 
+    
+    public static String generateId(String name) {
+        String generatedIdPrefix = "";
+
+        for (int i = 0; (i < name.length() && i < 32); i++) {
+            if ((name.charAt(i) >= 'a' && name.charAt(i) <= 'z') || (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z') || (name.charAt(i) >= '0' && name.charAt(i) <= '9')) {
+                generatedIdPrefix += name.charAt(i);
+            }
+        }
+        generatedIdPrefix += "r";
+
+        String fullId = generatedIdPrefix + generateNumberSufix(generatedIdPrefix);
+
+        return fullId;
+    }
+    
+    private static int generateNumberSufix(String basename) {
+        int currentNumber = 0;
+        String currentFullId = basename + currentNumber;
+
+        try {
+            while (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(currentFullId) != null) {
+                currentNumber++;
+                currentFullId = basename + currentNumber;
+            }
+        } catch (DocumentException e) {
+            throw new RuntimeException("Caused by DocumentException", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Caused by IOException", e);
+        }
+
+        return currentNumber;
+    }
+    
     /**
      * @param args
      * @throws Exception

@@ -2,6 +2,9 @@
   "apiVersion" : "0.0.1-SNAPSHOT",
   "swaggerVersion" : "1.2",
   "apis" : [ {
+    "path" : "/aggregators.{format}",
+    "description" : "Rest api for aggregators"
+  }, {
     "path" : "/datasets.{format}",
     "description" : "Rest api for datasets"
   }, {
@@ -10,9 +13,6 @@
   }, {
     "path" : "/providers.{format}",
     "description" : "Rest api for providers"
-  }, {
-    "path" : "/aggregators.{format}",
-    "description" : "Rest api for aggregators"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",

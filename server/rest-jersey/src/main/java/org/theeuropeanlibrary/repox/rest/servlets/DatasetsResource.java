@@ -183,9 +183,7 @@ public class DatasetsResource {
             Map<String, MetadataTransformation> metadataTransformations = null;
             List<ExternalRestService> externalRestServices = null;
 
-            if (id == null || id.isEmpty())
-                throw new MissingArgumentsException("Missing value: " + "Dataset id must not be empty");
-            else if (schema == null || schema.equals(""))
+            if (schema == null || schema.equals(""))
                 throw new MissingArgumentsException("Missing value: " + "Dataset schema must not be empty");
             else if (namespace == null || namespace.equals(""))
                 throw new MissingArgumentsException("Missing value: " + "Dataset namespace must not be empty");
