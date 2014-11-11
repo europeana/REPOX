@@ -16,6 +16,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -55,6 +56,7 @@ import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -268,7 +270,7 @@ public class DatasetsResource {
                 {
                     if (sourcesDirPath == null || sourcesDirPath.isEmpty())
                         throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
-                    
+
                     try {
                         dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
@@ -282,20 +284,20 @@ public class DatasetsResource {
                         throw new InternalServerErrorException("Error in server : " + e.getMessage());
                     }
                 }
-                else if(retrieveStrategy instanceof FtpFileRetrieveStrategy)
+                else if (retrieveStrategy instanceof FtpFileRetrieveStrategy)
                 {
                     FtpFileRetrieveStrategy ftpRetrieveStrategy = (FtpFileRetrieveStrategy)retrieveStrategy;
                     String server = ftpRetrieveStrategy.getServer();
-//                    String authentication = ftpRetrieveStrategy.getIdTypeAccess();
                     String userName = ftpRetrieveStrategy.getUser();
                     String password = ftpRetrieveStrategy.getPassword();
                     String ftpPath = ftpRetrieveStrategy.getFtpPath();
-                    
+
                     if (server == null || server.isEmpty())
                         throw new MissingArgumentsException("Missing value: " + "FTP server must not be empty");
-                    
+
                     try {
-                        dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
+                        dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -306,16 +308,17 @@ public class DatasetsResource {
                         throw new InternalServerErrorException("Error in server : " + e.getMessage());
                     }
                 }
-                else if(retrieveStrategy instanceof HttpFileRetrieveStrategy)
+                else if (retrieveStrategy instanceof HttpFileRetrieveStrategy)
                 {
                     HttpFileRetrieveStrategy httpFileRetrieveStrategy = (HttpFileRetrieveStrategy)retrieveStrategy;
                     String httpUrl = httpFileRetrieveStrategy.getUrl();
-                    
+
                     if (httpUrl == null || httpUrl.isEmpty())
                         throw new MissingArgumentsException("Missing value: " + "HTTP Url must not be empty");
-                    
+
                     try {
-                        dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString, recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat);
+                        dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -360,7 +363,112 @@ public class DatasetsResource {
         return Response.status(200).entity(new Result("Dataset with id " + datasetId + " deleted!")).build();
     }
 
-    //TODO UPDATE METHOD
+    /**
+     * Update a dataset by specifying the Id.
+     * Relative path : /datasets
+     * @param datasetId 
+     * @param dataSourceContainer 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws InvalidArgumentsException 
+     * @throws MissingArgumentsException 
+     * @throws ObjectNotFoundException 
+     * @throws AlreadyExistsException 
+     */
+    @PUT
+    @Path("/" + DatasetOptionListContainer.DATASETID)
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Update a dataset.", httpMethod = "PUT", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response updateDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
+            @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws MissingArgumentsException, ObjectNotFoundException, DoesNotExistException,
+            InvalidArgumentsException, AlreadyExistsException {
+
+        if (dataSourceContainer instanceof DefaultDataSourceContainer)
+        {
+            DefaultDataSourceContainer defaultDataSourceContainer = (DefaultDataSourceContainer)dataSourceContainer;
+            DataSource dataSource = defaultDataSourceContainer.getDataSource();
+            String name = defaultDataSourceContainer.getName();
+            String nameCode = defaultDataSourceContainer.getNameCode();
+
+            String newId = dataSource.getId();
+            String description = dataSource.getDescription();
+            String exportPath = dataSource.getExportDir();
+            String schema = dataSource.getSchema();
+            String namespace = dataSource.getNamespace();
+            String metadataFormat = dataSource.getMetadataFormat();
+            String marcFormat = dataSource.getMarcFormat();
+            Map<String, MetadataTransformation> metadataTransformations = null;
+            List<ExternalRestService> externalRestServices = null;
+
+            if (schema == null || schema.equals(""))
+                throw new MissingArgumentsException("Missing value: " + "Dataset schema must not be empty");
+            else if (namespace == null || namespace.equals(""))
+                throw new MissingArgumentsException("Missing value: " + "Dataset namespace must not be empty");
+            else if (metadataFormat == null || metadataFormat.equals(""))
+                throw new MissingArgumentsException("Missing value: " + "Dataset metadataFormat must not be empty");
+
+            if (metadataFormat.equals(MetadataFormat.MarcXchange.toString()))
+            {
+                if (marcFormat == null || marcFormat.isEmpty())
+                    throw new MissingArgumentsException("Invalid value: " + "Dataset marcFormat must not be empty");
+            }
+
+            //Retrieve and set the values that are not provided through the REST calls
+            DefaultDataSourceContainer oldDataSourceContainer = null;
+            try {
+                oldDataSourceContainer = (DefaultDataSourceContainer)dataManager.getDataSourceContainer(datasetId);
+                if (oldDataSourceContainer == null)
+                    throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+
+                DataSource oldDataSource = oldDataSourceContainer.getDataSource();
+                if (oldDataSource == null)
+                    throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+
+                metadataTransformations = oldDataSource.getMetadataTransformations();
+                externalRestServices = oldDataSource.getExternalRestServices();
+            } catch (DocumentException | IOException e) {
+                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            }
+
+            if (dataSource instanceof OaiDataSource)
+            {
+                OaiDataSource oaiDataSource = (OaiDataSource)dataSource;
+                String oaiSourceURL = oaiDataSource.getOaiSourceURL();
+                String oaiSet = oaiDataSource.getOaiSet();
+
+                if (oaiSourceURL == null || oaiSourceURL.isEmpty())
+                    throw new MissingArgumentsException("Missing value: " + "Dataset oaiSourceURL must not be empty");
+                else if (oaiSet == null || oaiSet.equals(""))
+                    throw new MissingArgumentsException("Missing value: " + "Dataset oaiSet must not be empty");
+
+                try {
+                    dataManager.updateDataSourceOai(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, metadataTransformations,
+                            externalRestServices, marcFormat, true);
+                } catch (InvalidArgumentsException e) {
+                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                } catch (ObjectNotFoundException e) {
+                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                } catch (AlreadyExistsException e) {
+                    throw new AlreadyExistsException("Dataset with newId " + e.getMessage() + " already exists!");
+                } catch (DocumentException | IOException e) {
+                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                }
+            }
+            if (newId != null && !newId.isEmpty() && !datasetId.equals(newId))
+                return Response.status(200).entity(new Result("Dataset with id " + datasetId + " updated and has now id : " + newId + "!")).build();
+            else
+                return Response.status(200).entity(new Result("Dataset with id " + datasetId + " updated!")).build();
+        }
+        return Response.status(500).entity(new Result("Invalid instance in body!")).build();
+    }
 
     /**
      * Get a list of datasets in the specified range.

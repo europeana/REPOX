@@ -287,6 +287,8 @@ public class DefaultSaveData {
                     saveDataResponse.setResponseState(ResponseState.INVALID_ARGUMENTS);
                 } catch (IncompatibleInstanceException e) {
                     saveDataResponse.setResponseState(ResponseState.INCOMPATIBLE_TYPE);
+                } catch (AlreadyExistsException e) {
+                    saveDataResponse.setResponseState(ResponseState.ALREADY_EXISTS);
                 }
                 return saveDataResponse;
             }

@@ -155,6 +155,45 @@
         "code" : 500,
         "message" : "InternalServerErrorException"
       } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Update a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "updateDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Dataset data",
+        "required" : true,
+        "type" : "datasetContainer",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
     } ]
   } ],
   "models" : {
@@ -205,19 +244,16 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "schema", "namespace", "metadataFormat" ],
+      "required" : [ "namespace", "metadataFormat", "schema" ],
       "discriminator" : "dataSourceType",
       "properties" : {
-        "id" : {
-          "type" : "string"
-        },
         "description" : {
           "type" : "string"
         },
-        "schema" : {
+        "namespace" : {
           "type" : "string"
         },
-        "namespace" : {
+        "id" : {
           "type" : "string"
         },
         "exportDir" : {
@@ -231,6 +267,9 @@
         },
         "recordIdPolicy" : {
           "$ref" : "RecordIdPolicy"
+        },
+        "schema" : {
+          "type" : "string"
         },
         "sample" : {
           "type" : "boolean"

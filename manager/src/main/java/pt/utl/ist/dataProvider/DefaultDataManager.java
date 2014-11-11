@@ -2504,24 +2504,27 @@ public class DefaultDataManager implements DataManager {
     public DataSource updateDataSourceOai(String oldId, String id, String description, String nameCode, String name, String exportPath,
             String schema, String namespace, String metadataFormat, String oaiSourceURL, String oaiSet,
             Map<String, MetadataTransformation> metadataTransformations, List<ExternalRestService> externalRestServices, String marcFormat,
-            boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException,
-            IncompatibleInstanceException {
+            boolean useLastIngestDate) throws DocumentException, IOException, ObjectNotFoundException, InvalidArgumentsException, AlreadyExistsException {
         DefaultDataSourceContainer oldDataSourceContainer = (DefaultDataSourceContainer)getDataSourceContainer(oldId);
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
+            if(!oldId.equals(id) && getDataSourceContainer(id) != null)
+                    throw new AlreadyExistsException(id);
+            
             if (!isIdValid(id))
                 throw new InvalidArgumentsException(id);
 
             //validate the URL server
-            if (!oaiSourceURL.startsWith("http://") && !oaiSourceURL.startsWith("https://")) {
-                oaiSourceURL = "http://" + oaiSourceURL;
+            String newOaiSourceURL = oaiSourceURL;
+            if (!newOaiSourceURL.startsWith("http://") && !newOaiSourceURL.startsWith("https://")) {
+                newOaiSourceURL = "http://" + newOaiSourceURL;
             }
-            if (new java.net.URL(oaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(oaiSourceURL)) {
+            if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(newOaiSourceURL)) {
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if (dataProviderParent != null) {
                     if (!(dataSource instanceof OaiDataSource)) {
                         DataSource newDataSource = new OaiDataSource(dataProviderParent, id, description, schema, namespace, metadataFormat,
-                                oaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+                                newOaiSourceURL, oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
                         newDataSource.setStatus(dataSource.getStatus());
 
@@ -2539,12 +2542,11 @@ public class DefaultDataManager implements DataManager {
                     dataSource.setSchema(schema);
                     dataSource.setNamespace(namespace);
                     dataSource.setMetadataFormat(metadataFormat);
-                    ((OaiDataSource)dataSource).setOaiSourceURL(oaiSourceURL);
+                    ((OaiDataSource)dataSource).setOaiSourceURL(newOaiSourceURL);
                     ((OaiDataSource)dataSource).setOaiSet(oaiSet);
                     dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setMarcFormat(marcFormat);
-
                     dataSource.setExportDir(exportPath);
 
                     if (!id.equals(oldId)) {
@@ -2555,6 +2557,7 @@ public class DefaultDataManager implements DataManager {
                         oldDataSourceContainer.setNameCode(nameCode);
                         //                            dataSourceContainer.setExportPath(exportPath);
                     }
+                    saveData();
                     updateDataProvider(dataProviderParent, dataProviderParent.getId());
                     return dataSource;
                 } else {

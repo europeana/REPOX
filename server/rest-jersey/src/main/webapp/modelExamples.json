@@ -2,7 +2,8 @@
 
 #Dataset Schemas examples()
 
-#Example for OAIdataset(containerType=DEFAULT,datasetType=OAI)
+#Example for Creating/Updating OAIdataset(containerType=DEFAULT,datasetType=OAI)
+
 #id must validate against the regular expression"[a-zA-Z_0-9]*".
 #Required fields(schema, namespace, metadatformat, oaiSourceURL, oaiSet)
 {
@@ -27,7 +28,8 @@
 }
 #################################################################
 
-#Example for DIRdataset(containerType=DEFAULT,datasetType=DIR)
+#Example for Creating/Updating DIRdataset(containerType=DEFAULT,datasetType=DIR)
+
 #This example is for folder dataset.
 #Required fields(schema, namespace, metadatformat, sourcesDirPath)
 {
