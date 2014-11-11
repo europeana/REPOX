@@ -2186,18 +2186,14 @@ public class DefaultDataManager implements DataManager {
 
             if (dataProvider != null) {
                 String accessType;
-                if (user != null && user.equals("") && password != null && password.equals("")) {
-                    accessType = FtpFileRetrieveStrategy.ANONYMOUS;
-                }
-                else if (user == null && password == null)
-                {
+                if ((user != null && user.equals("")) || user == null) {
                     accessType = FtpFileRetrieveStrategy.ANONYMOUS;
                 }
                 else {
                     accessType = FtpFileRetrieveStrategy.NORMAL;
                 }
 
-                FileRetrieveStrategy retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, accessType, ftpPath);
+                FtpFileRetrieveStrategy ftpRetrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, accessType, ftpPath);
 
                 RecordIdPolicy recordIdPolicy = DataSourceUtil.createIdPolicy(recordIdPolicyClass, idXpath, namespaces);
 
@@ -2225,8 +2221,14 @@ public class DefaultDataManager implements DataManager {
                     //                                extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(server, id),
                     //                                recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
+                    // Check FTP connection
+                    if (!FileUtilSecond.checkFtpServer(ftpRetrieveStrategy.getServer(), ftpRetrieveStrategy.getIdTypeAccess(), ftpRetrieveStrategy.getFtpPath(), ftpRetrieveStrategy.getUser(),
+                            ftpRetrieveStrategy.getPassword())) {
+                        throw new InvalidArgumentsException("Ftp connection failed");
+                    }
+
                     DataSource newDataSource = new DirectoryImporterDataSource(dataProvider, newId, description, schema, namespace, metadataFormat,
-                            extractStrategy, retrieveStrategy, characterEncoding, "",
+                            extractStrategy, ftpRetrieveStrategy, characterEncoding, "",
                             recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                     newDataSource.setExportDir(exportPath);

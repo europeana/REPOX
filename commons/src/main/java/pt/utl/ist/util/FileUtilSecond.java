@@ -366,6 +366,10 @@ public class FileUtilSecond {
             if (idType.equals("Normal")) {
                 if (!ftp.login(user, password)) { return false; }
             }
+            else if(idType.equals("Anonymous"))
+            {
+                if(!ftp.login("anonymous", "")) { return false; }
+            }
 
             if (!ftp.changeWorkingDirectory(ftpPath)) { return false; }
 
