@@ -242,6 +242,7 @@ public class DatasetsResource {
                 if (recordIdPolicy == null)
                     throw new MissingArgumentsException("Missing value: " + "Dataset recordIdPolicy must not be empty");
 
+                Map<String, String> namespaces = null;
                 if (recordIdPolicy instanceof IdGeneratedRecordIdPolicy)
                     recordIdPolicyString = IdGeneratedRecordIdPolicy.IDGENERATED;
                 else if (recordIdPolicy instanceof IdProvidedRecordIdPolicy)
@@ -253,9 +254,8 @@ public class DatasetsResource {
 
                     if (idXpath == null || idXpath.isEmpty())
                         throw new MissingArgumentsException("Missing value: " + "Dataset identifierXpath must not be empty");
+                    namespaces = ((IdExtractedRecordIdPolicy)recordIdPolicy).getNamespaces();
                 }
-
-                Map<String, String> namespaces = new HashMap<String, String>();
 
                 if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
                     if (isoVariant == null)

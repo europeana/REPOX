@@ -2432,6 +2432,7 @@ public class DefaultDataManager implements DataManager {
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
                             .initialize(dataProvider.getDataSourceContainers());
                     updateDataProvider(dataProvider, dataProviderId);
+                    saveData();
                     return newDataSource;
                 } else {
                     throw new InvalidArgumentsException("recordIdPolicy");

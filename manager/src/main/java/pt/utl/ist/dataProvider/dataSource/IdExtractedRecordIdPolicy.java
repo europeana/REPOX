@@ -32,6 +32,8 @@ public class IdExtractedRecordIdPolicy implements RecordIdPolicy {
     private static final Logger log = Logger.getLogger(IdExtractedRecordIdPolicy.class);
     public static final String IDEXTRACTED = "IdExtracted";
 
+    @XmlElement
+    @ApiModelProperty
     private Map<String, String> namespaces;
     @XmlElement
     @ApiModelProperty(required = true)

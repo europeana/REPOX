@@ -4,6 +4,7 @@
 
 #Example for OAIdataset(containerType=DEFAULT,datasetType=OAI)
 #id must validate against the regular expression"[a-zA-Z_0-9]*".
+#Required fields(schema, namespace, metadatformat, oaiSourceURL, oaiSet)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -28,6 +29,7 @@
 
 #Example for DIRdataset(containerType=DEFAULT,datasetType=DIR)
 #This example is for folder dataset.
+#Required fields(schema, namespace, metadatformat, sourcesDirPath)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -43,13 +45,17 @@
         "IdGenerated": {}
       },
       "sourcesDirPath": "/tmp/example/a",
-      "recordXPath": "/rec"
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
     },
     "nameCode": "a1010",
     "name": "NormalFolder"
 }
 
-#Example with IdExtracted recordIdPolicy
+#Example with IdExtracted recordIdPolicy  
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, identifierXpath)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -63,17 +69,24 @@
       "exportDir": "/tmp/export",
       "recordIdPolicy": {
         "IdExtracted": {
+       		"namespaces": {
+            	"ese": "http://www.europeana.eu/schemas/ese/"
+          	},
 			"identifierXpath": "/recId"
 		}
       },
       "sourcesDirPath": "/tmp/example/a",
-      "recordXPath": "/rec"
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
     },
     "nameCode": "a1010",
     "name": "NormalFolder"
 }
 
 #Example for ISO2709 format
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, isoVariant, characterEncoding)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -91,11 +104,15 @@
       "sourcesDirPath": "/tmp/ex",
       "characterEncoding": "UTF_8",
       "isoVariant": "STANDARD"
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
     },
     "nameCode": "a1011",
     "name": "IsoFolder"
 }
 #Example for MarcXchange format
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, marcFormat)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -112,6 +129,9 @@
         "IdGenerated": {}
       },
       "sourcesDirPath": "/tmp/mar"
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
     },
     "nameCode": "a1113",
     "name": "MarcFolder"
@@ -121,7 +141,7 @@
 
 #Example for FTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=FTP)
 #This example is for dataset over ftp.
-#Required fields(server)
+#Required fields(schema, namespace, metadatformat, server)
 {
     "containerType": "DEFAULT",
     "dataSource": {
@@ -153,7 +173,7 @@
   
 #Example for HTTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=HTTP)
 #This example is for dataset over http.
-#Required fields(url)
+#Required fields(schema, namespace, metadatformat, url)
 {
     "containerType": "DEFAULT",
     "dataSource": {
