@@ -1,7 +1,9 @@
 /* IsoVariant.java - created on Nov 7, 2014, Copyright (c) 2011 The European Library, all rights reserved */
-package pt.utl.ist.marc.iso2709;
+package pt.utl.ist.marc.iso2709.shared;
 
 import javax.xml.bind.annotation.XmlEnum;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Enumeration of Iso2709 variants
@@ -10,7 +12,7 @@ import javax.xml.bind.annotation.XmlEnum;
  * @since Nov 7, 2014
  */
 @XmlEnum(String.class)
-public enum Iso2709Variant {
+public enum Iso2709Variant  implements IsSerializable{
     STANDARD("pt.utl.ist.marc.iso2709.IteratorIso2709"),
     ALBANIA("pt.utl.ist.marc.iso2709.IteratorIso2709Albania"),
     UKRAINE("pt.utl.ist.marc.iso2709.IteratorIso2709Ukraine");

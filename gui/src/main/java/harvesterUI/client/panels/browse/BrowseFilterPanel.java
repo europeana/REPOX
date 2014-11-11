@@ -11,7 +11,6 @@ import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.models.DataFilter;
 import harvesterUI.client.models.FilterButton;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.filters.FilterQueryLastIngest;
 import harvesterUI.shared.filters.FilterQueryRecords;
@@ -21,6 +20,8 @@ import harvesterUI.shared.users.UserRole;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style;

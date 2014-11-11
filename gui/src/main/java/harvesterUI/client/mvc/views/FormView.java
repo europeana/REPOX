@@ -19,12 +19,12 @@ import harvesterUI.client.panels.forms.dataSources.DataSourceForm;
 import harvesterUI.client.panels.forms.dataSources.DataSourceTabPanel;
 import harvesterUI.client.panels.mdr.forms.NewSchemaDialog;
 import harvesterUI.client.panels.mdr.forms.NewTransformationDialog;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.AggregatorUI;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.mdr.SchemaUI;
 import harvesterUI.shared.mdr.TransformationUI;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;

@@ -18,7 +18,10 @@
 	<!--<inherits name='pt.ist.mdr.mapping.ui.MappingUI'/> -->
 	<!--<inherits name='pt.ist.mdr.concept.library.ui.MDRConceptLibrary'/> -->
 	<inherits name='pt.ist.mdr.mapping.ui.svg.MDRMappingSVG' />
-			
+	
+	<inherits name="pt.utl.ist.marc.Marc"/>
+	<inherits name="pt.utl.ist.util.Util"/>
+				
 	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
 	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 

@@ -26,9 +26,9 @@ import pt.utl.ist.rest.services.web.DefaultWebServices;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
-import pt.utl.ist.util.ProjectType;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.shared.ProjectType;
 
 public class RestServlet extends HttpServlet {
     private static org.apache.log4j.Logger log                  = org.apache.log4j.Logger.getLogger(RestServlet.class);

@@ -21,7 +21,7 @@ import pt.utl.ist.dataProvider.dataSource.*;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
-import pt.utl.ist.marc.iso2709.Iso2709Variant;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;

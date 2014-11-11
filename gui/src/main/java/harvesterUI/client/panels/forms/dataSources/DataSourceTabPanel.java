@@ -2,9 +2,9 @@ package harvesterUI.client.panels.forms.dataSources;
 
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.panels.forms.FormDialog;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;

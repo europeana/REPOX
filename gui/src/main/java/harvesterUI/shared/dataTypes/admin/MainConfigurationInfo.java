@@ -1,6 +1,6 @@
 package harvesterUI.shared.dataTypes.admin;
 
-import harvesterUI.shared.ProjectType;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

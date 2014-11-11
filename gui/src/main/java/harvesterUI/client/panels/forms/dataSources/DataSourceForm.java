@@ -13,7 +13,6 @@ import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.formPanel.DefaultFormPanel;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
 import harvesterUI.client.util.paging.PageUtil;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.SaveDataResponse;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
@@ -26,6 +25,8 @@ import harvesterUI.shared.servletResponseStates.ResponseState;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.event.ComponentEvent;

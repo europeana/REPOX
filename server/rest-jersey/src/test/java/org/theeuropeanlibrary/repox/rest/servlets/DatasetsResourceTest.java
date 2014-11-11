@@ -41,7 +41,7 @@ import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
-import pt.utl.ist.marc.iso2709.Iso2709Variant;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;

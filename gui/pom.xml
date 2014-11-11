@@ -151,6 +151,24 @@
 									</includes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
+
+								<!-- Clean gwt directories, that were generated if gwt compile was 
+									used -->
+								<fileset>
+									<directory>src/main/webapp/harvesterui</directory>
+								</fileset>
+								<fileset>
+									<directory>src/main/webapp/WEB-INF/classes</directory>
+								</fileset>
+								<fileset>
+									<directory>src/main/webapp/WEB-INF/deploy</directory>
+								</fileset>
+								<fileset>
+									<directory>src/main/webapp/WEB-INF/lib</directory>
+								</fileset>
+								<fileset>
+									<directory>src/main/webapp/META-INF/maven</directory>
+								</fileset>
 							</filesets>
 						</configuration>
 					</plugin>

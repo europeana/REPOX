@@ -4,7 +4,7 @@ import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.util.UtilManager;
 import harvesterUI.client.util.formPanel.DefaultFormPanel;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
-import harvesterUI.shared.ProjectType;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.event.BoxComponentEvent;

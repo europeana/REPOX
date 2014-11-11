@@ -5,7 +5,6 @@ import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
 import harvesterUI.server.projects.DefaultProjectManager;
 import harvesterUI.server.projects.ProjectManager;
 import harvesterUI.server.util.Util;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.admin.AdminInfo;
 import harvesterUI.shared.dataTypes.admin.MainConfigurationInfo;
@@ -29,6 +28,7 @@ import pt.utl.ist.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.TransformationResultLogger;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

@@ -25,6 +25,16 @@
 	</contributors>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/shared/*</include>
+					<include>**/*.gwt.xml</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
@@ -42,6 +52,33 @@
 	</build>
 
 	<dependencies>
+	
+	<!--Ext GWT Libs -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>gxt</groupId> -->
+<!-- 			<artifactId>gxt</artifactId> -->
+<!-- 			<classifier>gwt22</classifier> -->
+<!-- 		</dependency> -->
+
+		<!--GWT Core Libs -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	
+	
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>

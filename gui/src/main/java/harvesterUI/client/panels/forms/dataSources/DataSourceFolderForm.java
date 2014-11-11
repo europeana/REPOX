@@ -5,8 +5,6 @@ import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.models.Attribute;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
-import harvesterUI.shared.Iso2709Variant;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
@@ -18,6 +16,8 @@ import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.data.ModelData;

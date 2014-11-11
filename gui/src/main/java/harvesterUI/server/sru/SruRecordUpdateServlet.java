@@ -3,8 +3,6 @@ package harvesterUI.server.sru;
 
 
 
-import harvesterUI.shared.ProjectType;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,6 +38,7 @@ import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.recordPackage.RecordRepoxExternalId;
 import pt.utl.ist.sru.SruRecordUpdateDataSource;
 import pt.utl.ist.util.PropertyUtil;
+import pt.utl.ist.util.shared.ProjectType;
 
 /**
  *

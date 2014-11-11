@@ -15,7 +15,6 @@ import harvesterUI.client.servlets.dataManagement.DataManagementServiceAsync;
 import harvesterUI.client.servlets.dataManagement.FilterServiceAsync;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.UtilManager;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.AggregatorUI;
 import harvesterUI.shared.dataTypes.DataContainer;
 import harvesterUI.shared.dataTypes.DataProviderUI;
@@ -24,6 +23,8 @@ import harvesterUI.shared.filters.FilterQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style;

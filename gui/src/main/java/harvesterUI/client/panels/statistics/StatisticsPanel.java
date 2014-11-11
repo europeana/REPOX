@@ -3,7 +3,6 @@ package harvesterUI.client.panels.statistics;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.servlets.RepoxServiceAsync;
 import harvesterUI.client.util.ServerExceptionDialog;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.statistics.RepoxStatisticsUI;
 import harvesterUI.shared.statistics.StatisticsType;
 
@@ -11,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style;

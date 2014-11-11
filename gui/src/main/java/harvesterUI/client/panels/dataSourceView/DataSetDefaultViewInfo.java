@@ -1,15 +1,15 @@
 package harvesterUI.client.panels.dataSourceView;
 
-import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.servlets.RepoxServiceAsync;
 import harvesterUI.client.util.ImageButton;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.UtilManager;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.dataSet.DataSetTagUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.mdr.TransformationUI;
+import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.event.ButtonEvent;

@@ -5,7 +5,6 @@ import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.UtilManager;
 import harvesterUI.client.util.formPanel.EditableFormLayout;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.event.ButtonEvent;

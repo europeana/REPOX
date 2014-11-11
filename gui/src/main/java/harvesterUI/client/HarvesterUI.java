@@ -41,12 +41,13 @@ import harvesterUI.client.util.CookieManager;
 import harvesterUI.client.util.SearchUtilManager;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.UtilManager;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.admin.MainConfigurationInfo;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.users.UserRole;
 
 import java.util.logging.Logger;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Registry;

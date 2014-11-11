@@ -3,11 +3,12 @@ package harvesterUI.client.panels.overviewGrid;
 import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.panels.browse.BrowseFilterPanel;
 import harvesterUI.client.servlets.dataManagement.search.SearchServiceAsync;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.filters.FilterQuery;
 import harvesterUI.shared.search.BaseSearchResult;
 
 import java.util.List;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.data.BaseModel;

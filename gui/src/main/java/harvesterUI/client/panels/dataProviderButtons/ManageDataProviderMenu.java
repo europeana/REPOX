@@ -7,12 +7,13 @@ import harvesterUI.client.panels.overviewGrid.contextMenus.DataProviderContextMe
 import harvesterUI.client.servlets.dataManagement.DPServiceAsync;
 import harvesterUI.client.util.ServerExceptionDialog;
 import harvesterUI.client.util.WidgetWithRole;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.dataTypes.DataContainer;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;

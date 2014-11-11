@@ -4,8 +4,8 @@ import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.util.UtilManager;
 import harvesterUI.client.util.WidgetWithRole;
-import harvesterUI.shared.ProjectType;
 import harvesterUI.shared.users.UserRole;
+import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
