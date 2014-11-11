@@ -150,6 +150,35 @@
     "nameCode": "a2021",
     "name": "FTP Example"
   }
+  
+#Example for HTTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=HTTP)
+#This example is for dataset over http.
+#Required fields(url)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a3030",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": false,
+      "exportDir": "/tmp/example/http",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "HTTP": {
+          "url": "http://example.com"
+        }
+      }
+    },
+    "nameCode": "a3030",
+    "name": "HTTP Example"
+}
 #################################################################
 
 
