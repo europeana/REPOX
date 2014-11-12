@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -75,7 +76,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getOptions()}.
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testGetOptions() {
         int numberOfAvailableOptions = 6;
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS);
@@ -139,7 +140,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testCreateDatasetOai() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -184,7 +185,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testCreateDatasetDir() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -331,7 +332,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws ObjectNotFoundException 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testDeleteDataset() throws Exception, DocumentException, ObjectNotFoundException {
         String datasetId = "SampleDatasetId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
@@ -356,7 +357,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateDatasetOai() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -372,13 +373,14 @@ public class DatasetsResourceTest extends JerseyTest {
         DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
 
         //DefaultDataSourceContainer exist but null dataSource
-        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(new DefaultDataSourceContainer(null, "SampleNameCode", "SampleName", "/Sample/Export/Path")).thenReturn(null).thenReturn(defaultDataSourceContainer);
+        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(new DefaultDataSourceContainer(null, "SampleNameCode", "SampleName", "/Sample/Export/Path")).thenReturn(null)
+                .thenReturn(defaultDataSourceContainer);
         Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(404, response.getStatus());
         //DefaultDataSourceContainer does NOT exist
         response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(404, response.getStatus());
-        
+
         when(dataManager.updateDataSourceOai(datasetId, datasetId, oaiDataSource.getDescription(), defaultDataSourceContainer.getNameCode(),
                 defaultDataSourceContainer.getName(), oaiDataSource.getExportDir(), oaiDataSource.getSchema(), oaiDataSource.getNamespace(), oaiDataSource.getMetadataFormat(),
                 oaiDataSource.getOaiSourceURL(), oaiDataSource.getOaiSet(), new TreeMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(), oaiDataSource.getMarcFormat(), true))
@@ -434,7 +436,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateDatasetFolder() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -503,7 +505,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateDatasetFtp() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -531,33 +533,33 @@ public class DatasetsResourceTest extends JerseyTest {
                 .thenThrow(new ObjectNotFoundException(providerId))
                 .thenThrow(new InvalidArgumentsException());
 
-                //Valid call
-                Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(200, response.getStatus());
-                //Internal server error exception
-                response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(500, response.getStatus());
-                //Resource does NOT exist
-                response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(404, response.getStatus());
-                //Invalid URL
-                response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(400, response.getStatus());
-        
-                //Non Mocked errors
-                //Missing sourceDirPath
-                ftpFileRetrieveStrategy.setServer(null);
-                response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(406, response.getStatus());
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(200, response.getStatus());
+        //Internal server error exception
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+
+        //Non Mocked errors
+        //Missing sourceDirPath
+        ftpFileRetrieveStrategy.setServer(null);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
     }
-    
+
     /**
      * 
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#updateDataset(String, DataSourceContainer)}.
      * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateDatasetHttp() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -582,36 +584,35 @@ public class DatasetsResourceTest extends JerseyTest {
                 httpDataSource.getRecordXPath(), httpFileRetrieveStrategy.getUrl(),
                 new TreeMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(),
                 httpDataSource.getMarcFormat(), true)).thenReturn(httpDataSource).thenThrow(new IOException())
-              .thenThrow(new ObjectNotFoundException(providerId))
-              .thenThrow(new InvalidArgumentsException());
+                .thenThrow(new ObjectNotFoundException(providerId))
+                .thenThrow(new InvalidArgumentsException());
 
-                //Valid call
-                Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(200, response.getStatus());
-                //Internal server error exception
-                response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(500, response.getStatus());
-                //Resource does NOT exist
-                response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(404, response.getStatus());
-                //Invalid URL
-                response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(400, response.getStatus());
-        
-                //Non Mocked errors
-                //Missing httpUrl
-                httpFileRetrieveStrategy.setUrl(null);
-                response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
-                assertEquals(406, response.getStatus());
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(200, response.getStatus());
+        //Internal server error exception
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+
+        //Non Mocked errors
+        //Missing httpUrl
+        httpFileRetrieveStrategy.setUrl(null);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
     }
 
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getDatasetList(String, int, int)}.
      * @throws Exception 
-     * @throws Exception
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testGetDatasetList() throws Exception {
         int offset = 0;
         int number = 3;
@@ -654,6 +655,79 @@ public class DatasetsResourceTest extends JerseyTest {
         //Notice not mocked here cause it has to throw the exception before the call to the dataManager
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getDatasetLastIngestionDate(String)}.
+     * @throws Exception 
+     */
+    @Test
+        @Ignore
+    public void testGetDatasetLastIngestionDate() throws Exception {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + DatasetOptionListContainer.DATE);
+
+        //Mocking
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        OaiDataSource oaiDataSource = new OaiDataSource(dataProvider, datasetId, "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat", "SampleOaiSourceURL", "SampleOaiSet",
+                new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+        oaiDataSource.setExternalRestServices(new ArrayList<ExternalRestService>());
+        oaiDataSource.setLastUpdate(new Date());
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(null).thenThrow(new IOException()).thenReturn(defaultDataSourceContainer);
+
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(500, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+
+        //Ingest date null
+        defaultDataSourceContainer.getDataSource().setLastUpdate(null);
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+
+        //Datasource in defaultDataSourceContainer null
+        defaultDataSourceContainer.setDataSource(null);
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+    }
+    
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getDatasetRecordCount(String)}.
+     * @throws Exception 
+     */
+    @Test
+//        @Ignore
+    public void getDatasetRecordCount() throws Exception {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + DatasetOptionListContainer.DATE);
+
+        //Mocking
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        OaiDataSource oaiDataSource = new OaiDataSource(dataProvider, datasetId, "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat", "SampleOaiSourceURL", "SampleOaiSet",
+                new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+        oaiDataSource.setExternalRestServices(new ArrayList<ExternalRestService>());
+        oaiDataSource.setLastUpdate(new Date());
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(null).thenThrow(new IOException()).thenReturn(defaultDataSourceContainer);
+
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(500, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+
+        //Datasource in defaultDataSourceContainer null
+        defaultDataSourceContainer.setDataSource(null);
+        response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(404, response.getStatus());
     }
 
 }

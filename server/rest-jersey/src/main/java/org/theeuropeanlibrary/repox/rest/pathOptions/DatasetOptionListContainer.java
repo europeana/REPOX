@@ -25,6 +25,8 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class DatasetOptionListContainer extends OptionListContainer {
     public static final String DATASETS = "datasets";
     public static final String DATASETID = "{datasetId}";
+    public static final String DATE = "date";
+    public static final String COUNT = "count";
     //Query parameters
     public static final String OFFSET = "offset";
     public static final String NUMBER = "number";

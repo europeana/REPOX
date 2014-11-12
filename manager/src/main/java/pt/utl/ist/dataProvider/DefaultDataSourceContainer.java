@@ -48,7 +48,6 @@ public class DefaultDataSourceContainer extends DataSourceContainer{
     @XmlElement
     @ApiModelProperty(position = 3)
     protected String name;
-//    protected String exportPath;
 
     public String getNameCode() {
         return nameCode;
@@ -120,7 +119,6 @@ public class DefaultDataSourceContainer extends DataSourceContainer{
 
         dataSourceElement.addAttribute("name", getName());
         dataSourceElement.addAttribute("nameCode", getNameCode());
-//        dataSourceElement.addAttribute("exportPath", getExportPath());
 
         return dataSourceElement;
     }
@@ -137,7 +135,6 @@ public class DefaultDataSourceContainer extends DataSourceContainer{
         this.dataSource = dataSource;
         this.nameCode = (nameCode != null ? nameCode : "");
         this.name = (name != null ? name : "");
-//        this.exportPath = (exportPath != null ? exportPath : "");
     }
 
     public DefaultDataSourceContainer() {
