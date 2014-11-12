@@ -522,6 +522,30 @@ public class DatasetsResource {
                         throw new InternalServerErrorException("Error in server : " + e.getMessage());
                     }
                 }
+                else if (retrieveStrategy instanceof FtpFileRetrieveStrategy)
+                {
+                    FtpFileRetrieveStrategy ftpRetrieveStrategy = (FtpFileRetrieveStrategy)retrieveStrategy;
+                    String server = ftpRetrieveStrategy.getServer();
+                    String userName = ftpRetrieveStrategy.getUser();
+                    String password = ftpRetrieveStrategy.getPassword();
+                    String ftpPath = ftpRetrieveStrategy.getFtpPath();
+
+                    if (server == null || server.isEmpty())
+                        throw new MissingArgumentsException("Missing value: " + "FTP server must not be empty");
+
+                    try {
+                        dataManager.updateDataSourceFtp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat, true);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    } catch (DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
+                }
             }
 
             if (newId != null && !newId.isEmpty() && !datasetId.equals(newId))

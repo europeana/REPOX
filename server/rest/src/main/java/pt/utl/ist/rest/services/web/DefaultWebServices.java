@@ -1593,8 +1593,8 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source FTP. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating Data Source FTP. Data Provider was not found.");
-        } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source FTP. Data Provider was not Incompatible.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
         }
     }
 
