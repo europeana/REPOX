@@ -3,12 +3,14 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.ws.rs.client.Entity;
@@ -184,7 +186,7 @@ public class DatasetsResourceTest extends JerseyTest {
      */
     @Test
     @Ignore
-    public void testCreateDatasetFolder() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
+    public void testCreateDatasetDir() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
 
@@ -355,8 +357,8 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-//        @Ignore
-    public void testUpdateDataset() throws Exception {
+    @Ignore
+    public void testUpdateDatasetOai() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
@@ -373,7 +375,8 @@ public class DatasetsResourceTest extends JerseyTest {
         when(dataManager.getDataSourceContainer(datasetId)).thenReturn(defaultDataSourceContainer);
         when(dataManager.updateDataSourceOai(datasetId, datasetId, oaiDataSource.getDescription(), defaultDataSourceContainer.getNameCode(),
                 defaultDataSourceContainer.getName(), oaiDataSource.getExportDir(), oaiDataSource.getSchema(), oaiDataSource.getNamespace(), oaiDataSource.getMetadataFormat(),
-                oaiDataSource.getOaiSourceURL(), oaiDataSource.getOaiSet(), new TreeMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(), oaiDataSource.getMarcFormat(), true)).thenReturn(oaiDataSource).thenThrow(new IOException())
+                oaiDataSource.getOaiSourceURL(), oaiDataSource.getOaiSet(), new TreeMap<String, MetadataTransformation>(), new ArrayList<ExternalRestService>(), oaiDataSource.getMarcFormat(), true))
+                .thenReturn(oaiDataSource).thenThrow(new IOException())
                 .thenThrow(new ObjectNotFoundException(providerId))
                 .thenThrow(new InvalidArgumentsException());
 
@@ -389,13 +392,67 @@ public class DatasetsResourceTest extends JerseyTest {
         //Invalid URL
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(400, response.getStatus());
-        
+
         //Missing oaiUrl
         oaiDataSource.setOaiSourceURL(null);
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
         //Missing oaiSet
         oaiDataSource.setOaiSet(null);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+    }
+
+    /**
+     * 
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#updateDataset(String, DataSourceContainer)}.
+     * @throws Exception
+     */
+    @Test
+    //        @Ignore
+    public void testUpdateDatasetDir() throws Exception {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
+
+        //Mocking
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        DirectoryImporterDataSource folderDataSource = new DirectoryImporterDataSource(dataProvider, datasetId, "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat",
+                new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), CharacterEncoding.UTF_8, "/sample/dir", new IdProvidedRecordIdPolicy(),
+                new TreeMap<String, MetadataTransformation>(), "SamplerecordXPath", new HashMap<String, String>());
+        folderDataSource.setIsoVariant(Iso2709Variant.STANDARD);
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(folderDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(defaultDataSourceContainer);
+
+        Map<String, String> map = any();
+        Map<String, MetadataTransformation> map2 = any();
+        List<ExternalRestService> list = any();
+
+        when(dataManager.updateDataSourceFolder(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString(), map, anyString(), anyString(), map2, list, anyString(), anyBoolean())).thenReturn(folderDataSource).thenThrow(new IOException())
+                .thenThrow(new ObjectNotFoundException(providerId))
+                .thenThrow(new InvalidArgumentsException());
+
+        //Valid call
+        Response response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(200, response.getStatus());
+        //Two internal server error exception
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Resource does NOT exist
+        response = target.request(MediaType.APPLICATION_XML).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Invalid URL
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(400, response.getStatus());
+
+        //Missing sourceDirPath
+        folderDataSource.setSourcesDirPath(null);
+        response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+        //Missing recordIdPolicy
+        folderDataSource.setRecordIdPolicy(null);
         response = target.request(MediaType.APPLICATION_JSON).put(Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
     }

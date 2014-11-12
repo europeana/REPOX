@@ -1956,8 +1956,8 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source Folder. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.OTHER, "Error updating Data Source Folder. Data Source with id \"" + id + "\" was not a Folder data source.");
-        } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating Data Source Folder. Incompatible record id policy.");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
         }
     }
 

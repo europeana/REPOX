@@ -455,13 +455,75 @@ public class DatasetsResource {
                 } catch (InvalidArgumentsException e) {
                     throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
-                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    throw new DoesNotExistException("Dataset with id " + e.getMessage() + " does NOT exist!");
                 } catch (AlreadyExistsException e) {
                     throw new AlreadyExistsException("Dataset with newId " + e.getMessage() + " already exists!");
                 } catch (DocumentException | IOException e) {
                     throw new InternalServerErrorException("Error in server : " + e.getMessage());
                 }
             }
+            else if (dataSource instanceof DirectoryImporterDataSource)
+            {
+                DirectoryImporterDataSource directoryImporterDataSource = (DirectoryImporterDataSource)dataSource;
+                String sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
+                String recordXPath = directoryImporterDataSource.getRecordXPath();
+                CharacterEncoding characterEncoding = directoryImporterDataSource.getCharacterEncoding();
+                FileRetrieveStrategy retrieveStrategy = directoryImporterDataSource.getRetrieveStrategy();
+                String characterEncodingString = "";
+                if (characterEncoding != null)
+                    characterEncodingString = characterEncoding.toString();
+                Iso2709Variant isoVariant = directoryImporterDataSource.getIsoVariant();
+                String isoVariantString = "";
+                if (isoVariant != null)
+                    isoVariantString = isoVariant.getIsoVariant();
+                RecordIdPolicy recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
+                String recordIdPolicyString = null;
+                String idXpath = null;
+                if (recordIdPolicy == null)
+                    throw new MissingArgumentsException("Missing value: " + "Dataset recordIdPolicy must not be empty");
+
+                Map<String, String> namespaces = null;
+                if (recordIdPolicy instanceof IdGeneratedRecordIdPolicy)
+                    recordIdPolicyString = IdGeneratedRecordIdPolicy.IDGENERATED;
+                else if (recordIdPolicy instanceof IdProvidedRecordIdPolicy)
+                    recordIdPolicyString = IdProvidedRecordIdPolicy.IDPROVIDED;
+                else if (recordIdPolicy instanceof IdExtractedRecordIdPolicy)
+                {
+                    recordIdPolicyString = IdExtractedRecordIdPolicy.IDEXTRACTED;
+                    idXpath = ((IdExtractedRecordIdPolicy)recordIdPolicy).getIdentifierXpath();
+
+                    if (idXpath == null || idXpath.isEmpty())
+                        throw new MissingArgumentsException("Missing value: " + "Dataset identifierXpath must not be empty");
+                    namespaces = ((IdExtractedRecordIdPolicy)recordIdPolicy).getNamespaces();
+                }
+
+                if (metadataFormat.equals(MetadataFormat.ISO2709.toString())) {
+                    if (isoVariant == null)
+                        throw new MissingArgumentsException("Missing value: " + "Dataset isoVariant must not be empty");
+                    else if (characterEncoding == null)
+                        throw new MissingArgumentsException("Missing value: " + "Dataset characterEncoding must not be empty");
+                }
+
+                if (retrieveStrategy instanceof FolderFileRetrieveStrategy)
+                {
+                    if (sourcesDirPath == null || sourcesDirPath.isEmpty())
+                        throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
+
+                    try {
+                        dataManager.updateDataSourceFolder(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat, true);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Dataset with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with newId " + e.getMessage() + " already exists!");
+                    } catch (DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
+                }
+            }
+
             if (newId != null && !newId.isEmpty() && !datasetId.equals(newId))
                 return Response.status(200).entity(new Result("Dataset with id " + datasetId + " updated and has now id : " + newId + "!")).build();
             else
