@@ -671,7 +671,7 @@ public class DatasetsResource {
     
     
     /**
-     * Get the number of records of the dataset
+     * Get the number of records of the dataset.
      * Relative path : /datasets/{datasetId}/count
      * @param datasetId 
      * @return number of records

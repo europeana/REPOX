@@ -52,6 +52,8 @@ public class DatasetOptionListContainer extends OptionListContainer {
         optionList.add(new Option("[DELETE]Delete a dataset by specifying the Id.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[PUT]Update a dataset by specifying the Id on the context path.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[GET]Get a list of datasets by specifying a range.", baseUri + DATASETS, new ArrayList<String>(Arrays.asList(PROVIDERID, OFFSET, NUMBER))));
+        optionList.add(new Option("[GET]Get the last ingestion date of the dataset.", baseUri + DATASETS + "/" + DatasetOptionListContainer.DATE, null));
+        optionList.add(new Option("[GET]Get the number of records of the dataset.", baseUri + DATASETS + "/" + DatasetOptionListContainer.COUNT, null));
         
         setOptionList(optionList);
     }
