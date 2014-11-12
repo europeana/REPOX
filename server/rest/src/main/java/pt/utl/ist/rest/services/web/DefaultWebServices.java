@@ -1775,8 +1775,8 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Data Source HTTP. " + e.getMessage());
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Data Source HTTP. Data Provider was not found.");
-        } catch (IncompatibleInstanceException e) {
-            createErrorMessage(out, MessageType.INCOMPATIBLE_TYPE, "Error updating a Data Source HTTP. Data Provider was not found.");
+        } catch (AlreadyExistsException e) {
+                createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
         }
     }
 

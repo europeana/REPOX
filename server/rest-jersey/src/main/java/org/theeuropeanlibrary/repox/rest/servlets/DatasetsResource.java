@@ -150,6 +150,7 @@ public class DatasetsResource {
      * @throws AlreadyExistsException 
      * @throws InvalidArgumentsException 
      * @throws DoesNotExistException 
+     * @throws InternalServerErrorException 
      */
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -164,7 +165,7 @@ public class DatasetsResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
     public Response createDataset(@ApiParam(value = "ProviderId", required = true) @QueryParam("providerId") String providerId,
             @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws AlreadyExistsException, MissingArgumentsException, InvalidArgumentsException,
-            DoesNotExistException {
+            DoesNotExistException, InternalServerErrorException {
 
         if (providerId == null || providerId.equals(""))
             throw new MissingArgumentsException("Missing argument providerId!");
@@ -371,9 +372,9 @@ public class DatasetsResource {
      * @return OK or Error Message
      * @throws DoesNotExistException 
      * @throws InvalidArgumentsException 
-     * @throws MissingArgumentsException 
-     * @throws ObjectNotFoundException 
+     * @throws MissingArgumentsException  
      * @throws AlreadyExistsException 
+     * @throws InternalServerErrorException 
      */
     @PUT
     @Path("/" + DatasetOptionListContainer.DATASETID)
@@ -385,11 +386,12 @@ public class DatasetsResource {
             @ApiResponse(code = 400, message = "InvalidArgumentsException"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
     public Response updateDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
-            @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws MissingArgumentsException, ObjectNotFoundException, DoesNotExistException,
-            InvalidArgumentsException, AlreadyExistsException {
+            @ApiParam(value = "Dataset data", required = true) DataSourceContainer dataSourceContainer) throws MissingArgumentsException, DoesNotExistException,
+            InvalidArgumentsException, AlreadyExistsException, InternalServerErrorException {
 
         if (dataSourceContainer instanceof DefaultDataSourceContainer)
         {
@@ -546,14 +548,39 @@ public class DatasetsResource {
                         throw new InternalServerErrorException("Error in server : " + e.getMessage());
                     }
                 }
+                else if (retrieveStrategy instanceof HttpFileRetrieveStrategy)
+                {
+                    HttpFileRetrieveStrategy httpFileRetrieveStrategy = (HttpFileRetrieveStrategy)retrieveStrategy;
+                    String httpUrl = httpFileRetrieveStrategy.getUrl();
+
+                    if (httpUrl == null || httpUrl.isEmpty())
+                        throw new MissingArgumentsException("Missing value: " + "HTTP Url must not be empty");
+
+                    try {
+                        dataManager.updateDataSourceHttp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat, true);
+                    } catch (InvalidArgumentsException e) {
+                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    } catch (ObjectNotFoundException e) {
+                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    } catch (AlreadyExistsException e) {
+                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    } catch (DocumentException | IOException e) {
+                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    }
+                }
+                else
+                    return Response.status(500).entity(new Result("Invalid retrieve strategy!")).build();
             }
+            else
+                return Response.status(500).entity(new Result("Invalid dataSource instance in body!")).build();
 
             if (newId != null && !newId.isEmpty() && !datasetId.equals(newId))
                 return Response.status(200).entity(new Result("Dataset with id " + datasetId + " updated and has now id : " + newId + "!")).build();
             else
                 return Response.status(200).entity(new Result("Dataset with id " + datasetId + " updated!")).build();
         }
-        return Response.status(500).entity(new Result("Invalid instance in body!")).build();
+        return Response.status(500).entity(new Result("Invalid dataSourceContainer instance in body!")).build();
     }
 
     /**

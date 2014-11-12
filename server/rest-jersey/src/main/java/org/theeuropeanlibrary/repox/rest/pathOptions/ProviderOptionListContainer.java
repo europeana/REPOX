@@ -48,7 +48,7 @@ public class ProviderOptionListContainer extends OptionListContainer {
         optionList.add(new Option("[GET]Gets a provider by Id.", baseUri + PROVIDERS + "/" + PROVIDERID, null));
         optionList.add(new Option("[POST]Create a provider provided in the body of the post call.", baseUri + PROVIDERS, new ArrayList<String>(Arrays.asList(AGGREGATORID))));
         optionList.add(new Option("[DELETE]Delete a provider by specifying the Id.", baseUri + PROVIDERS + "/" + PROVIDERID, null));
-        optionList.add(new Option("[PUT]Update aprovider by specifying the Id on the context path.", baseUri + PROVIDERS + "/" + PROVIDERID, new ArrayList<String>(Arrays.asList(NEWAGGREGATORID))));
+        optionList.add(new Option("[PUT]Update a provider by specifying the Id on the context path.", baseUri + PROVIDERS + "/" + PROVIDERID, new ArrayList<String>(Arrays.asList(NEWAGGREGATORID))));
         optionList.add(new Option("[GET]Get a list of providers by specifying a range.", baseUri + PROVIDERS, new ArrayList<String>(Arrays.asList(AGGREGATORID, OFFSET, NUMBER))));
         
         setOptionList(optionList);
