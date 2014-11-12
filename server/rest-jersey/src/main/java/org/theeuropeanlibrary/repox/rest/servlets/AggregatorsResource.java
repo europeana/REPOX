@@ -143,11 +143,11 @@ public class AggregatorsResource {
             try {
                 createdAggregator = dataManager.createAggregator(aggregator.getId(), aggregator.getName(), aggregator.getNameCode(), aggregator.getHomepage().toString());
             } catch (DocumentException | IOException e) {
-                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
             } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
             } catch (AlreadyExistsException e) { //This basically happens if and aggregator already exists with the same Id 
-                throw new AlreadyExistsException("Aggregator with id " + e.getMessage() + " already exists!");
+                throw new AlreadyExistsException("Already exists: " + e.getMessage());
             }
         } else
             throw new MissingArgumentsException("Missing argument name!");
@@ -177,10 +177,9 @@ public class AggregatorsResource {
         try {
             dataManager.deleteAggregator(aggregatorId);
         } catch (DocumentException | IOException e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException(
-                    "A resource of the aggregator or the aggregator itself with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
 
         return Response.status(200).entity(new Result("Aggregator with id " + aggregatorId + " deleted!")).build();
@@ -196,6 +195,7 @@ public class AggregatorsResource {
      * @throws DoesNotExistException 
      * @throws InvalidArgumentsException 
      * @throws MissingArgumentsException 
+     * @throws AlreadyExistsException 
      */
     @PUT
     @Path("/" + AggregatorOptionListContainer.AGGREGATORID)
@@ -211,7 +211,7 @@ public class AggregatorsResource {
     })
     public Response updateAggregator(@ApiParam(value = "Id of aggregator", required = true) @PathParam("aggregatorId") String aggregatorId,
             @ApiParam(value = "Aggregator data", required = true) Aggregator aggregator) throws DoesNotExistException,
-            InvalidArgumentsException, MissingArgumentsException {
+            InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException {
 
         //        if(aggregator.getId() != null)
         //            throw new InvalidArgumentsException("Invalid value: " + "Aggregator Id provided in body must be null");
@@ -224,12 +224,13 @@ public class AggregatorsResource {
             try {
                 dataManager.updateAggregator(aggregatorId, newAggregatorId, name, nameCode, homePage);
             } catch (IOException e) {
-                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
             } catch (ObjectNotFoundException e) {
-                throw new DoesNotExistException(
-                        "A resource of the aggregator or the aggregator itself with id " + e.getMessage() + " does NOT exist!");
+                throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
             } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-                throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
+            } catch (AlreadyExistsException e) {
+                throw new AlreadyExistsException("Already exists: " + e.getMessage());
             }
         } else
             throw new MissingArgumentsException("Missing argument name!");
@@ -268,7 +269,7 @@ public class AggregatorsResource {
         try {
             aggregatorsListSorted = dataManager.getAggregatorsListSorted(offset, number);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidArgumentsException("Invalid argument : " + e.getMessage());
+            throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
         }
 
         return Response.status(200).entity(new GenericEntity<List<Aggregator>>(aggregatorsListSorted) {

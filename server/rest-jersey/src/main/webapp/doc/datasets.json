@@ -4,20 +4,100 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/datasets",
   "apis" : [ {
-    "path" : "/datasets",
+    "path" : "/datasets/{datasetId}",
     "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over datasets conext.",
+      "method" : "GET",
+      "summary" : "Get specific dataset.",
       "notes" : "",
-      "type" : "DatasetOptions",
-      "nickname" : "getOptions",
+      "type" : "datasetContainer",
+      "nickname" : "getDataset",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
+        "message" : "OK (Response containing an Dataset)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     }, {
+      "method" : "DELETE",
+      "summary" : "Delete a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "deleteDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Update a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "updateDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Dataset data",
+        "required" : true,
+        "type" : "datasetContainer",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets",
+    "operations" : [ {
       "method" : "POST",
       "summary" : "Create a dataset.",
       "notes" : "",
@@ -105,94 +185,17 @@
         "code" : 404,
         "message" : "DoesNotExistException"
       } ]
-    } ]
-  }, {
-    "path" : "/datasets/{datasetId}",
-    "operations" : [ {
-      "method" : "GET",
-      "summary" : "Get specific dataset.",
-      "notes" : "",
-      "type" : "datasetContainer",
-      "nickname" : "getDataset",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "datasetId",
-        "description" : "Id of dataset",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing an Dataset)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
     }, {
-      "method" : "DELETE",
-      "summary" : "Delete a dataset.",
+      "method" : "OPTIONS",
+      "summary" : "Get options over datasets conext.",
       "notes" : "",
-      "type" : "string",
-      "nickname" : "deleteDataset",
+      "type" : "DatasetOptions",
+      "nickname" : "getOptions",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "datasetId",
-        "description" : "Id of dataset",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      } ],
+      "parameters" : [ ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a String message)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
-      } ]
-    }, {
-      "method" : "PUT",
-      "summary" : "Update a dataset.",
-      "notes" : "",
-      "type" : "string",
-      "nickname" : "updateDataset",
-      "produces" : [ "application/json", "application/xml" ],
-      "consumes" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "datasetId",
-        "description" : "Id of dataset",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "path",
-        "allowMultiple" : false
-      }, {
-        "name" : "body",
-        "description" : "Dataset data",
-        "required" : true,
-        "type" : "datasetContainer",
-        "paramType" : "body",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a String message)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 406,
-        "message" : "MissingArgumentsException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
+        "message" : "OK (Response containing a list of all available options)"
       } ]
     } ]
   } ],
@@ -244,13 +247,10 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "namespace", "metadataFormat", "schema" ],
+      "required" : [ "schema", "metadataFormat", "namespace" ],
       "discriminator" : "dataSourceType",
       "properties" : {
-        "description" : {
-          "type" : "string"
-        },
-        "namespace" : {
+        "schema" : {
           "type" : "string"
         },
         "id" : {
@@ -268,7 +268,10 @@
         "recordIdPolicy" : {
           "$ref" : "RecordIdPolicy"
         },
-        "schema" : {
+        "description" : {
+          "type" : "string"
+        },
+        "namespace" : {
           "type" : "string"
         },
         "sample" : {

@@ -752,7 +752,7 @@ public class DefaultDataManager implements DataManager {
                 }
                 newAggregator.setHomepage(generatedHomepageUrl);
             } catch (Exception e) {
-                throw new InvalidArgumentsException(homepageUrl);
+                throw new InvalidArgumentsException("The Url " + homepageUrl + " is not valid!");
             }
         } else if (homepageUrl != null && homepageUrl.equals(""))
             newAggregator.setHomepage(homepageUrl);
@@ -773,7 +773,7 @@ public class DefaultDataManager implements DataManager {
             saveData();
             return newAggregator;
         } else
-            throw new AlreadyExistsException(newAggregator.getId());
+            throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!");
     }
 
     /**
@@ -787,10 +787,11 @@ public class DefaultDataManager implements DataManager {
      * @return MessageType
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
      */
     @Override
     public Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage) throws InvalidArgumentsException, IOException,
-            ObjectNotFoundException {
+            ObjectNotFoundException, AlreadyExistsException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
 
@@ -800,7 +801,7 @@ public class DefaultDataManager implements DataManager {
             if (newAggregatorId != null && !newAggregatorId.equals("") && !aggregatorId.equals(newAggregatorId)) {
                 Aggregator aggregatorIdTest = new Aggregator(newAggregatorId, null, null, null, null);
                 if (checkIfAggregatorExists(aggregators, aggregatorIdTest))
-                    throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " already exists!");
+                    throw new AlreadyExistsException("Aggregator with newId: " + aggregatorIdTest.getId() + " already exists!");
             }
 
             if (name != null)
@@ -823,7 +824,7 @@ public class DefaultDataManager implements DataManager {
                     }
                     aggregator.setHomepage(newHomepageUrl);
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(newHomepageUrl);
+                    throw new InvalidArgumentsException("The Url " + newHomepageUrl + " is not valid!");
                 }
             } else if (homepage != null && homepage.equals("")) {
                 aggregator.setHomepage(homepage);
@@ -844,7 +845,7 @@ public class DefaultDataManager implements DataManager {
             saveData();
             return aggregator;
         } else {
-            throw new ObjectNotFoundException(aggregatorId);
+            throw new ObjectNotFoundException("Aggregator with id " + aggregatorId + " NOT found!");
         }
     }
 
@@ -886,7 +887,7 @@ public class DefaultDataManager implements DataManager {
                 }
             }
         }
-        throw new ObjectNotFoundException(aggregatorId);
+        throw new ObjectNotFoundException("Aggregator  " + aggregatorId + "NOT found!");
     }
 
     /**
@@ -1029,7 +1030,7 @@ public class DefaultDataManager implements DataManager {
                     }
                     newDataProvider.setHomepage(generatedHomepage);
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(generatedHomepage);
+                    throw new InvalidArgumentsException("The Url " + generatedHomepage + " is not valid!");
                 }
             } else if (homepage != null && homepage.equals(""))
                 newDataProvider.setHomepage(homepage);
@@ -1037,7 +1038,7 @@ public class DefaultDataManager implements DataManager {
             try {
                 newDataProvider.setProviderType(ProviderType.get(dataSetType));
             } catch (Exception e) {
-                throw new InvalidArgumentsException(dataSetType);
+                throw new InvalidArgumentsException(e.getMessage());
             }
             newDataProvider.setDataSourceContainers(new HashMap<String, DataSourceContainer>());
 
@@ -1053,7 +1054,7 @@ public class DefaultDataManager implements DataManager {
                 if (currentAggregator.getId().equals(aggregatorId)) {
                     //Check if dataProvider already exists with the same Id, this check is for when the Id is provided and not generated
                     if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
-                        throw new AlreadyExistsException(newDataProvider.getId());
+                        throw new AlreadyExistsException("DataProvider " + newDataProvider.getId() + " already exists!");
                     }
                     currentAggregator.addDataProvider(newDataProvider);
                     break;
@@ -1062,7 +1063,7 @@ public class DefaultDataManager implements DataManager {
             saveData();
             return newDataProvider;
         } else {
-            throw new ObjectNotFoundException(aggregatorId);
+            throw new ObjectNotFoundException("Aggregator with id " + aggregatorId + " NOT found!");
         }
     }
 
@@ -1156,10 +1157,11 @@ public class DefaultDataManager implements DataManager {
      * @return MessageType
      * @throws ObjectNotFoundException 
      * @throws InvalidArgumentsException 
+     * @throws AlreadyExistsException 
      */
     @Override
     public DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String description, String nameCode, String homepage,
-            String dataSetType, String email) throws InvalidArgumentsException, IOException, ObjectNotFoundException
+            String dataSetType, String email) throws InvalidArgumentsException, IOException, ObjectNotFoundException, AlreadyExistsException
     {
         DataProvider dataProvider = getDataProvider(providerId);
 
@@ -1168,7 +1170,7 @@ public class DefaultDataManager implements DataManager {
 
             if (newProviderId != null && !newProviderId.equals("") && !providerId.equals(newProviderId)) {
                 if (getDataProvider(newProviderId) != null)
-                    throw new InvalidArgumentsException("Provider with id: " + newProviderId + " already exists!");
+                    throw new AlreadyExistsException("Provider with id: " + newProviderId + " already exists!");
             }
 
             if (name != null)
@@ -1196,7 +1198,7 @@ public class DefaultDataManager implements DataManager {
                     }
                     dataProvider.setHomepage(newHomepageUrl);
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(newHomepageUrl);
+                    throw new InvalidArgumentsException("The Url " + newHomepageUrl + " is not valid!");
                 }
             } else if (homepage != null && homepage.equals("")) {
                 dataProvider.setHomepage(homepage);
@@ -1206,7 +1208,7 @@ public class DefaultDataManager implements DataManager {
                 try {
                     dataProvider.setProviderType(ProviderType.get(dataSetType));
                 } catch (Exception e) {
-                    throw new InvalidArgumentsException(dataSetType);
+                    throw new InvalidArgumentsException(e.getMessage());
                 }
             }
 
@@ -1230,7 +1232,7 @@ public class DefaultDataManager implements DataManager {
                             {
                                 Aggregator aggregatorIdTest = new Aggregator(newAggregatorId, null, null, null, null);
                                 if (!checkIfAggregatorExists(aggregators, aggregatorIdTest))
-                                    throw new InvalidArgumentsException("Aggregator with id: " + aggregatorIdTest.getId() + " does NOT exists!");
+                                    throw new ObjectNotFoundException("Aggregator with id: " + aggregatorIdTest.getId() + " does NOT exist!");
                                 Aggregator parentAggregator = getAggregator(newAggregatorId);
 
                                 parentAggregator.getDataProviders().add(defaultDataProvider);
@@ -1244,9 +1246,9 @@ public class DefaultDataManager implements DataManager {
 
                 }
             }
-            throw new ObjectNotFoundException(dataProvider.getId());
+            throw new ObjectNotFoundException("DataProvider with id " + dataProvider.getId() + " NOT found!");
         } else {
-            throw new ObjectNotFoundException(providerId);
+            throw new ObjectNotFoundException("DataProvider with id " + providerId + " NOT found!");
         }
     }
 
@@ -1322,7 +1324,7 @@ public class DefaultDataManager implements DataManager {
                 }
             }
         }
-        throw new ObjectNotFoundException(dataProviderId);
+        throw new ObjectNotFoundException("DataProvider  " + dataProviderId + "NOT found!");
     }
 
     @Override
@@ -1391,7 +1393,7 @@ public class DefaultDataManager implements DataManager {
     public List<DataProvider> getDataProvidersListSorted(String aggregatorId, int offset, int number) throws ObjectNotFoundException
     {
         if (getAggregator(aggregatorId) == null)
-            throw new ObjectNotFoundException(aggregatorId);
+            throw new ObjectNotFoundException("Aggregator with id: " + aggregatorId + " does NOT exist!");
 
         List<DataProvider> sortedList = new ArrayList<DataProvider>(getAggregator(aggregatorId).getDataProviders());
         Collections.sort(sortedList, new DataProviderComparator());
@@ -1545,7 +1547,7 @@ public class DefaultDataManager implements DataManager {
         DataProvider dataProviderParent = getDataProviderParent(dataSourceId);
 
         if (dataProviderParent == null)
-            throw new ObjectNotFoundException(dataSourceId);
+            throw new ObjectNotFoundException("DataProvider for dataSource " + dataSourceId + "NOT found!");
 
         DefaultDataSourceContainer dataSourceContainer = (DefaultDataSourceContainer)dataProviderParent.getDataSourceContainers().get(dataSourceId);
 
@@ -1666,7 +1668,7 @@ public class DefaultDataManager implements DataManager {
     public List<DataSourceContainer> getDataSourceContainerListSorted(String providerId, int offset, int number) throws ObjectNotFoundException
     {
         if (getDataProvider(providerId) == null)
-            throw new ObjectNotFoundException(providerId);
+            throw new ObjectNotFoundException("Dataprovider " + providerId + " NOT found!");
 
         List<DataSourceContainer> sortedList = new ArrayList<DataSourceContainer>(getDataProvider(providerId).getDataSourceContainers().values());
         Collections.sort(sortedList, new DataSourceContainerComparator());
@@ -1886,13 +1888,13 @@ public class DefaultDataManager implements DataManager {
                     saveData();
                     return newDataSource;
                 } else {
-                    throw new InvalidArgumentsException(oaiSourceURL);
+                    throw new InvalidArgumentsException("The Url " + oaiSourceURL + " is not valid!");
                 }
             } else {
-                throw new ObjectNotFoundException(dataProviderId);
+                throw new ObjectNotFoundException("Dataprovider " + dataProviderId + " NOT found!");
             }
         } else {
-            throw new AlreadyExistsException(id);
+            throw new AlreadyExistsException("Datasource " + id + " already exists!");
         }
     }
 
@@ -2246,13 +2248,13 @@ public class DefaultDataManager implements DataManager {
                     saveData();
                     return newDataSource;
                 } else {
-                    throw new InvalidArgumentsException("recordIdPolicy");
+                    throw new InvalidArgumentsException("The recordIdPolicy is NULL!");
                 }
             } else {
-                throw new ObjectNotFoundException(dataProviderId);
+                throw new ObjectNotFoundException("Dataprovider " + dataProviderId + " NOT found!");
             }
         } else {
-            throw new AlreadyExistsException(id);
+            throw new AlreadyExistsException("Datasource " + id + " already exists!");
         }
     }
 
@@ -2340,13 +2342,13 @@ public class DefaultDataManager implements DataManager {
                     updateDataProvider(dataProvider, dataProviderId);
                     return newDataSource;
                 } else {
-                    throw new InvalidArgumentsException("recordIdPolicy");
+                    throw new InvalidArgumentsException("The recordIdPolicy is NULL!");
                 }
             } else {
-                throw new ObjectNotFoundException(dataProviderId);
+                throw new ObjectNotFoundException("Dataprovider " + dataProviderId + " NOT found!");
             }
         } else {
-            throw new AlreadyExistsException(id);
+            throw new AlreadyExistsException("Datasource " + id + " already exists!");
         }
     }
 
@@ -2435,13 +2437,13 @@ public class DefaultDataManager implements DataManager {
                     saveData();
                     return newDataSource;
                 } else {
-                    throw new InvalidArgumentsException("recordIdPolicy");
+                    throw new InvalidArgumentsException("The recordIdPolicy is NULL!");
                 }
             } else {
-                throw new ObjectNotFoundException(dataProviderId);
+                throw new ObjectNotFoundException("Dataprovider " + dataProviderId + " NOT found!");
             }
         } else {
-            throw new AlreadyExistsException(id);
+            throw new AlreadyExistsException("Datasource " + id + " already exists!");
         }
     }
 
@@ -2509,7 +2511,7 @@ public class DefaultDataManager implements DataManager {
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
             if (!oldId.equals(id) && getDataSourceContainer(id) != null)
-                throw new AlreadyExistsException(id);
+                throw new AlreadyExistsException("DataSource with newId " + id + " already exist!");
 
             //validate the URL server
             String newOaiSourceURL = oaiSourceURL;
@@ -2805,7 +2807,7 @@ public class DefaultDataManager implements DataManager {
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
             if (!oldId.equals(id) && getDataSourceContainer(id) != null)
-                throw new AlreadyExistsException(id);
+                throw new AlreadyExistsException("DataSource with newId " + id + " already exist!");
 
             //Datasource Id is specified and if not first generated by the nameCode and last from the Name
             String newId = "";
@@ -2844,8 +2846,7 @@ public class DefaultDataManager implements DataManager {
 
                     if (!(dataSource instanceof DirectoryImporterDataSource)) {
                         DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, id, description, schema, namespace,
-                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, FtpFileRetrieveStrategy.getOutputFtpPath(
-                                        server, id), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
+                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, "", recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
                                 new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
@@ -2908,7 +2909,7 @@ public class DefaultDataManager implements DataManager {
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
             if (!oldId.equals(id) && getDataSourceContainer(id) != null)
-                throw new AlreadyExistsException(id);
+                throw new AlreadyExistsException("DataSource with newId " + id + " already exist!");
             
             //Datasource Id is specified and if not first generated by the nameCode and last from the Name
             String newId = "";
@@ -2939,8 +2940,7 @@ public class DefaultDataManager implements DataManager {
 
                     if (!(dataSource instanceof DirectoryImporterDataSource)) {
                         DataSource newDataSource = new DirectoryImporterDataSource(dataProviderParent, newId, description, schema, namespace,
-                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, HttpFileRetrieveStrategy.getOutputHttpPath(url,
-                                        newId), recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
+                                metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, "", recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath,
                                 new HashMap<String, String>());
                         newDataSource.setExportDir(exportPath);
                         newDataSource.setAccessPoints(dataSource.getAccessPoints());
@@ -3004,7 +3004,7 @@ public class DefaultDataManager implements DataManager {
         if (oldDataSourceContainer != null) {
             DataSource dataSource = oldDataSourceContainer.getDataSource();
             if (!oldId.equals(id) && getDataSourceContainer(id) != null)
-                throw new AlreadyExistsException(id);
+                throw new AlreadyExistsException("DataSource with newId " + id + " already exist!");
 
             //Datasource Id is specified and if not first generated by the nameCode and last from the Name
             String newId = "";

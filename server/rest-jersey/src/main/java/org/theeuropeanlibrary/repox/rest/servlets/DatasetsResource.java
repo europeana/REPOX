@@ -1,11 +1,8 @@
 /* DatasetsResource.java - created on Oct 30, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.repox.rest.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +26,10 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
-import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -56,7 +51,6 @@ import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
-import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -216,13 +210,13 @@ public class DatasetsResource {
                             oaiSourceURL, oaiSet, metadataTransformations,
                             externalRestServices, marcFormat);
                 } catch (InvalidArgumentsException e) {
-                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
-                    throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                    throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                 } catch (AlreadyExistsException e) {
-                    throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                    throw new AlreadyExistsException("Already exists: " + e.getMessage());
                 } catch (SQLException | DocumentException | IOException e) {
-                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                 }
             }
             else if (dataSource instanceof DirectoryImporterDataSource)
@@ -276,13 +270,13 @@ public class DatasetsResource {
                         dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (SQLException | DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
                 else if (retrieveStrategy instanceof FtpFileRetrieveStrategy)
@@ -300,13 +294,13 @@ public class DatasetsResource {
                         dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (SQLException | DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
                 else if (retrieveStrategy instanceof HttpFileRetrieveStrategy)
@@ -321,13 +315,13 @@ public class DatasetsResource {
                         dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat);
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (SQLException | DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
             }
@@ -356,9 +350,9 @@ public class DatasetsResource {
         try {
             dataManager.deleteDataSourceContainer(datasetId);
         } catch (IOException e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("A resource or the dataset with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
 
         return Response.status(200).entity(new Result("Dataset with id " + datasetId + " deleted!")).build();
@@ -453,15 +447,15 @@ public class DatasetsResource {
 
                 try {
                     dataManager.updateDataSourceOai(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, metadataTransformations,
-                            externalRestServices, marcFormat, true);
+                            externalRestServices, marcFormat, true);    
                 } catch (InvalidArgumentsException e) {
-                    throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                    throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
-                    throw new DoesNotExistException("Dataset with id " + e.getMessage() + " does NOT exist!");
+                    throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                 } catch (AlreadyExistsException e) {
-                    throw new AlreadyExistsException("Dataset with newId " + e.getMessage() + " already exists!");
+                    throw new AlreadyExistsException("Already exists: " + e.getMessage());
                 } catch (DocumentException | IOException e) {
-                    throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                    throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                 }
             }
             else if (dataSource instanceof DirectoryImporterDataSource)
@@ -513,15 +507,15 @@ public class DatasetsResource {
 
                     try {
                         dataManager.updateDataSourceFolder(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
-                                recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat, true);
+                                recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat, true);   
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Dataset with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with newId " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
                 else if (retrieveStrategy instanceof FtpFileRetrieveStrategy)
@@ -539,13 +533,13 @@ public class DatasetsResource {
                         dataManager.updateDataSourceFtp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat, true);
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
                 else if (retrieveStrategy instanceof HttpFileRetrieveStrategy)
@@ -560,13 +554,13 @@ public class DatasetsResource {
                         dataManager.updateDataSourceHttp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat, true);
                     } catch (InvalidArgumentsException e) {
-                        throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+                        throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
-                        throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+                        throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Dataset with id " + e.getMessage() + " already exists!");
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
                     } catch (DocumentException | IOException e) {
-                        throw new InternalServerErrorException("Error in server : " + e.getMessage());
+                        throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
                 else
@@ -614,7 +608,7 @@ public class DatasetsResource {
         try {
             dataSourceContainerListSorted = dataManager.getDataSourceContainerListSorted(providerId, offset, number);
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
 
         return Response.status(200).entity(new GenericEntity<List<DataSourceContainer>>(dataSourceContainerListSorted) {

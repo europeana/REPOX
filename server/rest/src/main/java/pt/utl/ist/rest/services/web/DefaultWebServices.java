@@ -140,6 +140,8 @@ public class DefaultWebServices implements WebServices {
             createErrorMessage(out, MessageType.INVALID_ARGUMENTS, "Error updating Aggregator: homepage \"" + homepageUrl + "\" was not valid.");
         } catch (IOException e) {
             createErrorMessage(out, MessageType.OTHER, "Error updating Aggregator with id \"" + id + "\".");
+        } catch (AlreadyExistsException e) {
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating Aggregator. Aggregator with name \"" + name + "\" and name code \"" + nameCode + "\" already exists.");
         }
     }
 
@@ -265,7 +267,7 @@ public class DefaultWebServices implements WebServices {
     public void updateDataProvider(OutputStream out, String id, String name, String country, String description) throws DocumentException {
     }
 
-    public void updateDataProvider(OutputStream out, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws DocumentException, IOException {
+    public void updateDataProvider(OutputStream out, String id, String name, String country, String description, String nameCode, String url, String dataSetType) throws DocumentException, IOException, AlreadyExistsException {
         try {
             DataProvider dataProvider = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).updateDataProvider(null, id, null,
                     name, country, description, nameCode, url, dataSetType, null);
@@ -1776,7 +1778,7 @@ public class DefaultWebServices implements WebServices {
         } catch (ObjectNotFoundException e) {
             createErrorMessage(out, MessageType.NOT_FOUND, "Error updating a Data Source HTTP. Data Provider was not found.");
         } catch (AlreadyExistsException e) {
-                createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
+            createErrorMessage(out, MessageType.ALREADY_EXISTS, "Error creating a Data Source Folder. Data source with id \"" + id + "\" already exists.");
         }
     }
 

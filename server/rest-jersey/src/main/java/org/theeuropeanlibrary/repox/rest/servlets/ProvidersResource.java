@@ -135,8 +135,6 @@ public class ProvidersResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
     public Response createProvider(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId,
             @ApiParam(value = "Provider data", required = true) DataProvider provider) throws MissingArgumentsException, AlreadyExistsException, InvalidArgumentsException, DoesNotExistException {
-        //        if(provider.getId() != null)
-        //            throw new InvalidArgumentsException("Invalid value: " + "Provider Id provided in body must be null");
 
         if (aggregatorId == null || aggregatorId.equals(""))
             throw new MissingArgumentsException("Missing argument aggregatorId!");
@@ -164,13 +162,13 @@ public class ProvidersResource {
         try {
             createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, providerType, email);
         } catch (IOException e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
-            throw new InvalidArgumentsException("Invalid value: " + e.getMessage());
+            throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
         } catch (AlreadyExistsException e) { //This basically happens if and provider already exists with the same Id 
-            throw new AlreadyExistsException("Provider with id " + e.getMessage() + " already exists!");
+            throw new AlreadyExistsException("Already exists: " + e.getMessage());
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("Aggregator with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
 
         return Response.created(null).entity(new Result("DataProvider with id = " + createdProvider.getId() + " and name = " + createdProvider.getName() + " created successfully")).build();
@@ -187,7 +185,7 @@ public class ProvidersResource {
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Delete a provider.", httpMethod = "DELETE", response = String.class)
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException") })
@@ -195,9 +193,9 @@ public class ProvidersResource {
         try {
             dataManager.deleteDataProvider(dataProviderId);
         } catch (IOException e) {
-            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("A resource of the dataProvider with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
 
         return Response.status(200).entity(new Result("Provider with id " + dataProviderId + " deleted!")).build();
@@ -213,6 +211,7 @@ public class ProvidersResource {
      * @throws DoesNotExistException 
      * @throws InvalidArgumentsException 
      * @throws MissingArgumentsException 
+     * @throws AlreadyExistsException 
      */
     @PUT
     @Path("/" + ProviderOptionListContainer.PROVIDERID)
@@ -229,7 +228,7 @@ public class ProvidersResource {
     public Response updateProvider(@ApiParam(value = "Id of provider", required = true) @PathParam("providerId") String providerId,
             @ApiParam(value = "Aggregator Id", required = false) @QueryParam("newAggregatorId") String newAggregatorId,
             @ApiParam(value = "Provider data", required = true) DataProvider provider) throws DoesNotExistException,
-            InvalidArgumentsException, MissingArgumentsException {
+            InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException {
 
         String newProviderId = provider.getId();
         String name = provider.getName();
@@ -252,9 +251,11 @@ public class ProvidersResource {
         try {
             dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, providerType, email);
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("Provider with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         } catch (IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (AlreadyExistsException e) {
+            throw new AlreadyExistsException("Already exists: " + e.getMessage());
         }
 
         if (newProviderId != null && !newProviderId.isEmpty() && !providerId.equals(newProviderId))
@@ -294,7 +295,9 @@ public class ProvidersResource {
         try {
             providersListSorted = dataManager.getDataProvidersListSorted(aggregatorId, offset, number);
         } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("Aggregator with id " + e.getMessage() + " does NOT exist!");
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
         }
 
         return Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {

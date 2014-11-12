@@ -37,7 +37,7 @@ public interface DataManager {
     //********************AGGREGATOR ********************/    
     Aggregator createAggregator(String aggregatorId, String name, String nameCode, String homepageUrl) throws InvalidArgumentsException, DocumentException, IOException, AlreadyExistsException;
 
-    Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage) throws ObjectNotFoundException, InvalidArgumentsException, IOException;
+    Aggregator updateAggregator(String aggregatorId, String newAggregatorId, String name, String nameCode, String homepage) throws ObjectNotFoundException, InvalidArgumentsException, IOException, AlreadyExistsException;
 
     void deleteAggregator(String aggregatorId) throws ObjectNotFoundException, IOException, DocumentException;
 
@@ -58,7 +58,7 @@ public interface DataManager {
     DataProvider createDataProvider(String name, String country, String description) throws IOException, AlreadyExistsException;
 
     DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String description, String nameCode, String homepage,
-            String dataSetType, String email) throws ObjectNotFoundException, InvalidArgumentsException, IOException;
+            String dataSetType, String email) throws ObjectNotFoundException, InvalidArgumentsException, IOException, AlreadyExistsException;
 
     DataProvider updateDataProvider(String id, String name, String country, String description);
 

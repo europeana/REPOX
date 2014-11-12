@@ -13,6 +13,7 @@ import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidRequestException;
 
 import javax.servlet.ServletOutputStream;
@@ -33,6 +34,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class DefaultResponseRest extends ResponseOperations implements ResponseRest {
+    @Override
     public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
 
         DefaultWebServices defaultWebServices = (DefaultWebServices)webServices;
@@ -293,8 +295,12 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         String dataSetType = restRequest.getRequestParameters().get("dataSetType");
 
                         if(id != null && !id.isEmpty()){
-                            defaultWebServices.updateDataProvider(out, id, name, country, description, nameCode, url,
-                                    dataSetType);
+                            try {
+                                defaultWebServices.updateDataProvider(out, id, name, country, description, nameCode, url,
+                                        dataSetType);
+                            } catch (AlreadyExistsException e) {
+                                throw new RuntimeException("Caused by AlreadyExistsException", e);
+                            }
                         }
                         else{
                             defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error updating Data" +

@@ -531,6 +531,8 @@ public class DefaultSaveData {
                     saveDataResponse.setResponseState(ResponseState.INVALID_ARGUMENTS);
                 } catch (IOException e) {
                     saveDataResponse.setResponseState(ResponseState.OTHER);
+                } catch (AlreadyExistsException e) {
+                    saveDataResponse.setResponseState(ResponseState.ALREADY_EXISTS);
                 }
 
             }
