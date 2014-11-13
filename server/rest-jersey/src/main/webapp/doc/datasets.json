@@ -131,12 +131,13 @@
         "message" : "DoesNotExistException"
       } ]
     }, {
-      "method" : "DELETE",
-      "summary" : "Delete a dataset.",
+      "method" : "POST",
+      "summary" : "Copy a dataset.",
       "notes" : "",
       "type" : "string",
-      "nickname" : "deleteDataset",
+      "nickname" : "copyDataset",
       "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "datasetId",
         "description" : "Id of dataset",
@@ -144,13 +145,29 @@
         "type" : "string",
         "paramType" : "path",
         "allowMultiple" : false
+      }, {
+        "name" : "newDatasetId",
+        "description" : "newDatasetId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
       } ],
       "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a String message)"
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
       }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
@@ -193,6 +210,31 @@
       }, {
         "code" : 409,
         "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "DELETE",
+      "summary" : "Delete a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "deleteDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       }, {
         "code" : 500,
         "message" : "InternalServerErrorException"
@@ -303,19 +345,19 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "schema", "namespace", "metadataFormat" ],
+      "required" : [ "namespace", "schema", "metadataFormat" ],
       "discriminator" : "dataSourceType",
       "properties" : {
-        "id" : {
-          "type" : "string"
-        },
-        "schema" : {
-          "type" : "string"
-        },
         "description" : {
           "type" : "string"
         },
         "namespace" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "schema" : {
           "type" : "string"
         },
         "exportDir" : {

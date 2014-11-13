@@ -54,7 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "DirectoryDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "A DirectoryDatasource")
-public class DirectoryImporterDataSource extends DataSource {
+public class DirectoryImporterDataSource extends DataSource{
     private static final Logger  log = Logger.getLogger(DirectoryImporterDataSource.class);
 
     @XmlElement
@@ -158,6 +158,28 @@ public class DirectoryImporterDataSource extends DataSource {
      */
     public DirectoryImporterDataSource() {
         super();
+    }
+    
+    /**
+     * Copy constructor for JAXB fields.
+     * @param directoryImporterDataSource
+     */
+    public DirectoryImporterDataSource(DirectoryImporterDataSource directoryImporterDataSource) {
+        this.id = directoryImporterDataSource.getId();
+        this.schema = directoryImporterDataSource.getSchema();
+        this.namespace = directoryImporterDataSource.getNamespace();
+        this.description = directoryImporterDataSource.getDescription();
+        this.metadataFormat = directoryImporterDataSource.getMetadataFormat();
+        this.isSample = directoryImporterDataSource.isSample();
+        this.exportDir = directoryImporterDataSource.getExportDir();
+        this.marcFormat = directoryImporterDataSource.getMarcFormat();
+        this.recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
+        
+        this.sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
+        this.recordXPath = directoryImporterDataSource.getRecordXPath();
+        this.characterEncoding = directoryImporterDataSource.getCharacterEncoding();
+        this.isoVariant = directoryImporterDataSource.getIsoVariant();
+        this.retrieveStrategy = directoryImporterDataSource.getRetrieveStrategy();
     }
 
     /**

@@ -138,7 +138,15 @@ public class DefaultDataSourceContainer extends DataSourceContainer{
     }
 
     public DefaultDataSourceContainer() {
+    } 
+    
+    /**
+     * Copy constructor
+     * @param defaultDataSourceContainer
+     */
+    public DefaultDataSourceContainer(DefaultDataSourceContainer defaultDataSourceContainer) {
+        this.dataSource = defaultDataSourceContainer.getDataSource();
+        this.nameCode = defaultDataSourceContainer.getNameCode();
+        this.name = defaultDataSourceContainer.getName();
     }
-
-
 }

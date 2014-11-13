@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,12 +28,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.dom4j.DocumentException;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -74,9 +77,9 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "/" + DatasetOptionListContainer.DATASETS, description = "Rest api for datasets")
 public class DatasetsResource {
     @Context
-    UriInfo                     uriInfo;
+    UriInfo                   uriInfo;
 
-    public DefaultDataManager   dataManager;
+    public DefaultDataManager dataManager;
 
     /**
      * Initialize fields before serving.
@@ -328,9 +331,85 @@ public class DatasetsResource {
                     }
                 }
             }
-            return Response.created(null).entity(new Result("DataProvider with id = " + id + " and name = " + name + " created successfully")).build();
+            return Response.created(null).entity(new Result("DataSet with id = " + id + " and name = " + name + " created successfully")).build();
         }
-        return null;
+        return Response.status(500).entity(new Result("Invalid dataSourceContainer instance in body!")).build();
+    }
+
+    /**
+     * Copy an dataset to another dataset with a newDatasetId
+     * Relative path : /datasets/{datasetId}
+     * @param datasetId 
+     * @param newDatasetId 
+     * 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws InternalServerErrorException 
+     * @throws InvalidArgumentsException 
+     * @throws MissingArgumentsException 
+     * @throws AlreadyExistsException 
+     */
+    @POST
+    @Path("/" + DatasetOptionListContainer.DATASETID)
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Copy a dataset.", httpMethod = "POST", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException") })
+    public Response copyDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
+            @ApiParam(value = "newDatasetId", required = true) @QueryParam("newDatasetId") String newDatasetId) throws DoesNotExistException, InternalServerErrorException, AlreadyExistsException,
+            MissingArgumentsException, InvalidArgumentsException {
+
+        DefaultDataSourceContainer oldDataSourceContainer = null;
+        try {
+            oldDataSourceContainer = (DefaultDataSourceContainer)dataManager.getDataSourceContainer(datasetId);
+            if (oldDataSourceContainer == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+
+            DataSource oldDataSource = oldDataSourceContainer.getDataSource();
+            if (oldDataSource == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        try {
+            DefaultDataSourceContainer newDataSourceContainer = null;
+            newDataSourceContainer = (DefaultDataSourceContainer)dataManager.getDataSourceContainer(newDatasetId);
+            if (newDataSourceContainer != null)
+                throw new AlreadyExistsException("Dataset with newId " + newDatasetId + " already exist!");
+
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        DataProvider dataProviderParent = dataManager.getDataProviderParent(datasetId);
+        DataSource oldDataSource = oldDataSourceContainer.getDataSource();
+        
+        DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(oldDataSourceContainer);
+        if(oldDataSource instanceof OaiDataSource)
+        {
+            OaiDataSource oldOaiDataSource = (OaiDataSource)oldDataSource;
+            OaiDataSource oaiDataSource = new OaiDataSource(oldOaiDataSource);
+            oaiDataSource.setId(newDatasetId);
+            dataSourceContainer.setDataSource(oaiDataSource);
+        }
+        else if (oldDataSource instanceof DirectoryImporterDataSource)
+        {
+            DirectoryImporterDataSource oldDirectoryImporterDataSource = (DirectoryImporterDataSource)oldDataSource;
+            DirectoryImporterDataSource directoryImporterDataSource = new DirectoryImporterDataSource(oldDirectoryImporterDataSource);
+            directoryImporterDataSource.setId(newDatasetId);
+            dataSourceContainer.setDataSource(directoryImporterDataSource);
+        }
+        else
+            return Response.status(500).entity(new Result("Invalid dataSourceContainer instance in body!")).build();
+        
+        return createDataset(dataProviderParent.getId(), dataSourceContainer);
     }
 
     /**
@@ -635,7 +714,8 @@ public class DatasetsResource {
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response getDatasetLastIngestionDate(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException, InternalServerErrorException
+    public Response getDatasetLastIngestionDate(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException,
+            InternalServerErrorException
     {
         try {
             DataSourceContainer dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
@@ -653,7 +733,7 @@ public class DatasetsResource {
                     {
                         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                         String lastIngestDateString = df.format(lastIngestDate);
-                        
+
                         return Response.status(200).entity(new Result(lastIngestDateString)).build();
                     }
                     else
@@ -668,8 +748,7 @@ public class DatasetsResource {
             throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         }
     }
-    
-    
+
     /**
      * Get the number of records of the dataset.
      * Relative path : /datasets/{datasetId}/count
@@ -699,7 +778,7 @@ public class DatasetsResource {
                     DataSource dataSource = defaultDataSourceContainerdata.getDataSource();
                     if (dataSource == null)
                         throw new DoesNotExistException("Does NOT exist: " + "Dataset with id " + datasetId + " does NOT exist!");
-                    
+
                     return Response.status(200).entity(new Result(Integer.toString(dataSource.getIntNumberRecords()))).build();
                 }
                 else

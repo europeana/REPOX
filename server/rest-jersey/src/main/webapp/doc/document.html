@@ -431,10 +431,10 @@ http://localhost:8080/repox/rest/datasets/{datasetId}
 
 
 - - -
-#### **DELETE** `/datasets/{datasetId}`
-##### deleteDataset 
+#### **POST** `/datasets/{datasetId}`
+##### copyDataset 
 
-Delete a dataset.
+Copy a dataset.
 
 
 ###### URL
@@ -456,6 +456,22 @@ http://localhost:8080/repox/rest/datasets/{datasetId}
         <td>Id of dataset</td>
     </tr>
 </table>
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>newDatasetId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>newDatasetId</td>
+    </tr>
+</table>
 
 ###### Response
 [string](#)
@@ -464,8 +480,11 @@ http://localhost:8080/repox/rest/datasets/{datasetId}
 ###### Response Codes
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
-| 200    | OK (Response containing a String message) | - |
+| 201    | Created (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
 | 404    | DoesNotExistException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
 
 
@@ -524,6 +543,45 @@ http://localhost:8080/repox/rest/datasets/{datasetId}
 | 404    | DoesNotExistException | - |
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **DELETE** `/datasets/{datasetId}`
+##### deleteDataset 
+
+Delete a dataset.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets/{datasetId}
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>datasetId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of dataset</td>
+    </tr>
+</table>
+
+###### Response
+[string](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+| 404    | DoesNotExistException | - |
 | 500    | InternalServerErrorException | - |
 
 
@@ -652,57 +710,6 @@ http://localhost:8080/repox/rest/providers
 
 
 - - -
-#### **GET** `/providers`
-##### getProviderList 
-
-Get a list of providers.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[dataprovider]](#dataprovider)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of providers) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
-
-
-- - -
 #### **POST** `/providers`
 ##### createProvider 
 
@@ -758,6 +765,57 @@ http://localhost:8080/repox/rest/providers
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of providers) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -

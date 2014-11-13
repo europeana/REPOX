@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,6 +49,7 @@ import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
+import pt.utl.ist.task.Task.Status;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -323,6 +326,95 @@ public class DatasetsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(defaultDataSourceContainerHttp, MediaType.APPLICATION_XML), Response.class);
         assertEquals(406, response.getStatus());
 
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#copyDataset(String, String)}. 
+     * @throws IOException 
+     * @throws DocumentException 
+     */
+    @Test
+    //    @Ignore
+    public void testCopyDataset() throws DocumentException, IOException {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleDatasetId";
+        String newDatasetId = "SampleNewDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId).queryParam("newDatasetId", newDatasetId);
+
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        OaiDataSource oaiDataSource = new OaiDataSource(dataProvider, "SampleId", "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat", "SampleOaiSourceURL", "SampleOaiSet",
+                new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+        oaiDataSource.setExportDir("/Sample/Export/Path");
+        oaiDataSource.setMarcFormat("SampleMarcFormat");
+        DefaultDataSourceContainer defaultDataSourceContainerWithNull = new DefaultDataSourceContainer(null, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        DataSource dataSource = new DataSource() {
+            @Override
+            public boolean isWorking() {
+                // return false;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public Status ingestRecords(File logFile, boolean fullIngest) throws Exception {
+                // return null;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public List<Long> getStatisticsHarvester() {
+                // return null;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public int getNumberOfRecordsPerResponse() {
+                // return 0;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public String getNumberOfRecords2HarvestStr() {
+                // return null;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public int getNumberOfRecords2Harvest() {
+                // return 0;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+
+            @Override
+            public Element addSpecificInfo(Element sourceElement) {
+                // return null;
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
+        };
+        DefaultDataSourceContainer defaultDataSourceContainerWithInvalidInstance = new DefaultDataSourceContainer(dataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenReturn(null).thenReturn(defaultDataSourceContainerWithNull).thenReturn(defaultDataSourceContainer)
+                .thenReturn(defaultDataSourceContainerWithInvalidInstance);
+
+        //DataSourceContainer null
+        Response response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //DataSource null
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+
+        when(dataManager.getDataSourceContainer(newDatasetId)).thenReturn(defaultDataSourceContainer).thenThrow(new DocumentException());
+
+        //New DataSourceContainer already exists
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(409, response.getStatus());
+        //Internal Server Error        
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Invalid instance        
+        response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
     }
 
     /**
@@ -662,7 +754,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-        @Ignore
+    @Ignore
     public void testGetDatasetLastIngestionDate() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -695,13 +787,13 @@ public class DatasetsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
     }
-    
+
     /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getDatasetRecordCount(String)}.
      * @throws Exception 
      */
     @Test
-//        @Ignore
+    @Ignore
     public void getDatasetRecordCount() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -729,5 +821,4 @@ public class DatasetsResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
     }
-
 }
