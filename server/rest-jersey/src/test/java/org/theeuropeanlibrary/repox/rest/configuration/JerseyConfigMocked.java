@@ -13,6 +13,7 @@ import org.theeuropeanlibrary.repox.rest.exceptionMappers.InvalidArgumentsExcept
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.MissingArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.servlets.AggregatorsResource;
 import org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource;
+import org.theeuropeanlibrary.repox.rest.servlets.HarvestResource;
 import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
@@ -44,9 +45,11 @@ public class JerseyConfigMocked extends ResourceConfig {
         AggregatorsResource ar = new AggregatorsResource(dataManager);
         ProvidersResource pr = new ProvidersResource(dataManager);
         DatasetsResource dr = new DatasetsResource(dataManager);
+        HarvestResource hr = new HarvestResource(dataManager);
         register(ar);
         register(pr);
         register(dr);
+        register(hr);
     }
 
     /**

@@ -1,0 +1,94 @@
+{
+  "apiVersion" : "0.0.1-SNAPSHOT",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://localhost:8080/repox/rest",
+  "resourcePath" : "/harvest",
+  "apis" : [ {
+    "path" : "/datasets/{datasetId}/harvest/start",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Initiate a new harvest.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "startHarvest",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "type",
+        "description" : "Initiate a new harvest.",
+        "defaultValue" : "sample",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets/harvest",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over harvest conext.",
+      "notes" : "",
+      "type" : "HarvestOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "Option" : {
+      "id" : "Option",
+      "description" : "",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "syntax" : {
+          "type" : "string"
+        },
+        "queryParameter" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "HarvestOptions" : {
+      "id" : "HarvestOptions",
+      "description" : "",
+      "required" : [ "option" ],
+      "properties" : {
+        "option" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Option"
+          }
+        }
+      }
+    }
+  }
+}
