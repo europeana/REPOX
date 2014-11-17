@@ -4,6 +4,21 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/harvest",
   "apis" : [ {
+    "path" : "/datasets/harvest",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over harvest conext.",
+      "notes" : "",
+      "type" : "HarvestOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
+  }, {
     "path" : "/datasets/{datasetId}/harvest/start",
     "operations" : [ {
       "method" : "POST",
@@ -43,18 +58,28 @@
       } ]
     } ]
   }, {
-    "path" : "/datasets/harvest",
+    "path" : "/datasets/{datasetId}/harvest/cancel",
     "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over harvest conext.",
+      "method" : "DELETE",
+      "summary" : "Cancels a harvesting ingest.",
       "notes" : "",
-      "type" : "HarvestOptions",
-      "nickname" : "getOptions",
+      "type" : "string",
+      "nickname" : "cancelHarvest",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
       } ]
     } ]
   } ],

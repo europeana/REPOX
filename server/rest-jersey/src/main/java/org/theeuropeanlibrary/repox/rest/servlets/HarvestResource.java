@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 import java.io.IOException;
 import java.text.ParseException;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
@@ -25,6 +26,7 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.task.Task;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -126,6 +128,35 @@ public class HarvestResource {
 
         return Response.status(200)
                 .entity(new Result("Harvest(" + (fullIngest ? HarvestOptionListContainer.FULL : HarvestOptionListContainer.SAMPLE) + ") of dataset with id " + datasetId + " started!")).build();
+    }
+
+    /**
+     * Cancels a harvesting ingest.
+     * Relative path : /datasets/{datasetId}/harvest/cancel 
+     * @param datasetId 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     */
+    @DELETE
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Cancels a harvesting ingest.", httpMethod = "DELETE", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response cancelHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
+
+        try {
+            dataManager.stopIngestDataSource(datasetId, Task.Status.CANCELED);
+        } catch (NoSuchMethodException | ClassNotFoundException | DocumentException | IOException | ParseException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
+        }
+
+        return Response.status(200).entity(new Result("Ingest of dataset with id " + datasetId + " cancelled!")).build();
     }
 
 }

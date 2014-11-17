@@ -320,14 +320,14 @@ public abstract class DataSourceForm extends DefaultFormPanel {
         dataSourceUI.setMetadataTransformations(transformations);
         dataSourceUI.setTags(dataSourceTagContainer.getTags());
 
-        // Europeana Fields
+        // Fields
         if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
-            String exprtP;
-            if(exportPath == null) {
-                exprtP = HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/" + record_set;
-            } else {
-                exprtP= exportPath;
-            }
+//            String exprtP;
+//            if(exportPath == null) {
+//                exprtP = HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/" + record_set;
+//            } else {
+//                exprtP= exportPath;
+//            }
             dataSourceUI.setName(name != null ? name.trim() : "");
             dataSourceUI.setNameCode(nameCode != null ? nameCode.trim() : "");
 //            dataSourceUI.setExportDirectory(exprtP != null ? exprtP.trim() : "");

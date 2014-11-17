@@ -91,7 +91,7 @@ public class DefaultSaveData {
     public static SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
-            DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
+            DefaultRepoxManager defaultRepoxManager = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
 
             ResponseState urlStatus = Util.getUrlStatus(dataSourceUI);
             if(urlStatus != null){
@@ -112,8 +112,8 @@ public class DefaultSaveData {
 
             if(update) {
                 // Check if the id already exists
-                DataSourceContainer dataSourceContainer = repoxManagerEuropeana.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
-                DataSourceContainer originalDSC = repoxManagerEuropeana.getDataManager().getDataSourceContainer(originalDSset);
+                DataSourceContainer dataSourceContainer = defaultRepoxManager.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
+                DataSourceContainer originalDSC = defaultRepoxManager.getDataManager().getDataSourceContainer(originalDSset);
                 if(dataSourceContainer != null && !originalDSC.getDataSource().getId().equals(dataSourceUI.getDataSourceSet())){
                     saveDataResponse.setResponseState(ResponseState.ALREADY_EXISTS);
                     return saveDataResponse;
@@ -122,7 +122,7 @@ public class DefaultSaveData {
                 DataSource createdDataSource = null;
                 try{
                     if(type == DatasetType.OAI) {
-                        createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceOai(originalDSset,
+                        createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceOai(originalDSset,
                                 dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                 dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                 dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -130,7 +130,7 @@ public class DefaultSaveData {
                                 dataSourceUI.getOaiSet(), metadataTransformations,externalRestServices,
                                 dataSourceUI.getMarcFormat(),dataSourceUI.isUseLastUpdateDate());
                     } else if(type == DatasetType.SRU) {
-                        createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceSruRecordUpdate(originalDSset,
+                        createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceSruRecordUpdate(originalDSset,
                                 dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                 dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                 dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -145,7 +145,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceFolder(originalDSset, dataSourceUI.getDataSourceSet(),
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceFolder(originalDSset, dataSourceUI.getDataSourceSet(),
                                     dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -170,7 +170,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceFtp(originalDSset,
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceFtp(originalDSset,
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -187,7 +187,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceHttp(originalDSset,
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceHttp(originalDSset,
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -206,7 +206,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceZ3950IdSequence(originalDSset,
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceZ3950IdSequence(originalDSset,
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -230,7 +230,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceZ3950IdList(originalDSset,
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceZ3950IdList(originalDSset,
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -250,7 +250,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().updateDataSourceZ3950Timestamp(originalDSset,
+                            createdDataSource = defaultRepoxManager.getDataManager().updateDataSourceZ3950Timestamp(originalDSset,
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -295,7 +295,7 @@ public class DefaultSaveData {
             else {
                 // New Data Source
                 // Check if the id already exists
-                DataSourceContainer dataSourceContainerTest = repoxManagerEuropeana.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
+                DataSourceContainer dataSourceContainerTest = defaultRepoxManager.getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet());
                 if(dataSourceContainerTest != null){
                     saveDataResponse.setResponseState(ResponseState.ALREADY_EXISTS);
                     return saveDataResponse;
@@ -304,14 +304,14 @@ public class DefaultSaveData {
                 DataSource createdDataSource = null;
                 try {
                     if(type == DatasetType.OAI) {
-                        createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceOai(dataSourceUI.getDataSetParent().getId(),
+                        createdDataSource = defaultRepoxManager.getDataManager().createDataSourceOai(dataSourceUI.getDataSetParent().getId(),
                                 dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                 dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                 dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
                                 dataSourceUI.getSourceMDFormat(), dataSourceUI.getOaiSource(),
                                 dataSourceUI.getOaiSet(), metadataTransformations,externalRestServices,dataSourceUI.getMarcFormat());
                     }else if(type == DatasetType.SRU) {
-                        createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceSruRecordUpdate(dataSourceUI.getDataSetParent().getId(),
+                        createdDataSource = defaultRepoxManager.getDataManager().createDataSourceSruRecordUpdate(dataSourceUI.getDataSetParent().getId(),
                                 dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                 dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                 dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -325,7 +325,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceFolder(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceFolder(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -350,7 +350,7 @@ public class DefaultSaveData {
                                 }
                             }
 
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceFtp(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceFtp(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -367,7 +367,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceHttp(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceHttp(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(), dataSourceUI.getSourceMDFormat(),
@@ -386,7 +386,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceZ3950IdSequence(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceZ3950IdSequence(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -410,7 +410,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceZ3950IdList(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceZ3950IdList(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),
@@ -429,7 +429,7 @@ public class DefaultSaveData {
                                             dataSourceUI.getNamespaceList().get(i+1));
                                 }
                             }
-                            createdDataSource = repoxManagerEuropeana.getDataManager().createDataSourceZ3950Timestamp(dataSourceUI.getDataSetParent().getId(),
+                            createdDataSource = defaultRepoxManager.getDataManager().createDataSourceZ3950Timestamp(dataSourceUI.getDataSetParent().getId(),
                                     dataSourceUI.getDataSourceSet(), dataSourceUI.getDescription(),
                                     dataSourceUI.getNameCode(), dataSourceUI.getName(), dataSourceUI.getExportDirectory(),
                                     dataSourceUI.getSchema(), dataSourceUI.getMetadataNamespace(),

@@ -3168,7 +3168,7 @@ public class DefaultDataManager implements DataManager {
             }
             throw new ObjectNotFoundException("Task not found");
         } else {
-            throw new ObjectNotFoundException(dataSourceId);
+            throw new ObjectNotFoundException("Datasource with id " + dataSourceId + " NOT found!");
         }
     }
 

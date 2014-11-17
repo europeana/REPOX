@@ -21,6 +21,7 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.task.Task;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -69,7 +70,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-        @Ignore
+    @Ignore
     public void testStartHarvest() throws Exception {
         String datasetId = "SampleId";
         boolean fullIngest = false;
@@ -95,11 +96,38 @@ public class HarvestResourceTest extends JerseyTest {
 
         target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.START).queryParam("type",
                 HarvestOptionListContainer.FULL);
-        
+
         //Valid call
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
         assertEquals(200, response.getStatus());
         assertEquals(response.readEntity(String.class).contains(HarvestOptionListContainer.FULL), true);
+
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#cancelHarvest(String)}.
+     * @throws Exception
+     */
+    @Test
+    //    @Ignore
+    public void testCancelHarvest() throws Exception {
+        String datasetId = "SampleId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL);
+
+        //Mocking
+        doThrow(new IOException()).doThrow(new ObjectNotFoundException("Datasource with id " + datasetId + " NOT found!")).doNothing().when(dataManager)
+                .stopIngestDataSource(datasetId, Task.Status.CANCELED);
+
+        //Internal Server Error    
+        Response response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Non existent
+        response = target.request(MediaType.APPLICATION_JSON).delete();
+        assertEquals(404, response.getStatus());
+
+        //Valid call
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(200, response.getStatus());
 
     }
 }

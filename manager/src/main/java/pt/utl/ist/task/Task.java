@@ -22,17 +22,14 @@ public abstract class Task {
     public enum Status {
         OK, WARNINGS, ERRORS, CANCELED, FAILED, FORCE_EMPTY;
 
-        @SuppressWarnings("javadoc")
         public boolean isSuccessful() {
             return (equals(OK) || equals(WARNINGS));
         }
 
-        @SuppressWarnings("javadoc")
         public boolean isCanceled() {
             return (equals(CANCELED));
         }
 
-        @SuppressWarnings("javadoc")
         public boolean isForceEmpty() {
             return (equals(FORCE_EMPTY));
         }
