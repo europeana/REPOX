@@ -282,19 +282,60 @@ public class HarvestResource {
         DataSourceContainer dataSourceContainer;
         try {
             dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+            if (dataSourceContainer == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
         } catch (DocumentException | IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
         }
 
         List<ScheduledTask> scheduledTasks = null;
-        if (dataSourceContainer != null) {
-            scheduledTasks = taskManager.getDataSourceTasks(datasetId);
-        }
-        else
-            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        scheduledTasks = taskManager.getDataSourceTasks(datasetId);
 
         return Response.status(200).entity(new GenericEntity<List<ScheduledTask>>(scheduledTasks) {
         }).build();
+    }
+
+    /**
+     * Deletes an automatic harvesting.
+     * Relative path : /datasets/{datasetId}/harvest/schedules/{taskId}
+     * @param datasetId 
+     * @param taskId 
+     * @return OK or Error Message 
+     * @throws DoesNotExistException 
+     */
+    @DELETE
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES + "/" + HarvestOptionListContainer.TASKID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Deletes an automatic harvesting.", httpMethod = "DELETE", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response deleteScheduledTask(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
+            @ApiParam(value = "Id of task", required = true) @PathParam("taskId") String taskId) throws DoesNotExistException {
+
+        DataSourceContainer dataSourceContainer;
+        try {
+            dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+            if (dataSourceContainer == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        if (taskManager.getTask(taskId) == null)
+            throw new DoesNotExistException("Does NOT exist: " + "Task with id " + taskId + " does NOT exist!");
+
+        try {
+            if (taskManager.deleteTask(taskId))
+                return Response.status(200).entity(new Result("Task with id " + taskId + " of dataset with id " + datasetId + " deleted!")).build();
+            else
+                throw new InternalServerErrorException("Error in server : " + "Could NOT delete task with id " + taskId);
+
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
     }
 
 }

@@ -28,6 +28,7 @@ public class HarvestOptionListContainer extends OptionListContainer {
     public static final String CANCEL = "cancel";
     public static final String SCHEDULE = "schedule";
     public static final String SCHEDULES = "schedules";
+    public static final String TASKID = "{taskId}";
     
     public static final String FULL = "full";
     public static final String SAMPLE = "sample";
