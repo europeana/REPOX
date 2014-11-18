@@ -5,8 +5,8 @@
     "path" : "/harvest.{format}",
     "description" : "Rest api for datasets"
   }, {
-    "path" : "/datasets.{format}",
-    "description" : "Rest api for datasets"
+    "path" : "/aggregators.{format}",
+    "description" : "Rest api for aggregators"
   }, {
     "path" : "/options.{format}",
     "description" : "Rest api for options context"
@@ -14,8 +14,8 @@
     "path" : "/providers.{format}",
     "description" : "Rest api for providers"
   }, {
-    "path" : "/aggregators.{format}",
-    "description" : "Rest api for aggregators"
+    "path" : "/datasets.{format}",
+    "description" : "Rest api for datasets"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",

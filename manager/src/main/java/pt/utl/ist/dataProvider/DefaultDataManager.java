@@ -3118,7 +3118,10 @@ public class DefaultDataManager implements DataManager {
                 throw new AlreadyExistsException("Task for dataSource with id : " + dataSourceId + " already exists!");
             } else {
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(harvestTask);
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
+                if(fullIngest)
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(false,dataSource);
+                else
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             }
         } else {
             throw new ObjectNotFoundException("Datasource with id " + dataSourceId + " NOT found!");

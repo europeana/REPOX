@@ -184,6 +184,7 @@ public class DatasetsResource {
             String namespace = dataSource.getNamespace();
             String metadataFormat = dataSource.getMetadataFormat();
             String marcFormat = dataSource.getMarcFormat();
+            boolean isSample = dataSource.isSample();
             Map<String, MetadataTransformation> metadataTransformations = null;
             List<ExternalRestService> externalRestServices = null;
 
@@ -212,9 +213,10 @@ public class DatasetsResource {
                     throw new MissingArgumentsException("Missing value: " + "Dataset oaiSet must not be empty");
 
                 try {
-                    dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
+                    DataSource createdDataSourceOai = dataManager.createDataSourceOai(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat,
                             oaiSourceURL, oaiSet, metadataTransformations,
                             externalRestServices, marcFormat);
+                    dataManager.setDataSetSampleState(isSample, createdDataSourceOai);
                 } catch (InvalidArgumentsException e) {
                     throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
@@ -273,8 +275,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
 
                     try {
-                        dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource createdDataSourceFolder = dataManager.createDataSourceFolder(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat);
+                        dataManager.setDataSetSampleState(isSample, createdDataSourceFolder);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -297,8 +300,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Missing value: " + "FTP server must not be empty");
 
                     try {
-                        dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource createdDataSourceFtp = dataManager.createDataSourceFtp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat);
+                        dataManager.setDataSetSampleState(isSample, createdDataSourceFtp);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -318,8 +322,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Missing value: " + "HTTP Url must not be empty");
 
                     try {
-                        dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource createdDataSourceHttp = dataManager.createDataSourceHttp(providerId, id, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat);
+                        dataManager.setDataSetSampleState(isSample, createdDataSourceHttp);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -483,6 +488,7 @@ public class DatasetsResource {
             String namespace = dataSource.getNamespace();
             String metadataFormat = dataSource.getMetadataFormat();
             String marcFormat = dataSource.getMarcFormat();
+            boolean isSample = dataSource.isSample();
             Map<String, MetadataTransformation> metadataTransformations = null;
             List<ExternalRestService> externalRestServices = null;
 
@@ -528,8 +534,9 @@ public class DatasetsResource {
                     throw new MissingArgumentsException("Missing value: " + "Dataset oaiSet must not be empty");
 
                 try {
-                    dataManager.updateDataSourceOai(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, metadataTransformations,
+                    DataSource updatedDataSourceOai = dataManager.updateDataSourceOai(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, oaiSourceURL, oaiSet, metadataTransformations,
                             externalRestServices, marcFormat, true);
+                    dataManager.setDataSetSampleState(isSample, updatedDataSourceOai);
                 } catch (InvalidArgumentsException e) {
                     throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                 } catch (ObjectNotFoundException e) {
@@ -588,8 +595,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Invalid value: " + "Dataset sourcesDirPath must not be empty");
 
                     try {
-                        dataManager.updateDataSourceFolder(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource updatedDataSourceFolder = dataManager.updateDataSourceFolder(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, sourcesDirPath, metadataTransformations, externalRestServices, marcFormat, true);
+                        dataManager.setDataSetSampleState(isSample, updatedDataSourceFolder);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -612,8 +620,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Missing value: " + "FTP server must not be empty");
 
                     try {
-                        dataManager.updateDataSourceFtp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource updatedDataSourceFtp = dataManager.updateDataSourceFtp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, server, userName, password, ftpPath, metadataTransformations, externalRestServices, marcFormat, true);
+                        dataManager.setDataSetSampleState(isSample, updatedDataSourceFtp);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {
@@ -633,8 +642,9 @@ public class DatasetsResource {
                         throw new MissingArgumentsException("Missing value: " + "HTTP Url must not be empty");
 
                     try {
-                        dataManager.updateDataSourceHttp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
+                        DataSource updatedDataSourceHttp = dataManager.updateDataSourceHttp(datasetId, newId, description, nameCode, name, exportPath, schema, namespace, metadataFormat, isoVariantString, characterEncodingString,
                                 recordIdPolicyString, idXpath, namespaces, recordXPath, httpUrl, metadataTransformations, externalRestServices, marcFormat, true);
+                        dataManager.setDataSetSampleState(isSample, updatedDataSourceHttp);
                     } catch (InvalidArgumentsException e) {
                         throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
                     } catch (ObjectNotFoundException e) {

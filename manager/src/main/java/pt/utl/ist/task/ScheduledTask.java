@@ -19,7 +19,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  */
 @XmlRootElement(name = "ScheduledTask")
 @XmlAccessorType(XmlAccessType.NONE)
-@ApiModel(value = "An ScheduledTask")
+@ApiModel(value = "A ScheduledTask")
 public class ScheduledTask extends Task {
     /**
      */

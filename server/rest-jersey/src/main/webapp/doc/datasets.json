@@ -4,6 +4,109 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/datasets",
   "apis" : [ {
+    "path" : "/datasets",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over datasets conext.",
+      "notes" : "",
+      "type" : "DatasetOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    }, {
+      "method" : "POST",
+      "summary" : "Create a dataset.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "createDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "ProviderId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Dataset data",
+        "required" : true,
+        "type" : "datasetContainer",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get a list of datasets.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "datasetContainer"
+      },
+      "nickname" : "getDatasetList",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "providerId",
+        "description" : "ProviderId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "offset",
+        "description" : "Index where to start from",
+        "defaultValue" : "0",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      }, {
+        "name" : "number",
+        "description" : "Number of aggregators requested",
+        "defaultValue" : "-1",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of datasets)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      } ]
+    } ]
+  }, {
     "path" : "/datasets/{datasetId}",
     "operations" : [ {
       "method" : "GET",
@@ -138,109 +241,6 @@
       } ]
     } ]
   }, {
-    "path" : "/datasets",
-    "operations" : [ {
-      "method" : "POST",
-      "summary" : "Create a dataset.",
-      "notes" : "",
-      "type" : "string",
-      "nickname" : "createDataset",
-      "produces" : [ "application/json", "application/xml" ],
-      "consumes" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "providerId",
-        "description" : "ProviderId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "body",
-        "description" : "Dataset data",
-        "required" : true,
-        "type" : "datasetContainer",
-        "paramType" : "body",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 201,
-        "message" : "Created (Response containing a String message)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 406,
-        "message" : "MissingArgumentsException"
-      }, {
-        "code" : 409,
-        "message" : "AlreadyExistsException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
-      } ]
-    }, {
-      "method" : "GET",
-      "summary" : "Get a list of datasets.",
-      "notes" : "",
-      "type" : "array",
-      "items" : {
-        "$ref" : "datasetContainer"
-      },
-      "nickname" : "getDatasetList",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ {
-        "name" : "providerId",
-        "description" : "ProviderId",
-        "required" : true,
-        "type" : "string",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "offset",
-        "description" : "Index where to start from",
-        "defaultValue" : "0",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      }, {
-        "name" : "number",
-        "description" : "Number of aggregators requested",
-        "defaultValue" : "-1",
-        "required" : true,
-        "type" : "integer",
-        "format" : "int32",
-        "paramType" : "query",
-        "allowMultiple" : false
-      } ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of datasets)"
-      }, {
-        "code" : 400,
-        "message" : "InvalidArgumentsException"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      } ]
-    }, {
-      "method" : "OPTIONS",
-      "summary" : "Get options over datasets conext.",
-      "notes" : "",
-      "type" : "DatasetOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
-      } ]
-    } ]
-  }, {
     "path" : "/datasets/{datasetId}/date",
     "operations" : [ {
       "method" : "GET",
@@ -345,10 +345,19 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "metadataFormat", "schema", "namespace" ],
+      "required" : [ "namespace", "schema", "metadataFormat" ],
       "discriminator" : "dataSourceType",
       "properties" : {
+        "description" : {
+          "type" : "string"
+        },
         "id" : {
+          "type" : "string"
+        },
+        "namespace" : {
+          "type" : "string"
+        },
+        "schema" : {
           "type" : "string"
         },
         "exportDir" : {
@@ -360,20 +369,11 @@
         "marcFormat" : {
           "type" : "string"
         },
-        "recordIdPolicy" : {
-          "$ref" : "RecordIdPolicy"
-        },
-        "schema" : {
-          "type" : "string"
-        },
-        "description" : {
-          "type" : "string"
-        },
-        "namespace" : {
-          "type" : "string"
-        },
         "sample" : {
           "type" : "boolean"
+        },
+        "recordIdPolicy" : {
+          "$ref" : "RecordIdPolicy"
         }
       },
       "subTypes" : [ "OaiDatasource", "DirectoryDatasource" ]

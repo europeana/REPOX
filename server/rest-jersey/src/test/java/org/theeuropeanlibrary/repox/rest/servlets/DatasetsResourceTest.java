@@ -25,7 +25,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
@@ -79,9 +78,9 @@ public class DatasetsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 6;
+        int numberOfAvailableOptions = 8;
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS);
 
         //Check xml options working
@@ -101,7 +100,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws DocumentException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetDataset() throws DocumentException, IOException {
         String datasetId = "SampleId";
         OaiDataSource oaiDataSource = new OaiDataSource(null, "SampleId", "description", "schem", "namesp", "format", "oaiURL", "set", null, null);
@@ -143,7 +142,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testCreateDatasetOai() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -188,7 +187,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws SQLException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testCreateDatasetDir() throws DocumentException, IOException, InvalidArgumentsException, AlreadyExistsException, ObjectNotFoundException, SQLException {
         String providerId = "SampleProviderId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS).queryParam("providerId", providerId);
@@ -424,7 +423,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws ObjectNotFoundException 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testDeleteDataset() throws Exception, DocumentException, ObjectNotFoundException {
         String datasetId = "SampleDatasetId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
@@ -449,7 +448,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateDatasetOai() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -528,7 +527,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateDatasetFolder() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -597,7 +596,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateDatasetFtp() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -651,7 +650,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testUpdateDatasetHttp() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -704,7 +703,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetDatasetList() throws Exception {
         int offset = 0;
         int number = 3;
@@ -754,7 +753,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetDatasetLastIngestionDate() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";
@@ -793,7 +792,7 @@ public class DatasetsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void getDatasetRecordCount() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleDatasetId";

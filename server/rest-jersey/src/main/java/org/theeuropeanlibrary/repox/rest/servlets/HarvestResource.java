@@ -182,7 +182,7 @@ public class HarvestResource {
      * Relative path : /datasets/{datasetId}/harvest/schedule 
      * @param datasetId 
      * @param task 
-     * @param fullIngest 
+     * @param incremental 
      * @return OK or Error Message
      * @throws MissingArgumentsException 
      * @throws DoesNotExistException 
@@ -201,7 +201,7 @@ public class HarvestResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
     public Response scheduleHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId, @ApiParam(value = "Task", required = true) Task task,
-            @ApiParam(value = "true|false") @DefaultValue("true") @QueryParam("fullIngest") boolean fullIngest)
+            @ApiParam(value = "true|false") @DefaultValue("false") @QueryParam("incremental") boolean incremental)
             throws MissingArgumentsException, DoesNotExistException, AlreadyExistsException {
 
         DataSourceContainer dataSourceContainer;
@@ -238,7 +238,7 @@ public class HarvestResource {
                 }
 
                 scheduledTask.setTaskClass(IngestDataSource.class);
-                String[] parameters = new String[] { newTaskId, dataSource.getId(), (Boolean.valueOf(fullIngest)).toString() };
+                String[] parameters = new String[] { newTaskId, dataSource.getId(), (Boolean.valueOf(!incremental)).toString() };
                 scheduledTask.setParameters(parameters);
 
                 try {
@@ -336,6 +336,40 @@ public class HarvestResource {
         } catch (IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
         }
+    }
+
+    /**
+     * Gets the status of a specific dataset harvesting.
+     * Relative path : /datasets/{datasetId}/harvest/status 
+     * @param datasetId 
+     * @return Status of the harvesting task
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.STATUS)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Gets the status of a specific dataset harvesting.", httpMethod = "GET", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response getDatasetHarvestingStatus(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
+
+        DataSourceContainer dataSourceContainer;
+        try {
+            dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+            if (dataSourceContainer == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        DataSource dataSource = dataSourceContainer.getDataSource();
+        if (dataSource == null)
+            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+
+        return Response.status(200).entity(new Result(dataSource.getStatus().toString())).build();
     }
 
 }

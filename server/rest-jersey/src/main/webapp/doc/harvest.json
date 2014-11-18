@@ -4,6 +4,21 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/harvest",
   "apis" : [ {
+    "path" : "/datasets/harvest",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over harvest conext.",
+      "notes" : "",
+      "type" : "HarvestOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    } ]
+  }, {
     "path" : "/datasets/{datasetId}/harvest/start",
     "operations" : [ {
       "method" : "POST",
@@ -95,9 +110,9 @@
         "paramType" : "body",
         "allowMultiple" : false
       }, {
-        "name" : "fullIngest",
+        "name" : "incremental",
         "description" : "true|false",
-        "defaultValue" : "true",
+        "defaultValue" : "false",
         "required" : false,
         "type" : "boolean",
         "paramType" : "query",
@@ -187,18 +202,31 @@
       } ]
     } ]
   }, {
-    "path" : "/datasets/harvest",
+    "path" : "/datasets/{datasetId}/harvest/status",
     "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over harvest conext.",
+      "method" : "GET",
+      "summary" : "Gets the status of a specific dataset harvesting.",
       "notes" : "",
-      "type" : "HarvestOptions",
-      "nickname" : "getOptions",
+      "type" : "string",
+      "nickname" : "getDatasetHarvestingStatus",
       "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
       "responseMessages" : [ {
         "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
+        "message" : "OK (Response containing an Dataset)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
     } ]
   } ],
