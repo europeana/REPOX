@@ -725,7 +725,7 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/start
         <th>type</th>
         <td>string</td>
         <td>false</td>
-        <td>Initiate a new harvest.</td>
+        <td>full|sample</td>
     </tr>
 </table>
 
@@ -778,6 +778,97 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/cancel
 |-------------|-------------|----------------|
 | 200    | OK (Response containing a String message) | - |
 | 404    | DoesNotExistException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **POST** `/datasets/{datasetId}/harvest/schedule`
+##### scheduleHarvest 
+
+Schedules an automatic harvesting.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedule
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>datasetId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of dataset</td>
+    </tr>
+</table>
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#pt.utl.ist.task.Task">pt.utl.ist.task.Task</a></td>
+        <td>true</td>
+        <td>Task</td>
+    </tr>
+</table>
+
+###### Response
+[string](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a String message) | - |
+
+
+- - -
+#### **GET** `/datasets/{datasetId}/harvest/schedules`
+##### getDataset 
+
+Retrieves the list of schedules.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedules
+###### Parameters
+- path
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>datasetId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>Id of dataset</td>
+    </tr>
+</table>
+
+###### Response
+[List[pt.utl.ist.task.Task]](#List[pt.utl.ist.task.Task])
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing an Dataset) | - |
 
 
 - - -
@@ -824,6 +915,57 @@ http://localhost:8080/repox/rest/providers
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of providers) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -882,57 +1024,6 @@ http://localhost:8080/repox/rest/providers
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
-
-
-- - -
-#### **GET** `/providers`
-##### getProviderList 
-
-Get a list of providers.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[dataprovider]](#dataprovider)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of providers) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
 
 
 - - -

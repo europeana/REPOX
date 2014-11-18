@@ -6,21 +6,43 @@ import pt.utl.ist.util.date.DateUtil;
 
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  */
+@XmlRootElement(name = "ScheduledTask")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "An ScheduledTask")
 public class ScheduledTask extends Task {
     /**
      */
+    @XmlEnum(String.class)
     public enum Frequency {
         ONCE, DAILY, WEEKLY, XMONTHLY
     }
 
+    @ApiModelProperty(hidden = true)
     private List<String> minutesList; //00-59 (5 minutes interval)
+    @ApiModelProperty(hidden = true)
     private List<String> hoursList;  //00-23
 
+    @XmlElement
+    @ApiModelProperty
     private String       id;
+    @ApiModelProperty(hidden = true)
     private Calendar     firstRun;   // time of first execution
+    @XmlElement
+    @ApiModelProperty(required = true)
     private Frequency    frequency;  // frequency of the execution - ONCE , DAILY, WEEKLY, XMONTHLY
+    @XmlElement
+    @ApiModelProperty
     private Integer      xmonths;    // month frequency for XMONTHLY (1..12 months)
 
     @Override
@@ -76,6 +98,7 @@ public class ScheduledTask extends Task {
         this.xmonths = xmonths;
     }
 
+    @ApiModelProperty(hidden = true)
     public Integer getMinute() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -90,6 +113,7 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.MINUTE, minute);
     }
 
+    @ApiModelProperty(hidden = true)
     public Integer getHour() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -104,11 +128,13 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.HOUR_OF_DAY, hour);
     }
 
+    @XmlElement
+    @ApiModelProperty(required = true)
     public String getDate() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
         }
-        return DateUtil.date2String(firstRun.getTime(), "");
+        return DateUtil.date2String(firstRun.getTime(), TimeUtil.DATE_FORMAT);
     }
 
     public void setDate(String date) {
@@ -116,12 +142,38 @@ public class ScheduledTask extends Task {
             firstRun = Calendar.getInstance();
         }
 
-        String[] dateComponents = date.split("-");
+        String[] dateComponents = null;
+        if(date.contains("-"))
+            dateComponents = date.split("-");
+        else if(date.contains("/"))
+            dateComponents = date.split("/");
+        
         firstRun.set(Calendar.DAY_OF_MONTH, Integer.valueOf(dateComponents[0]));
         firstRun.set(Calendar.MONTH, Integer.valueOf(dateComponents[1]) - 1);
         firstRun.set(Calendar.YEAR, Integer.valueOf(dateComponents[2]));
     }
+    
+    @XmlElement
+    @ApiModelProperty(required = true)
+    public String getTime() {
+        if (firstRun == null) {
+            firstRun = Calendar.getInstance();
+        }
+        return DateUtil.date2String(firstRun.getTime(), TimeUtil.TIME_FORMAT);
+    }
+    
+    public void setTime(String time)
+    {
+        if (firstRun == null) {
+            firstRun = Calendar.getInstance();
+        }
+        
+        String[] dateComponents = time.split(":");
+        firstRun.set(Calendar.HOUR_OF_DAY, Integer.valueOf(dateComponents[0]));
+        firstRun.set(Calendar.MINUTE, Integer.valueOf(dateComponents[1]));
+    }
 
+    @ApiModelProperty(hidden = true)
     public Integer getDay() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -136,6 +188,7 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.DAY_OF_MONTH, day);
     }
 
+    @ApiModelProperty(hidden = true)
     public Integer getMonth() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -150,6 +203,7 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.MONTH, month - 1);
     }
 
+    @ApiModelProperty(hidden = true)
     public Integer getYear() {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
@@ -164,14 +218,17 @@ public class ScheduledTask extends Task {
         firstRun.set(Calendar.YEAR, year);
     }
 
+    @ApiModelProperty(hidden = true)
     public String getFirstRunString() {
         return DateUtil.date2String(firstRun.getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS);
     }
 
+    @ApiModelProperty(hidden = true)
     public String getFirstRunStringHour() {
         return DateUtil.date2String(firstRun.getTime(), "HH:mm");
     }
 
+    @ApiModelProperty(hidden = true)
     public String getFirstRunStringDate() {
 
         return DateUtil.date2String(firstRun.getTime(), "dd/MM/yyyy");
@@ -182,6 +239,7 @@ public class ScheduledTask extends Task {
      * Get the next ingest time
      * @return next ingest time
      */
+    @ApiModelProperty(hidden = true)
     public String getNextIngestDate() {
         Calendar now = Calendar.getInstance();
 
@@ -236,6 +294,7 @@ public class ScheduledTask extends Task {
         return "";
     }
 
+    @ApiModelProperty(hidden = true)
     public String getWeekdayAsString() {
         Locale locale = new Locale("en");
         return firstRun.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale);
@@ -331,6 +390,7 @@ public class ScheduledTask extends Task {
     /**
      * Returns false if it's the same hour/minute as execution time to avoid executing more than once
      */
+    @ApiModelProperty(hidden = true)
     @Override
     public boolean isTimeToRemove() {
         Calendar now = Calendar.getInstance();

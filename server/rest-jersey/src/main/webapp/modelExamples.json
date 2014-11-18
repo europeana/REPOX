@@ -1,6 +1,6 @@
 #Modelschemas#
 
-#Dataset Schemas examples()
+#Dataset Models examples
 
 #Example for Creating/Updating OAIdataset(containerType=DEFAULT,datasetType=OAI)
 
@@ -203,6 +203,23 @@
 }
 #################################################################
 
+
+
+#Tasks Models examples
+
+
+#Example for creating a ScheduledTask(taskType=SCHEDULED)
+#Value of Id is ignored.
+#Frequency values(ONCE, DAILY, WEEKLY, XMONTHLY)
+#Required fields(frequency, time, date)
+{
+    "taskType": "SCHEDULED",
+    "id": "",
+    "frequency": "ONCE",
+    "xmonths": 0,
+    "time": "11:20",
+    "date": "11/12/2014"
+}
 
 
 

@@ -1,5 +1,17 @@
 package pt.utl.ist.task;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
@@ -7,14 +19,21 @@ import pt.utl.ist.util.CompareUtil;
 import pt.utl.ist.util.RunnableStoppable;
 import pt.utl.ist.util.TimeUtil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  */
+@XmlRootElement(name = "task")
+@XmlAccessorType(XmlAccessType.NONE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "taskType")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ScheduledTask.class, name = "SCHEDULED")
+})
+@XmlSeeAlso({ ScheduledTask.class })
+@ApiModel(value = "A Task", discriminator = "taskType", subTypes = { ScheduledTask.class })
 public abstract class Task {
     private static final Logger log = Logger.getLogger(Task.class);
 
@@ -35,16 +54,27 @@ public abstract class Task {
         }
     }
 
+    @ApiModelProperty(hidden = true)
     RunnableStoppable                            runnableTask;          // RunnableStoppable instance that will run the task
+    @ApiModelProperty(hidden = true)
     protected Class<? extends RunnableStoppable> taskClass;             // class assignable to RunnableStoppable that will be instantiated to run
+    @ApiModelProperty(hidden = true)
     protected String[]                           parameters;            // Parameters to instantiate object of class taskClass
+    @ApiModelProperty(hidden = true)
     protected Thread                             taskThread;
+    @ApiModelProperty(hidden = true)
     protected Calendar                           startTime;
+    @ApiModelProperty(hidden = true)
     protected Calendar                           finishTime;
+    @ApiModelProperty(hidden = true)
     protected Status                             status     = Status.OK;
+    @ApiModelProperty(hidden = true)
     protected int                                maxRetries = 3;
+    @ApiModelProperty(hidden = true)
     protected int                                retries    = 0;        // Retries already performed, ceiling at maxRetries
+    @ApiModelProperty(hidden = true)
     protected long                               retryDelay = 300;      // Delay sleep time in seconds (5 minutes) 300
+    @ApiModelProperty(hidden = true)
     protected Calendar                           failTime;              // Time of failure, required to calculate next retry
 
     public Class<? extends RunnableStoppable> getTaskClass() {
@@ -217,6 +247,7 @@ public abstract class Task {
         this.retryDelay = retryDelay;
     }
 
+    @ApiModelProperty(hidden = true)
     public boolean isRunning() {
         return (taskThread != null && taskThread.isAlive());
     }
@@ -394,6 +425,7 @@ public abstract class Task {
     /**
      * Return true if the task can be removed from execution list and false otherwise, independently of having been finished.
      */
+    @ApiModelProperty(hidden = true)
     public boolean isTimeToRemove() {
         return true;
     }

@@ -17,6 +17,7 @@ import org.theeuropeanlibrary.repox.rest.servlets.HarvestResource;
 import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.task.TaskManager;
 
 /**
  * Register all the resources for the jersey configuration for Testing
@@ -27,6 +28,7 @@ import pt.utl.ist.dataProvider.DefaultDataManager;
 public class JerseyConfigMocked extends ResourceConfig {
 
     private static DefaultDataManager dataManager = mock(DefaultDataManager.class);
+    private static TaskManager taskManager = mock(TaskManager.class);
 
     /**
      * Creates a new instance of this class.
@@ -45,7 +47,7 @@ public class JerseyConfigMocked extends ResourceConfig {
         AggregatorsResource ar = new AggregatorsResource(dataManager);
         ProvidersResource pr = new ProvidersResource(dataManager);
         DatasetsResource dr = new DatasetsResource(dataManager);
-        HarvestResource hr = new HarvestResource(dataManager);
+        HarvestResource hr = new HarvestResource(dataManager, taskManager);
         register(ar);
         register(pr);
         register(dr);
@@ -58,5 +60,13 @@ public class JerseyConfigMocked extends ResourceConfig {
      */
     public static DefaultDataManager getDataManager() {
         return dataManager;
+    }
+
+    /**
+     * Returns the taskManager.
+     * @return the taskManager
+     */
+    public static TaskManager getTaskManager() {
+        return taskManager;
     }
 }

@@ -2,8 +2,11 @@
   "apiVersion" : "0.0.1-SNAPSHOT",
   "swaggerVersion" : "1.2",
   "apis" : [ {
-    "path" : "/harvest.{format}",
-    "description" : "Rest api for datasets"
+    "path" : "/aggregators.{format}",
+    "description" : "Rest api for aggregators"
+  }, {
+    "path" : "/providers.{format}",
+    "description" : "Rest api for providers"
   }, {
     "path" : "/options.{format}",
     "description" : "Rest api for options context"
@@ -11,11 +14,8 @@
     "path" : "/datasets.{format}",
     "description" : "Rest api for datasets"
   }, {
-    "path" : "/aggregators.{format}",
-    "description" : "Rest api for aggregators"
-  }, {
-    "path" : "/providers.{format}",
-    "description" : "Rest api for providers"
+    "path" : "/harvest.{format}",
+    "description" : "Rest api for datasets"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",

@@ -36,7 +36,7 @@
         "allowMultiple" : false
       }, {
         "name" : "type",
-        "description" : "Initiate a new harvest.",
+        "description" : "full|sample",
         "defaultValue" : "sample",
         "required" : false,
         "type" : "string",
@@ -80,6 +80,64 @@
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets/{datasetId}/harvest/schedule",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Schedules an automatic harvesting.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "scheduleHarvest",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "description" : "Task",
+        "required" : true,
+        "type" : "pt.utl.ist.task.Task",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets/{datasetId}/harvest/schedules",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Retrieves the list of schedules.",
+      "notes" : "",
+      "type" : "array",
+      "items" : {
+        "$ref" : "pt.utl.ist.task.Task"
+      },
+      "nickname" : "getDataset",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ {
+        "name" : "datasetId",
+        "description" : "Id of dataset",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing an Dataset)"
       } ]
     } ]
   } ],
