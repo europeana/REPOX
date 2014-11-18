@@ -3,7 +3,6 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -180,7 +179,7 @@ public class HarvestResource {
 
     /**
      * Schedules an automatic harvesting.
-     * Relative path : /datasets/{datasetId}/harvest/schedule 
+     * Relative path : /datasets/{datasetId}/harvest/schedules 
      * @param datasetId 
      * @param task 
      * @return OK or Error Message
@@ -189,7 +188,7 @@ public class HarvestResource {
      * @throws AlreadyExistsException 
      */
     @POST
-    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE)
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES)
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Schedules an automatic harvesting.", httpMethod = "POST", response = String.class)
@@ -218,7 +217,7 @@ public class HarvestResource {
                 Calendar firstRun = scheduledTask.getFirstRun();
                 Frequency frequency = scheduledTask.getFrequency();
                 String xmonths = "";
-                if(scheduledTask.getXmonths() != null)
+                if (scheduledTask.getXmonths() != null)
                     xmonths = Integer.toString(scheduledTask.getXmonths());
 
                 if (firstRun == null)
@@ -262,35 +261,40 @@ public class HarvestResource {
             throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
     }
 
-//    /**
-//     * Retrieves the list of schedules.
-//     * Relative path : /datasets/{datasetId}/harvest/schedules 
-//     * @param datasetId 
-//     * @return XML, JSON: scheduled harvests
-//     */
-//    @GET
-//    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES)
-//    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-//    @ApiOperation(value = "Retrieves the list of schedules.", httpMethod = "GET", response = Task.class, responseContainer = "List")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
-//                  //            @ApiResponse(code = 404, message = "DoesNotExistException") 
-//    })
-//    public Response getDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) {
-//        List<Task> schedules = new ArrayList<Task>();
-//
-//        ScheduledTask scheduledTask = new ScheduledTask();
-//        scheduledTask.setDate("11-12-2014");
-//        scheduledTask.setId("someId");
-//        scheduledTask.setFrequency(Frequency.ONCE);
-//        scheduledTask.setHour(11);
-//        scheduledTask.setMinute(20);
-//
-//        schedules.add(scheduledTask);
-//
-//        return Response.status(200).entity(new GenericEntity<List<Task>>(schedules) {
-//        }).build();
-//
-//    }
+    /**
+     * Retrieves the list of schedules.
+     * Relative path : /datasets/{datasetId}/harvest/schedules 
+     * @param datasetId 
+     * @return XML, JSON: scheduled harvest tasks
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Retrieves the list of schedules.", httpMethod = "GET", response = ScheduledTask.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response getDatasetScheduledTasks(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
+
+        DataSourceContainer dataSourceContainer;
+        try {
+            dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        List<ScheduledTask> scheduledTasks = null;
+        if (dataSourceContainer != null) {
+            scheduledTasks = taskManager.getDataSourceTasks(datasetId);
+        }
+        else
+            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+
+        return Response.status(200).entity(new GenericEntity<List<ScheduledTask>>(scheduledTasks) {
+        }).build();
+    }
 
 }

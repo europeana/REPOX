@@ -606,6 +606,22 @@ public class TaskManager implements RunnableStoppable {
             }
         }
     }
+    
+    public List<ScheduledTask> getDataSourceTasks(String dataSourceId)
+    {
+        List<ScheduledTask> scheduledDataSourceTasks = new ArrayList<ScheduledTask>();
+        
+        for (ScheduledTask currentTask : scheduledTasks) {
+            if (IngestDataSource.class.isAssignableFrom(currentTask.getTaskClass()) || ExportToFilesystem.class.isAssignableFrom(currentTask.getTaskClass())) {
+                String taskDataSourceId = currentTask.getParameters()[1];
+                if (taskDataSourceId.equals(dataSourceId)) {
+                    scheduledDataSourceTasks.add(currentTask);
+                }
+            }
+        }
+        
+        return scheduledDataSourceTasks;
+    }
 
     /**
      * @param day

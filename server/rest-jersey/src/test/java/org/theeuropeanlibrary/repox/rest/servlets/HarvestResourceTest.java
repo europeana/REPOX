@@ -152,11 +152,11 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    //    @Ignore
+    @Ignore
     public void testScheduleHarvest() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
-        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE);
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES);
 
         //Mocking
         DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
@@ -215,5 +215,34 @@ public class HarvestResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(scheduledTask, MediaType.APPLICATION_XML), Response.class);
         assertEquals(201, response.getStatus());
 
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getDatasetScheduledTasks(String)}.
+     * @throws Exception
+     */
+    @Test
+    //    @Ignore
+    public void testGetDatasetScheduledTasks() throws Exception {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES);
+
+        //Mocking
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        OaiDataSource oaiDataSource = new OaiDataSource(dataProvider, "SampleId", "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat", "SampleOaiSourceURL", "SampleOaiSet",
+                new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+        oaiDataSource.setExportDir("/Sample/Export/Path");
+        oaiDataSource.setMarcFormat("SampleMarcFormat");
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenThrow(new IOException()).thenReturn(null).thenReturn(defaultDataSourceContainer);
+
+        //Internal Server Error    
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(500, response.getStatus());
+        //Non existent
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(404, response.getStatus());
     }
 }

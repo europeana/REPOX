@@ -86,7 +86,7 @@
       } ]
     } ]
   }, {
-    "path" : "/datasets/{datasetId}/harvest/schedule",
+    "path" : "/datasets/{datasetId}/harvest/schedules",
     "operations" : [ {
       "method" : "POST",
       "summary" : "Schedules an automatic harvesting.",
@@ -111,19 +111,28 @@
         "allowMultiple" : false
       } ],
       "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a String message)"
+        "code" : 201,
+        "message" : "Created (Response containing a String message)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
-    } ]
-  }, {
-    "path" : "/datasets/{datasetId}/harvest/schedules",
-    "operations" : [ {
+    }, {
       "method" : "GET",
       "summary" : "Retrieves the list of schedules.",
       "notes" : "",
       "type" : "array",
       "items" : {
-        "$ref" : "pt.utl.ist.task.Task"
+        "$ref" : "ScheduledTask"
       },
       "nickname" : "getDataset",
       "produces" : [ "application/json", "application/xml" ],
@@ -138,6 +147,12 @@
       "responseMessages" : [ {
         "code" : 200,
         "message" : "OK (Response containing an Dataset)"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
     } ]
   } ],
@@ -170,6 +185,30 @@
           "items" : {
             "$ref" : "Option"
           }
+        }
+      }
+    },
+    "ScheduledTask" : {
+      "id" : "ScheduledTask",
+      "description" : "",
+      "required" : [ "frequency", "time", "date" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "frequency" : {
+          "type" : "string",
+          "enum" : [ "ONCE", "DAILY", "WEEKLY", "XMONTHLY" ]
+        },
+        "xmonths" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "time" : {
+          "type" : "string"
+        },
+        "date" : {
+          "type" : "string"
         }
       }
     }

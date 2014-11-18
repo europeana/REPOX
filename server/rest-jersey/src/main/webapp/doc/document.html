@@ -782,14 +782,14 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/cancel
 
 
 - - -
-#### **POST** `/datasets/{datasetId}/harvest/schedule`
+#### **POST** `/datasets/{datasetId}/harvest/schedules`
 ##### scheduleHarvest 
 
 Schedules an automatic harvesting.
 
 
 ###### URL
-http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedule
+http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedules
 ###### Parameters
 - path
 
@@ -831,7 +831,11 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedule
 ###### Response Codes
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
-| 200    | OK (Response containing a String message) | - |
+| 201    | Created (Response containing a String message) | - |
+| 404    | DoesNotExistException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
 
 
 - - -
@@ -862,13 +866,15 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/schedules
 </table>
 
 ###### Response
-[List[pt.utl.ist.task.Task]](#List[pt.utl.ist.task.Task])
+[List[ScheduledTask]](#ScheduledTask)
 
 
 ###### Response Codes
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK (Response containing an Dataset) | - |
+| 404    | DoesNotExistException | - |
+| 500    | InternalServerErrorException | - |
 
 
 - - -
@@ -915,57 +921,6 @@ http://localhost:8080/repox/rest/providers
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
 | 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
-#### **GET** `/providers`
-##### getProviderList 
-
-Get a list of providers.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[dataprovider]](#dataprovider)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of providers) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -1024,6 +979,57 @@ http://localhost:8080/repox/rest/providers
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of providers) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -1314,6 +1320,55 @@ http://localhost:8080/repox/rest/providers/{providerId}
     	<td>option</td>
         <td><a href="#Option">Array[Option]</a></td>
         <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+</table>
+
+
+
+## <a name="ScheduledTask">ScheduledTask</a>
+
+<table border="1">
+    <tr>
+    	<th>name</th>
+        <th>type</th>
+        <th>required</th>
+        <th>description</th>
+        <th>allowedValues</th>
+    </tr>
+    <tr>
+    	<td>date</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>frequency</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>ONCE, DAILY, WEEKLY, XMONTHLY</td>
+    </tr>
+    <tr>
+    	<td>time</td>
+        <td>string</td>
+        <td>required</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>xmonths</td>
+        <td>int</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>id</td>
+        <td>string</td>
+        <td>optional</td>
         <td>-</td>
         <td>any</td>
     </tr>
