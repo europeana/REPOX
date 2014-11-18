@@ -649,7 +649,7 @@ public class TaskManager implements RunnableStoppable {
      * @return boolean
      * @throws IOException
      */
-    public boolean taskAlreadyExists(String dataSourceId, String time, Frequency frequency, String fullIngest) throws IOException {
+    public boolean taskAlreadyExists(String dataSourceId, String time, Frequency frequency) throws IOException {
         for (ScheduledTask scheduledTask : scheduledTasks) {
             if (scheduledTask.getParameters().length > 1 && scheduledTask.getParameters()[1].equals(dataSourceId) && scheduledTask.getFrequency().equals(frequency) && DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS).equals(time)) { return true; }
         }

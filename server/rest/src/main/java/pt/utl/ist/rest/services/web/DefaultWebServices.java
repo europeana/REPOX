@@ -2099,7 +2099,7 @@ public class DefaultWebServices implements WebServices {
             scheduledTask.setParameters(parameters);
 
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager()
-                    .taskAlreadyExists(dataSource.getId(), DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency(), fullIngest)) {
+                    .taskAlreadyExists(dataSource.getId(), DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency())) {
                 createErrorMessage(out, MessageType.ALREADY_EXISTS,
                         "Error scheduling the Data Source ingestion. A task for this specific hour and data source ID \"" + dataSourceId + "\" is already scheduled.");
             }

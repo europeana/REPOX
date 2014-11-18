@@ -148,15 +148,15 @@ public class HarvestResourceTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#scheduleHarvest(String, Task)}.
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#scheduleHarvest(String, Task, boolean)}.
      * @throws Exception
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testScheduleHarvest() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
-        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES);
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE);
 
         //Mocking
         DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
@@ -205,7 +205,7 @@ public class HarvestResourceTest extends JerseyTest {
         assertEquals(500, response.getStatus());
 
         when(dataSource.getId()).thenReturn(datasetId);
-        when(taskManager.taskAlreadyExists(datasetId, DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency(), "true"))
+        when(taskManager.taskAlreadyExists(datasetId, DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency()))
                 .thenReturn(true).thenReturn(false);
 
         //Already exist Task

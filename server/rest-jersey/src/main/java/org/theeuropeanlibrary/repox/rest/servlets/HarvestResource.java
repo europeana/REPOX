@@ -179,16 +179,17 @@ public class HarvestResource {
 
     /**
      * Schedules an automatic harvesting.
-     * Relative path : /datasets/{datasetId}/harvest/schedules 
+     * Relative path : /datasets/{datasetId}/harvest/schedule 
      * @param datasetId 
      * @param task 
+     * @param fullIngest 
      * @return OK or Error Message
      * @throws MissingArgumentsException 
      * @throws DoesNotExistException 
      * @throws AlreadyExistsException 
      */
     @POST
-    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES)
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE)
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Schedules an automatic harvesting.", httpMethod = "POST", response = String.class)
@@ -199,7 +200,8 @@ public class HarvestResource {
             @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response scheduleHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId, @ApiParam(value = "Task", required = true) Task task)
+    public Response scheduleHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId, @ApiParam(value = "Task", required = true) Task task,
+            @ApiParam(value = "true|false") @DefaultValue("true") @QueryParam("fullIngest") boolean fullIngest)
             throws MissingArgumentsException, DoesNotExistException, AlreadyExistsException {
 
         DataSourceContainer dataSourceContainer;
@@ -235,14 +237,12 @@ public class HarvestResource {
                     throw new InternalServerErrorException("Error in server : " + e.getMessage());
                 }
 
-                String fullIngest = "true";
                 scheduledTask.setTaskClass(IngestDataSource.class);
                 String[] parameters = new String[] { newTaskId, dataSource.getId(), (Boolean.valueOf(fullIngest)).toString() };
                 scheduledTask.setParameters(parameters);
 
                 try {
-                    if (taskManager.taskAlreadyExists(dataSource.getId(), DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency(),
-                            fullIngest)) {
+                    if (taskManager.taskAlreadyExists(dataSource.getId(), DateUtil.date2String(scheduledTask.getFirstRun().getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS), scheduledTask.getFrequency())) {
                         throw new AlreadyExistsException("Already exists: " + "Task already exists!");
                     }
                     else {

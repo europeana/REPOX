@@ -322,7 +322,7 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
             // Check if scheduled task already exists
             if(RepoxServiceImpl.getRepoxManager().getTaskManager().taskAlreadyExists(taskUI.getDataSetId(),
                     DateUtil.date2String(taskUI.getDate(), TimeUtil.LONG_DATE_FORMAT_NO_SECS),
-                    ScheduledTask.Frequency.valueOf(taskUI.getType()),taskUI.getFullIngest()))
+                    ScheduledTask.Frequency.valueOf(taskUI.getType())))
                 return "alreadyExists";
 
             DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
@@ -401,7 +401,7 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
             try {
                 String date = DateUtil.date2String(scheduledTaskUI.getDate(), TimeUtil.LONG_DATE_FORMAT_NO_SECS);
                 if(RepoxServiceImpl.getRepoxManager().getTaskManager().taskAlreadyExists(scheduledTaskUI.getDataSetId(),
-                        date, ScheduledTask.Frequency.valueOf(scheduledTaskUI.getType()), scheduledTaskUI.getFullIngest())){
+                        date, ScheduledTask.Frequency.valueOf(scheduledTaskUI.getType()))){
                     return false;
                 }
             } catch (IOException e) {

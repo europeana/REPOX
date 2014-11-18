@@ -86,7 +86,7 @@
       } ]
     } ]
   }, {
-    "path" : "/datasets/{datasetId}/harvest/schedules",
+    "path" : "/datasets/{datasetId}/harvest/schedule",
     "operations" : [ {
       "method" : "POST",
       "summary" : "Schedules an automatic harvesting.",
@@ -109,6 +109,14 @@
         "type" : "pt.utl.ist.task.Task",
         "paramType" : "body",
         "allowMultiple" : false
+      }, {
+        "name" : "fullIngest",
+        "description" : "true|false",
+        "defaultValue" : "true",
+        "required" : false,
+        "type" : "boolean",
+        "paramType" : "query",
+        "allowMultiple" : false
       } ],
       "responseMessages" : [ {
         "code" : 201,
@@ -126,7 +134,10 @@
         "code" : 500,
         "message" : "InternalServerErrorException"
       } ]
-    }, {
+    } ]
+  }, {
+    "path" : "/datasets/{datasetId}/harvest/schedules",
+    "operations" : [ {
       "method" : "GET",
       "summary" : "Retrieves the list of schedules.",
       "notes" : "",
@@ -134,7 +145,7 @@
       "items" : {
         "$ref" : "ScheduledTask"
       },
-      "nickname" : "getDataset",
+      "nickname" : "getDatasetScheduledTasks",
       "produces" : [ "application/json", "application/xml" ],
       "parameters" : [ {
         "name" : "datasetId",
