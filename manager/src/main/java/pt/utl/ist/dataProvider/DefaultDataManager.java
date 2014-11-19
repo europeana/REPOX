@@ -3161,6 +3161,7 @@ public class DefaultDataManager implements DataManager {
             for (Task task : allTasks) {
                 if (task instanceof ScheduledTask && task.getParameters() != null && task.getParameters().length > 0) {
                     dummyTask.setTaskId(((ScheduledTask)task).getId());
+                    ((DataSourceIngestTask)dummyTask).setFullIngest((Boolean.valueOf(((ScheduledTask)task).getParameters()[2])) );
                 }
 
                 if (task.equalsAction((Task)dummyTask)) {

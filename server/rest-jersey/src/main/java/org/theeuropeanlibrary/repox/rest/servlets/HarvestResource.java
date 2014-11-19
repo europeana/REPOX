@@ -246,6 +246,7 @@ public class HarvestResource {
                         throw new AlreadyExistsException("Already exists: " + "Task already exists!");
                     }
                     else {
+                        dataManager.setDataSetSampleState(false,dataSource); //Set dataset to isSample false, a scheduled dataset harvest is not a sample anymore
                         taskManager.saveTask(scheduledTask);
                     }
                 } catch (IOException e) {
