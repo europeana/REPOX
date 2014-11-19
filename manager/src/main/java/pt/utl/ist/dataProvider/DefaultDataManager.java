@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import javax.ws.rs.InternalServerErrorException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -3103,25 +3105,28 @@ public class DefaultDataManager implements DataManager {
      * @throws AlreadyExistsException
      */
     @Override
-    public void startIngestDataSource(String dataSourceId, boolean fullIngest) throws SecurityException, NoSuchMethodException, DocumentException, IOException, AlreadyExistsException,
+    public void startIngestDataSource(String dataSourceId, boolean full, boolean fullIngest) throws SecurityException, NoSuchMethodException, DocumentException, IOException, AlreadyExistsException,
             ClassNotFoundException, ParseException, ObjectNotFoundException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
-            if(fullIngest)
-                dataSource.setMaxRecord4Sample(-1);
-            else
-                dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
             Task harvestTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), String.valueOf(fullIngest));
+
+            if (full)
+            {
+                dataSource.setMaxRecord4Sample(-1);
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(false, dataSource);
+            }
+            else
+            {
+                dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true, dataSource);
+            }
 
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(harvestTask)) {
                 throw new AlreadyExistsException("Task for dataSource with id : " + dataSourceId + " already exists!");
             } else {
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(harvestTask);
-                if(fullIngest)
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(false,dataSource);
-                else
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             }
         } else {
             throw new ObjectNotFoundException("Datasource with id " + dataSourceId + " NOT found!");

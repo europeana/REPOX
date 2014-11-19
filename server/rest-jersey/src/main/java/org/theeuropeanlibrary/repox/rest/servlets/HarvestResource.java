@@ -127,15 +127,15 @@ public class HarvestResource {
             @ApiParam(value = "full|sample") @DefaultValue(HarvestOptionListContainer.SAMPLE) @QueryParam("type") String type) throws InternalServerErrorException, DoesNotExistException,
             AlreadyExistsException {
 
-        boolean fullIngest = true;
+        boolean full = true;
 
         if (type == null || type.equals("") || (!type.equals(HarvestOptionListContainer.FULL) && !type.equals(HarvestOptionListContainer.SAMPLE)))
-            fullIngest = false;
+            full = false;
         else if (type.equals(HarvestOptionListContainer.SAMPLE))
-            fullIngest = false;
+            full = false;
 
         try {
-            dataManager.startIngestDataSource(datasetId, fullIngest);
+            dataManager.startIngestDataSource(datasetId, full, true);
         } catch (SecurityException | NoSuchMethodException | ClassNotFoundException | DocumentException | IOException | ParseException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
         } catch (AlreadyExistsException e) {
@@ -145,7 +145,7 @@ public class HarvestResource {
         }
 
         return Response.status(200)
-                .entity(new Result("Harvest(" + (fullIngest ? HarvestOptionListContainer.FULL : HarvestOptionListContainer.SAMPLE) + ") of dataset with id " + datasetId + " started!")).build();
+                .entity(new Result("Harvest(" + (full ? HarvestOptionListContainer.FULL : HarvestOptionListContainer.SAMPLE) + ") of dataset with id " + datasetId + " started!")).build();
     }
 
     /**
@@ -246,7 +246,8 @@ public class HarvestResource {
                         throw new AlreadyExistsException("Already exists: " + "Task already exists!");
                     }
                     else {
-                        dataManager.setDataSetSampleState(false,dataSource); //Set dataset to isSample false, a scheduled dataset harvest is not a sample anymore
+                        dataSource.setMaxRecord4Sample(-1);
+                        dataManager.setDataSetSampleState(false, dataSource); //Set dataset to isSample false, a scheduled dataset harvest is not a sample anymore
                         taskManager.saveTask(scheduledTask);
                     }
                 } catch (IOException e) {

@@ -186,6 +186,9 @@ public class OaiDataSource extends DataSource{
         Task.Status ingestStatus = Task.Status.OK;
 
         OaiHarvester harvester = new OaiHarvester(oaiSourceURL, oaiSet, null, null, metadataFormat, logFile, maxRecord4Sample);
+        if(getPreviousStatus() == null || getPreviousStatus() == StatusDS.CANCELED)
+            harvester.cleanUp();
+            
         String outputDirPath = OaiHarvester.getOutputDirPath(oaiSourceURL, oaiSet);
         File ingestResumptionFile = new File(outputDirPath, "ingestResumption.txt");
 

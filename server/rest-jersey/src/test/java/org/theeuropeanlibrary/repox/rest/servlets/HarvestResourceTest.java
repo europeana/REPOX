@@ -94,7 +94,7 @@ public class HarvestResourceTest extends JerseyTest {
 
         //Mocking
         doThrow(new IOException()).doThrow(new AlreadyExistsException("Task for dataSource with id : " + datasetId + " already exists!"))
-                .doThrow(new ObjectNotFoundException("Datasource with id " + datasetId + " NOT found!")).doNothing().when(dataManager).startIngestDataSource(datasetId, fullIngest);
+                .doThrow(new ObjectNotFoundException("Datasource with id " + datasetId + " NOT found!")).doNothing().when(dataManager).startIngestDataSource(datasetId, true, fullIngest);
 
         //Internal Server Error    
         Response response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);

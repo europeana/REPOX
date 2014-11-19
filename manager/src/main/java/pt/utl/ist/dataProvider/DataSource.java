@@ -172,6 +172,8 @@ public abstract class DataSource {
     @ApiModelProperty(hidden = true)
     protected StatusDS                            status;
     @ApiModelProperty(hidden = true)
+    protected StatusDS                            previousStatus;
+    @ApiModelProperty(hidden = true)
     protected String                              lastRunResult;
     @ApiModelProperty(hidden = true)
     protected int                                 maxRecord4Sample           = -1;
@@ -287,6 +289,14 @@ public abstract class DataSource {
     public StatusDS getStatus() {
         return status;
         //return StatusDS.OK;
+    }
+    
+    public StatusDS getPreviousStatus() {
+        return previousStatus;
+    }
+    
+    public void setPreviousStatus(StatusDS previousStatus) {
+        this.previousStatus = previousStatus;
     }
 
     public List<OldTask> getOldTasksList() {
@@ -463,6 +473,8 @@ public abstract class DataSource {
 
             if (exitStatus.isSuccessful()) {
                 status = StatusDS.OK;
+//                if(full)
+//                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             } else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
             } else if (exitStatus.isForceEmpty()) {
@@ -476,6 +488,7 @@ public abstract class DataSource {
             } else {
                 status = StatusDS.ERROR;
             }
+            previousStatus = status;
 
             // update record's count
             RecordCount dataSourceCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, true);

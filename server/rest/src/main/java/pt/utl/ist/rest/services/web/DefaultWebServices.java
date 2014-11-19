@@ -2028,9 +2028,9 @@ public class DefaultWebServices implements WebServices {
         }
     }
 
-    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException {
+    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean full, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException {
         try {
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceId, fullIngest);
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceId, full, fullIngest);
             Element successElement = DocumentHelper.createElement("success");
             successElement.setText("Harvest of Data Source with ID \"" + dataSourceId + "\" will start in a few seconds.");
             RestUtils.writeRestResponse(out, successElement);

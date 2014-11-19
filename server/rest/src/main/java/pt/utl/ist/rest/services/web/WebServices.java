@@ -483,6 +483,7 @@ public interface WebServices {
      * Starts a Data Source ingestion
      * @param out
      * @param dataSourceId
+     * @param full 
      * @param fullIngest 
      * @throws DocumentException
      * @throws UnsupportedEncodingException
@@ -491,7 +492,7 @@ public interface WebServices {
      * @throws ClassNotFoundException 
      * @throws ParseException 
      */
-    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException;
+    public void startIngestDataSource(OutputStream out, String dataSourceId, boolean full, boolean fullIngest) throws DocumentException, IOException, NoSuchMethodException, ClassNotFoundException, ParseException;
 
     /**
      * Cancels a Data Source ingestion

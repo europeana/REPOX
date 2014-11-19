@@ -109,7 +109,7 @@ public interface DataManager {
 
     //    DataSource getDataSource(String dataSourceId) throws DocumentException, IOException;
 
-    void startIngestDataSource(String dataSourceId, boolean fullIngest) throws SecurityException, NoSuchMethodException, DocumentException, IOException, AlreadyExistsException,
+    void startIngestDataSource(String dataSourceId, boolean full, boolean fullIngest) throws SecurityException, NoSuchMethodException, DocumentException, IOException, AlreadyExistsException,
             ClassNotFoundException, ParseException, ObjectNotFoundException;
 
     void stopIngestDataSource(String dataSourceId, Task.Status status) throws DocumentException, IOException, NoSuchMethodException, ObjectNotFoundException, ClassNotFoundException, ParseException;

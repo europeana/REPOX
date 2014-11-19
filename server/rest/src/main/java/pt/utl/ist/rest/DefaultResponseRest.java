@@ -1022,7 +1022,7 @@ public class DefaultResponseRest extends ResponseOperations implements ResponseR
                         if(id != null && !id.isEmpty() &&
                                 fullIngest != null && !fullIngest.isEmpty() &&
                                 (fullIngest.equalsIgnoreCase("true") || fullIngest.equalsIgnoreCase("false"))){
-                            defaultWebServices.startIngestDataSource(out, id, Boolean.valueOf(fullIngest));
+                            defaultWebServices.startIngestDataSource(out, id, true, Boolean.valueOf(fullIngest));
                         }
                         else{
                             defaultWebServices.createErrorMessage(out, MessageType.INVALID_REQUEST, "Error starting the Data" +
