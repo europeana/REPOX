@@ -48,6 +48,7 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
 
     public HarvestOperationsServiceImpl() {}
 
+    @Override
     public String dataSourceIngestNow(List<DataSourceUI> dataSourceUIList) throws ServerSideException{
         try {
             for (DataSourceUI dataSourceUI : dataSourceUIList) {
@@ -59,9 +60,7 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
                 }
 
                 int oldValue = dataSource.getMaxRecord4Sample();
-                dataSource.setMaxRecord4Sample(-1);
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().
-                        startIngestDataSource(dataSourceUI.getDataSourceSet(), true, oldValue != -1);
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceUI.getDataSourceSet(), true, oldValue != -1);
             }
         }catch (ObjectNotFoundException e) {
             return "NO_DS_FOUND";
@@ -74,6 +73,7 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
         return "SUCCESS";
     }
 
+    @Override
     public String dataSourceIngestSample(List<DataSourceUI> dataSourceUIList) throws ServerSideException{
         try {
             for (DataSourceUI dataSourceUI : dataSourceUIList) {
@@ -83,15 +83,16 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
                 if(dataSource == null) {
                     return "NO_DS_FOUND";
                 } else {
-                    dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
-
-                    Task harvestSubsetTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()),dataSource.getId(),"true");
-
-                    if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(harvestSubsetTask ))
-                        return "TASK_EXECUTING";
-
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(harvestSubsetTask );
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceUI.getDataSourceSet(), false, true);
+//                    dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
+//
+//                    Task harvestSubsetTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()),dataSource.getId(),"true");
+//
+//                    if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(harvestSubsetTask ))
+//                        return "TASK_EXECUTING";
+//
+//                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(harvestSubsetTask );
+//                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
                 }
             }
             return "SUCCESS";

@@ -33,6 +33,7 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.IngestDataSource;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.ScheduledTask.Frequency;
@@ -111,7 +112,8 @@ public class HarvestResource {
      * @return OK or Error Message
      * @throws InternalServerErrorException 
      * @throws DoesNotExistException 
-     * @throws AlreadyExistsException 
+     * @throws AlreadyExistsException  
+     * @throws SecurityException 
      */
     @POST
     @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.START)
@@ -124,8 +126,7 @@ public class HarvestResource {
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
     public Response startHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
-            @ApiParam(value = "full|sample") @DefaultValue(HarvestOptionListContainer.SAMPLE) @QueryParam("type") String type) throws InternalServerErrorException, DoesNotExistException,
-            AlreadyExistsException {
+            @ApiParam(value = "full|sample") @DefaultValue(HarvestOptionListContainer.SAMPLE) @QueryParam("type") String type) throws AlreadyExistsException, DoesNotExistException {
 
         boolean full = true;
 
@@ -134,15 +135,29 @@ public class HarvestResource {
         else if (type.equals(HarvestOptionListContainer.SAMPLE))
             full = false;
 
+        DataSourceContainer dataSourceContainer;
         try {
-            dataManager.startIngestDataSource(datasetId, full, true);
-        } catch (SecurityException | NoSuchMethodException | ClassNotFoundException | DocumentException | IOException | ParseException e) {
+            dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+        } catch (DocumentException | IOException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
-        } catch (AlreadyExistsException e) {
-            throw new AlreadyExistsException("Already exists: " + e.getMessage());
-        } catch (ObjectNotFoundException e) {
-            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         }
+
+        if (dataSourceContainer != null) {
+            DataSource dataSource = dataSourceContainer.getDataSource();
+
+            int oldValue = dataSource.getMaxRecord4Sample();
+            try {
+                dataManager.startIngestDataSource(datasetId, full, oldValue != -1);
+            } catch (SecurityException | NoSuchMethodException | ClassNotFoundException | DocumentException | IOException | ParseException e) {
+                throw new InternalServerErrorException("Error in server : " + e.getMessage());
+            } catch (AlreadyExistsException e) {
+                throw new AlreadyExistsException("Already exists: " + e.getMessage());
+            } catch (ObjectNotFoundException e) {
+                throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
+            }
+        }
+        else
+            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
 
         return Response.status(200)
                 .entity(new Result("Harvest(" + (full ? HarvestOptionListContainer.FULL : HarvestOptionListContainer.SAMPLE) + ") of dataset with id " + datasetId + " started!")).build();

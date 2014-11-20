@@ -3110,24 +3110,26 @@ public class DefaultDataManager implements DataManager {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             DataSource dataSource = dataSourceContainer.getDataSource();
-            Task harvestTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), String.valueOf(fullIngest));
-
-            if (full)
+            Task harvestTask = null;
+            if(full)
             {
                 dataSource.setMaxRecord4Sample(-1);
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(false, dataSource);
+                harvestTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), String.valueOf(fullIngest));
             }
             else
             {
                 dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true, dataSource);
+                harvestTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), "true");
             }
-
+            
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(harvestTask)) {
                 throw new AlreadyExistsException("Task for dataSource with id : " + dataSourceId + " already exists!");
             } else {
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(harvestTask);
             }
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(!full, dataSource);
+            
+            
         } else {
             throw new ObjectNotFoundException("Datasource with id " + dataSourceId + " NOT found!");
         }
