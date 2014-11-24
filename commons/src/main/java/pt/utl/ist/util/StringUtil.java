@@ -109,7 +109,7 @@ public class StringUtil {
      * @param clazz
      * @param file
      */
-    public static void simpleLog(String message, Class clazz, File file) {
+    public static synchronized void simpleLog(String message, Class clazz, File file) {
         //        System.out.println("INFO--------- " + message);
         LogUtil.addSimpleInfoLog(message, clazz, file, true);
         //		BufferedWriter writer = null;

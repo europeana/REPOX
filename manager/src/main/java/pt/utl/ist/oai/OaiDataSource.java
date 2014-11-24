@@ -19,8 +19,6 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.TransformerConfigurationException;
 
@@ -31,32 +29,22 @@ import org.dom4j.Element;
 import org.oclc.oai.harvester.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
 
-import pt.utl.ist.accessPoint.AccessPoint;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DataSource.StatusDS;
-import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
-import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
-import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
-import pt.utl.ist.externalServices.ExternalRestService;
-import pt.utl.ist.externalServices.ExternalServiceStates;
 import pt.utl.ist.metadataTransformation.MetadataFormat;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.statistics.RecordCount;
-import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.CompareUtil;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
@@ -204,6 +192,8 @@ public class OaiDataSource extends DataSource{
             if (ingestResumptionFile.exists()) {
                 ingestResumptionFile.delete();
             }
+            
+            harvester.cleanUp();
 
             //Clear the last ingest date
             setLastUpdate(null);

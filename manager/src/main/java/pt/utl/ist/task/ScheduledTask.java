@@ -143,16 +143,16 @@ public class ScheduledTask extends Task {
         }
 
         String[] dateComponents = null;
-        if(date.contains("-"))
+        if (date.contains("-"))
             dateComponents = date.split("-");
-        else if(date.contains("/"))
+        else if (date.contains("/"))
             dateComponents = date.split("/");
-        
+
         firstRun.set(Calendar.DAY_OF_MONTH, Integer.valueOf(dateComponents[0]));
         firstRun.set(Calendar.MONTH, Integer.valueOf(dateComponents[1]) - 1);
         firstRun.set(Calendar.YEAR, Integer.valueOf(dateComponents[2]));
     }
-    
+
     @XmlElement
     @ApiModelProperty(required = true)
     public String getTime() {
@@ -161,13 +161,13 @@ public class ScheduledTask extends Task {
         }
         return DateUtil.date2String(firstRun.getTime(), TimeUtil.TIME_FORMAT);
     }
-    
+
     public void setTime(String time)
     {
         if (firstRun == null) {
             firstRun = Calendar.getInstance();
         }
-        
+
         String[] dateComponents = time.split(":");
         firstRun.set(Calendar.HOUR_OF_DAY, Integer.valueOf(dateComponents[0]));
         firstRun.set(Calendar.MINUTE, Integer.valueOf(dateComponents[1]));
@@ -243,7 +243,9 @@ public class ScheduledTask extends Task {
     public String getNextIngestDate() {
         Calendar now = Calendar.getInstance();
 
-        if (firstRun.after(now)) { return DateUtil.date2String(firstRun.getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS); }
+        if (firstRun.after(now)) {
+            return DateUtil.date2String(firstRun.getTime(), TimeUtil.LONG_DATE_FORMAT_NO_SECS);
+        }
 
         Calendar maxTime = Calendar.getInstance();
         maxTime.add(Calendar.YEAR, 2); // setting up a max time for checks to avoid infinite loops
@@ -336,7 +338,8 @@ public class ScheduledTask extends Task {
      * @throws NoSuchMethodException
      */
     public ScheduledTask(String id, Calendar firstRun, Frequency frequency, Integer xmonths, Task taskToRun) throws SecurityException, NoSuchMethodException {
-        super(taskToRun.getTaskClass(), taskToRun.getParameters(), taskToRun.getStartTime(), taskToRun.getFinishTime(), taskToRun.getStatus(), taskToRun.getMaxRetries(), taskToRun.getRetries(), taskToRun.getRetryDelay());
+        super(taskToRun.getTaskClass(), taskToRun.getParameters(), taskToRun.getStartTime(), taskToRun.getFinishTime(), taskToRun.getStatus(), taskToRun.getMaxRetries(), taskToRun.getRetries(),
+                taskToRun.getRetryDelay());
 
         init();
         this.id = id;
@@ -349,10 +352,21 @@ public class ScheduledTask extends Task {
     public boolean isTimeToRun(Calendar calendar) {
         if (isRunning()) {
             return false;
-        } else if (status != null && status.equals(Task.Status.FAILED)) { return isTimeToRetry(calendar); }
+        } else if (status != null && status.equals(Task.Status.FAILED)) {
+            return isTimeToRetry(calendar);
+        }
+        else if (status != null && status.equals(Task.Status.CANCELED) && isHourMinuteDateFailed(calendar))
+        {
+            return false;
+        }
 
         return firstRun == null || isHourMinuteToRun(calendar) && isDayToRun(calendar);
 
+    }
+
+    public boolean isHourMinuteDateFailed(Calendar calendar) {
+        return (calendar.get(Calendar.DAY_OF_MONTH) == failTime.get(Calendar.DAY_OF_MONTH) && calendar.get(Calendar.MONTH) == failTime.get(Calendar.MONTH) && calendar.get(Calendar.YEAR) == failTime
+                .get(Calendar.YEAR) && failTime.get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE) && failTime.get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY));
     }
 
     /**
@@ -369,11 +383,14 @@ public class ScheduledTask extends Task {
      */
     public boolean isDayToRun(Calendar calendar) {
         Calendar dayStartCalendar = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-        if (firstRun.after(dayStartCalendar)) { return false; }
+        if (firstRun.after(dayStartCalendar)) {
+            return false;
+        }
 
         switch (frequency) {
         case ONCE:
-            return (dayStartCalendar.get(Calendar.DAY_OF_MONTH) == firstRun.get(Calendar.DAY_OF_MONTH) && dayStartCalendar.get(Calendar.MONTH) == firstRun.get(Calendar.MONTH) && dayStartCalendar.get(Calendar.YEAR) == firstRun.get(Calendar.YEAR));
+            return (dayStartCalendar.get(Calendar.DAY_OF_MONTH) == firstRun.get(Calendar.DAY_OF_MONTH) && dayStartCalendar.get(Calendar.MONTH) == firstRun.get(Calendar.MONTH) && dayStartCalendar
+                    .get(Calendar.YEAR) == firstRun.get(Calendar.YEAR));
         case DAILY:
             return true;
         case WEEKLY:

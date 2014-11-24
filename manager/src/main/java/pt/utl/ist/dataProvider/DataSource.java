@@ -119,7 +119,7 @@ import freemarker.template.TemplateException;
 public abstract class DataSource {
     @XmlEnum(String.class)
     public enum StatusDS {
-        RUNNING, ERROR, OK, WARNING, CANCELED, PRE_PROCESSING, POST_PROCESSING, PRE_PROCESS_ERROR, POST_PROCESS_ERROR
+        CREATED, RUNNING, ERROR, OK, WARNING, CANCELED, PRE_PROCESSING, POST_PROCESSING, PRE_PROCESS_ERROR, POST_PROCESS_ERROR
     }
 
     private static final Logger                   log                        = Logger.getLogger(DataSource.class);
@@ -414,6 +414,8 @@ public abstract class DataSource {
         } else {
             this.metadataTransformations = metadataTransformations;
         }
+        
+        this.status = StatusDS.CREATED;
 
         initAccessPoints();
     }
@@ -477,6 +479,7 @@ public abstract class DataSource {
 //                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             } else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             } else if (exitStatus.isForceEmpty()) {
                 status = null;
                 // update record's count
@@ -487,6 +490,7 @@ public abstract class DataSource {
                 return exitStatus;
             } else {
                 status = StatusDS.ERROR;
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             }
             previousStatus = status;
 
