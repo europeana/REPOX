@@ -138,14 +138,14 @@ public class DefaultProjectManager extends ProjectManager {
             if(useCountriesFile)
                 return Countries.getCountries();
             else
-                return createEuropeanaCountriesMap();
+                return createDefaultCountriesMap();
         }catch (Exception e){
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    private Map<String,String> createEuropeanaCountriesMap() {
+    private Map<String,String> createDefaultCountriesMap() {
         Map<String,String> results = new HashMap<String,String>();
 
         Country[] countries = Country.values();

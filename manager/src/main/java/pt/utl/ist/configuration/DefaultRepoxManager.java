@@ -24,11 +24,11 @@ import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: GPedrosa
- * Date: 30-03-2011
- * Time: 16:50
- * To change this template use File | Settings | File Templates.
+ * Default implementation of the RepoxManager.
+ * 
+ * @author GPedrosa
+ * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
+ * @since Oct 24, 2014
  */
 public class DefaultRepoxManager implements RepoxManager {
     private static final Logger           log = Logger.getLogger(DefaultRepoxManager.class);
@@ -47,50 +47,62 @@ public class DefaultRepoxManager implements RepoxManager {
     private Thread                        taskManagerThread;
     private DefaultEmailUtil            emailClient;
 
+    @Override
     public DefaultRepoxConfiguration getConfiguration() {
         return configuration;
     }
 
+    @Override
     public AccessPointsManager getAccessPointsManager() {
         return accessPointsManager;
     }
 
+    @Override
     public DefaultDataManager getDataManager() {
         return dataManager;
     }
 
+    @Override
     public RecordCountManager getRecordCountManager() {
         return recordCountManager;
     }
 
+    @Override
     public StatisticsManager getStatisticsManager() {
         return statisticsManager;
     }
 
+    @Override
     public TaskManager getTaskManager() {
         return taskManager;
     }
 
+    @Override
     public MetadataTransformationManager getMetadataTransformationManager() {
         return metadataTransformationManager;
     }
 
+    @Override
     public ExternalRestServicesManager getExternalRestServicesManager() {
         return externalRestServicesManager;
     }
 
+    @Override
     public MetadataSchemaManager getMetadataSchemaManager() {
         return metadataSchemaManager;
     }
 
+    @Override
     public TagsManager getTagsManager() {
         return tagsManager;
     }
 
+    @Override
     public Thread getTaskManagerThread() {
         return taskManagerThread;
     }
 
+    @Override
     public DefaultEmailUtil getEmailClient() {
         return emailClient;
     }

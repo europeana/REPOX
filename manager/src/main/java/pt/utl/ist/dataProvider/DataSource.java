@@ -479,7 +479,8 @@ public abstract class DataSource {
 //                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             } else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
+                if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             } else if (exitStatus.isForceEmpty()) {
                 status = null;
                 // update record's count
@@ -490,7 +491,8 @@ public abstract class DataSource {
                 return exitStatus;
             } else {
                 status = StatusDS.ERROR;
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
+                if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             }
             previousStatus = status;
 

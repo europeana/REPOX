@@ -486,7 +486,7 @@ public class DefaultSaveData {
 
     public static SaveDataResponse saveDataProvider(boolean update, DataProviderUI dataProviderUI, int pageSize, String username) throws ServerSideException {
 
-        DefaultDataManager europeanaManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
+        DefaultDataManager defaultManager = (DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager();
         //String dpId;
         String homepage = dataProviderUI.getHomepage();
         URL url = null;
@@ -510,7 +510,7 @@ public class DefaultSaveData {
         }
 
         if(update) {
-            DataProvider dataProvider = europeanaManager.getDataProvider(dataProviderUI.getId());
+            DataProvider dataProvider = defaultManager.getDataProvider(dataProviderUI.getId());
             if(dataProvider != null) {
                 dataProvider.setCountry(dataProviderUI.getCountry());
                 dataProvider.setName(dataProviderUI.getName());
@@ -520,7 +520,7 @@ public class DefaultSaveData {
                 dataProvider.setHomepage(url.toString());
 
                 try {
-                    dataProvider = europeanaManager.updateDataProvider(null, dataProvider.getId(), null, dataProviderUI.getName(),
+                    dataProvider = defaultManager.updateDataProvider(null, dataProvider.getId(), null, dataProviderUI.getName(),
                             dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType(), null);
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
@@ -538,7 +538,7 @@ public class DefaultSaveData {
             }
         } else {
             try {
-                DataProvider dataProvider = europeanaManager.createDataProvider(dataProviderUI.getParentAggregatorID(), null, dataProviderUI.getName(),
+                DataProvider dataProvider = defaultManager.createDataProvider(dataProviderUI.getParentAggregatorID(), null, dataProviderUI.getName(),
                         dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(),
                         homepage, dataProviderUI.getType(), null);
                 UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());

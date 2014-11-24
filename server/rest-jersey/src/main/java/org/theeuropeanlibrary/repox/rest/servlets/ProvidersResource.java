@@ -3,6 +3,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,6 +28,7 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.Countries;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
@@ -108,7 +110,19 @@ public class ProvidersResource {
         if (provider == null)
             throw new DoesNotExistException("Provider with id " + providerId + " does NOT exist!");
 
-        return provider;
+        String country = null;
+        Map<String, String> countries = Countries.getCountries();
+        for (Map.Entry<String, String> countryMap : countries.entrySet())
+        {
+            if (countryMap.getKey().equalsIgnoreCase(provider.getCountry()))
+                country = countryMap.getValue();
+        }
+        if (country == null)
+            return provider;
+        else
+            //Change the country code to the real name
+            return new DataProvider(provider.getId(), provider.getName(), country, provider.getDescription(), provider.getDataSourceContainers(), provider.getNameCode(), provider.getHomepage(),
+                    provider.getProviderType(), provider.getEmail());
     }
 
     /**
@@ -157,8 +171,15 @@ public class ProvidersResource {
         else if (providerType == null || providerType.equals(""))
             throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty");
 
-        DataProvider createdProvider = null;
+        //Change the real name to the country code 
+        Map<String, String> countries = Countries.getCountries();
+        for (Map.Entry<String, String> countryMap : countries.entrySet())
+        {
+            if (countryMap.getValue().equalsIgnoreCase(country))
+                country = countryMap.getKey();
+        }
 
+        DataProvider createdProvider = null;
         try {
             createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, providerType, email);
         } catch (IOException e) {
@@ -248,6 +269,14 @@ public class ProvidersResource {
         else if (providerType == null || providerType.equals(""))
             throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty.");
 
+        //Change the real name to the country code
+        Map<String, String> countries = Countries.getCountries();
+        for (Map.Entry<String, String> countryMap : countries.entrySet())
+        {
+            if (countryMap.getValue().equalsIgnoreCase(country))
+                country = countryMap.getKey();
+        }
+
         try {
             dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, providerType, email);
         } catch (ObjectNotFoundException e) {
@@ -298,6 +327,19 @@ public class ProvidersResource {
             throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
+        }
+        
+        Map<String, String> countries = Countries.getCountries();
+        for(DataProvider dataProvider : providersListSorted)
+        {
+            String country = null;
+            for (Map.Entry<String, String> countryMap : countries.entrySet())
+            {
+                if (countryMap.getKey().equalsIgnoreCase(dataProvider.getCountry()))
+                    country = countryMap.getValue();
+            }
+            if (country != null)
+                dataProvider.setCountry(country);
         }
 
         return Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {
