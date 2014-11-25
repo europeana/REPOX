@@ -190,7 +190,7 @@ public class DataProvider {
      * 
      * @param id
      * @param name
-     * @param country
+     * @param countryCode
      * @param description
      * @param dataSourceContainers
      * @param nameCode 
@@ -198,7 +198,7 @@ public class DataProvider {
      * @param providerType 
      * @param email 
      */
-    public DataProvider(String id, String name, String country, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage,
+    public DataProvider(String id, String name, String countryCode, String description, HashMap<String, DataSourceContainer> dataSourceContainers, String nameCode, String homepage,
                         ProviderType providerType, String email) {
         
         //Setting to "" is required for the response of a rest service.
@@ -210,8 +210,8 @@ public class DataProvider {
             this.name = name;
         else
             this.name = "";
-        if (country != null)
-            this.countryCode = country;
+        if (countryCode != null)
+            this.countryCode = countryCode;
         else
             this.countryCode = "";
         if (description != null)
