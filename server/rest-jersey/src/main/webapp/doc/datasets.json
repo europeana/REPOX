@@ -345,16 +345,19 @@
     "dataset" : {
       "id" : "dataset",
       "description" : "",
-      "required" : [ "namespace", "metadataFormat", "schema" ],
+      "required" : [ "namespace", "schema", "metadataFormat" ],
       "discriminator" : "dataSourceType",
       "properties" : {
+        "id" : {
+          "type" : "string"
+        },
         "description" : {
           "type" : "string"
         },
         "namespace" : {
           "type" : "string"
         },
-        "id" : {
+        "schema" : {
           "type" : "string"
         },
         "exportDir" : {
@@ -371,9 +374,6 @@
         },
         "recordIdPolicy" : {
           "$ref" : "RecordIdPolicy"
-        },
-        "schema" : {
-          "type" : "string"
         }
       },
       "subTypes" : [ "OaiDatasource", "DirectoryDatasource" ]

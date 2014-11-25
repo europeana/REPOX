@@ -16,7 +16,6 @@
 
 	<properties>
 		<documentation.dir>src/main/webapp/doc/</documentation.dir>
-		<powermock.version>1.5.6</powermock.version>
 	</properties>
 
 	<build>
@@ -193,20 +192,20 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- POWERMOCKITO, Keep it at first position -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.5.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.5.6</version>
+			<scope>test</scope>
+		</dependency>
 
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-module-junit4</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-api-mockito</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			
 		<!-- SWAGGER -->
 		<dependency>
 			<groupId>com.wordnik</groupId>
@@ -241,23 +240,10 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 
-		<!-- Media types support -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.glassfish.jersey.media</groupId> -->
-		<!-- <artifactId>jersey-media-moxy</artifactId> -->
-		<!-- <version>2.13</version> -->
-		<!-- </dependency> -->
-
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.jaxrs</groupId> -->
-		<!-- <artifactId>jackson-jaxrs-xml-provider</artifactId> -->
-		<!-- <version>2.1.1</version> -->
-		<!-- </dependency> -->
 
 		<!-- Test Dependencies -->
 		<dependency>
