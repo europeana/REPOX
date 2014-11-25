@@ -1,0 +1,19 @@
+#Provider Model examples
+
+#Example for Creating/Updating Provider
+
+#If id not provided it is generated first from nameCode and if empty then from name.
+#If county and countryCode populated then priority gets the nameCode.nameCode is of "ISO 3166-1 alpha-2" format.
+#ProviderType is an Enum(MUSEUM, ARCHIVE, LIBRARY, AUDIO_VISUAL_ARCHIVE, RESEARCH_EDUCATIONAL, CROSS_SECTOR, PUBLISHER, PRIVATE, AGGREGATOR, UNKNOWN)
+#Required fields(name, providerType, country or countryCode)
+{
+  "id": "",
+  "name": "ProviderName",
+  "country": "AUSTria",
+  "countryCode": "",
+  "description": "",
+  "nameCode": "",
+  "homepage": "",
+  "providerType": "MUSEUM",
+  "email": ""
+}

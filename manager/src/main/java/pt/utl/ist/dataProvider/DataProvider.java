@@ -32,22 +32,25 @@ public class DataProvider {
     @ApiModelProperty(position = 2, required = true)
     private String                               name;
     @XmlElement
-    @ApiModelProperty(position = 3, required = true)
+    @ApiModelProperty(position = 3)
     private String                               country;
     @XmlElement
     @ApiModelProperty(position = 4)
-    private String                               description;
+    private String                               countryCode;
     @XmlElement
     @ApiModelProperty(position = 5)
-    private String                               nameCode;
+    private String                               description;
     @XmlElement
     @ApiModelProperty(position = 6)
+    private String                               nameCode;
+    @XmlElement
+    @ApiModelProperty(position = 7)
     private String                               homepage;
     @XmlElement
-    @ApiModelProperty(position = 7, required = true)
+    @ApiModelProperty(position = 8, required = true)
     private ProviderType                         providerType;
     @XmlElement
-    @ApiModelProperty(position = 8)
+    @ApiModelProperty(position = 9)
     private String                               email;
 
     @XmlTransient
@@ -75,6 +78,14 @@ public class DataProvider {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String country) {
+        this.countryCode = country;
     }
 
     public String getDescription() {
@@ -200,9 +211,9 @@ public class DataProvider {
         else
             this.name = "";
         if (country != null)
-            this.country = country;
+            this.countryCode = country;
         else
-            this.country = "";
+            this.countryCode = "";
         if (description != null)
             this.description = description;
         else
@@ -238,8 +249,8 @@ public class DataProvider {
 
         dataProviderElement.addAttribute("id", this.getId());
         dataProviderElement.addElement("name").setText(this.getName());
-        if (this.getCountry() != null) {
-            dataProviderElement.addElement("country").setText(this.getCountry());
+        if (this.getCountryCode() != null) {
+            dataProviderElement.addElement("country").setText(this.getCountryCode());
         }
         if (this.getDescription() != null) {
             dataProviderElement.addElement("description").setText(this.getDescription());

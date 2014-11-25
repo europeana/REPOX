@@ -77,14 +77,9 @@ import com.extjs.gxt.ui.client.data.ModelData;
 
 import eu.europeana.definitions.domain.Country;
 
-//import com.google.common.collect.Iterables;
-//import pt.utl.ist.repox.RepoxManagerEuDml;
-
 /**
- * Created to Project REPOX
- * User: Edmundo
- * Date: 30-04-2012
- * Time: 11:29
+ * @author Edmundo
+ * @since Apr 30, 2012
  */
 public class DefaultProjectManager extends ProjectManager {
 
@@ -94,6 +89,7 @@ public class DefaultProjectManager extends ProjectManager {
         ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());
     }
 
+    @Override
     public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType, String username) throws ServerSideException {
         try {
             DefaultStatisticsManager manager = (DefaultStatisticsManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getStatisticsManager();
@@ -132,6 +128,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public Map<String,String> getFullCountryList() throws ServerSideException{
         try{
             boolean useCountriesFile = RepoxServiceImpl.getRepoxManager().getConfiguration().getUseCountriesTxt();
@@ -153,17 +150,18 @@ public class DefaultProjectManager extends ProjectManager {
         for(int index=0; index < countries.length; index++){
             String countryName = countries[index].name();
 
-            Iterator iterator = Countries.getCountries().entrySet().iterator();
+            Iterator<Map.Entry<String, String>> iterator = Countries.getCountries().entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry mapEntry=(Map.Entry)iterator.next();
+                Map.Entry<String, String> mapEntry=iterator.next();
                 if(mapEntry.getValue().equals(countryName)) {
-                    results.put((String)mapEntry.getKey(),(String)mapEntry.getValue());
+                    results.put(mapEntry.getKey(),mapEntry.getValue());
                 }
             }
         }
         return results;
     }
 
+    @Override
     public AdminInfo loadAdminFormInfo() throws ServerSideException{
         try{
             DefaultRepoxConfiguration configuration = (DefaultRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration();
@@ -208,6 +206,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public void saveAdminFormInfo(AdminInfo results) throws ServerSideException{
         try{
             Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
@@ -261,6 +260,7 @@ public class DefaultProjectManager extends ProjectManager {
      Paging Europeana Functions
      **********************************************************/
 
+    @Override
     public List<DataContainer> getParsedData(int offSet, int limit) throws ServerSideException{
         List<DataContainer> mainData = new ArrayList<DataContainer>();
         try{
@@ -271,27 +271,27 @@ public class DefaultProjectManager extends ProjectManager {
                 AggregatorUI currentAggregator = null;
                 for (int i = offSet; i<(limit>realLimit ? realLimit : limit); i++){
                     if(allDataList.get(i) instanceof Aggregator){
-                        currentAggregator = parseAggregatorEuropeana((Aggregator) allDataList.get(i));
+                        currentAggregator = parseAggregator((Aggregator) allDataList.get(i));
                         mainData.add(currentAggregator);
                     }else if(allDataList.get(i) instanceof DataProvider){
                         if(currentAggregator == null){
-                            currentAggregator = parseAggregatorEuropeana(((DefaultDataManager) RepoxServiceImpl.
+                            currentAggregator = parseAggregator(((DefaultDataManager) RepoxServiceImpl.
                                     getRepoxManager().getDataManager()).getAggregatorParent(((DataProvider) allDataList.get(i)).getId()));
                             mainData.add(currentAggregator);
                         }
-                        currentDataProvider = parseDataProviderEuropeana((DataProvider) allDataList.get(i), currentAggregator);
+                        currentDataProvider = parseDataProvider((DataProvider) allDataList.get(i), currentAggregator);
                         currentAggregator.add(currentDataProvider);
                         currentAggregator.addDataProvider(currentDataProvider);
                     } else if(allDataList.get(i) instanceof DataSourceContainer){
                         if(currentAggregator == null){
                             String parentDataProviderId = RepoxServiceImpl.
                                     getRepoxManager().getDataManager().getDataProviderParent(((DataSourceContainer) allDataList.get(i)).getDataSource().getId()).getId();
-                            currentAggregator = parseAggregatorEuropeana(((DefaultDataManager) RepoxServiceImpl.
+                            currentAggregator = parseAggregator(((DefaultDataManager) RepoxServiceImpl.
                                     getRepoxManager().getDataManager()).getAggregatorParent(parentDataProviderId));
                             mainData.add(currentAggregator);
                         }
                         if(currentDataProvider == null){
-                            currentDataProvider = parseDataProviderEuropeana(RepoxServiceImpl.getRepoxManager().getDataManager().
+                            currentDataProvider = parseDataProvider(RepoxServiceImpl.getRepoxManager().getDataManager().
                                     getDataProviderParent(((DataSourceContainer) allDataList.get(i)).getDataSource().getId()),
                                     currentAggregator);
                             currentAggregator.add(currentDataProvider);
@@ -316,6 +316,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public DataContainer getSearchResult(ModelData data) throws ServerSideException{
         try{
             DataContainer dataContainer = new DataContainer(UUID.randomUUID().toString());
@@ -324,10 +325,10 @@ public class DefaultProjectManager extends ProjectManager {
             if(data.get("dataType").equals(DataType.AGGREGATOR.name())){
                 DefaultDataManager dataManagerEuropeana = (DefaultDataManager)RepoxServiceImpl.getRepoxManager().getDataManager();
                 Aggregator aggregator = dataManagerEuropeana.getAggregator(id);
-                AggregatorUI aggregatorUI = parseAggregatorEuropeana(aggregator);
+                AggregatorUI aggregatorUI = parseAggregator(aggregator);
                 dataContainer.add(aggregatorUI);
                 for(DataProvider dataProvider : aggregator.getDataProviders()){
-                    DataProviderUI dataProviderUI = parseDataProviderEuropeana(dataProvider,aggregatorUI);
+                    DataProviderUI dataProviderUI = parseDataProvider(dataProvider,aggregatorUI);
                     aggregatorUI.add(dataProviderUI);
                     aggregatorUI.addDataProvider(dataProviderUI);
 
@@ -339,10 +340,10 @@ public class DefaultProjectManager extends ProjectManager {
                 }
             }else if(data.get("dataType").equals(DataType.DATA_PROVIDER.name())){
                 DataProvider dataProvider = RepoxServiceImpl.getRepoxManager().getDataManager().getDataProvider(id);
-                AggregatorUI aggregatorUI = parseAggregatorEuropeana(((DefaultDataManager)RepoxServiceImpl.
+                AggregatorUI aggregatorUI = parseAggregator(((DefaultDataManager)RepoxServiceImpl.
                         getRepoxManager().getDataManager()).getAggregatorParent(dataProvider.getId()));
                 dataContainer.add(aggregatorUI);
-                DataProviderUI dataProviderUI = parseDataProviderEuropeana(dataProvider,aggregatorUI);
+                DataProviderUI dataProviderUI = parseDataProvider(dataProvider,aggregatorUI);
                 aggregatorUI.add(dataProviderUI);
                 aggregatorUI.addDataProvider(dataProviderUI);
 
@@ -353,10 +354,10 @@ public class DefaultProjectManager extends ProjectManager {
                 }
             }else if(data.get("dataType").equals(DataType.DATA_SET.name())){
                 String parentDataProviderId = RepoxServiceImpl.getRepoxManager().getDataManager().getDataProviderParent(id).getId();
-                AggregatorUI aggregatorUI = parseAggregatorEuropeana(((DefaultDataManager)RepoxServiceImpl.
+                AggregatorUI aggregatorUI = parseAggregator(((DefaultDataManager)RepoxServiceImpl.
                         getRepoxManager().getDataManager()).getAggregatorParent(parentDataProviderId));
                 dataContainer.add(aggregatorUI);
-                DataProviderUI dataProviderUI = parseDataProviderEuropeana(RepoxServiceImpl.getRepoxManager().getDataManager().
+                DataProviderUI dataProviderUI = parseDataProvider(RepoxServiceImpl.getRepoxManager().getDataManager().
                         getDataProviderParent(id), aggregatorUI);
                 aggregatorUI.add(dataProviderUI);
                 aggregatorUI.addDataProvider(dataProviderUI);
@@ -373,6 +374,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public List<DataContainer> getViewResult(int offset, int limit, String type) throws ServerSideException{
         List<DataContainer> mainData = new ArrayList<DataContainer>();
         try{
@@ -380,14 +382,14 @@ public class DefaultProjectManager extends ProjectManager {
                 DefaultDataManager dataManagerEuropeana = (DefaultDataManager) RepoxServiceImpl.getRepoxManager().getDataManager();
                 List<Aggregator> aggregatorEuropeanaList = dataManagerEuropeana.getAggregators();
                 for (int i = offset; i<limit && i<aggregatorEuropeanaList.size(); i++){
-                    mainData.add(parseAggregatorEuropeana(aggregatorEuropeanaList.get(i)));
+                    mainData.add(parseAggregator(aggregatorEuropeanaList.get(i)));
                 }
             }else if(type.equals("DATA_PROVIDERS")){
                 List<DataProvider> dpList = RepoxServiceImpl.getRepoxManager().getDataManager().getDataProviders();
                 for (int i = offset; i<limit && i<dpList.size(); i++){
-                    AggregatorUI currentAggregator = parseAggregatorEuropeana(((DefaultDataManager)RepoxServiceImpl.
+                    AggregatorUI currentAggregator = parseAggregator(((DefaultDataManager)RepoxServiceImpl.
                             getRepoxManager().getDataManager()).getAggregatorParent(dpList.get(i).getId()));
-                    mainData.add(parseDataProviderEuropeana(dpList.get(i), currentAggregator));
+                    mainData.add(parseDataProvider(dpList.get(i), currentAggregator));
                 }
             }else if(type.equals("DATA_SETS")){
                 DefaultDataManager dataManagerEuropeana = (DefaultDataManager) RepoxServiceImpl.getRepoxManager().getDataManager();
@@ -412,6 +414,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public List<FilterAttribute> getDPAttributes(FilterType filterType,List<FilterQuery> filterQueries) throws ServerSideException {
         Map<String,String> countryMap = getFullCountryList();
 
@@ -428,9 +431,9 @@ public class DefaultProjectManager extends ProjectManager {
                 DataProvider dataProvider = (DataProvider)object;
                 if(filterType.equals(FilterType.COUNTRY)){
                     String showName = "<img src=\"resources/images/countries/" +
-                            dataProvider.getCountry() + ".png\" alt=\"" + countryMap.get(dataProvider.getCountry()) + "\" title=\"" +
-                            countryMap.get(dataProvider.getCountry()) + "\"/> " + countryMap.get(dataProvider.getCountry());
-                    values.add(new FilterAttribute(showName,dataProvider.getCountry()));
+                            dataProvider.getCountryCode() + ".png\" alt=\"" + countryMap.get(dataProvider.getCountryCode()) + "\" title=\"" +
+                            countryMap.get(dataProvider.getCountryCode()) + "\"/> " + countryMap.get(dataProvider.getCountryCode());
+                    values.add(new FilterAttribute(showName,dataProvider.getCountryCode()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
                     DataProvider dataProviderEuropeana = dataProvider;
                     values.add(new FilterAttribute(dataProviderEuropeana.getProviderType().name(),dataProviderEuropeana.getProviderType().name()));
@@ -441,9 +444,9 @@ public class DefaultProjectManager extends ProjectManager {
                         getDataProviderParent(((DataSourceContainer) object).getDataSource().getId());
                 if(filterType.equals(FilterType.COUNTRY)){
                     String showName = "<img src=\"resources/images/countries/" +
-                            parent.getCountry() + ".png\" alt=\"" + countryMap.get(parent.getCountry()) + "\" title=\"" +
-                            countryMap.get(parent.getCountry()) + "\"/> " + countryMap.get(parent.getCountry());
-                    values.add(new FilterAttribute(showName,parent.getCountry()));
+                            parent.getCountryCode() + ".png\" alt=\"" + countryMap.get(parent.getCountryCode()) + "\" title=\"" +
+                            countryMap.get(parent.getCountryCode()) + "\"/> " + countryMap.get(parent.getCountryCode());
+                    values.add(new FilterAttribute(showName,parent.getCountryCode()));
                 }else if(filterType.equals(FilterType.DP_TYPE)){
                     values.add(new FilterAttribute(parent.getProviderType().name(),parent.getProviderType().name()));
                 }
@@ -452,6 +455,7 @@ public class DefaultProjectManager extends ProjectManager {
         return values;
     }
 
+    @Override
     public DataContainer getFilteredData(List<FilterQuery> filterQueries,int offset, int limit)throws ServerSideException{
         try{
             FilteredDataResponse filteredDataResponse = FilterManagementUtil.getInstance().getRawFilteredData(filterQueries);
@@ -482,24 +486,24 @@ public class DefaultProjectManager extends ProjectManager {
                 int realLimit = (limit>filteredListSize ? filteredListSize : limit);
                 for (int i = offSet; i<realLimit; i++){
                     if(filteredDataList.get(i) instanceof Aggregator){
-                        currentAggregator = parseAggregatorEuropeana((Aggregator) filteredDataList.get(i));
+                        currentAggregator = parseAggregator((Aggregator) filteredDataList.get(i));
                         mainData.add(currentAggregator);
                     }else if(filteredDataList.get(i) instanceof DataProvider){
                         if(currentAggregator == null || isDifferentAggregator(currentAggregator,(DataProvider)filteredDataList.get(i))){
-                            currentAggregator = parseAggregatorEuropeana(((DefaultDataManager) RepoxServiceImpl.
+                            currentAggregator = parseAggregator(((DefaultDataManager) RepoxServiceImpl.
                                     getRepoxManager().getDataManager()).getAggregatorParent(((DataProvider) filteredDataList.get(i)).getId()));
                             mainData.add(currentAggregator);
                             if(limit <= filteredDataList.size())
                                 realLimit--;
                         }
-                        currentDataProvider = parseDataProviderEuropeana((DataProvider) filteredDataList.get(i), currentAggregator);
+                        currentDataProvider = parseDataProvider((DataProvider) filteredDataList.get(i), currentAggregator);
                         currentAggregator.add(currentDataProvider);
                         currentAggregator.addDataProvider(currentDataProvider);
                     } else if(filteredDataList.get(i) instanceof DataSourceContainer){
                         if(currentAggregator == null || isDifferentAggregator(currentAggregator,(DataSourceContainer)filteredDataList.get(i))){
                             String parentDataProviderId = RepoxServiceImpl.
                                     getRepoxManager().getDataManager().getDataProviderParent(((DataSourceContainer) filteredDataList.get(i)).getDataSource().getId()).getId();
-                            currentAggregator = parseAggregatorEuropeana(((DefaultDataManager) RepoxServiceImpl.
+                            currentAggregator = parseAggregator(((DefaultDataManager) RepoxServiceImpl.
                                     getRepoxManager().getDataManager()).getAggregatorParent(parentDataProviderId));
                             mainData.add(currentAggregator);
 
@@ -507,7 +511,7 @@ public class DefaultProjectManager extends ProjectManager {
                                 realLimit--;
                         }
                         if(currentDataProvider == null || isDifferentDataProvider(currentDataProvider,(DataSourceContainer)filteredDataList.get(i))){
-                            currentDataProvider = parseDataProviderEuropeana(RepoxServiceImpl.getRepoxManager().getDataManager().
+                            currentDataProvider = parseDataProvider(RepoxServiceImpl.getRepoxManager().getDataManager().
                                     getDataProviderParent(((DataSourceContainer) filteredDataList.get(i)).getDataSource().getId()),
                                     currentAggregator);
                             currentAggregator.add(currentDataProvider);
@@ -531,6 +535,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public int getFilteredDataSize(){
         return filteredDataSize;
     }
@@ -562,6 +567,7 @@ public class DefaultProjectManager extends ProjectManager {
      Save Europeana Functions
      **********************************************************/
 
+    @Override
     public SaveDataResponse saveDataProvider(boolean update, DataProviderUI dataProviderUI, int pageSize, String username) throws ServerSideException {
         try{
             return DefaultSaveData.saveDataProvider(update, dataProviderUI,pageSize,username);
@@ -571,6 +577,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public SaveDataResponse moveDataProvider(List<DataProviderUI> dataProviders, ModelData aggregatorUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
@@ -591,6 +598,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public String deleteDataProviders(List<DataProviderUI> dataProviderUIs) throws ServerSideException{
         try{
             return DefaultSaveData.deleteDataProviders(dataProviderUIs);
@@ -600,6 +608,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException {
         try{
             return DefaultSaveData.saveDataSource(update, type, originalDSset, dataSourceUI,pageSize);
@@ -609,6 +618,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public String addAllOAIURL(String url,String dataProviderID,String dsSchema,String dsNamespace,
                                String dsMTDFormat, String name, String nameCode, String exportPath,DataSetOperationsServiceImpl dataSetOperationsService) throws ServerSideException{
         try{
@@ -628,6 +638,7 @@ public class DefaultProjectManager extends ProjectManager {
         return "SUCCESS";
     }
 
+    @Override
     public SaveDataResponse moveDataSources(List<DataSourceUI> dataSourceUIs, ModelData dataProviderUI, int pageSize) throws ServerSideException{
         SaveDataResponse saveDataResponse = new SaveDataResponse();
         try {
@@ -651,6 +662,7 @@ public class DefaultProjectManager extends ProjectManager {
         return saveDataResponse;
     }
 
+    @Override
     public String deleteDataSources(List<DataSourceUI> dataSourceUIs) throws ServerSideException{
         try{
             return DefaultSaveData.deleteDataSources(dataSourceUIs);
@@ -660,6 +672,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public Boolean dataSourceExport(DataSourceUI dataSourceUI) throws ServerSideException{
         try {
             DefaultRepoxManager repoxManagerEuropeana = (DefaultRepoxManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager();
@@ -682,6 +695,7 @@ public class DefaultProjectManager extends ProjectManager {
         return true;
     }
 
+    @Override
     public List<OldTaskUI> getParsedOldTasks(List<FilterQuery> filterQueries) throws ServerSideException{
         try{
             List<OldTaskUI> oldTaskUIs = new ArrayList<OldTaskUI>();
@@ -756,6 +770,7 @@ public class DefaultProjectManager extends ProjectManager {
         return newDataSourceUI;
     }
 
+    @Override
     public String sendFeedbackEmail(String userEmail, String title, String message, String messageType) throws ServerSideException {
         try {
 //            String fromEmail = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getDefaultEmail();
@@ -777,6 +792,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public ResponseState sendUserDataEmail(String username, String email, String password) throws ServerSideException {
         try {
             // Europeana
@@ -799,13 +815,14 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public boolean isCorrectAggregator(String dataSetId, String aggregatorId) throws ServerSideException{
         String parentDataProviderId = RepoxServiceImpl.
                 getRepoxManager().getDataManager().getDataProviderParent(dataSetId).getId();
         return ((DefaultDataManager)RepoxServiceImpl.getRepoxManager().getDataManager()).getAggregatorParent(parentDataProviderId).getId().equals(aggregatorId);
     }
 
-    private AggregatorUI parseAggregatorEuropeana(Aggregator aggregatorEuropeana)  throws ServerSideException{
+    private AggregatorUI parseAggregator(Aggregator aggregatorEuropeana)  throws ServerSideException{
         String url;
         if(aggregatorEuropeana.getHomepage() != null)
             url = aggregatorEuropeana.getHomepage().toString();
@@ -815,26 +832,27 @@ public class DefaultProjectManager extends ProjectManager {
                 aggregatorEuropeana.getName(),aggregatorEuropeana.getNameCode(),url);
     }
 
-    private DataProviderUI parseDataProviderEuropeana(DataProvider dataProvider, AggregatorUI aggregatorUI)  throws ServerSideException{
-        DataProvider dataProviderEuropeana = dataProvider;
+    private DataProviderUI parseDataProvider(DataProvider dataProvider, AggregatorUI aggregatorUI)  throws ServerSideException{
+        DataProvider provider = dataProvider;
         String country;
-        if(dataProviderEuropeana.getCountry() != null)
-            country = dataProviderEuropeana.getCountry();
+        if(provider.getCountryCode() != null)
+            country = provider.getCountryCode();
         else
             country = "none";
 
-        DataProviderUI newDataProviderUI = new DataProviderUI(dataProviderEuropeana.getId(),dataProviderEuropeana.getName(),
+        DataProviderUI newDataProviderUI = new DataProviderUI(provider.getId(),provider.getName(),
                 country, (country != null && !country.equals("")) ? Countries.getCountries().get(country) : "");
-        newDataProviderUI.setName(dataProviderEuropeana.getName());
-        newDataProviderUI.setNameCode(dataProviderEuropeana.getNameCode());
-        newDataProviderUI.setDescription(dataProviderEuropeana.getDescription());
-        if(dataProviderEuropeana.getHomepage() != null)
-            newDataProviderUI.setHomepage(dataProviderEuropeana.getHomepage().toString());
-        newDataProviderUI.setType(dataProviderEuropeana.getProviderType().name());
+        newDataProviderUI.setName(provider.getName());
+        newDataProviderUI.setNameCode(provider.getNameCode());
+        newDataProviderUI.setDescription(provider.getDescription());
+        if(provider.getHomepage() != null)
+            newDataProviderUI.setHomepage(provider.getHomepage().toString());
+        newDataProviderUI.setType(provider.getProviderType().name());
         newDataProviderUI.setParentAggregatorID(aggregatorUI.getId());
         return newDataProviderUI;
     }
 
+    @Override
     public DataSourceUI getDataSetInfo(String dataSetId) throws ServerSideException{
         try{
             DataProvider dataProvider = RepoxServiceImpl.getRepoxManager().getDataManager().
@@ -851,6 +869,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public List<ModelData> getAllAggregators() throws ServerSideException{
         List<ModelData> aggregators = new ArrayList<ModelData>();
         List<Object> allDataList = RepoxServiceImpl.getRepoxManager().getDataManager().getAllDataList();
@@ -916,6 +935,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public String deleteAggregators(List<AggregatorUI> aggregatorUIs) throws ServerSideException{
         try {
             for (AggregatorUI aggregatorUI : aggregatorUIs) {
@@ -935,6 +955,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public List<BaseSearchResult> getMainGridSearchResults(String searchValue, List<FilterQuery> filterQueries) throws ServerSideException{
         List<BaseSearchResult> searchData = new ArrayList<BaseSearchResult>();
         try{
@@ -980,6 +1001,7 @@ public class DefaultProjectManager extends ProjectManager {
         }
     }
 
+    @Override
     public int getDataPage(String id, int pageSize){
         try{
             List<Object> allDataList = RepoxServiceImpl.getRepoxManager().getDataManager().getAllDataList();

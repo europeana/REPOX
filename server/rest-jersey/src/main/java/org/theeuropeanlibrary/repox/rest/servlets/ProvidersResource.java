@@ -110,19 +110,7 @@ public class ProvidersResource {
         if (provider == null)
             throw new DoesNotExistException("Provider with id " + providerId + " does NOT exist!");
 
-        String country = null;
-        Map<String, String> countries = Countries.getCountries();
-        for (Map.Entry<String, String> countryMap : countries.entrySet())
-        {
-            if (countryMap.getKey().equalsIgnoreCase(provider.getCountry()))
-                country = countryMap.getValue();
-        }
-        if (country == null)
-            return provider;
-        else
-            //Change the country code to the real name
-            return new DataProvider(provider.getId(), provider.getName(), country, provider.getDescription(), provider.getDataSourceContainers(), provider.getNameCode(), provider.getHomepage(),
-                    provider.getProviderType(), provider.getEmail());
+        return provider;
     }
 
     /**
@@ -156,6 +144,7 @@ public class ProvidersResource {
         String providerId = provider.getId();
         String name = provider.getName();
         String country = provider.getCountry();
+        String countryCode = provider.getCountryCode();
         String description = provider.getDescription();
         String nameCode = provider.getNameCode();
         String homepage = provider.getHomepage();
@@ -165,23 +154,45 @@ public class ProvidersResource {
         String email = provider.getEmail();
 
         if (name == null || name.isEmpty())
-            throw new MissingArgumentsException("Missing value: " + "Provider name must not be empty");
-        else if (country == null || country.equals(""))
-            throw new MissingArgumentsException("Missing value: " + "Provider country must not be empty");
+            throw new MissingArgumentsException("Missing value: " + "Provider name must not be empty.");
+        else if ((country == null || country.equals("")) && (countryCode == null || countryCode.equals("")))
+            throw new MissingArgumentsException("Missing value: " + "Provider country or countryCode must not be empty.");
         else if (providerType == null || providerType.equals(""))
-            throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty");
+            throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty.");
 
-        //Change the real name to the country code 
         Map<String, String> countries = Countries.getCountries();
-        for (Map.Entry<String, String> countryMap : countries.entrySet())
+        if (countryCode != null && !countryCode.equals(""))
         {
-            if (countryMap.getValue().equalsIgnoreCase(country))
-                country = countryMap.getKey();
+            boolean flag = false;
+            for (Map.Entry<String, String> mapEntry : countries.entrySet())
+                if (mapEntry.getKey().equalsIgnoreCase(countryCode))
+                {
+                    country = mapEntry.getValue();
+                    countryCode = mapEntry.getKey();
+                    flag = true;
+                    break;
+                }
+            if(!flag)
+                throw new InvalidArgumentsException("Invalid argument: " + "Provider countryCode doesn't exist.");
+        }
+        else if (country != null && !country.equals(""))
+        {
+            boolean flag = false;
+            for (Map.Entry<String, String> mapEntry : countries.entrySet())
+                if (mapEntry.getValue().equalsIgnoreCase(country))
+                {
+                    country = mapEntry.getValue();
+                    countryCode = mapEntry.getKey();
+                    flag = true;
+                    break;
+                }
+            if(!flag)
+                throw new InvalidArgumentsException("Invalid argument: " + "Provider country doesn't exist.");
         }
 
         DataProvider createdProvider = null;
         try {
-            createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, description, nameCode, homepage, providerType, email);
+            createdProvider = dataManager.createDataProvider(aggregatorId, providerId, name, country, countryCode, description, nameCode, homepage, providerType, email);
         } catch (IOException e) {
             throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         } catch (InvalidArgumentsException e) { //This happens when the URL is invalid
@@ -254,6 +265,7 @@ public class ProvidersResource {
         String newProviderId = provider.getId();
         String name = provider.getName();
         String country = provider.getCountry();
+        String countryCode = provider.getCountryCode();
         String description = provider.getDescription();
         String nameCode = provider.getNameCode();
         String homepage = provider.getHomepage();
@@ -264,21 +276,43 @@ public class ProvidersResource {
 
         if (name == null || name.isEmpty())
             throw new MissingArgumentsException("Missing value: " + "Provider name must not be empty.");
-        else if (country == null || country.equals(""))
-            throw new MissingArgumentsException("Missing value: " + "Provider country must not be empty.");
+        else if ((country == null || country.equals("")) && (countryCode == null || countryCode.equals("")))
+            throw new MissingArgumentsException("Missing value: " + "Provider country or countryCode must not be empty.");
         else if (providerType == null || providerType.equals(""))
             throw new MissingArgumentsException("Missing value: " + "Provider dataSetType must not be empty.");
 
-        //Change the real name to the country code
         Map<String, String> countries = Countries.getCountries();
-        for (Map.Entry<String, String> countryMap : countries.entrySet())
+        if (countryCode != null && !countryCode.equals(""))
         {
-            if (countryMap.getValue().equalsIgnoreCase(country))
-                country = countryMap.getKey();
+            boolean flag = false;
+            for (Map.Entry<String, String> mapEntry : countries.entrySet())
+                if (mapEntry.getKey().equalsIgnoreCase(countryCode))
+                {
+                    country = mapEntry.getValue();
+                    countryCode = mapEntry.getKey();
+                    flag = true;
+                    break;
+                }
+            if(!flag)
+                throw new InvalidArgumentsException("Invalid argument: " + "Provider countryCode doesn't exist.");
+        }
+        else if (country != null && !country.equals(""))
+        {
+            boolean flag = false;
+            for (Map.Entry<String, String> mapEntry : countries.entrySet())
+                if (mapEntry.getValue().equalsIgnoreCase(country))
+                {
+                    country = mapEntry.getValue();
+                    countryCode = mapEntry.getKey();
+                    flag = true;
+                    break;
+                }
+            if(!flag)
+                throw new InvalidArgumentsException("Invalid argument: " + "Provider country doesn't exist.");
         }
 
         try {
-            dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, description, nameCode, homepage, providerType, email);
+            dataManager.updateDataProvider(newAggregatorId, providerId, newProviderId, name, country, countryCode, description, nameCode, homepage, providerType, email);
         } catch (ObjectNotFoundException e) {
             throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         } catch (IOException e) {
@@ -327,19 +361,6 @@ public class ProvidersResource {
             throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
-        }
-        
-        Map<String, String> countries = Countries.getCountries();
-        for(DataProvider dataProvider : providersListSorted)
-        {
-            String country = null;
-            for (Map.Entry<String, String> countryMap : countries.entrySet())
-            {
-                if (countryMap.getKey().equalsIgnoreCase(dataProvider.getCountry()))
-                    country = countryMap.getValue();
-            }
-            if (country != null)
-                dataProvider.setCountry(country);
         }
 
         return Response.status(200).entity(new GenericEntity<List<DataProvider>>(providersListSorted) {

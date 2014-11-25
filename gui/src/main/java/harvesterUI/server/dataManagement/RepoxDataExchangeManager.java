@@ -312,8 +312,8 @@ public class RepoxDataExchangeManager {
 
     public static DataProviderUI parseDataProvider(DataProvider dataProvider)  throws ServerSideException{
         String country;
-        if(dataProvider.getCountry() != null)
-            country = dataProvider.getCountry();
+        if(dataProvider.getCountryCode() != null)
+            country = dataProvider.getCountryCode();
         else
             country = "none";
 

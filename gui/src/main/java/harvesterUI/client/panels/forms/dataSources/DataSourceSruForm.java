@@ -182,7 +182,7 @@ public class DataSourceSruForm extends DataSourceForm {
         String desc = description.getValue();
         if(dataSourceUI == null) {
             dataSourceUI = new DataSourceUI(parent, desc.trim(), "", metadataFormat + " | ese", "SRU " + metadataFormat.trim(),
-                    parent.getCountry(),desc.trim(), "", "", "","", IdGeneratedRecordIdPolicy.IDGENERATED,metadataFormat);
+                    parent.getCountryCode(),desc.trim(), "", "", "","", IdGeneratedRecordIdPolicy.IDGENERATED,metadataFormat);
         }
 
         dataSourceUI.setIngest("SRU " + metadataFormat.trim());

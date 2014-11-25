@@ -21,6 +21,112 @@ Api Version: 0.0.1-SNAPSHOT
 ## APIs
 ### /aggregators
 
+#### **OPTIONS** `/aggregators`
+##### getOptions 
+
+Get options over aggregator conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+
+###### Response
+[AggregatorOptions](#AggregatorOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **POST** `/aggregators`
+##### createAggregator 
+
+Create an aggregator.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#aggregator">aggregator</a></td>
+        <td>true</td>
+        <td>Aggregator data</td>
+    </tr>
+</table>
+
+###### Response
+[string](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 201    | Created (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
+#### **GET** `/aggregators`
+##### getAggregatorList 
+
+Get a list of aggregators.
+
+
+###### URL
+http://localhost:8080/repox/rest/aggregators
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>false</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>false</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[aggregator]](#aggregator)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of aggregators) | - |
+| 400    | InvalidArgumentsException | - |
+
+
+- - -
 #### **GET** `/aggregators/{aggregatorId}`
 ##### getAggregator 
 
@@ -155,15 +261,54 @@ http://localhost:8080/repox/rest/aggregators/{aggregatorId}
 
 
 - - -
-#### **POST** `/aggregators`
-##### createAggregator 
+### /datasets
 
-Create an aggregator.
+#### **OPTIONS** `/datasets`
+##### getOptions 
+
+Get options over datasets conext.
 
 
 ###### URL
-http://localhost:8080/repox/rest/aggregators
+http://localhost:8080/repox/rest/datasets
 ###### Parameters
+
+###### Response
+[DatasetOptions](#DatasetOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **POST** `/datasets`
+##### createDataset 
+
+Create a dataset.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>providerId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>ProviderId</td>
+    </tr>
+</table>
 - body
 
 <table border="1">
@@ -175,9 +320,9 @@ http://localhost:8080/repox/rest/aggregators
     </tr>
     <tr>
         <th>body</th>
-        <td><a href="#aggregator">aggregator</a></td>
+        <td><a href="#datasetContainer">datasetContainer</a></td>
         <td>true</td>
-        <td>Aggregator data</td>
+        <td>Dataset data</td>
     </tr>
 </table>
 
@@ -190,20 +335,21 @@ http://localhost:8080/repox/rest/aggregators
 |-------------|-------------|----------------|
 | 201    | Created (Response containing a String message) | - |
 | 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 | 406    | MissingArgumentsException | - |
 | 409    | AlreadyExistsException | - |
 | 500    | InternalServerErrorException | - |
 
 
 - - -
-#### **GET** `/aggregators`
-##### getAggregatorList 
+#### **GET** `/datasets`
+##### getDatasetList 
 
-Get a list of aggregators.
+Get a list of datasets.
 
 
 ###### URL
-http://localhost:8080/repox/rest/aggregators
+http://localhost:8080/repox/rest/datasets
 ###### Parameters
 - query
 
@@ -215,54 +361,38 @@ http://localhost:8080/repox/rest/aggregators
         <th>Description</th>
     </tr>
     <tr>
+        <th>providerId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>ProviderId</td>
+    </tr>
+    <tr>
         <th>offset</th>
         <td>int</td>
-        <td>false</td>
+        <td>true</td>
         <td>Index where to start from</td>
     </tr>
     <tr>
         <th>number</th>
         <td>int</td>
-        <td>false</td>
+        <td>true</td>
         <td>Number of aggregators requested</td>
     </tr>
 </table>
 
 ###### Response
-[List[aggregator]](#aggregator)
+[List[datasetContainer]](#datasetContainer)
 
 
 ###### Response Codes
 | Status Code | Reason      | Response Model |
 |-------------|-------------|----------------|
-| 200    | OK (Response containing a list of aggregators) | - |
+| 200    | OK (Response containing a list of datasets) | - |
 | 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
 
 
 - - -
-#### **OPTIONS** `/aggregators`
-##### getOptions 
-
-Get options over aggregator conext.
-
-
-###### URL
-http://localhost:8080/repox/rest/aggregators
-###### Parameters
-
-###### Response
-[AggregatorOptions](#AggregatorOptions)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
-### /datasets
-
 #### **GET** `/datasets/{datasetId}`
 ##### getDataset 
 
@@ -456,136 +586,6 @@ http://localhost:8080/repox/rest/datasets/{datasetId}
 
 
 - - -
-#### **POST** `/datasets`
-##### createDataset 
-
-Create a dataset.
-
-
-###### URL
-http://localhost:8080/repox/rest/datasets
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>providerId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>ProviderId</td>
-    </tr>
-</table>
-- body
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>body</th>
-        <td><a href="#datasetContainer">datasetContainer</a></td>
-        <td>true</td>
-        <td>Dataset data</td>
-    </tr>
-</table>
-
-###### Response
-[string](#)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 201    | Created (Response containing a String message) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
-| 406    | MissingArgumentsException | - |
-| 409    | AlreadyExistsException | - |
-| 500    | InternalServerErrorException | - |
-
-
-- - -
-#### **GET** `/datasets`
-##### getDatasetList 
-
-Get a list of datasets.
-
-
-###### URL
-http://localhost:8080/repox/rest/datasets
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>providerId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>ProviderId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[datasetContainer]](#datasetContainer)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of datasets) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
-
-
-- - -
-#### **OPTIONS** `/datasets`
-##### getOptions 
-
-Get options over datasets conext.
-
-
-###### URL
-http://localhost:8080/repox/rest/datasets
-###### Parameters
-
-###### Response
-[DatasetOptions](#DatasetOptions)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
 #### **GET** `/datasets/{datasetId}/date`
 ##### getDatasetLastIngestionDate 
 
@@ -666,6 +666,27 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/count
 - - -
 ### /harvest
 
+#### **OPTIONS** `/datasets/harvest`
+##### getOptions 
+
+Get options over harvest conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/datasets/harvest
+###### Parameters
+
+###### Response
+[HarvestOptions](#HarvestOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
 #### **POST** `/datasets/{datasetId}/harvest/start`
 ##### startHarvest 
 
@@ -957,27 +978,6 @@ http://localhost:8080/repox/rest/datasets/{datasetId}/harvest/status
 
 
 - - -
-#### **OPTIONS** `/datasets/harvest`
-##### getOptions 
-
-Get options over harvest conext.
-
-
-###### URL
-http://localhost:8080/repox/rest/datasets/harvest
-###### Parameters
-
-###### Response
-[HarvestOptions](#HarvestOptions)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
 ### /options
 
 #### **OPTIONS** `/options`
@@ -1003,6 +1003,136 @@ http://localhost:8080/repox/rest/options
 - - -
 ### /providers
 
+#### **OPTIONS** `/providers`
+##### getOptions 
+
+Get options over providers conext.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+
+###### Response
+[ProviderOptions](#ProviderOptions)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of all available options) | - |
+
+
+- - -
+#### **GET** `/providers`
+##### getProviderList 
+
+Get a list of providers.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+    <tr>
+        <th>offset</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Index where to start from</td>
+    </tr>
+    <tr>
+        <th>number</th>
+        <td>int</td>
+        <td>true</td>
+        <td>Number of aggregators requested</td>
+    </tr>
+</table>
+
+###### Response
+[List[dataprovider]](#dataprovider)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 200    | OK (Response containing a list of providers) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
+
+
+- - -
+#### **POST** `/providers`
+##### createProvider 
+
+Create a provider.
+
+
+###### URL
+http://localhost:8080/repox/rest/providers
+###### Parameters
+- query
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>aggregatorId</th>
+        <td>string</td>
+        <td>true</td>
+        <td>AggregatorId</td>
+    </tr>
+</table>
+- body
+
+<table border="1">
+    <tr>
+        <th>Parameter</th>
+        <th>Data Type</th>
+        <th>Required</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th>body</th>
+        <td><a href="#dataprovider">dataprovider</a></td>
+        <td>true</td>
+        <td>Provider data</td>
+    </tr>
+</table>
+
+###### Response
+[string](#)
+
+
+###### Response Codes
+| Status Code | Reason      | Response Model |
+|-------------|-------------|----------------|
+| 201    | Created (Response containing a String message) | - |
+| 400    | InvalidArgumentsException | - |
+| 404    | DoesNotExistException | - |
+| 406    | MissingArgumentsException | - |
+| 409    | AlreadyExistsException | - |
+| 500    | InternalServerErrorException | - |
+
+
+- - -
 #### **GET** `/providers/{providerId}`
 ##### getProvider 
 
@@ -1150,136 +1280,6 @@ http://localhost:8080/repox/rest/providers/{providerId}
 | 404    | DoesNotExistException | - |
 | 406    | MissingArgumentsException | - |
 | 500    | InternalServerErrorException | - |
-
-
-- - -
-#### **OPTIONS** `/providers`
-##### getOptions 
-
-Get options over providers conext.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-
-###### Response
-[ProviderOptions](#ProviderOptions)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of all available options) | - |
-
-
-- - -
-#### **POST** `/providers`
-##### createProvider 
-
-Create a provider.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-</table>
-- body
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>body</th>
-        <td><a href="#dataprovider">dataprovider</a></td>
-        <td>true</td>
-        <td>Provider data</td>
-    </tr>
-</table>
-
-###### Response
-[string](#)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 201    | Created (Response containing a String message) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
-| 406    | MissingArgumentsException | - |
-| 409    | AlreadyExistsException | - |
-| 500    | InternalServerErrorException | - |
-
-
-- - -
-#### **GET** `/providers`
-##### getProviderList 
-
-Get a list of providers.
-
-
-###### URL
-http://localhost:8080/repox/rest/providers
-###### Parameters
-- query
-
-<table border="1">
-    <tr>
-        <th>Parameter</th>
-        <th>Data Type</th>
-        <th>Required</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <th>aggregatorId</th>
-        <td>string</td>
-        <td>true</td>
-        <td>AggregatorId</td>
-    </tr>
-    <tr>
-        <th>offset</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Index where to start from</td>
-    </tr>
-    <tr>
-        <th>number</th>
-        <td>int</td>
-        <td>true</td>
-        <td>Number of aggregators requested</td>
-    </tr>
-</table>
-
-###### Response
-[List[dataprovider]](#dataprovider)
-
-
-###### Response Codes
-| Status Code | Reason      | Response Model |
-|-------------|-------------|----------------|
-| 200    | OK (Response containing a list of providers) | - |
-| 400    | InvalidArgumentsException | - |
-| 404    | DoesNotExistException | - |
 
 
 - - -
@@ -1545,7 +1545,14 @@ http://localhost:8080/repox/rest/providers
     <tr>
     	<td>country</td>
         <td>string</td>
-        <td>required</td>
+        <td>optional</td>
+        <td>-</td>
+        <td>any</td>
+    </tr>
+    <tr>
+    	<td>countryCode</td>
+        <td>string</td>
+        <td>optional</td>
         <td>-</td>
         <td>any</td>
     </tr>

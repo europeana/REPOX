@@ -21,10 +21,10 @@ public class DataProviderUI extends DataContainer {
 
     public DataProviderUI() {}
 
-    public DataProviderUI(String id, String name, String country, String countryName) {
+    public DataProviderUI(String id, String name, String countryCode, String countryName) {
         super(id);
         set("name", name);
-        set("country", country);
+        set("country", countryCode);
         set("countryName", countryName);
 
         dataSourceUIList = new ArrayList<DataSourceUI>();
@@ -88,8 +88,8 @@ public class DataProviderUI extends DataContainer {
         set("name",name);
     }
 
-    public void setCountry(String country) {
-        set("country",country);
+    public void setCountryCode(String countryCode) {
+        set("country",countryCode);
     }
 
     public void setCountryName(String countryName) {
@@ -120,8 +120,12 @@ public class DataProviderUI extends DataContainer {
         return (String) get("nameCode");
     }
 
-    public String getCountry() {
+    public String getCountryCode() {
         return (String) get("country");
+    }
+    
+    public String getCountryName() {
+        return (String) get("countryName");
     }
 
     // Data Provider only

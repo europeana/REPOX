@@ -107,14 +107,14 @@ public class DefaultStatisticsManager implements StatisticsManager {
                 }
 
                 DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSourceContainer.getDataSource().getId());
-                if (dataProviderParent.getCountry() != null) {
+                if (dataProviderParent.getCountryCode() != null) {
                     int countryRecordsTotal = dataSourceCount;
 
-                    if (countriesRecords.get(dataProviderParent.getCountry()) != null) {
-                        countryRecordsTotal += countriesRecords.get(dataProviderParent.getCountry());
+                    if (countriesRecords.get(dataProviderParent.getCountryCode()) != null) {
+                        countryRecordsTotal += countriesRecords.get(dataProviderParent.getCountryCode());
                     }
 
-                    countriesRecords.put(dataProviderParent.getCountry(), countryRecordsTotal);
+                    countriesRecords.put(dataProviderParent.getCountryCode(), countryRecordsTotal);
                 }
 
                 recordsTotal += dataSourceCount;

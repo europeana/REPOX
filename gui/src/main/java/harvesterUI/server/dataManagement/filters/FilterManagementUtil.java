@@ -89,7 +89,7 @@ public class FilterManagementUtil {
     }
 
     public void compareDataProviderValues(DataProvider dataProvider, FilterQuery filterQuery, List<Object> dataToRemove){
-        Boolean result = isSameCountry(dataProvider.getCountry(), filterQuery);
+        Boolean result = isSameCountry(dataProvider.getCountryCode(), filterQuery);
         if(result != null && !result)
             deleteDataProviderFromList(dataProvider, dataToRemove);
 

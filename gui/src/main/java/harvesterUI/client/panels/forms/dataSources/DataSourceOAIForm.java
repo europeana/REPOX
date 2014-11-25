@@ -384,7 +384,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         String desc = description.getValue();
         if(dataSourceUI == null) {
             dataSourceUI = new DataSourceUI(parent, desc.trim(), "", metadataFormat + " | ese", "OAI-PMH " + metadataFormat.trim(),
-                    parent.getCountry(),desc.trim(), "", oai_url.trim(), oai_set != null ? oai_set.trim() : "",
+                    parent.getCountryCode(),desc.trim(), "", oai_url.trim(), oai_set != null ? oai_set.trim() : "",
                     "", IdGeneratedRecordIdPolicy.IDGENERATED,metadataFormat);
         }
 

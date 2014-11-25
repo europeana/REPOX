@@ -141,7 +141,7 @@ public class DataSourceZ39Form extends DataSourceForm {
 
         String desc = description.getValue();
         if(dataSourceUI == null) {
-            dataSourceUI = new DataSourceUI(parent,desc.trim(), "", "", "Z3950 MarcXchange",parent.getCountry().trim(),desc.trim(),
+            dataSourceUI = new DataSourceUI(parent,desc.trim(), "", "", "Z3950 MarcXchange",parent.getCountryCode().trim(),desc.trim(),
                     "", "", "","", idPolicy.trim(), "");
         }
 

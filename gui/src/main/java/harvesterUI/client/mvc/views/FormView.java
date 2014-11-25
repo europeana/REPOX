@@ -11,10 +11,9 @@ import harvesterUI.client.HarvesterUI;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.panels.dataSourceView.ChooseDataSetDialog;
 import harvesterUI.client.panels.forms.AggregatorForm;
-import harvesterUI.client.panels.forms.dataProviders.DataProviderEuropeanaForm;
+import harvesterUI.client.panels.forms.dataProviders.DefaultDataProviderForm;
 import harvesterUI.client.panels.forms.dataProviders.DataProviderForm;
 import harvesterUI.client.panels.forms.dataProviders.DataProviderImportForm;
-import harvesterUI.client.panels.forms.dataProviders.DataProviderLightForm;
 import harvesterUI.client.panels.forms.dataSources.DataSourceForm;
 import harvesterUI.client.panels.forms.dataSources.DataSourceTabPanel;
 import harvesterUI.client.panels.mdr.forms.NewSchemaDialog;
@@ -24,7 +23,6 @@ import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.mdr.SchemaUI;
 import harvesterUI.shared.mdr.TransformationUI;
-import pt.utl.ist.util.shared.ProjectType;
 
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
@@ -128,13 +126,13 @@ public class FormView extends View {
         newSchemaDialog = new NewSchemaDialog();
         dataSourceTabPanel = new DataSourceTabPanel();
 
-        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
+//        if(HarvesterUI.getProjectType() == ProjectType.DEFAULT){
             aggregatorForm = new AggregatorForm();
-            dataProviderForm = new DataProviderEuropeanaForm();
-        }else{
-            aggregatorForm = null;
-            dataProviderForm = new DataProviderLightForm();
-        }
+            dataProviderForm = new DefaultDataProviderForm();
+//        }else{
+//            aggregatorForm = null;
+//            dataProviderForm = new DataProviderLightForm();
+//        }
 
         dataProviderImportForm = new DataProviderImportForm();
     }

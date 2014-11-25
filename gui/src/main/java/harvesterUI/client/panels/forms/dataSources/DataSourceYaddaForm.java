@@ -180,7 +180,7 @@ public class DataSourceYaddaForm extends DataSourceForm {
 
         if(dataSourceUI == null) {
             dataSourceUI = new DataSourceUI(parent, desc.trim(), "", metadataFormat.trim() + " | ese", "Folder " + metadataFormat.trim(),
-                    parent.getCountry().trim(),desc.trim(), "", "", "",
+                    parent.getCountryCode().trim(),desc.trim(), "", "", "",
                     "", idPolicy.trim(), metadataFormat.trim());
         }
 

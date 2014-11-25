@@ -52,12 +52,12 @@ public interface DataManager {
     List<Aggregator> getAggregatorsListSorted(int offset, int number) throws IndexOutOfBoundsException;
 
     //********************DATA PROVIDER's ********************/
-    DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String description, String nameCode,
+    DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String countryCode, String description, String nameCode,
             String homepage, String dataSetType, String email) throws InvalidArgumentsException, AlreadyExistsException, IOException, ObjectNotFoundException;
 
     DataProvider createDataProvider(String name, String country, String description) throws IOException, AlreadyExistsException;
 
-    DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String description, String nameCode, String homepage,
+    DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String countryCode, String description, String nameCode, String homepage,
             String dataSetType, String email) throws ObjectNotFoundException, InvalidArgumentsException, IOException, AlreadyExistsException;
 
     DataProvider updateDataProvider(String id, String name, String country, String description);

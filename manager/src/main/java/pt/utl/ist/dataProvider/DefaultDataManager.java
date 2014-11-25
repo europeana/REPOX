@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.InternalServerErrorException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -1005,7 +1003,7 @@ public class DefaultDataManager implements DataManager {
      * @throws InvalidArgumentsException 
      */
     @Override
-    public DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String description, String nameCode,
+    public DataProvider createDataProvider(String aggregatorId, String providerId, String name, String country, String countryCode, String description, String nameCode,
             String homepage, String dataSetType, String email) throws InvalidArgumentsException, AlreadyExistsException, IOException, ObjectNotFoundException {
         Aggregator aggregator = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager())
                 .getAggregator(aggregatorId);
@@ -1014,6 +1012,7 @@ public class DefaultDataManager implements DataManager {
             DataProvider newDataProvider = new DataProvider();
             newDataProvider.setName(name);
             newDataProvider.setCountry(country);
+            newDataProvider.setCountryCode(countryCode);
             newDataProvider.setDescription(description);
             newDataProvider.setNameCode(nameCode);
             newDataProvider.setEmail(email);
@@ -1162,7 +1161,7 @@ public class DefaultDataManager implements DataManager {
      * @throws AlreadyExistsException 
      */
     @Override
-    public DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String description, String nameCode, String homepage,
+    public DataProvider updateDataProvider(String newAggregatorId, String providerId, String newProviderId, String name, String country, String countryCode, String description, String nameCode, String homepage,
             String dataSetType, String email) throws InvalidArgumentsException, IOException, ObjectNotFoundException, AlreadyExistsException
     {
         DataProvider dataProvider = getDataProvider(providerId);
@@ -1179,6 +1178,8 @@ public class DefaultDataManager implements DataManager {
                 dataProvider.setName(name);
             if (country != null)
                 dataProvider.setCountry(country);
+            if (countryCode != null)
+                dataProvider.setCountryCode(countryCode);
             if (description != null)
                 dataProvider.setDescription(description);
             if (nameCode != null)

@@ -512,7 +512,8 @@ public class DefaultSaveData {
         if(update) {
             DataProvider dataProvider = defaultManager.getDataProvider(dataProviderUI.getId());
             if(dataProvider != null) {
-                dataProvider.setCountry(dataProviderUI.getCountry());
+                dataProvider.setCountryCode(dataProviderUI.getCountryCode());
+                dataProvider.setCountry(dataProviderUI.getCountryName());
                 dataProvider.setName(dataProviderUI.getName());
                 dataProvider.setDescription(dataProviderUI.getDescription());
                 dataProvider.setProviderType(ProviderType.valueOf(dataProviderUI.getType()));
@@ -521,7 +522,7 @@ public class DefaultSaveData {
 
                 try {
                     dataProvider = defaultManager.updateDataProvider(null, dataProvider.getId(), null, dataProviderUI.getName(),
-                            dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType(), null);
+                            dataProviderUI.getCountryName(), dataProviderUI.getCountryCode(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(), homepage, dataProviderUI.getType(), null);
                     UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                     saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(), pageSize));
                     saveDataResponse.setResponseState(ResponseState.SUCCESS);
@@ -539,7 +540,7 @@ public class DefaultSaveData {
         } else {
             try {
                 DataProvider dataProvider = defaultManager.createDataProvider(dataProviderUI.getParentAggregatorID(), null, dataProviderUI.getName(),
-                        dataProviderUI.getCountry(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(),
+                        dataProviderUI.getCountryName(), dataProviderUI.getCountryCode(), dataProviderUI.getDescription(), dataProviderUI.getNameCode(),
                         homepage, dataProviderUI.getType(), null);
                 UserManagementServiceImpl.getInstance().addDPtoUser(username,dataProvider.getId());
                 saveDataResponse.setPage(PagingUtil.getDataPage(dataProvider.getId(),pageSize));
