@@ -30,12 +30,9 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.MessageType;
-import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.IngestDataSource;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.ScheduledTask.Frequency;

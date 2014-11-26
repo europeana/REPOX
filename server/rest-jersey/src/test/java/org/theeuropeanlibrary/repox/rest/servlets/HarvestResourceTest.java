@@ -29,6 +29,7 @@ import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.DataSource.StatusDS;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
@@ -48,6 +49,7 @@ import pt.utl.ist.util.exceptions.ObjectNotFoundException;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Nov 17, 2014
  */
+//@Ignore
 public class HarvestResourceTest extends JerseyTest {
     DefaultDataManager dataManager;
     TaskManager        taskManager;
@@ -69,9 +71,9 @@ public class HarvestResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getOptions()}.
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 1;
+        int numberOfAvailableOptions = 9;
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + HarvestOptionListContainer.HARVEST);
 
         //Check xml options working
@@ -90,7 +92,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testStartHarvest() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
@@ -136,7 +138,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testCancelHarvest() throws Exception {
         String datasetId = "SampleId";
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL);
@@ -163,7 +165,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testScheduleHarvest() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
@@ -233,7 +235,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testGetDatasetScheduledTasks() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
@@ -262,7 +264,7 @@ public class HarvestResourceTest extends JerseyTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testDeleteScheduledTask() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
@@ -301,11 +303,40 @@ public class HarvestResourceTest extends JerseyTest {
     }
 
     /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getDatasetHarvestingStatus(String)}.
+     * @throws Exception
+     */
+    @Test
+    //    @Ignore
+    public void testGetDatasetHarvestingStatus() throws Exception {
+        String datasetId = "SampleId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.STATUS);
+
+        //Mocking
+        DataSource datasource = mock(DataSource.class);
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(datasource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenThrow(new IOException()).thenReturn(null).thenReturn(defaultDataSourceContainer);
+        when(datasource.getStatus()).thenReturn(StatusDS.OK);
+
+        //Internal Server Error    
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(500, response.getStatus());
+        //Non existent
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(404, response.getStatus());
+
+        //Valid
+        response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, response.getStatus());
+    }
+
+    /**
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getDatasetLastIngestLog(String)}.
      * @throws Exception
      */
     @Test
-    @Ignore
+    //    @Ignore
     public void testGetDatasetLastIngestLog() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
@@ -354,7 +385,7 @@ public class HarvestResourceTest extends JerseyTest {
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + HarvestOptionListContainer.HARVESTS);
 
         when(taskManager.getRunningTasks()).thenReturn(new ArrayList<Task>());
-        
+
         //Valid
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, response.getStatus());
