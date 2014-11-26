@@ -68,14 +68,13 @@ import pt.utl.ist.rest.statistics.DefaultStatisticsManager;
 import pt.utl.ist.rest.util.DefaultEmailUtil;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.OldTaskReviewer;
+import pt.utl.ist.util.Country;
 import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import com.extjs.gxt.ui.client.data.ModelData;
-
-import eu.europeana.definitions.domain.Country;
 
 /**
  * @author Edmundo

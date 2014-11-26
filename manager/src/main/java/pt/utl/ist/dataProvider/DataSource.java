@@ -6,6 +6,7 @@ package pt.utl.ist.dataProvider;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +37,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -53,6 +53,7 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -88,6 +89,7 @@ import pt.utl.ist.util.CompareUtil;
 import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.date.DateUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -290,11 +292,11 @@ public abstract class DataSource {
         return status;
         //return StatusDS.OK;
     }
-    
+
     public StatusDS getPreviousStatus() {
         return previousStatus;
     }
-    
+
     public void setPreviousStatus(StatusDS previousStatus) {
         this.previousStatus = previousStatus;
     }
@@ -414,7 +416,7 @@ public abstract class DataSource {
         } else {
             this.metadataTransformations = metadataTransformations;
         }
-        
+
         this.status = StatusDS.CREATED;
 
         initAccessPoints();
@@ -475,11 +477,11 @@ public abstract class DataSource {
 
             if (exitStatus.isSuccessful()) {
                 status = StatusDS.OK;
-//                if(full)
-//                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
+                //                if(full)
+                //                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
             } else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
-                if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
+                if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             } else if (exitStatus.isForceEmpty()) {
                 status = null;
@@ -491,7 +493,7 @@ public abstract class DataSource {
                 return exitStatus;
             } else {
                 status = StatusDS.ERROR;
-                if(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
+                if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
             }
             previousStatus = status;
@@ -656,6 +658,33 @@ public abstract class DataSource {
         File logFile = new File(logsMonthDir, taskId + "_" + DateFormatUtils.format(new Date(), TimeUtil.LONG_DATE_FORMAT_COMPACT) + ".log");
 
         return logFile;
+    }
+
+    @ApiModelProperty(hidden = true)
+    public String getLastLogDataSource() throws ObjectNotFoundException, IOException {
+        if (getLogFilenames().size() > 0) {
+            Element logElement;
+            File logFile = new File(getLogsDir(), getLogFilenames().get(0));
+            try {
+                SAXReader reader = new SAXReader();
+                org.dom4j.Document document = reader.read(logFile);
+                logElement = document.getRootElement();
+            } catch (DocumentException e) {
+                ArrayList<String> logFileContent = FileUtilSecond.readFile(new File(getLogsDir(), getLogFilenames().get(0)));
+
+                logElement = DocumentHelper.createElement("log");
+
+                for (String line : logFileContent) {
+                    logElement.addElement("line").addText(line);
+                }
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            XmlUtil.writePrettyPrint(baos, logElement);
+            return baos.toString();
+        }
+        else {
+            throw new ObjectNotFoundException("Log file NOT found!");
+        }
     }
 
     /**
@@ -1384,7 +1413,6 @@ public abstract class DataSource {
         }
     }
 
-    
     public static String generateId(String name) {
         String generatedIdPrefix = "";
 
@@ -1399,7 +1427,7 @@ public abstract class DataSource {
 
         return fullId;
     }
-    
+
     private static int generateNumberSufix(String basename) {
         int currentNumber = 0;
         String currentFullId = basename + currentNumber;
@@ -1417,7 +1445,7 @@ public abstract class DataSource {
 
         return currentNumber;
     }
-    
+
     /**
      * @param args
      * @throws Exception

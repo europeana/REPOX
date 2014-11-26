@@ -33,6 +33,7 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.task.DataSourceIngestTask;
 import pt.utl.ist.task.IngestDataSource;
 import pt.utl.ist.task.ScheduledTask;
@@ -387,6 +388,52 @@ public class HarvestResource {
             throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
 
         return Response.status(200).entity(new Result(dataSource.getStatus().toString())).build();
+    }
+    
+    /**
+     * Gets the logs of the last ingest.
+     * Relative path : /datasets/{datasetId}/harvest/log 
+     * @param datasetId 
+     * @return Log of last harvest
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG)
+//    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.TEXT_PLAIN})
+    @ApiOperation(value = "Gets the logs of the last ingest.", httpMethod = "GET", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public String getDatasetLastIngestLog(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId) throws DoesNotExistException {
+        
+        DataSourceContainer dataSourceContainer;
+        try {
+            dataSourceContainer = dataManager.getDataSourceContainer(datasetId);
+            if (dataSourceContainer == null)
+                throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        } catch (DocumentException | IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        DataSource dataSource = dataSourceContainer.getDataSource();
+        if (dataSource == null)
+            throw new DoesNotExistException("Dataset with id " + datasetId + " does NOT exist!");
+        
+        String log = "";
+        try {
+            log = dataSource.getLastLogDataSource();
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Log of dataset with id " + datasetId + " does NOT exist!");
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }        
+        
+        System.out.println(log);
+//        return Response.status(200).entity(log).build();
+        return log;
     }
 
 }

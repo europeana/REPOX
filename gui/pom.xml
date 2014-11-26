@@ -215,11 +215,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>eu.europeana</groupId>
-			<artifactId>definitions</artifactId>
-		</dependency>
-
 		<!--Ext GWT Libs -->
 		<dependency>
 			<groupId>gxt</groupId>
