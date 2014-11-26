@@ -32,8 +32,8 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ScheduledTask.class, name = "SCHEDULED")
 })
-@XmlSeeAlso({ ScheduledTask.class })
-@ApiModel(value = "A Task", discriminator = "taskType", subTypes = { ScheduledTask.class })
+@XmlSeeAlso({ ScheduledTask.class, DataSourceIngestTask.class, DataSourceExportTask.class })
+@ApiModel(value = "A Task", discriminator = "taskType", subTypes = { ScheduledTask.class, DataSourceIngestTask.class, DataSourceExportTask.class })
 public abstract class Task {
     private static final Logger log = Logger.getLogger(Task.class);
 

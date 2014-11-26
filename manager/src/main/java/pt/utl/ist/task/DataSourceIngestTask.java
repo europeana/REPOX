@@ -2,35 +2,56 @@ package pt.utl.ist.task;
 
 import org.dom4j.DocumentException;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.util.CompareUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  */
+@XmlRootElement(name = "DataSourceIngestTask")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "A DataSourceIngestTask")
 public class DataSourceIngestTask extends Task implements DataSourceTask {
     @Override
     protected int getNumberParameters() {
         return 3;
     }
 
+    @XmlElement
+    @ApiModelProperty
+    @Override
     public String getTaskId() {
         return getParameter(0);
     }
 
+    @Override
     public void setTaskId(String taskId) {
         setParameter(0, taskId);
     }
 
+    @XmlElement
+    @ApiModelProperty
+    @Override
     public String getDataSourceId() {
         return getParameter(1);
     }
 
+    @Override
     public void setDataSourceId(String dataSourceId) {
         setParameter(1, dataSourceId);
     }
 
+    @XmlElement
+    @ApiModelProperty
     public boolean getFullIngest() {
         return (getParameter(2) != null && Boolean.parseBoolean(getParameter(2)));
     }

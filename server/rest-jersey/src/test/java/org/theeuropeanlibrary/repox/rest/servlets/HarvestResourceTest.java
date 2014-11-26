@@ -8,6 +8,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TreeMap;
 
@@ -93,7 +94,8 @@ public class HarvestResourceTest extends JerseyTest {
     public void testStartHarvest() throws Exception {
         String providerId = "SampleProviderId";
         String datasetId = "SampleId";
-        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.START).queryParam("type", HarvestOptionListContainer.FULL);
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.START).queryParam("type",
+                HarvestOptionListContainer.FULL);
 
         //Mocking
         DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
@@ -110,7 +112,6 @@ public class HarvestResourceTest extends JerseyTest {
         //Non existent
         response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(null, MediaType.APPLICATION_XML), Response.class);
         assertEquals(404, response.getStatus());
-        
 
         doThrow(new IOException()).doThrow(new AlreadyExistsException("Task for dataSource with id : " + datasetId + " already exists!"))
                 .doThrow(new ObjectNotFoundException("Datasource with id " + datasetId + " NOT found!")).doNothing().when(dataManager).startIngestDataSource(datasetId, true, false);
@@ -297,6 +298,65 @@ public class HarvestResourceTest extends JerseyTest {
         //Valid
         response = target.request(MediaType.APPLICATION_JSON).delete();
         assertEquals(200, response.getStatus());
+    }
 
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getDatasetLastIngestLog(String)}.
+     * @throws Exception
+     */
+    @Test
+    @Ignore
+    public void testGetDatasetLastIngestLog() throws Exception {
+        String providerId = "SampleProviderId";
+        String datasetId = "SampleId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG);
+
+        //Mocking
+        DataProvider dataProvider = new DataProvider(providerId, "testName", "testCountry", "testDescription", null, "testNameCode", "testHomePage", ProviderType.LIBRARY, "SampleEmail");
+        OaiDataSource oaiDataSource = new OaiDataSource(dataProvider, "SampleId", "SampleDescription", "SampleSchema", "SampleNamespace", "SampleMetadataFormat", "SampleOaiSourceURL", "SampleOaiSet",
+                new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
+        oaiDataSource.setExportDir("/Sample/Export/Path");
+        oaiDataSource.setMarcFormat("SampleMarcFormat");
+        DefaultDataSourceContainer defaultDataSourceContainer = new DefaultDataSourceContainer(oaiDataSource, "SampleNameCode", "SampleName", "/Sample/Export/Path");
+
+        when(dataManager.getDataSourceContainer(datasetId)).thenThrow(new IOException()).thenReturn(null).thenReturn(defaultDataSourceContainer);
+
+        //Internal Server Error    
+        Response response = target.request(MediaType.TEXT_PLAIN).get();
+        assertEquals(500, response.getStatus());
+        //Non existent
+        response = target.request(MediaType.TEXT_PLAIN).get();
+        assertEquals(404, response.getStatus());
+
+        DataSource datasource = mock(DataSource.class);
+        defaultDataSourceContainer.setDataSource(datasource);
+        when(datasource.getLastLogDataSource()).thenThrow(new ObjectNotFoundException("Log file NOT found!")).thenThrow(new IOException()).thenReturn("Log lines...");
+
+        //Non existent
+        response = target.request(MediaType.TEXT_PLAIN).get();
+        assertEquals(404, response.getStatus());
+
+        //Internal Server Error    
+        response = target.request(MediaType.TEXT_PLAIN).get();
+        assertEquals(500, response.getStatus());
+
+        //Valid
+        response = target.request(MediaType.TEXT_PLAIN).get();
+        assertEquals(200, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.HarvestResource#getCurrentHarvestsList()}.
+     */
+    @Test
+    //    @Ignore
+    public void testGetCurrentHarvestsList() {
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + HarvestOptionListContainer.HARVESTS);
+
+        when(taskManager.getRunningTasks()).thenReturn(new ArrayList<Task>());
+        
+        //Valid
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, response.getStatus());
     }
 }
