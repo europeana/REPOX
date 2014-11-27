@@ -241,6 +241,12 @@
 			<artifactId>jersey-container-servlet</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>2.13</version>
+		</dependency>
+
 		<!-- (Un)Marshal for JSON -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

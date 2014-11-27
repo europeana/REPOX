@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import java.net.MalformedURLException;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.AlreadyExistsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
@@ -36,6 +37,7 @@ public class JerseyConfigMocked extends ResourceConfig {
      */
     public JerseyConfigMocked() throws MalformedURLException {
         packages("org.theeuropeanlibrary.repox.rest.servlets");
+        
         //Exceptions
         register(DoesNotExistExceptionMapper.class);
         register(AlreadyExistsExceptionMapper.class);
@@ -52,6 +54,10 @@ public class JerseyConfigMocked extends ResourceConfig {
         register(pr);
         register(dr);
         register(hr);
+        
+        //Features
+        packages("org.glassfish.jersey.examples.multipart");
+        register(MultiPartFeature.class);
     }
 
     /**

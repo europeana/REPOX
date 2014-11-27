@@ -26,8 +26,8 @@ public class MetadataTransformation {
 
     private String              id;
     private String              description;
-    private String              sourceFormat;
-    private String              destinationFormat;
+    private String              sourceSchemaId;
+    private String              destinationSchemaId;
     private String              stylesheet;
     private String              destSchema;
     private String              destNamespace;
@@ -78,19 +78,19 @@ public class MetadataTransformation {
     }
 
     public String getSourceFormat() {
-        return sourceFormat;
+        return sourceSchemaId;
     }
 
     public void setSourceFormat(String sourceFormat) {
-        this.sourceFormat = sourceFormat;
+        this.sourceSchemaId = sourceFormat;
     }
 
     public String getDestinationFormat() {
-        return destinationFormat;
+        return destinationSchemaId;
     }
 
     public void setDestinationFormat(String destinationFormat) {
-        this.destinationFormat = destinationFormat;
+        this.destinationSchemaId = destinationFormat;
     }
 
     public String getStylesheet() {
@@ -145,20 +145,20 @@ public class MetadataTransformation {
      * 
      * @param id
      * @param description
-     * @param sourceFormat
-     * @param destinationFormat
+     * @param sourceSchemaId
+     * @param destinationSchemaId
      * @param stylesheet
      * @param editable
      * @param isVersion2
      * @param destSchema
      * @param namespace
      */
-    public MetadataTransformation(String id, String description, String sourceFormat, String destinationFormat, String stylesheet, boolean editable, boolean isVersion2, String destSchema, String namespace) {
+    public MetadataTransformation(String id, String description, String sourceSchemaId, String destinationSchemaId, String stylesheet, boolean editable, boolean isVersion2, String destSchema, String namespace) {
         super();
         this.id = id;
         this.description = description;
-        this.sourceFormat = sourceFormat;
-        this.destinationFormat = destinationFormat;
+        this.sourceSchemaId = sourceSchemaId;
+        this.destinationSchemaId = destinationSchemaId;
         this.stylesheet = stylesheet;
         this.bEditable = editable;
         this.versionTwo = isVersion2;

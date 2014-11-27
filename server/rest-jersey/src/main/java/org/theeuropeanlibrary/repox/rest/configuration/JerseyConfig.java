@@ -3,9 +3,10 @@ package org.theeuropeanlibrary.repox.rest.configuration;
 
 import java.net.MalformedURLException;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.AlreadyExistsExceptionMapper;
+import org.theeuropeanlibrary.repox.rest.exceptionMappers.DoesNotExistExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.InternalServerErrorExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.InvalidArgumentsExceptionMapper;
 import org.theeuropeanlibrary.repox.rest.exceptionMappers.MissingArgumentsExceptionMapper;
@@ -24,12 +25,17 @@ public class JerseyConfig extends ResourceConfig{
      */
     public JerseyConfig() throws MalformedURLException {
         packages("org.theeuropeanlibrary.repox.rest.servlets");
+        
         //Exceptions
         register(DoesNotExistExceptionMapper.class);
         register(AlreadyExistsExceptionMapper.class);
         register(MissingArgumentsExceptionMapper.class);
         register(InvalidArgumentsExceptionMapper.class);
         register(InternalServerErrorExceptionMapper.class);
+        
+        //Features
+        packages("org.glassfish.jersey.examples.multipart");
+        register(MultiPartFeature.class);
     }
 
 }

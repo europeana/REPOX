@@ -4,21 +4,6 @@
   "basePath" : "http://localhost:8080/repox/rest",
   "resourcePath" : "/harvest",
   "apis" : [ {
-    "path" : "/datasets/harvest",
-    "operations" : [ {
-      "method" : "OPTIONS",
-      "summary" : "Get options over harvest conext.",
-      "notes" : "",
-      "type" : "HarvestOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
-      } ]
-    } ]
-  }, {
     "path" : "/datasets/{datasetId}/harvest/start",
     "operations" : [ {
       "method" : "POST",
@@ -273,12 +258,21 @@
       "responseMessages" : [ {
         "code" : 200,
         "message" : "OK (Response containing an Dataset)"
-      }, {
-        "code" : 404,
-        "message" : "DoesNotExistException"
-      }, {
-        "code" : 500,
-        "message" : "InternalServerErrorException"
+      } ]
+    } ]
+  }, {
+    "path" : "/datasets/harvest",
+    "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over harvest conext.",
+      "notes" : "",
+      "type" : "HarvestOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
       } ]
     } ]
   } ],

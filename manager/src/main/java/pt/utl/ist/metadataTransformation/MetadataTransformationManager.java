@@ -271,7 +271,7 @@ public class MetadataTransformationManager {
 
             Iterator<MetadataTransformation> transformationIterator = transformationsList.iterator();
             while (transformationIterator.hasNext()) {
-                MetadataTransformation metadataTransformation = (MetadataTransformation)transformationIterator.next();
+                MetadataTransformation metadataTransformation = transformationIterator.next();
                 if (metadataTransformation.getId().equals(metadataTransformationId)) {
                     // Delete XSLT File
                     String fileName = FilenameUtils.removeExtension(metadataTransformation.getStylesheet());

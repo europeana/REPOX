@@ -48,7 +48,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 9, 2014
  */
-
 @Path("/" + AggregatorOptionListContainer.AGGREGATORS)
 @Api(value = "/" + AggregatorOptionListContainer.AGGREGATORS, description = "Rest api for aggregators")
 public class AggregatorsResource {
