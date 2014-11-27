@@ -55,7 +55,7 @@
 							<module>harvesterUI.HarvesterUI</module>
 							<style>OBFUSCATED</style>
 							<localWorkers>4</localWorkers>
-							<extraJvmArgs>-Xms512m -Xmx512m</extraJvmArgs>
+<!-- 							<extraJvmArgs>-Xms512m -Xmx512m</extraJvmArgs> -->
 							<deploy>${project.build.directory}/gwt-deploy</deploy>
 						</configuration>
 						<goals>

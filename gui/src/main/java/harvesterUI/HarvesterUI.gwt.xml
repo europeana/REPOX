@@ -29,20 +29,21 @@
 	<!-- User Agent -->
 	<!-- Compile faster but only works on Firefox/Chrome/IE Browser -->
 	<!-- BRING BACK ALL BROWSERS WHEN READY FOR FULL BUILD -->
-	<!-- <set-property name="user.agent" value="safari"></set-property> -->
-	<collapse-all-properties />
+	<set-property name="user.agent" value="safari"></set-property>
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='harvesterUI.client.HarvesterUI' />
 
 	<!-- BRING BACK LANGUAGES WHEN READY FOR FULL BUILD -->
-	<!-- <extend-property name="locale" values="en" /> -->
+	<extend-property name="locale" values="en" />
 	<!-- <extend-property name="locale" values="pt" /> -->
 	<!-- <extend-property name="locale" values="es" /> -->
 	<!-- <extend-property name="locale" values="nl" /> -->
 	<!--Default Language -->
-	<!-- <set-property-fallback name="locale" value="en" /> -->
+	<set-property-fallback name="locale" value="en" />
 
+
+	<collapse-all-properties />
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
