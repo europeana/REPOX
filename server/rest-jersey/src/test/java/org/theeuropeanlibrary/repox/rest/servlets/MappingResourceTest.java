@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -14,12 +15,15 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dom4j.DocumentException;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
@@ -41,6 +45,7 @@ import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.metadataTransformation.TransformationsFileManager;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 /**
@@ -98,9 +103,13 @@ public class MappingResourceTest extends JerseyTest {
         assertEquals(numberOfAvailableOptions, molc.getOptionList().size());
     }
 
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#createMapping(MultiPart)}.
+     * @throws Exception 
+     */
     @Test
       @Ignore
-    public void testUploadFile() throws Exception {
+    public void testCreateMapping() throws Exception{
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
 
         String id = "SampleId2";
@@ -203,14 +212,19 @@ public class MappingResourceTest extends JerseyTest {
         multiPartEntity.close();
     }
 
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#getMapping(String)}.
+     * @throws Exception 
+     */
     @Test
 //    @Ignore
     public void testGetMapping() throws Exception {
         String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
         
+        doReturn(new HashMap<String, List<MetadataTransformation>>()).when(metadataTransformationManager).getMetadataTransformations();
+        
         Response response = target.request(MediaType.APPLICATION_XML).get();
-        assertEquals(200, response.getStatus());
+        assertEquals(404, response.getStatus());
     }
-
 }

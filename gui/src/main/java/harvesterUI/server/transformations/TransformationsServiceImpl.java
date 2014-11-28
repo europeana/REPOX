@@ -197,6 +197,7 @@ public class TransformationsServiceImpl extends RemoteServiceServlet implements 
 
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataTransformationManager().
                     saveMetadataTransformation(mtdTransformation,oldTransId);
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataTransformationManager().updateSchemaVersions(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager());
             return ResponseState.SUCCESS;
         } catch (SameStylesheetTransformationException e) {
             return ResponseState.MAPPING_SAME_XSL;
