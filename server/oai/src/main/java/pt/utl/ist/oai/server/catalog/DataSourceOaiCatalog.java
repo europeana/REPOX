@@ -105,7 +105,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
                 for (DataSourceContainer dataSourceContainer : dataSourceContainers.values()) {
 
                     for (MetadataTransformation metadataTransformation : dataSourceContainer.getDataSource().getMetadataTransformations().values()) {
-                        if (metadataSchemaManager.isMetadataSchemaOaiAvailable(metadataTransformation.getDestinationFormat())) schemaLocationsMap.put(metadataTransformation.getDestinationFormat(), metadataTransformation.getDestNamespace() + " " + metadataTransformation.getDestSchema());
+                        if (metadataSchemaManager.isMetadataSchemaOaiAvailable(metadataTransformation.getDestinationSchemaId())) schemaLocationsMap.put(metadataTransformation.getDestinationSchemaId(), metadataTransformation.getDestNamespace() + " " + metadataTransformation.getDestSchema());
                     }
 
                     if (metadataSchemaManager.isMetadataSchemaOaiAvailable(dataSourceContainer.getDataSource().getMetadataFormat())) schemaLocationsMap.put(dataSourceContainer.getDataSource().getMetadataFormat(), dataSourceContainer.getDataSource().getNamespace() + " " + dataSourceContainer.getDataSource().getSchema());
@@ -367,7 +367,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
                         if (currentDataSource.hasTransformation(metadataPrefix)) {
                             String transId = "NO_ID";
                             for (MetadataTransformation metadataTransformation : currentDataSource.getMetadataTransformations().values()) {
-                                if (metadataTransformation.getDestinationFormat().equals(metadataPrefix)) {
+                                if (metadataTransformation.getDestinationSchemaId().equals(metadataPrefix)) {
                                     transId = metadataTransformation.getId();
                                 }
                             }
@@ -406,7 +406,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
                 if (currentDataSource.hasTransformation(metadataPrefix)) {
                     String transId = "NO_ID";
                     for (MetadataTransformation metadataTransformation : currentDataSource.getMetadataTransformations().values()) {
-                        if (metadataTransformation.getDestinationFormat().equals(metadataPrefix)) {
+                        if (metadataTransformation.getDestinationSchemaId().equals(metadataPrefix)) {
                             transId = metadataTransformation.getId();
                         }
                     }
@@ -721,7 +721,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
             } else if (!dataSource.getMetadataFormat().equals(metadataPrefix) && !xmlRecordString.isEmpty()) {
 
                 for (MetadataTransformation metadataTransformation : dataSource.getMetadataTransformations().values()) {
-                    if (metadataTransformation.getDestinationFormat().equals(metadataPrefix)) {
+                    if (metadataTransformation.getDestinationSchemaId().equals(metadataPrefix)) {
                         DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSource.getId());
                         xmlRecordString = metadataTransformation.transform(encodedIdentifier, xmlRecordString, dataProviderParent.getName());
                         return xmlRecordString;

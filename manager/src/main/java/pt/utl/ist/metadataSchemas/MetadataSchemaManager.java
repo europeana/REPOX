@@ -208,7 +208,7 @@ public class MetadataSchemaManager {
         return null;
     }
 
-    private MetadataSchema getMetadataSchema(String id) {
+    public MetadataSchema getMetadataSchema(String id) {
         for (MetadataSchema metadataSchema : metadataSchemas) {
             if (id.equals(metadataSchema.getShortDesignation())) { return metadataSchema; }
         }

@@ -2510,9 +2510,9 @@ public class DefaultWebServices implements WebServices {
             if (description != null)
                 mtdTransformation.setDescription(description);
             if (srcSchemaId != null)
-                mtdTransformation.setSourceFormat(srcSchemaId);
+                mtdTransformation.setSourceSchemaId(srcSchemaId);
             if (destSchemaId != null)
-                mtdTransformation.setDestinationFormat(destSchemaId);
+                mtdTransformation.setDestinationSchemaId(destSchemaId);
             if (isXslVersion2 != null)
                 mtdTransformation.setVersionTwo(Boolean.valueOf(isXslVersion2));
             mtdTransformation.setMDRCompliant(true);
@@ -2566,8 +2566,8 @@ public class DefaultWebServices implements WebServices {
                     Element transformationElement = root.addElement("mapping");
                     transformationElement.addAttribute("id", metadataTransformation.getId());
                     transformationElement.addElement("description").setText(metadataTransformation.getDescription());
-                    transformationElement.addElement("sourceFormat").setText(metadataTransformation.getSourceFormat());
-                    transformationElement.addElement("destinationFormat").setText(metadataTransformation.getDestinationFormat());
+                    transformationElement.addElement("sourceFormat").setText(metadataTransformation.getSourceSchemaId());
+                    transformationElement.addElement("destinationFormat").setText(metadataTransformation.getDestinationSchemaId());
                 }
             }
             RestUtils.writeRestResponse(out, root);

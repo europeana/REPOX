@@ -35,6 +35,11 @@ public class TransformationsFileManager {
             System.out.println("[INFO] XSLT dir couldn't be created.");
 
         File tmpFile = new File(xsltDir, filename.toLowerCase());
+        if(tmpFile.exists())
+        {
+            System.out.println("[INFO] XSLT file already exists.");
+            result = Response.XSL_ALREADY_EXISTS;
+        }
 
         try {
             // Process the input stream

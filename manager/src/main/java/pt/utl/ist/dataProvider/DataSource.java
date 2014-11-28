@@ -1396,7 +1396,7 @@ public abstract class DataSource {
      */
     public boolean hasTransformation(String format) {
         for (MetadataTransformation metadataTransformation : getMetadataTransformations().values()) {
-            if (metadataTransformation.getDestinationFormat().equals(format)) {
+            if (metadataTransformation.getDestinationSchemaId().equals(format)) {
                 return true;
             }
         }

@@ -723,7 +723,7 @@ public class DefaultProjectManager extends ProjectManager {
         String oaiSchemas = dataSource.getMetadataFormat();
         if(dataSource.getMetadataTransformations() != null) {
             for(MetadataTransformation metadataTransformation : dataSource.getMetadataTransformations().values()){
-                oaiSchemas += " | " + metadataTransformation.getDestinationFormat();
+                oaiSchemas += " | " + metadataTransformation.getDestinationSchemaId();
             }
         }
 

@@ -372,7 +372,7 @@ public class DefaultDataManager implements DataManager {
                         String transformationId = metadataTransformationElement.getText();
                         MetadataTransformation metadataTransformation = metadataTransformationManager.loadMetadataTransformation(transformationId);
                         if (metadataTransformation != null)
-                            metadataTransformations.put(metadataTransformation.getDestinationFormat(), metadataTransformation);
+                            metadataTransformations.put(metadataTransformation.getDestinationSchemaId(), metadataTransformation);
                     }
 
                     //Create DataSource

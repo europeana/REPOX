@@ -2,9 +2,18 @@
 package org.theeuropeanlibrary.repox.rest.servlets;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -20,11 +29,19 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.MappingOptionListContainer;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.task.TaskManager;
+import pt.utl.ist.metadataSchemas.MetadataSchema;
+import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
+import pt.utl.ist.metadataTransformation.TransformationsFileManager;
+import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 /**
  * Mappings context path handling tests.
@@ -32,16 +49,22 @@ import pt.utl.ist.task.TaskManager;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Nov 27, 2014
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(TransformationsFileManager.class)
 public class MappingResourceTest extends JerseyTest {
-    DefaultDataManager dataManager;
-    TaskManager        taskManager;
+    DefaultDataManager            dataManager;
+    MetadataTransformationManager metadataTransformationManager;
+    MetadataSchemaManager         metadataSchemaManager;
 
     public MappingResourceTest() throws Exception {
         super(new JerseyConfigMocked());
         dataManager = JerseyConfigMocked.getDataManager();
-        taskManager = JerseyConfigMocked.getTaskManager();
+        metadataTransformationManager = JerseyConfigMocked.getMetadataTransformationManager();
+        metadataSchemaManager = JerseyConfigMocked.getMetadataSchemaManager();
+
+        mockStatic(TransformationsFileManager.class);
     }
-    
+
     @Override
     protected void configureClient(ClientConfig config) {
         config.register(MultiPartFeature.class);
@@ -51,7 +74,8 @@ public class MappingResourceTest extends JerseyTest {
     public void setUpBeforeMethod() throws Exception {
         //Reset mock before every test
         reset(dataManager);
-        reset(taskManager);
+        reset(metadataTransformationManager);
+        reset(metadataSchemaManager);
     }
 
     /**
@@ -74,23 +98,111 @@ public class MappingResourceTest extends JerseyTest {
         assertEquals(numberOfAvailableOptions, molc.getOptionList().size());
     }
 
-//    @Test
-//    //  @Ignore
-//    public void testUploadFile() throws Exception {
-//
-//        
-//        WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
-//
-//        // MediaType of the body part will be derived from the file.
-//        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", new File("/tmp/ex.txt"), MediaType.APPLICATION_OCTET_STREAM_TYPE);
-//        
-//        final MultiPart multiPartEntity = new MultiPart();
-//        //TODO Add transformation data in first bodypart.
-//        multiPartEntity.bodyPart(new BodyPart().entity("hello"));
-//        multiPartEntity.bodyPart(filePart);
-//
-//        Response response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
-//        assertEquals(200, response.getStatus());
-//    }
+    @Test
+    //  @Ignore
+    public void testUploadFile() throws Exception {
+        WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
+
+        String id = "SampleId2";
+        String description = "NONE";
+        String srcSchemaId = "edm";
+        String srcSchemaVersion = "1.0";
+        String destSchemaId = "ese";
+        String destSchemaVersion = "3.3";
+        String xslFilename = "myXSLT2";
+        boolean isXslVersion2 = true;
+
+        MetadataTransformation mtdTransformation = new MetadataTransformation();
+        mtdTransformation.setId(id);
+        mtdTransformation.setDescription(description);
+        mtdTransformation.setSourceSchemaId(srcSchemaId);
+        mtdTransformation.setDestinationSchemaId(destSchemaId);
+        mtdTransformation.setStylesheet(xslFilename);
+        mtdTransformation.setSourceSchemaVersion(srcSchemaVersion);
+        mtdTransformation.setDestSchemaVersion(destSchemaVersion);
+        mtdTransformation.setVersionTwo(isXslVersion2);
+
+        // MediaType of the body part will be derived from the file.
+        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", new File("/tmp/ex.txt"), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        MetadataTransformation mtdTransformationFake = new MetadataTransformation();
+        MultiPart multiPartEntity = new MultiPart();
+        multiPartEntity.bodyPart(new BodyPart(mtdTransformationFake, MediaType.APPLICATION_XML_TYPE));
+        multiPartEntity.bodyPart(filePart);
+
+        //Missing arguments in sent MetadataTransformation
+        //Missing Id
+        Response response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        mtdTransformationFake.setId(id);
+        //Missing sourceSchemaId
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        mtdTransformationFake.setSourceSchemaId(srcSchemaId);
+        //Missing destinationSchemaId
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        mtdTransformationFake.setDestinationSchemaId(destSchemaId);
+        //Missing styleSheet
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        mtdTransformationFake.setStylesheet(xslFilename);
+        //Missing srcSchemaVersion
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        mtdTransformationFake.setSourceSchemaVersion(srcSchemaVersion);
+        //Missing destSchemaVersion
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(406, response.getStatus());
+        multiPartEntity.close();
+
+        multiPartEntity = new MultiPart();
+        multiPartEntity.bodyPart(new BodyPart(mtdTransformation, MediaType.APPLICATION_XML_TYPE));
+        multiPartEntity.bodyPart(filePart);
+
+        when(metadataTransformationManager.getXsltDir()).thenReturn(null);
+        //        BodyPartEntity fileBodyPartEntity = (BodyPartEntity)multiPartEntity.getBodyParts().get(1).getEntity();
+        //        InputStream xsltInputStream = fileBodyPartEntity.getInputStream();
+        when(TransformationsFileManager.writeXslFile(anyString(), any(File.class), any(InputStream.class))).thenReturn(TransformationsFileManager.Response.ERROR)
+                .thenReturn(TransformationsFileManager.Response.FILE_TOO_BIG).thenReturn(TransformationsFileManager.Response.XSL_ALREADY_EXISTS)
+                .thenReturn(TransformationsFileManager.Response.SUCCESS);
+
+        //WriteXsltFile internalServerError
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(500, response.getStatus());
+        //WriteXsltFile internalServerError
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(500, response.getStatus());
+        //Xslt file already exists
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(409, response.getStatus());
+
+        when(metadataSchemaManager.getSchemaXSD(anyString(), anyDouble())).thenReturn(null).thenReturn("SomeSourceSchema").thenReturn(null).thenReturn("SomeDestinationSchema");
+        //Xsd source schema non existent 
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(404, response.getStatus());
+        //Xsd destination schema non existent 
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(404, response.getStatus());
+
+        MetadataSchema metadataSchema = mock(MetadataSchema.class);
+        when(metadataSchemaManager.getMetadataSchema(anyString())).thenReturn(metadataSchema);
+        when(metadataSchema.getNamespace()).thenReturn("SomeNamespace");
+
+        doThrow(new IOException()).doThrow(new SameStylesheetTransformationException("Another mapping has the same xslt file!")).doNothing().when(metadataTransformationManager)
+                .saveMetadataTransformation(any(MetadataTransformation.class), anyString());
+
+        //InternalServerError when saving metdataTransformation
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(500, response.getStatus());
+        //Already existent mapping with same xslt fileName
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(409, response.getStatus());
+
+        //Valid
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(201, response.getStatus());
+
+        multiPartEntity.close();
+    }
 
 }

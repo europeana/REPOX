@@ -239,8 +239,8 @@ public class RepoxDataExchangeManager {
         Map<String,MetadataTransformation> transformations = dataSource.getMetadataTransformations();
         for(MetadataTransformation metadataTransformation:transformations.values()){
             newDataSourceUI.getMetadataTransformations().add(new TransformationUI(metadataTransformation.getId(),
-                    metadataTransformation.getDescription(),metadataTransformation.getSourceFormat(),
-                    metadataTransformation.getDestinationFormat(),metadataTransformation.getDestSchema(),
+                    metadataTransformation.getDescription(),metadataTransformation.getSourceSchemaId(),
+                    metadataTransformation.getDestinationSchemaId(),metadataTransformation.getDestSchema(),
                     metadataTransformation.getDestNamespace(),metadataTransformation.getStylesheet(),
                     metadataTransformation.isVersionTwo()));
         }
@@ -380,14 +380,14 @@ public class RepoxDataExchangeManager {
                     TransformationUI transformationUI;
                     if(mdrDataStatistics != null){
                         transformationUI = new TransformationUI(metadataTransformation.getId(),
-                                metadataTransformation.getDescription(),metadataTransformation.getSourceFormat(),
-                                metadataTransformation.getDestinationFormat(),metadataTransformation.getDestSchema(),
+                                metadataTransformation.getDescription(),metadataTransformation.getSourceSchemaId(),
+                                metadataTransformation.getDestinationSchemaId(),metadataTransformation.getDestSchema(),
                                 metadataTransformation.getDestNamespace(),metadataTransformation.getStylesheet(),
                                 metadataTransformation.isVersionTwo(), mdrDataStatistics);
                     }else{
                         transformationUI = new TransformationUI(metadataTransformation.getId(),
-                                metadataTransformation.getDescription(),metadataTransformation.getSourceFormat(),
-                                metadataTransformation.getDestinationFormat(),metadataTransformation.getDestSchema(),
+                                metadataTransformation.getDescription(),metadataTransformation.getSourceSchemaId(),
+                                metadataTransformation.getDestinationSchemaId(),metadataTransformation.getDestSchema(),
                                 metadataTransformation.getDestNamespace(),metadataTransformation.getStylesheet(),
                                 metadataTransformation.isVersionTwo());
                     }

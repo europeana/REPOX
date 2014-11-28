@@ -119,7 +119,7 @@ public class MetadataTransformationManager {
         boolean isNewTransformation = oldMtdTransId.isEmpty();
 
         if (isNewTransformation)
-            checkTransformationExists(metadataTransformation.getId(), metadataTransformation.getSourceFormat(), metadataTransformation.getDestinationFormat(), metadataTransformation.getStylesheet());
+            checkTransformationExists(metadataTransformation.getId(), metadataTransformation.getSourceSchemaId(), metadataTransformation.getDestinationSchemaId(), metadataTransformation.getStylesheet());
         else //delete old transformation files
         if (metadataTransformation.isDeleteOldFiles()) {
             MetadataTransformation old = loadMetadataTransformation(oldMtdTransId);
@@ -143,12 +143,12 @@ public class MetadataTransformationManager {
             Boolean bEditable = metadataTransformation.isEditable();
             savedMtdTrans.setId(metadataTransformation.getId());
             savedMtdTrans.setDescription(metadataTransformation.getDescription());
-            savedMtdTrans.setDestinationFormat(metadataTransformation.getDestinationFormat());
+            savedMtdTrans.setDestinationSchemaId(metadataTransformation.getDestinationSchemaId());
             savedMtdTrans.setEditable(bEditable);
             savedMtdTrans.setVersionTwo(metadataTransformation.isVersionTwo());
             savedMtdTrans.setDestNamespace(metadataTransformation.getDestNamespace());
             savedMtdTrans.setDestSchema(metadataTransformation.getDestSchema());
-            savedMtdTrans.setSourceFormat(metadataTransformation.getSourceFormat());
+            savedMtdTrans.setSourceSchemaId(metadataTransformation.getSourceSchemaId());
             savedMtdTrans.setStylesheet(metadataTransformation.getStylesheet());
 
             savedMtdTrans.setSourceSchema(metadataTransformation.getSourceSchema());
@@ -162,12 +162,12 @@ public class MetadataTransformationManager {
         //        }
 
         //		metadataTransformations = loadMetadataTransformations();
-        List<MetadataTransformation> transformationsList = metadataTransformations.get(savedMtdTrans.getSourceFormat());
+        List<MetadataTransformation> transformationsList = metadataTransformations.get(savedMtdTrans.getSourceSchemaId());
         if (transformationsList == null) {
             transformationsList = new ArrayList<MetadataTransformation>();
         }
         transformationsList.add(savedMtdTrans);
-        metadataTransformations.put(savedMtdTrans.getSourceFormat(), transformationsList);
+        metadataTransformations.put(savedMtdTrans.getSourceSchemaId(), transformationsList);
         saveMetadataTransformations();
     }
 
@@ -325,8 +325,8 @@ public class MetadataTransformationManager {
                 Element metadataTransformationElement = rootNode.addElement("metadataTransformation");
                 metadataTransformationElement.addElement("id").setText(metadataTransformation.getId());
                 metadataTransformationElement.addElement("description").setText(metadataTransformation.getDescription());
-                metadataTransformationElement.addElement("sourceFormat").setText(metadataTransformation.getSourceFormat());
-                metadataTransformationElement.addElement("destinationFormat").setText(metadataTransformation.getDestinationFormat());
+                metadataTransformationElement.addElement("sourceFormat").setText(metadataTransformation.getSourceSchemaId());
+                metadataTransformationElement.addElement("destinationFormat").setText(metadataTransformation.getDestinationSchemaId());
                 metadataTransformationElement.addElement("stylesheet").setText(metadataTransformation.getStylesheet());
                 metadataTransformationElement.addElement("sourceSchema").setText(metadataTransformation.getSourceSchema());
                 metadataTransformationElement.addElement("destSchema").setText(metadataTransformation.getDestSchema());

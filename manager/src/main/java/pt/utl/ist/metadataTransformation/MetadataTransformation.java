@@ -7,10 +7,17 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -21,19 +28,40 @@ import java.io.File;
 
 /**
  */
+@XmlRootElement(name = "MetadataTransformation")
+@XmlAccessorType(XmlAccessType.NONE)
+@ApiModel(value = "A MetadataTransformation")
 public class MetadataTransformation {
     private static final Logger log             = Logger.getLogger(MetadataTransformation.class);
 
+    @XmlElement
+    @ApiModelProperty
     private String              id;
+    @XmlElement
+    @ApiModelProperty
     private String              description;
+    @XmlElement
+    @ApiModelProperty
     private String              sourceSchemaId;
+    @XmlElement
+    @ApiModelProperty
     private String              destinationSchemaId;
+    @XmlElement
+    @ApiModelProperty
     private String              stylesheet;
+    @XmlElement
+    @ApiModelProperty
+    private String              sourceSchemaVersion;
+    @XmlElement
+    @ApiModelProperty
+    private String              destSchemaVersion;
+    private String              sourceSchema;
     private String              destSchema;
     private String              destNamespace;
-    private String              sourceSchema;
     private boolean             bMDRCompliant;
     private boolean             bEditable;
+    @XmlElement
+    @ApiModelProperty
     private boolean             versionTwo      = false;
     private boolean             bDeleteOldFiles = false;
 
@@ -77,20 +105,20 @@ public class MetadataTransformation {
         this.description = description;
     }
 
-    public String getSourceFormat() {
+    public String getSourceSchemaId() {
         return sourceSchemaId;
     }
 
-    public void setSourceFormat(String sourceFormat) {
-        this.sourceSchemaId = sourceFormat;
+    public void setSourceSchemaId(String sourceSchemaId) {
+        this.sourceSchemaId = sourceSchemaId;
     }
 
-    public String getDestinationFormat() {
+    public String getDestinationSchemaId() {
         return destinationSchemaId;
     }
 
-    public void setDestinationFormat(String destinationFormat) {
-        this.destinationSchemaId = destinationFormat;
+    public void setDestinationSchemaId(String setSourceSchemaId) {
+        this.destinationSchemaId = setSourceSchemaId;
     }
 
     public String getStylesheet() {
@@ -131,6 +159,22 @@ public class MetadataTransformation {
 
     public void setDeleteOldFiles(boolean deleteOldFiles) {
         this.bDeleteOldFiles = deleteOldFiles;
+    }
+
+    public String getSourceSchemaVersion() {
+        return sourceSchemaVersion;
+    }
+
+    public void setSourceSchemaVersion(String sourceSchemaVersion) {
+        this.sourceSchemaVersion = sourceSchemaVersion;
+    }
+
+    public String getDestSchemaVersion() {
+        return destSchemaVersion;
+    }
+
+    public void setDestSchemaVersion(String destSchemaVersion) {
+        this.destSchemaVersion = destSchemaVersion;
     }
 
     /**
@@ -273,6 +317,7 @@ public class MetadataTransformation {
      * @throws TransformerException
      * @throws NullPointerException
      */
+    @ApiModelProperty(hidden = true)
     public static String getTransformedRecord(String encodedIdentifier, String metadataPrefix, DataSource dataSource, String xmlRecordString) throws DocumentException, TransformerException, NullPointerException {
         try {
             if (metadataPrefix.equals("MarcXchange") && dataSource.getMetadataFormat().equals("ISO2709")) {
@@ -280,7 +325,7 @@ public class MetadataTransformation {
             } else if (!dataSource.getMetadataFormat().equals(metadataPrefix) && !xmlRecordString.isEmpty()) {
 
                 for (MetadataTransformation metadataTransformation : dataSource.getMetadataTransformations().values()) {
-                    if (metadataTransformation.getDestinationFormat().equals(metadataPrefix)) {
+                    if (metadataTransformation.getDestinationSchemaId().equals(metadataPrefix)) {
                         DataProvider dataProviderParent = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataProviderParent(dataSource.getId());
                         xmlRecordString = metadataTransformation.transform(encodedIdentifier, xmlRecordString, dataProviderParent.getName());
                         return xmlRecordString;
