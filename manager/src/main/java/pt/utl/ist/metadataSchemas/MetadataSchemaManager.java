@@ -86,10 +86,12 @@ public class MetadataSchemaManager {
      * @param bOAIAvailable
      * @return MessageType
      */
-    public MessageType saveMetadataSchema(String designation, String shortDesignation, String description, String namespace, String notes, String oldId, List<MetadataSchemaVersion> metadataSchemaVersions, boolean bOAIAvailable) {
+    public MessageType saveMetadataSchema(String designation, String shortDesignation, String description, String namespace, String notes, String oldId,
+            List<MetadataSchemaVersion> metadataSchemaVersions, boolean bOAIAvailable) {
         if (oldId != null && oldId.equals(shortDesignation)) {
             // Do nothing
-        } else if (schemaExists(shortDesignation)) return MessageType.ALREADY_EXISTS;
+        } else if (schemaExists(shortDesignation))
+            return MessageType.ALREADY_EXISTS;
 
         deleteOldMetadataSchema(oldId);
         // New metadata schema
@@ -116,17 +118,24 @@ public class MetadataSchemaManager {
      * @param bOAIAvailable
      * @return MessageType
      */
-    public MessageType updateMetadataSchema(String designation, String shortDesignation, String description, String namespace, String notes, String oldId, List<MetadataSchemaVersion> metadataSchemaVersions, boolean bOAIAvailable) {
+    public MessageType updateMetadataSchema(String designation, String shortDesignation, String description, String namespace, String notes, String oldId,
+            List<MetadataSchemaVersion> metadataSchemaVersions, boolean bOAIAvailable) {
         if (oldId != null && oldId.equals(shortDesignation)) {
             // Do nothing
-        } else if (schemaExists(shortDesignation)) return MessageType.ALREADY_EXISTS;
+        } else if (schemaExists(shortDesignation))
+            return MessageType.ALREADY_EXISTS;
 
         MetadataSchema metadataSchema = getMetadataSchema(oldId);
-        if (designation != null) metadataSchema.setDesignation(designation);
-        if (description != null) metadataSchema.setDescription(description);
-        if (namespace != null) metadataSchema.setNamespace(namespace);
-        if (notes != null) metadataSchema.setNotes(notes);
-        if (metadataSchemaVersions != null && metadataSchemaVersions.size() > 0) metadataSchema.setMetadataSchemaVersions(metadataSchemaVersions);
+        if (designation != null)
+            metadataSchema.setDesignation(designation);
+        if (description != null)
+            metadataSchema.setDescription(description);
+        if (namespace != null)
+            metadataSchema.setNamespace(namespace);
+        if (notes != null)
+            metadataSchema.setNotes(notes);
+        if (metadataSchemaVersions != null && metadataSchemaVersions.size() > 0)
+            metadataSchema.setMetadataSchemaVersions(metadataSchemaVersions);
 
         metadataSchema.setOAIAvailable(bOAIAvailable);
         saveMetadataSchemas();
@@ -135,7 +144,8 @@ public class MetadataSchemaManager {
     }
 
     private void deleteOldMetadataSchema(String oldSchemaId) {
-        if (oldSchemaId == null) return;
+        if (oldSchemaId == null)
+            return;
 
         for (MetadataSchema metadataSchema : metadataSchemas) {
             if (oldSchemaId.equals(metadataSchema.getShortDesignation())) {
@@ -163,9 +173,12 @@ public class MetadataSchemaManager {
                 metadataSchemaElement.addElement("bOAIAvailable").setText(String.valueOf(metadataSchema.isOAIAvailable()));
 
                 // optional fields
-                if (metadataSchema.getDesignation() != null) metadataSchemaElement.addElement("designation").setText(metadataSchema.getDesignation());
-                if (metadataSchema.getDescription() != null) metadataSchemaElement.addElement("description").setText(metadataSchema.getDescription());
-                if (metadataSchema.getNotes() != null) metadataSchemaElement.addElement("notes").setText(metadataSchema.getNotes());
+                if (metadataSchema.getDesignation() != null)
+                    metadataSchemaElement.addElement("designation").setText(metadataSchema.getDesignation());
+                if (metadataSchema.getDescription() != null)
+                    metadataSchemaElement.addElement("description").setText(metadataSchema.getDescription());
+                if (metadataSchema.getNotes() != null)
+                    metadataSchemaElement.addElement("notes").setText(metadataSchema.getNotes());
 
                 Element versionsEl = metadataSchemaElement.addElement("versions");
                 for (MetadataSchemaVersion metadataSchemaVersion : metadataSchema.getMetadataSchemaVersions()) {
@@ -187,7 +200,9 @@ public class MetadataSchemaManager {
      */
     public boolean schemaExists(String metadataSchemaId) {
         for (MetadataSchema metadataSchema : metadataSchemas) {
-            if (metadataSchemaId.equals(metadataSchema.getShortDesignation())) { return true; }
+            if (metadataSchemaId.equals(metadataSchema.getShortDesignation())) {
+                return true;
+            }
         }
         return false;
     }
@@ -201,7 +216,9 @@ public class MetadataSchemaManager {
         for (MetadataSchema metadataSchema : metadataSchemas) {
             if (metadataSchemaId.equals(metadataSchema.getShortDesignation())) {
                 for (MetadataSchemaVersion metadataSchemaVersion : metadataSchema.getMetadataSchemaVersions()) {
-                    if (metadataSchemaVersion.getVersion() == version) { return metadataSchemaVersion.getXsdLink(); }
+                    if (metadataSchemaVersion.getVersion() == version) {
+                        return metadataSchemaVersion.getXsdLink();
+                    }
                 }
             }
         }
@@ -210,7 +227,9 @@ public class MetadataSchemaManager {
 
     public MetadataSchema getMetadataSchema(String id) {
         for (MetadataSchema metadataSchema : metadataSchemas) {
-            if (id.equals(metadataSchema.getShortDesignation())) { return metadataSchema; }
+            if (id.equals(metadataSchema.getShortDesignation())) {
+                return metadataSchema;
+            }
         }
         return null;
     }
@@ -243,9 +262,27 @@ public class MetadataSchemaManager {
      */
     public boolean isMetadataSchemaOaiAvailable(String metadataSchemaId) {
         for (MetadataSchema metadataSchema : metadataSchemas) {
-            if (metadataSchemaId.equals(metadataSchema.getShortDesignation())) { return metadataSchema.isOAIAvailable(); }
+            if (metadataSchemaId.equals(metadataSchema.getShortDesignation())) {
+                return metadataSchema.isOAIAvailable();
+            }
         }
         return false;
+    }
+
+    public String getVersionOfSchema(String xsdLink)
+    {
+        double sourceSchemaVersion = -1;
+        List<MetadataSchema> metadataSchemas = getMetadataSchemas();
+        for (MetadataSchema metadataSchema : metadataSchemas)
+        {
+            for (MetadataSchemaVersion metadataSchemaVersion : metadataSchema.getMetadataSchemaVersions())
+            {
+                if (metadataSchemaVersion.getXsdLink().equals(xsdLink))
+                    sourceSchemaVersion = metadataSchemaVersion.getVersion();
+            }
+        }
+        return sourceSchemaVersion == -1 ? null : Double.toHexString(sourceSchemaVersion);
+
     }
 
     private void fillDefaultData() {

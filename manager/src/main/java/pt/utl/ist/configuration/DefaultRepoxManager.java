@@ -140,6 +140,7 @@ public class DefaultRepoxManager implements RepoxManager {
 
         File metadataSchemasFile = new File(configuration.getXmlConfigPath(), metadataSchemasFilename);
         this.metadataSchemaManager = new MetadataSchemaManager(metadataSchemasFile);
+        this.metadataTransformationManager.updateSchemaVersions(metadataSchemaManager);
 
         File tagsFile = new File(configuration.getXmlConfigPath(), tagsFilename);
         this.tagsManager = new TagsManager(tagsFile);

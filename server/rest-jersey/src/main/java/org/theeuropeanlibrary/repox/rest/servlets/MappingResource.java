@@ -5,14 +5,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -20,17 +25,21 @@ import javax.ws.rs.core.UriInfo;
 import org.dom4j.DocumentException;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.MultiPart;
+import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.MappingOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.metadataTransformation.TransformationsFileManager;
+import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
@@ -38,6 +47,7 @@ import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
@@ -179,6 +189,35 @@ public class MappingResource {
         }
 
         return Response.status(201).entity(new Result("Mapping with id " + metadataTransformation.getId() + " created!")).build();
+    }
+    
+    /**
+     * Retrieve a mapping.
+     * Relative path : /mappings/{mappingId}
+     * @param mappingId 
+     * @return XML, JSON: Mapping
+     * @throws DoesNotExistException 
+     */
+    @GET
+    @Path("/" + MappingOptionListContainer.MAPPINGID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Retrieves the specified mapping.", httpMethod = "GET", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException")
+    })
+    public MetadataTransformation getMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId) throws DoesNotExistException{
+
+        Map<String, List<MetadataTransformation>> metadataTransformationsMap = metadataTransformationManager.getMetadataTransformations();
+        for(List<MetadataTransformation> metadataTransformations : metadataTransformationsMap.values())
+        {
+            for(MetadataTransformation metadataTransformation : metadataTransformations)
+            {
+                if(metadataTransformation.getId().toLowerCase().equals(mappingId.toLowerCase()))
+                    return metadataTransformation;
+            }
+        }
+        throw new DoesNotExistException("Mapping with id " + mappingId + " does NOT exist!");
     }
 
 }

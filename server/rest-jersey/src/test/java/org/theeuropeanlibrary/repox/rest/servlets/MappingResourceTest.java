@@ -99,7 +99,7 @@ public class MappingResourceTest extends JerseyTest {
     }
 
     @Test
-    //  @Ignore
+      @Ignore
     public void testUploadFile() throws Exception {
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
 
@@ -160,8 +160,6 @@ public class MappingResourceTest extends JerseyTest {
         multiPartEntity.bodyPart(filePart);
 
         when(metadataTransformationManager.getXsltDir()).thenReturn(null);
-        //        BodyPartEntity fileBodyPartEntity = (BodyPartEntity)multiPartEntity.getBodyParts().get(1).getEntity();
-        //        InputStream xsltInputStream = fileBodyPartEntity.getInputStream();
         when(TransformationsFileManager.writeXslFile(anyString(), any(File.class), any(InputStream.class))).thenReturn(TransformationsFileManager.Response.ERROR)
                 .thenReturn(TransformationsFileManager.Response.FILE_TOO_BIG).thenReturn(TransformationsFileManager.Response.XSL_ALREADY_EXISTS)
                 .thenReturn(TransformationsFileManager.Response.SUCCESS);
@@ -203,6 +201,16 @@ public class MappingResourceTest extends JerseyTest {
         assertEquals(201, response.getStatus());
 
         multiPartEntity.close();
+    }
+
+    @Test
+//    @Ignore
+    public void testGetMapping() throws Exception {
+        String mappingId = "SampleId2";
+        WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
+        
+        Response response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
     }
 
 }

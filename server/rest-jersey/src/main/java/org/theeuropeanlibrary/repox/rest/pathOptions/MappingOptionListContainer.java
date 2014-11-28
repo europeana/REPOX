@@ -23,7 +23,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel(value = "An Option List container")
 public class MappingOptionListContainer extends OptionListContainer {
     public static final String MAPPINGS = "mappings";
-    public static final String MAPPINGNAME = "mappingName";
+    public static final String MAPPINGID = "{mappingId}";
 
     /**
      * No argument constructor needed for JAXB.

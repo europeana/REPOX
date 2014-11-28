@@ -27,6 +27,9 @@ import org.dom4j.io.SAXReader;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxConfiguration;
+import pt.utl.ist.metadataSchemas.MetadataSchema;
+import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
+import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
 import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
@@ -310,6 +313,39 @@ public class MetadataTransformationManager {
 
         return null;
     }
+    
+    public void updateSchemaVersions(MetadataSchemaManager metadataSchemaManager)
+    {
+//        MetadataSchemaManager metadataSchemaManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager();
+        for(List<MetadataTransformation> metadataTransformationList : metadataTransformations.values())
+        {
+            for(MetadataTransformation metadataTransformation : metadataTransformationList)
+            {
+                double sourceSchemaVersion = -1;
+                List<MetadataSchema> metadataSchemas = metadataSchemaManager.getMetadataSchemas();
+                for (MetadataSchema metadataSchema : metadataSchemas)
+                {
+                    for (MetadataSchemaVersion metadataSchemaVersion : metadataSchema.getMetadataSchemaVersions())
+                    {
+                        if (metadataSchemaVersion.getXsdLink().equals(metadataTransformation.getSourceSchema()))
+                            sourceSchemaVersion = metadataSchemaVersion.getVersion();
+                    }
+                }
+                metadataTransformation.setSourceSchemaVersion(sourceSchemaVersion == -1 ? null : Double.toString(sourceSchemaVersion));
+                
+                double destinationSchemaVersion = -1;
+                for (MetadataSchema metadataSchema : metadataSchemas)
+                {
+                    for (MetadataSchemaVersion metadataSchemaVersion : metadataSchema.getMetadataSchemaVersions())
+                    {
+                        if (metadataSchemaVersion.getXsdLink().equals(metadataTransformation.getDestSchema()))
+                            destinationSchemaVersion = metadataSchemaVersion.getVersion();
+                    }
+                }
+                metadataTransformation.setDestSchemaVersion(destinationSchemaVersion == -1 ? null : Double.toString(destinationSchemaVersion));
+            }
+        }
+    }
 
     /**
      * @throws IOException
@@ -344,7 +380,7 @@ public class MetadataTransformationManager {
      * 
      */
     protected synchronized void loadMetadataTransformations() {
-
+        
         metadataTransformations = new HashMap<String, List<MetadataTransformation>>();
         if (!configurationFile.exists()) { return; }
 
@@ -384,7 +420,7 @@ public class MetadataTransformationManager {
                 }
                 if (destSchema == null) {
                     destSchema = getSchema(destinationFormat);
-                }
+                }                
 
                 boolean editable = Boolean.parseBoolean(currentElement.attributeValue("editable"));
                 boolean version2 = currentElement.attributeValue("version") != null && currentElement.attributeValue("version").equals("2.0");
