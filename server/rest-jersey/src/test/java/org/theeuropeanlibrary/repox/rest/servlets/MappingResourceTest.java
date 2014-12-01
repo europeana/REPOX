@@ -132,7 +132,7 @@ public class MappingResourceTest extends JerseyTest {
         mtdTransformation.setVersionTwo(isXslVersion2);
 
         // MediaType of the body part will be derived from the file.
-        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", new File("/tmp/ex.txt"), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", File.createTempFile("example", "xsl"), MediaType.APPLICATION_OCTET_STREAM_TYPE);
         MetadataTransformation mtdTransformationFake = new MetadataTransformation();
         MultiPart multiPartEntity = new MultiPart();
         multiPartEntity.bodyPart(new BodyPart(mtdTransformationFake, MediaType.APPLICATION_XML_TYPE));
@@ -162,6 +162,11 @@ public class MappingResourceTest extends JerseyTest {
         //Missing destSchemaVersion
         response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
         assertEquals(406, response.getStatus());
+        mtdTransformationFake.setDestSchemaVersion("3.0");
+        //Stylesheet with wrong suffix
+        mtdTransformationFake.setStylesheet("example.txt");
+        response = target.request().post(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(400, response.getStatus());
         multiPartEntity.close();
 
         multiPartEntity = new MultiPart();
@@ -217,14 +222,38 @@ public class MappingResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testGetMapping() throws Exception {
         String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
         
         doReturn(new HashMap<String, List<MetadataTransformation>>()).when(metadataTransformationManager).getMetadataTransformations();
         
+        //Non existent
         Response response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
     }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#deleteMapping(String)
+     * @throws Exception 
+     */
+	@Test
+//	@Ignore
+	public void testDeleteMapping() throws Exception {
+		String mappingId = "SampleId2";
+        WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
+        
+        when(metadataTransformationManager.deleteMetadataTransformation(mappingId)).thenThrow(new IOException()).thenReturn(false).thenReturn(true);
+        
+        //InternalServerError
+        Response response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Non existent
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(404, response.getStatus());
+        //Valid call
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(200, response.getStatus());
+	}
 }

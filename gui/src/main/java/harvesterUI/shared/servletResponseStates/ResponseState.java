@@ -34,5 +34,6 @@ public enum ResponseState implements IsSerializable {
     // Transformations
     MAPPING_SAME_SRC_AND_DEST,
     MAPPING_SAME_XSL,
-    ERROR_SAVING_XSL
+    ERROR_SAVING_XSL,
+    DOES_NOT_END_XSL
 }

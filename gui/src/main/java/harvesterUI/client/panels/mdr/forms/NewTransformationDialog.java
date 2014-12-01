@@ -131,6 +131,8 @@ public class NewTransformationDialog extends FormDialog {
                     HarvesterUI.UTIL_MANAGER.getErrorBox(HarvesterUI.CONSTANTS.saveTransformation(), "Transformation couldn't be saved due to server maximum form content reached or file permissions.");
                 }else if(responseState == ResponseState.ALREADY_EXISTS){
                     HarvesterUI.UTIL_MANAGER.getErrorBox(HarvesterUI.CONSTANTS.saveTransformation(), "Transformation with this Identifier already exists.");
+                }else if(responseState == ResponseState.DOES_NOT_END_XSL){
+                    HarvesterUI.UTIL_MANAGER.getErrorBox(HarvesterUI.CONSTANTS.saveTransformation(), "File has to end in .xsl");
                 }else if(responseState == ResponseState.SUCCESS){
                     newTransformationFormPanel.submit();
                 }

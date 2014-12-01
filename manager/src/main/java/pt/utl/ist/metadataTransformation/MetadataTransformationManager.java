@@ -279,6 +279,14 @@ public class MetadataTransformationManager {
                     // Delete XSLT File
                     String fileName = FilenameUtils.removeExtension(metadataTransformation.getStylesheet());
                     TransformationsFileManager.deleteXslFile(fileName, xsltDir);
+                    
+                    File tmpFile = new File(xsltDir, metadataTransformation.getStylesheet());
+                    Boolean result = tmpFile.delete();
+                    if (result) {
+                        System.out.println("[INFO] " + tmpFile.getName() + " was deleted.");
+                    } else {
+                        System.out.println("[INFO] " + "Delete operation is failed. File: " + tmpFile.getName());
+                    }
 
                     //Delete XMAP file
                     if (metadataTransformation.isEditable()) TransformationsFileManager.deleteXmapFile(fileName, xmapDir);

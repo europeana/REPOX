@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.metadataSchemas.MetadataSchemaVersion;
@@ -158,6 +160,9 @@ public class TransformationsServiceImpl extends RemoteServiceServlet implements 
 
 //            if(!oldTransId.isEmpty())           //TODO Possible bug when changing the id or file of an existing Transf.
 //                return ResponseState.SUCCESS;
+        	
+        	if(!FilenameUtils.getExtension(xslFilePath).equals("xsl"))
+        		return ResponseState.DOES_NOT_END_XSL;
 
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataTransformationManager().
                     checkTransformationValidity(id, xslFilePath, oldTransId);
