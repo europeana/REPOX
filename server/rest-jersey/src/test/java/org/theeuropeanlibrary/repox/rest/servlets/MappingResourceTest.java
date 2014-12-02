@@ -132,7 +132,9 @@ public class MappingResourceTest extends JerseyTest {
         mtdTransformation.setVersionTwo(isXslVersion2);
 
         // MediaType of the body part will be derived from the file.
-        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", File.createTempFile("example", "xsl"), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        File tempFile = File.createTempFile("example", "xsl");
+        tempFile.deleteOnExit();
+        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", tempFile, MediaType.APPLICATION_OCTET_STREAM_TYPE);
         MetadataTransformation mtdTransformationFake = new MetadataTransformation();
         MultiPart multiPartEntity = new MultiPart();
         multiPartEntity.bodyPart(new BodyPart(mtdTransformationFake, MediaType.APPLICATION_XML_TYPE));
@@ -235,11 +237,11 @@ public class MappingResourceTest extends JerseyTest {
     }
 
     /**
-     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#deleteMapping(String)
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#deleteMapping(String)}.
      * @throws Exception 
      */
 	@Test
-//	@Ignore
+	@Ignore
 	public void testDeleteMapping() throws Exception {
 		String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
@@ -256,4 +258,29 @@ public class MappingResourceTest extends JerseyTest {
         response = target.request(MediaType.APPLICATION_XML).delete();
         assertEquals(200, response.getStatus());
 	}
+
+	/**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#updateMapping(String, MultiPart)}
+     * @throws Exception 
+     */
+    @Test
+//  @Ignore
+    public void testUpdateMapping() throws Exception {
+        String mappingId = "SampleId2";
+        WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
+        
+        // MediaType of the body part will be derived from the file.
+        File tempFile = File.createTempFile("example", "xsl");
+        tempFile.deleteOnExit();
+        final FileDataBodyPart filePart = new FileDataBodyPart("myFile", tempFile, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        MetadataTransformation mtdTransformationFake = new MetadataTransformation();
+        MultiPart multiPartEntity = new MultiPart();
+        multiPartEntity.bodyPart(new BodyPart(mtdTransformationFake, MediaType.APPLICATION_XML_TYPE));
+        multiPartEntity.bodyPart(filePart);
+        multiPartEntity.close();
+        
+        //Valid
+        Response response = target.request().put(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
+        assertEquals(200, response.getStatus());
+    }
 }

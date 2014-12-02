@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -73,6 +74,9 @@ public class MappingResource {
     public MetadataTransformationManager metadataTransformationManager;
     public MetadataSchemaManager         metadataSchemaManager;
 
+    //For updating a mapping
+    private String                       oldMappingId = "";
+
     /**
      * Initialize fields before serving.
      */
@@ -116,7 +120,7 @@ public class MappingResource {
      * Create a new mapping - XSL file through HTTP POST.
      * Relative path : /mappings
      * @param multiPart 
-     * @return message.
+     * @return OK or Error Message
      * @throws AlreadyExistsException 
      * @throws InternalServerErrorException 
      * @throws MissingArgumentsException 
@@ -139,12 +143,12 @@ public class MappingResource {
         MetadataTransformation metadataTransformation = multiPart.getBodyParts().get(0).getEntityAs(MetadataTransformation.class);
         BodyPartEntity fileBodyPartEntity = (BodyPartEntity)multiPart.getBodyParts().get(1).getEntity();
         InputStream xsltInputStream = fileBodyPartEntity.getInputStream();
-        
+
         if (metadataTransformation == null)
             throw new MissingArgumentsException("Missing value: " + "MetadataTransformation was null");
         else if (xsltInputStream == null)
             throw new MissingArgumentsException("Missing value: " + "xsltInputStream was null");
-        
+
         if (metadataTransformation.getId() == null || metadataTransformation.getId().equals(""))
             throw new MissingArgumentsException("Missing value: " + "Id must not be empty");
         else if (metadataTransformation.getSourceSchemaId() == null || metadataTransformation.getSourceSchemaId().equals(""))
@@ -157,14 +161,19 @@ public class MappingResource {
             throw new MissingArgumentsException("Missing value: " + "SourceSchemaVersion must not be empty");
         else if (metadataTransformation.getDestSchemaVersion() == null || metadataTransformation.getDestSchemaVersion().equals(""))
             throw new MissingArgumentsException("Missing value: " + "DestSchemaVersion must not be empty");
-        
+
         File xsltDir = metadataTransformationManager.getXsltDir();
         String extension = FilenameUtils.getExtension(metadataTransformation.getStylesheet());
-        if(!extension.equals("xsl") && !extension.equals(""))
-        	throw new InvalidArgumentsException("Stylesheet name must be without extension or with .xsl");
-        else if(extension.equals("xsl"))
+        if (!extension.equals("xsl") && !extension.equals(""))
+            throw new InvalidArgumentsException("Stylesheet name must be without extension or with .xsl");
+        else if (extension.equals("xsl"))
         {
-        	metadataTransformation.setStylesheet(FilenameUtils.removeExtension(metadataTransformation.getStylesheet()));
+            metadataTransformation.setStylesheet(FilenameUtils.removeExtension(metadataTransformation.getStylesheet()));
+        }
+        if(oldMappingId != null && !oldMappingId.isEmpty()) //Validates only when called from the update method
+        {
+            MetadataTransformation mapping = getMapping(oldMappingId);
+            TransformationsFileManager.deleteTransformationFiles(FilenameUtils.removeExtension(mapping.getStylesheet()), xsltDir, metadataTransformationManager.getXmapDir());
         }
         TransformationsFileManager.Response result = TransformationsFileManager.writeXslFile(metadataTransformation.getStylesheet() + ".xsl", xsltDir, xsltInputStream);
 
@@ -179,12 +188,12 @@ public class MappingResource {
         }
 
         String srcXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getSourceSchemaId(), Double.valueOf(metadataTransformation.getSourceSchemaVersion()));
-        if(srcXsdLink == null)
+        if (srcXsdLink == null)
             throw new DoesNotExistException("Schema with id " + metadataTransformation.getSourceSchemaId() + " and version " + metadataTransformation.getSourceSchemaVersion() + " does NOT exist!");
         String destXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getDestinationSchemaId(), Double.valueOf(metadataTransformation.getDestSchemaVersion()));
-        if(destXsdLink == null)
+        if (destXsdLink == null)
             throw new DoesNotExistException("Schema with id " + metadataTransformation.getDestinationSchemaId() + " and version " + metadataTransformation.getDestSchemaVersion() + " does NOT exist!");
-        String destNamespace = metadataSchemaManager.getMetadataSchema(metadataTransformation.getDestinationSchemaId()).getNamespace();        
+        String destNamespace = metadataSchemaManager.getMetadataSchema(metadataTransformation.getDestinationSchemaId()).getNamespace();
 
         metadataTransformation.setEditable(false);
         metadataTransformation.setSourceSchema(srcXsdLink);
@@ -195,17 +204,16 @@ public class MappingResource {
         metadataTransformation.setDeleteOldFiles(true);
 
         try {
-            metadataTransformationManager.saveMetadataTransformation(metadataTransformation, "");
+            metadataTransformationManager.saveMetadataTransformation(metadataTransformation, oldMappingId);
         } catch (IOException | DocumentException e) {
             throw new InternalServerErrorException("Error in server : " + e.getMessage());
-        }
-        catch (SameStylesheetTransformationException e) {
+        } catch (SameStylesheetTransformationException e) {
             throw new AlreadyExistsException("Already exists: " + "Same Stylesheet");
         }
 
         return Response.status(201).entity(new Result("Mapping with id " + metadataTransformation.getId() + " created!")).build();
     }
-    
+
     /**
      * Retrieve a mapping.
      * Relative path : /mappings/{mappingId}
@@ -221,25 +229,27 @@ public class MappingResource {
             @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
             @ApiResponse(code = 404, message = "DoesNotExistException")
     })
-    public MetadataTransformation getMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId) throws DoesNotExistException{
+    public MetadataTransformation getMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId) throws DoesNotExistException {
 
         Map<String, List<MetadataTransformation>> metadataTransformationsMap = metadataTransformationManager.getMetadataTransformations();
-        for(List<MetadataTransformation> metadataTransformations : metadataTransformationsMap.values())
+        for (List<MetadataTransformation> metadataTransformations : metadataTransformationsMap.values())
         {
-            for(MetadataTransformation metadataTransformation : metadataTransformations)
+            for (MetadataTransformation metadataTransformation : metadataTransformations)
             {
-                if(metadataTransformation.getId().toLowerCase().equals(mappingId.toLowerCase()))
+                if (metadataTransformation.getId().toLowerCase().equals(mappingId.toLowerCase()))
                     return metadataTransformation;
             }
         }
         throw new DoesNotExistException("Mapping with id " + mappingId + " does NOT exist!");
     }
-    
+
     /**
      * Delete a mapping.
      * Relative path : /mappings/{mappingId}  
+     * @param mappingId 
      * @return OK or Error Message
      * @throws DoesNotExistException 
+     * @throws InternalServerErrorException 
      */
     @DELETE
     @Path("/" + MappingOptionListContainer.MAPPINGID)
@@ -250,16 +260,58 @@ public class MappingResource {
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response deleteMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId) throws DoesNotExistException{
-    	
-    	try {
-			if(!metadataTransformationManager.deleteMetadataTransformation(mappingId))
-				throw new DoesNotExistException("Mapping with id " + mappingId + " does NOT exist!");
-		} catch (IOException | DocumentException e) {
-			throw new InternalServerErrorException("Error in server : " + e.getMessage());
-		}
+    public Response deleteMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId) throws DoesNotExistException, InternalServerErrorException {
 
-    	return Response.status(200).entity(new Result("Mapping with id " + mappingId + " deleted!")).build();
+        try {
+            if (!metadataTransformationManager.deleteMetadataTransformation(mappingId))
+                throw new DoesNotExistException("Mapping with id " + mappingId + " does NOT exist!");
+        } catch (IOException | DocumentException e) {
+            throw new InternalServerErrorException("Error in server : " + e.getMessage());
+        }
+
+        return Response.status(200).entity(new Result("Mapping with id " + mappingId + " deleted!")).build();
+    }
+
+    /**
+     * Update a mapping.
+     * Relative path : /mappings/{mappingId}  
+     * @param mappingId  
+     * @param multiPart 
+     * @return OK or Error Message
+     * @throws MissingArgumentsException 
+     * @throws InvalidArgumentsException 
+     * @throws DoesNotExistException 
+     * @throws AlreadyExistsException 
+     * @throws InternalServerErrorException 
+     */
+    @PUT
+    @Path("/" + MappingOptionListContainer.MAPPINGID)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes("multipart/mixed")
+    @ApiOperation(value = "Update a mapping.", httpMethod = "PUT", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 400, message = "InvalidArgumentsException"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response updateMapping(@ApiParam(value = "Id of mapping", required = true) @PathParam("mappingId") String mappingId,
+            MultiPart multiPart) throws MissingArgumentsException, InternalServerErrorException, AlreadyExistsException, DoesNotExistException, InvalidArgumentsException {
+
+        MetadataTransformation mapping;
+        try {
+            mapping = getMapping(mappingId);
+        } catch (DoesNotExistException e) {
+            throw new RuntimeException("Caused by DoesNotExistException", e);
+        }
+        oldMappingId = mapping.getId();
+
+        createMapping(multiPart);
+        oldMappingId = "";
+
+        return Response.status(200).entity(new Result("Mapping with id " + mappingId + " updated!")).build();
     }
 
 }

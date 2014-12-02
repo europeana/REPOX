@@ -34,25 +34,25 @@ import java.io.File;
 public class MetadataTransformation {
     private static final Logger log             = Logger.getLogger(MetadataTransformation.class);
 
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              id;
     @XmlElement
     @ApiModelProperty
     private String              description;
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              sourceSchemaId;
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              destinationSchemaId;
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              stylesheet;
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              sourceSchemaVersion;
-    @XmlElement
+    @XmlElement(required = true)
     @ApiModelProperty
     private String              destSchemaVersion;
     private String              sourceSchema;
