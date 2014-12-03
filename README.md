@@ -72,6 +72,13 @@ The command to build is:
     This profile is bound to the `process-resources` phase of maven so its sufficient to run the maven build until this phase to get the resources. The resources that are being generated are resources that are required on demand when there is the need to run a module as a standalone or in an IDE(e.g. testing the REST API module).  
     After copying the `copy-resources` profile is run then a normal build without a profile can be run `clean package`.
 
+3. `generate-doc`
+
+    Repox uses swagger 2.0 for documenting the REST API of `repox-server-rest-jersey`. 
+    This profile is bound to the `generate-resources`.
+    &nbsp;&nbsp;&nbsp;&nbsp; `generate-resources -Pgenerate-doc`  
+    It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generated them and the applicable url and document locations can be editted in the `pom.xml` of the module.
+    
 
 Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the WEB-INF/classes directory.
 
