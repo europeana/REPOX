@@ -54,7 +54,7 @@ Repox consists of following projects:
 Repox is a maven project and can be easily build by building the root project where the parent pom is.
 The command to build is:
 
-&nbsp;&nbsp;&nbsp;&nbsp; `clean install -Pproduction`
+&nbsp;&nbsp;&nbsp;&nbsp; `clean install -Pproduction`  
 (Tests are skipped, and can be activated by configuring the maven pom's)
 
 ####Profiles####
@@ -82,7 +82,8 @@ The command to build is:
 
 Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the WEB-INF/classes directory.
 
-For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`. For other configuration needed, this file needs to be editted.
+For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`.  
+For other configuration needed, this file needs to be editted.
 
 ###Deploying Repox###
 - - -
