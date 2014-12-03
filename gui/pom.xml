@@ -48,9 +48,9 @@
 						WEB-INF/lib/asm-all-repackaged-2.2.0-b10.jar,
 						WEB-INF/lib/asm-1.5.3.jar,
 						WEB-INF/lib/cglib-2.2.0-b10.jar
-<!-- 						WEB-INF/lib/swagger-jersey2-jaxrs_2.11-1.3.10.jar, -->
-<!-- 						WEB-INF/lib/jersey-common-2.1.jar -->
-<!-- 						WEB-INF/lib/jersey-client-2.1.jar -->
+						<!-- WEB-INF/lib/swagger-jersey2-jaxrs_2.11-1.3.10.jar, -->
+						<!-- WEB-INF/lib/jersey-common-2.1.jar -->
+						<!-- WEB-INF/lib/jersey-client-2.1.jar -->
 					</packagingExcludes>
 				</configuration>
 			</plugin>
@@ -322,6 +322,10 @@
 				<exclusion>
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.resteasy</groupId>
+					<artifactId>jaxrs-api</artifactId>
 				</exclusion>
 				<!-- The below to exclusions need to be tested -->
 				<exclusion>

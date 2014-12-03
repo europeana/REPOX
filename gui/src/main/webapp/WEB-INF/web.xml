@@ -7,7 +7,6 @@
 	<description>Data Aggregation and Interoperability Manager</description>
 
 	<context-param>
-		<description>sd</description>
 		<description>
 			The location of the oaicat.properties file containing data pairs used to initialize
 			the OAI repository software.
@@ -264,13 +263,27 @@
 			<param-name>javax.ws.rs.Application</param-name>
 			<param-value>org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>6</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<url-pattern>/restj/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>JerseyJaxrsConfig</servlet-name>
+		<servlet-class>com.wordnik.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+		<init-param>
+			<param-name>api.version</param-name>
+			<param-value>1.0.0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>swagger.api.basepath</param-name>
+			<param-value>http://localhost:8080/repox-gui-2.6.0-SNAPSHOT/restj</param-value>
+		</init-param>
+		<load-on-startup>7</load-on-startup>
+	</servlet>
 
 
 	<!-- Servlet SRU Record Update -->

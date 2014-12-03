@@ -25,6 +25,7 @@ public class JerseyConfig extends ResourceConfig{
      */
     public JerseyConfig() throws MalformedURLException {
         packages("org.theeuropeanlibrary.repox.rest.servlets");
+        packages("com.wordnik.swagger.jersey.listing");
         
         //Exceptions
         register(DoesNotExistExceptionMapper.class);
