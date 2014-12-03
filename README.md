@@ -75,7 +75,7 @@ The command to build is:
 3. `generate-doc`
 
     Repox uses swagger 2.0 for documenting the REST API of `repox-server-rest-jersey`. 
-    This profile is bound to the `generate-resources`.
+    This profile is bound to the `generate-resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `generate-resources -Pgenerate-doc`  
     It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generated them and the applicable url and document locations can be editted in the `pom.xml` of the module.
     
