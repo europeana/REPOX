@@ -6,6 +6,18 @@
   "apis" : [ {
     "path" : "/providers",
     "operations" : [ {
+      "method" : "OPTIONS",
+      "summary" : "Get options over providers conext.",
+      "notes" : "",
+      "type" : "ProviderOptions",
+      "nickname" : "getOptions",
+      "produces" : [ "application/json", "application/xml" ],
+      "parameters" : [ ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a list of all available options)"
+      } ]
+    }, {
       "method" : "POST",
       "summary" : "Create a provider.",
       "notes" : "",
@@ -92,18 +104,6 @@
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
-      } ]
-    }, {
-      "method" : "OPTIONS",
-      "summary" : "Get options over providers conext.",
-      "notes" : "",
-      "type" : "ProviderOptions",
-      "nickname" : "getOptions",
-      "produces" : [ "application/json", "application/xml" ],
-      "parameters" : [ ],
-      "responseMessages" : [ {
-        "code" : 200,
-        "message" : "OK (Response containing a list of all available options)"
       } ]
     } ]
   }, {

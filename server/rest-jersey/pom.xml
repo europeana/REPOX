@@ -16,6 +16,8 @@
 
 	<properties>
 		<documentation.dir>src/main/webapp/doc/</documentation.dir>
+<!-- 		<production.url>http://localhost:8181/repox-gui-2.6.0-SNAPSHOT/restj</production.url> -->
+		<development.url>http://localhost:8080/repox/rest</development.url>
 	</properties>
 
 	<build>
@@ -143,7 +145,7 @@
 								<apiSource>
 									<locations>org.theeuropeanlibrary.repox.rest.servlets</locations>
 									<apiVersion>${project.version}</apiVersion>
-									<basePath>http://localhost:8080/repox/rest</basePath>
+									<basePath>${development.url}</basePath>
 									<!-- <basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath> -->
 									<swaggerInternalFilter>com.wordnik.swagger.config.DefaultSpecFilter</swaggerInternalFilter>
 									<!---General parameters END -->
@@ -166,7 +168,7 @@
 
 									<!---Swagger JSON parameters BEGIN -->
 									<swaggerDirectory>${documentation.dir}</swaggerDirectory>
-									<swaggerUIDocBasePath>http://localhost:8080/repox/doc</swaggerUIDocBasePath>
+									<swaggerUIDocBasePath>${development.url}/doc</swaggerUIDocBasePath>
 									<useOutputFlatStructure>true</useOutputFlatStructure>
 								</apiSource>
 							</apiSources>
@@ -217,7 +219,7 @@
 		<dependency>
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-jersey2-jaxrs_2.11</artifactId>
-			<scope>compile</scope>
+			<!-- <scope>compile</scope> -->
 			<version>1.3.10</version>
 			<exclusions>
 				<exclusion>
@@ -241,17 +243,17 @@
 			<artifactId>jersey-container-servlet</artifactId>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.glassfish.jersey.core</groupId> -->
-<!-- 			<artifactId>jersey-client</artifactId> -->
-<!-- 			<version>2.13</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.core</groupId> -->
+		<!-- <artifactId>jersey-client</artifactId> -->
+		<!-- <version>2.13</version> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.glassfish.jersey.connectors</groupId> -->
-<!-- 			<artifactId>jersey-apache-connector</artifactId> -->
-<!-- 			<version>2.13</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.connectors</groupId> -->
+		<!-- <artifactId>jersey-apache-connector</artifactId> -->
+		<!-- <version>2.13</version> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>

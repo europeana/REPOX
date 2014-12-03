@@ -44,6 +44,14 @@
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
 					<!-- <failOnMissingWebXml>false</failOnMissingWebXml> -->
+					<packagingExcludes>
+						WEB-INF/lib/asm-all-repackaged-2.2.0-b10.jar,
+						WEB-INF/lib/asm-1.5.3.jar,
+						WEB-INF/lib/cglib-2.2.0-b10.jar
+<!-- 						WEB-INF/lib/swagger-jersey2-jaxrs_2.11-1.3.10.jar, -->
+<!-- 						WEB-INF/lib/jersey-common-2.1.jar -->
+<!-- 						WEB-INF/lib/jersey-client-2.1.jar -->
+					</packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -55,7 +63,7 @@
 							<module>harvesterUI.HarvesterUI</module>
 							<style>OBFUSCATED</style>
 							<localWorkers>4</localWorkers>
-<!-- 							<extraJvmArgs>-Xms512m -Xmx512m</extraJvmArgs> -->
+							<!-- <extraJvmArgs>-Xms512m -Xmx512m</extraJvmArgs> -->
 							<deploy>${project.build.directory}/gwt-deploy</deploy>
 						</configuration>
 						<goals>
@@ -178,12 +186,14 @@
 	</profiles>
 
 	<dependencies>
-		<!-- <dependency> -->
-		<!-- <groupId>org.kohsuke.rngom</groupId> -->
-		<!-- <artifactId>rngom</artifactId> -->
-		<!-- <version>20100718</version> -->
-		<!-- </dependency> -->
 		<!-- REPOX Core Libs -->
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-manager</artifactId>
@@ -198,6 +208,13 @@
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-server-rest</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-server-rest-jersey</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 

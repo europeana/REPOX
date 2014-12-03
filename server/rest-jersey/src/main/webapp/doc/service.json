@@ -2,8 +2,11 @@
   "apiVersion" : "0.0.1-SNAPSHOT",
   "swaggerVersion" : "1.2",
   "apis" : [ {
-    "path" : "/datasets.{format}",
+    "path" : "/harvest.{format}",
     "description" : "Rest api for datasets"
+  }, {
+    "path" : "/mappings.{format}",
+    "description" : "Rest api for mappings"
   }, {
     "path" : "/aggregators.{format}",
     "description" : "Rest api for aggregators"
@@ -11,14 +14,11 @@
     "path" : "/providers.{format}",
     "description" : "Rest api for providers"
   }, {
-    "path" : "/harvest.{format}",
-    "description" : "Rest api for datasets"
-  }, {
-    "path" : "/mappings.{format}",
-    "description" : "Rest api for mappings"
-  }, {
     "path" : "/options.{format}",
     "description" : "Rest api for options context"
+  }, {
+    "path" : "/datasets.{format}",
+    "description" : "Rest api for datasets"
   } ],
   "info" : {
     "title" : "REPOX SERVER REST JERSEY",
@@ -26,5 +26,5 @@
     "license" : "Apache 2.0",
     "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html"
   },
-  "basePath" : "http://localhost:8080/repox/doc"
+  "basePath" : "http://localhost:8080/repox/rest/doc"
 }

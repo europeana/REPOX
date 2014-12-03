@@ -36,6 +36,9 @@
         "code" : 201,
         "message" : "Created (Response containing a String message)"
       }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
         "code" : 404,
         "message" : "DoesNotExistException"
       }, {
@@ -94,6 +97,50 @@
       }, {
         "code" : 404,
         "message" : "DoesNotExistException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
+      } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Update a mapping.",
+      "notes" : "",
+      "type" : "string",
+      "nickname" : "updateMapping",
+      "produces" : [ "application/json", "application/xml" ],
+      "consumes" : [ "multipart/mixed" ],
+      "parameters" : [ {
+        "name" : "mappingId",
+        "description" : "Id of mapping",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path",
+        "allowMultiple" : false
+      }, {
+        "name" : "body",
+        "required" : false,
+        "type" : "MultiPart",
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "OK (Response containing a String message)"
+      }, {
+        "code" : 400,
+        "message" : "InvalidArgumentsException"
+      }, {
+        "code" : 404,
+        "message" : "DoesNotExistException"
+      }, {
+        "code" : 406,
+        "message" : "MissingArgumentsException"
+      }, {
+        "code" : 409,
+        "message" : "AlreadyExistsException"
+      }, {
+        "code" : 500,
+        "message" : "InternalServerErrorException"
       } ]
     } ]
   } ],
@@ -110,11 +157,8 @@
         "entity" : {
           "$ref" : "Object"
         },
-        "headers" : {
-          "$ref" : "javax.ws.rs.core.MultivaluedMap<java.lang.String, java.lang.String>"
-        },
-        "providers" : {
-          "$ref" : "Providers"
+        "parent" : {
+          "$ref" : "MultiPart"
         },
         "parameterizedHeaders" : {
           "$ref" : "javax.ws.rs.core.MultivaluedMap<java.lang.String, org.glassfish.jersey.message.internal.ParameterizedHeader>"
@@ -125,8 +169,11 @@
         "mediaType" : {
           "$ref" : "MediaType"
         },
-        "parent" : {
-          "$ref" : "MultiPart"
+        "headers" : {
+          "$ref" : "javax.ws.rs.core.MultivaluedMap<java.lang.String, java.lang.String>"
+        },
+        "providers" : {
+          "$ref" : "Providers"
         },
         "messageBodyWorkers" : {
           "$ref" : "MessageBodyWorkers"

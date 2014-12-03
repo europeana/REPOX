@@ -311,7 +311,7 @@
     "ScheduledTask" : {
       "id" : "ScheduledTask",
       "description" : "",
-      "required" : [ "frequency", "date", "time" ],
+      "required" : [ "frequency", "time", "date" ],
       "properties" : {
         "id" : {
           "type" : "string"
@@ -324,10 +324,10 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "date" : {
+        "time" : {
           "type" : "string"
         },
-        "time" : {
+        "date" : {
           "type" : "string"
         }
       }
