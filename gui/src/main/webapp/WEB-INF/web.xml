@@ -282,7 +282,7 @@
 			<param-name>swagger.api.basepath</param-name>
 			<param-value>http://localhost:8080/repox-gui-2.6.0-SNAPSHOT/restj</param-value>
 		</init-param>
-		<load-on-startup>7</load-on-startup>
+		<load-on-startup>8</load-on-startup>
 	</servlet>
 
 
