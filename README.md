@@ -1,5 +1,3 @@
-#REPOX#
-
 **CAUTION!**  
 **The information below is subject to change**
 
@@ -25,6 +23,12 @@ Original repox site:
 Repox github site:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Repox github development](https://github.com/europeana/repox2 "Repox github development")
 
+###Contributor###
+- - - 
+<img src="http://www.theeuropeanlibrary.org/confluence/download/attachments/8880494/TEL_logoe_transparent_AEtry-out.jpg" alt="The European Library" width=200px/>  
+The European Library is the main contributor of refactoring the whole REPOX project as it was originally delivered from v2.3.5 to v3.0 and upwards,  
+including new implementations of REST API's, bug fixing and introducing new features.
+
 ###Repox Structure Overview###
 - - - 
 Repox consists of following projects:
@@ -32,7 +36,8 @@ Repox consists of following projects:
 * __Repox Parent (repox-system)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This project is basically the parent project consisting of the modules repox-gui, repox-manager, repox-commons, repox-server(repox-server-client, repox-server-oai), repox-resources
 * __Repox Gui (repox-gui)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The GUI implementation using GWT. This is the main war build that should be deployed in a servlet container.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The GUI implementation using GWT. This is the main war build that should be deployed in a servlet container.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The URL configuration of swagger-core dynamic JSON generation is located in the `web.xml`.
 * __Repox Manager (repox-manager)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; As the name of the module describes it is the core manager of the repox features. 
 * __Repox Commons (repox-commons)__  
@@ -42,9 +47,12 @@ Repox consists of following projects:
 * __Repox Server (repox-server)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The repox-server module is another parent project that contains the following modules repox-server-rest, repox-server-rest-jersey, repox-server-oai.
 * __Repox Server Rest (repox-server-rest)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the API Restful service for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the API Restful service for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the full build is initiated, then the `web.xml` of the `repox-gui` is the valid one, so any values in this `web.xml` must be copied in the `web.xml` of the `repox-gui`.
 * __Repox Server Rest Jersey(repox-server-rest-jersey)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The new RESTful API service, using Jersey 2 framework for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The new RESTful API service, using Jersey 2 framework for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The URL configuration of swagger-core dynamic JSON generation is located in the `web.xml`.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the full build is initiated, then the `web.xml` of the `repox-gui` is the valid one, so any values in this `web.xml` must be copied in the `web.xml` of the `repox-gui`.
 * __Repox Server OAI (repox-server-oai)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; An OAI-PMH endpoint for accessing information of Repox datasets. This module can be build and deployed independently from the repox-gui.
 
@@ -63,13 +71,15 @@ The command to build is:
 
     This is the profile that should be used when everything is in place and the resources of the `repox-resources` project are updated.  
     Always run this profile when a project is ready to run outside of an IDE.  
-    <b>!Caution:</b> Deletes specific resources that are bound in the `src/main/resources` and then generates the build. The resources that are being deleted are resources that were previously generated on demand when there is the need to run a module as a standalone or in an IDE(e.g. testing the REST API module).
+    <b>!Caution:</b> Deletes specific resources that are bound in the `src/main/resources` and then generates the build. The resources that are being deleted are resources that were  
+    previously generated on demand when there is the need to run a module as a standalone or in an IDE(e.g. testing the REST API module).
 
 2. `copy-resources`
 
     Maven profile that generates copies of specific configuration files from the repox-resources project to the maven `src/main/resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `process-resources -Pcopy-resources`  
-    This profile is bound to the `process-resources` phase of maven so its sufficient to run the maven build until this phase to get the resources. The resources that are being generated are resources that are required on demand when there is the need to run a module as a standalone or in an IDE(e.g. testing the REST API module).  
+    This profile is bound to the `process-resources` phase of maven so its sufficient to run the maven build until this phase to get the resources(In some IDE's a refresh of the project is needed).  
+    The resources that are being generated are resources that are required on demand when there is the need to run a module as a standalone or in an IDE(e.g. testing the REST API module).  
     After copying the `copy-resources` profile is run then a normal build without a profile can be run `clean package`.
 
 3. `generate-doc`
@@ -77,23 +87,24 @@ The command to build is:
     Repox uses swagger 2.0 for documenting the REST API of `repox-server-rest-jersey`. 
     This profile is bound to the `generate-resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `generate-resources -Pgenerate-doc`  
-    It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generated them and the applicable url and document locations can be editted in the `pom.xml` of the module.
+    It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generate them and the applicable  
+    url and document locations can be editted in the `pom.xml` of the module.
     
 
-Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the WEB-INF/classes directory.
+Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the `WEB-INF/classes` directory.
 
 For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`.  
-For other configuration needed, this file needs to be editted.
+For other configuration needs, this file needs to be edited.
 
 ###Deploying Repox###
 - - -
-For Repox deployment there is a need of a PostgreSQL or MySQL database server and a servlet container as tomcat.  
+For Repox deployment there is a need of a MySQL or PostgreSQL database server and a servlet container as tomcat.  
 Tested versions are:  
 &nbsp;&nbsp;&nbsp;&nbsp; <b>MySQL</b> 5.5.40, 5.6.20  
 &nbsp;&nbsp;&nbsp;&nbsp; <b>PostgreSQL</b> 9.1.14, 9.3.5  
 &nbsp;&nbsp;&nbsp;&nbsp; <b>Tomcat</b> 6.0.41, 7.0.55, 8.0.12  
 
-Additionally a database schema with a username with password that can access and modidy it, is needed in the SQL server.
+Additionally a database schema with a username and password that can access and modify it, is needed in the SQL server.
 These information must be added in the `configuration.properties` file mentioned above.  
 
 After the above software is configured the .war file, created by building the <b>repox-system</b> and located under `/repox-gui/target`, can be moved in the `webapps` directory of tomcat.

@@ -214,7 +214,6 @@
 		<dependency>
 			<groupId>repox</groupId>
 			<artifactId>repox-server-rest-jersey</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 
