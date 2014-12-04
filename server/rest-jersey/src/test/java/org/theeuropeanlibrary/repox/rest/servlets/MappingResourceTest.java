@@ -23,7 +23,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dom4j.DocumentException;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
@@ -45,7 +44,6 @@ import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.metadataTransformation.TransformationsFileManager;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
 
 /**
@@ -54,6 +52,7 @@ import pt.utl.ist.util.exceptions.SameStylesheetTransformationException;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Nov 27, 2014
  */
+//@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TransformationsFileManager.class)
 public class MappingResourceTest extends JerseyTest {
@@ -87,7 +86,7 @@ public class MappingResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.MappingResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {
         int numberOfAvailableOptions = 1;
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
@@ -108,7 +107,7 @@ public class MappingResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-      @Ignore
+//      @Ignore
     public void testCreateMapping() throws Exception{
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
 
@@ -224,7 +223,7 @@ public class MappingResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetMapping() throws Exception {
         String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
@@ -241,7 +240,7 @@ public class MappingResourceTest extends JerseyTest {
      * @throws Exception 
      */
 	@Test
-	@Ignore
+//	@Ignore
 	public void testDeleteMapping() throws Exception {
 		String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
@@ -265,7 +264,7 @@ public class MappingResourceTest extends JerseyTest {
      */
     @Test
 //  @Ignore
-    public void testUpdateMapping() throws Exception {
+    public void testUpdateMapping() throws Exception {     
         String mappingId = "SampleId2";
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS + "/" + mappingId);
         
@@ -279,8 +278,9 @@ public class MappingResourceTest extends JerseyTest {
         multiPartEntity.bodyPart(filePart);
         multiPartEntity.close();
         
-        //Valid
+        //Only check for the accessing call since the rest tests are already in place
+        //Does NOT exist
         Response response = target.request().put(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")), Response.class);
-        assertEquals(200, response.getStatus());
+        assertEquals(404, response.getStatus());
     }
 }

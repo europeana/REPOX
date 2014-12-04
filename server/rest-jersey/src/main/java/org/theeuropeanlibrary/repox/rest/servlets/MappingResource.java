@@ -170,7 +170,7 @@ public class MappingResource {
         {
             metadataTransformation.setStylesheet(FilenameUtils.removeExtension(metadataTransformation.getStylesheet()));
         }
-        if(oldMappingId != null && !oldMappingId.isEmpty()) //Validates only when called from the update method
+        if (oldMappingId != null && !oldMappingId.isEmpty()) //Validates only when called from the update method
         {
             MetadataTransformation mapping = getMapping(oldMappingId);
             TransformationsFileManager.deleteTransformationFiles(FilenameUtils.removeExtension(mapping.getStylesheet()), xsltDir, metadataTransformationManager.getXmapDir());
@@ -301,11 +301,8 @@ public class MappingResource {
             MultiPart multiPart) throws MissingArgumentsException, InternalServerErrorException, AlreadyExistsException, DoesNotExistException, InvalidArgumentsException {
 
         MetadataTransformation mapping;
-        try {
-            mapping = getMapping(mappingId);
-        } catch (DoesNotExistException e) {
-            throw new RuntimeException("Caused by DoesNotExistException", e);
-        }
+        
+        mapping = getMapping(mappingId);
         oldMappingId = mapping.getId();
 
         createMapping(multiPart);

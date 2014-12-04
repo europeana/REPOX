@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,7 +35,10 @@ public class RootOptionListContainer extends OptionListContainer {
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get information about all the options provided ", baseUri + RootOptionListContainer.OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Aggregators ", baseUri + AggregatorOptionListContainer.AGGREGATORS, null));
-        optionList.add(new Option("[OPTIONS]Get further options over Aggregators ", baseUri + ProviderOptionListContainer.PROVIDERS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Providers ", baseUri + ProviderOptionListContainer.PROVIDERS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Datasets ", baseUri + DatasetOptionListContainer.DATASETS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Harvests ", baseUri + DatasetOptionListContainer.DATASETS + "/" +HarvestOptionListContainer.HARVEST, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Mappings ", baseUri + MappingOptionListContainer.MAPPINGS, null));
         
         setOptionList(optionList);
     }
