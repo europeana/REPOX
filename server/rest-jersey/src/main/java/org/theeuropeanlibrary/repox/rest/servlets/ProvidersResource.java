@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -88,6 +89,21 @@ public class ProvidersResource {
     public ProviderOptionListContainer getOptions() {
         ProviderOptionListContainer providerOptionListContainer = new ProviderOptionListContainer(uriInfo.getBaseUri());
         return providerOptionListContainer;
+    }
+    
+    /**
+     * Retrieve all the available options for Providers(For browser visibility).
+     * Relative path : /providers
+     * @return the list of the options available wrapped in a container
+     */
+    @GET
+    @Path("/" + ProviderOptionListContainer.OPTIONS)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get options over providers conext.", httpMethod = "GET", response = ProviderOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
+    public ProviderOptionListContainer getGETOptions() {
+        return getOptions();
     }
 
     /**

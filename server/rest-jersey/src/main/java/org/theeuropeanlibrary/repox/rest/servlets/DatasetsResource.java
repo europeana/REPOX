@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,8 +27,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.dom4j.DocumentException;
+import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -111,6 +110,21 @@ public class DatasetsResource {
     public DatasetOptionListContainer getOptions() {
         DatasetOptionListContainer datasetOptionListContainer = new DatasetOptionListContainer(uriInfo.getBaseUri());
         return datasetOptionListContainer;
+    }
+    
+    /**
+     * Retrieve all the available options for Datasets(For browser visibility).
+     * Relative path : /datasets
+     * @return the list of the options available wrapped in a container
+     */
+    @GET
+    @Path("/" + DatasetOptionListContainer.OPTIONS)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get options over datasets conext.", httpMethod = "GET", response = DatasetOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
+    public DatasetOptionListContainer getGETOptions() {
+        return getOptions();
     }
 
     /**

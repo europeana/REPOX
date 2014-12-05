@@ -25,6 +25,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class HarvestOptionListContainer extends OptionListContainer {
     public static final String HARVEST = "harvest";
     public static final String HARVESTS = "harvests";
+    public static final String OPTIONS = "options";
     public static final String START = "start";
     public static final String CANCEL = "cancel";
     public static final String STATUS = "status";

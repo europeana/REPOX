@@ -101,6 +101,21 @@ public class HarvestResource {
         HarvestOptionListContainer harvestOptionListContainer = new HarvestOptionListContainer(uriInfo.getBaseUri());
         return harvestOptionListContainer;
     }
+    
+    /**
+     * Retrieve all the available options for Harvest(For browser visibility).
+     * Relative path : /datasets/harvest
+     * @return the list of the options available wrapped in a container
+     */
+    @GET
+    @Path("/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.OPTIONS)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get options over harvest conext.", httpMethod = "GET", response = HarvestOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)") })
+    public HarvestOptionListContainer getGETOptions() {
+        return getOptions();
+    }
 
     /**
      * Initiates a new harvest of the dataset with id.

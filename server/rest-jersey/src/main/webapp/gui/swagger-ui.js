@@ -1466,7 +1466,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
     HeaderView.prototype.showRepoxDev = function(e) {
       return this.trigger('update-swagger-ui', {
-        url: "http://localhost:8080/repox/doc/service.json"
+        url: "http://localhost:8080/repox/rest/api-docs"
       });
     };
 

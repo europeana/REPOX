@@ -74,7 +74,7 @@ public class AggregatorsResource {
     }
 
     /**
-     * Retrieve all the available options for Aggregators
+     * Retrieve all the available options for Aggregators.
      * Relative path : /aggregators
      * @return the list of the options available wrapped in a container
      */
@@ -87,6 +87,22 @@ public class AggregatorsResource {
     public AggregatorOptionListContainer getOptions() {
         AggregatorOptionListContainer aggregatorOptionListContainer = new AggregatorOptionListContainer(uriInfo.getBaseUri());
         return aggregatorOptionListContainer;
+    }
+
+    /**
+    * Retrieve all the available options for Aggregators(For browser visibility).
+    * Relative path : /aggregators
+    * @return the list of the options available wrapped in a container
+    */
+    @GET
+    @Path("/" + AggregatorOptionListContainer.OPTIONS)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Get options over aggregator conext.", httpMethod = "GET", response = AggregatorOptionListContainer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a list of all available options)")
+    })
+    public AggregatorOptionListContainer getGETOptions() {
+        return getOptions();
     }
 
     /**

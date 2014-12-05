@@ -25,6 +25,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class AggregatorOptionListContainer extends OptionListContainer {
     public static final String AGGREGATORS = "aggregators";
     public static final String AGGREGATORID = "{aggregatorId}";
+    public static final String OPTIONS = "options";
     //Query parameters
     public static final String OFFSET = "offset";
     public static final String NUMBER = "number";
