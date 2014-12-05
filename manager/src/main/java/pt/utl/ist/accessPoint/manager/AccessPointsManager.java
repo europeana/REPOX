@@ -8,6 +8,7 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.oai.OaiListResponse;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+
 import pt.utl.ist.oai.OaiListResponse.OaiItem;
 
 /**
@@ -148,8 +150,9 @@ public interface AccessPointsManager {
      * @throws IOException
      * @throws DocumentException
      * @throws SQLException
+     * @throws ObjectNotFoundException 
      */
-    Collection<OaiItem> getRecords(Urn... urnOfRecords) throws IOException, DocumentException, SQLException;
+    Collection<OaiItem> getRecords(Urn... urnOfRecords) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
     /**
      * Gets an OaiItem corresponding to a RecordRepox URN
@@ -159,8 +162,9 @@ public interface AccessPointsManager {
      * @throws IOException
      * @throws DocumentException
      * @throws SQLException
+     * @throws ObjectNotFoundException 
      */
-    OaiItem getRecord(Urn urnOfRecord) throws IOException, DocumentException, SQLException;
+    OaiItem getRecord(Urn urnOfRecord) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
     /**
      * Gets a Map of Records and respective update Dates of a given DataSource

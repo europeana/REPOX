@@ -17,11 +17,13 @@ import org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource;
 import org.theeuropeanlibrary.repox.rest.servlets.HarvestResource;
 import org.theeuropeanlibrary.repox.rest.servlets.MappingResource;
 import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
+import org.theeuropeanlibrary.repox.rest.servlets.RecordsResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.task.TaskManager;
+import pt.utl.ist.util.Urn;
 
 /**
  * Register all the resources for the jersey configuration for Testing
@@ -35,6 +37,7 @@ public class JerseyConfigMocked extends ResourceConfig {
     private static TaskManager taskManager = mock(TaskManager.class);
     private static MetadataTransformationManager metadataTransformationManager = mock(MetadataTransformationManager.class);
     private static MetadataSchemaManager metadataSchemaManager = mock(MetadataSchemaManager.class);
+    private static Urn urn = mock(Urn.class);
 
     /**
      * Creates a new instance of this class.
@@ -56,11 +59,13 @@ public class JerseyConfigMocked extends ResourceConfig {
         DatasetsResource dr = new DatasetsResource(dataManager);
         HarvestResource hr = new HarvestResource(dataManager, taskManager);
         MappingResource mr = new MappingResource(dataManager, metadataTransformationManager, metadataSchemaManager);
+        RecordsResource rr = new RecordsResource(dataManager, urn);
         register(ar);
         register(pr);
         register(dr);
         register(hr);
         register(mr);
+        register(rr);
         
         //Features
         packages("org.glassfish.jersey.examples.multipart");

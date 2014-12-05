@@ -40,6 +40,7 @@ import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.TransformationResultLogger;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.XmlUtil;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import javax.xml.transform.TransformerException;
 
@@ -94,8 +95,9 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
      *                the specified identifier was found but the item is flagged
      *                as deleted and thus no schemaLocations (i.e.
      *                metadataFormats) can be produced.
+     * @throws ObjectNotFoundException 
      */
-    public Map<String, String> getRepoxSchemaLocations(String identifier) throws IdDoesNotExistException, NoMetadataFormatsException {
+    public Map<String, String> getRepoxSchemaLocations(String identifier) throws IdDoesNotExistException, NoMetadataFormatsException, ObjectNotFoundException {
         Map<String, String> schemaLocationsMap = new HashMap<String, String>();
         MetadataSchemaManager metadataSchemaManager = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getMetadataSchemaManager();
 

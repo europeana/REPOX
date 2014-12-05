@@ -3251,9 +3251,10 @@ public class DefaultDataManager implements DataManager {
      * @throws IOException
      * @throws DocumentException
      * @throws SQLException
+     * @throws ObjectNotFoundException 
      */
     @Override
-    public Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException {
+    public Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         byte[] recordMetadata = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().getRecord(recordUrn).getMetadata();
         SAXReader reader = new SAXReader();
         Document recordDocument = reader.read(new ByteArrayInputStream(recordMetadata));

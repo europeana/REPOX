@@ -2277,7 +2277,7 @@ public class DefaultWebServices implements WebServices {
         RestUtils.writeRestResponse(out, runningTasksElement);
     }
 
-    public void getRecord(OutputStream out, Urn recordUrn) throws IOException, DocumentException, SQLException {
+    public void getRecord(OutputStream out, Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         Node detachedRecordNode = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).getRecord(recordUrn);
 
         Element recordResultElement = DocumentHelper.createElement("recordResult");

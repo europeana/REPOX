@@ -1,6 +1,17 @@
 package pt.utl.ist.accessPoint.manager;
 
-import com.ibm.icu.text.SimpleDateFormat;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -21,13 +32,10 @@ import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.ZipUtil;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.sql.SqlUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
+import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * Implementation of an AccessPointsManagerDefault based on a Sql database
@@ -749,8 +757,11 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     }
 
     @Override
-    public OaiItem getRecord(Urn urnOfRecord) throws IOException, DocumentException, SQLException {
-        DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(urnOfRecord.getDataSourceId()).getDataSource();
+    public OaiItem getRecord(Urn urnOfRecord) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
+        DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(urnOfRecord.getDataSourceId());
+        if(dataSourceContainer == null)
+            throw new ObjectNotFoundException("DataSource with id " + urnOfRecord.getDataSourceId() + " NOT found!");
+        DataSource dataSource = dataSourceContainer.getDataSource();
 
         String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
         String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
@@ -808,7 +819,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     }
 
     @Override
-    public Collection<OaiItem> getRecords(Urn... urnOfRecords) throws IOException, DocumentException, SQLException {
+    public Collection<OaiItem> getRecords(Urn... urnOfRecords) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         List<OaiItem> items = new ArrayList<>();
         for (Urn urnOfRecord : urnOfRecords) {
             items.add(getRecord(urnOfRecord));

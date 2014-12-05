@@ -28,6 +28,7 @@ import pt.utl.ist.rest.services.web.rest.RestRequest;
 import pt.utl.ist.rest.services.web.rest.RestUtils;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.shared.ProjectType;
 
 public class RestServlet extends HttpServlet {
@@ -326,7 +327,7 @@ public class RestServlet extends HttpServlet {
         return true;
     }
 
-    private boolean validateRecordUrn(RestRequest restRequest, ServletOutputStream out, String recordUrnString) throws IOException, DocumentException, SQLException {
+    private boolean validateRecordUrn(RestRequest restRequest, ServletOutputStream out, String recordUrnString) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         Urn recordUrn;
 
         try {

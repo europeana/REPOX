@@ -412,7 +412,7 @@ public class HarvestResource {
      */
     @GET
     @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG)
-    @Produces({ MediaType.TEXT_PLAIN })
+    @Produces({ MediaType.APPLICATION_XML })
     @ApiOperation(value = "Gets the logs of the last ingest.", httpMethod = "GET", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),

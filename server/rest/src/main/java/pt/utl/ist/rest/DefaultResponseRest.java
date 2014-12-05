@@ -15,6 +15,7 @@ import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidRequestException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class DefaultResponseRest extends ResponseOperations implements ResponseRest {
     @Override
-    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException {
+    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException, ObjectNotFoundException {
 
         DefaultWebServices defaultWebServices = (DefaultWebServices)webServices;
 

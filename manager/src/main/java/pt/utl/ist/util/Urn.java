@@ -3,6 +3,7 @@ package pt.utl.ist.util;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.configuration.RepoxManager;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.util.InvalidInputException;
@@ -159,7 +160,8 @@ public class Urn {
         //		Urn urn = new Urn("urn:repox.ist.utl.pt:");
         //		Urn urn = new Urn("urn:repox.ist.utl.pt:a1");
         //		Urn urn = new Urn("urn:repox.ist.utl.pt:a1:ASD3");
-        Urn urn = new Urn("oai:repox.ist.utl.pt:a1:ASD3;2008-01-29;asdasd:234324");
+//        Urn urn = new Urn("oai:repox.ist.utl.pt:a1:ASD3;2008-01-29;asdasd:234324");
+        Urn urn = new Urn("oai:sip-manager.isti.cnr.it.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/+Z103526808;");
         System.out.println(urn.getDataSourceId());
         System.out.println(urn.getRecordId());
         System.out.println(urn.getTimestamp());

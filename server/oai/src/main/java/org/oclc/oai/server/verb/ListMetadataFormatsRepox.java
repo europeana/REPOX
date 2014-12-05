@@ -18,6 +18,7 @@ import org.oclc.oai.util.OAIUtil;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.oai.server.catalog.DataSourceOaiCatalog;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,8 +62,9 @@ public class ListMetadataFormatsRepox extends ServerVerb {
      * @exception OAIInternalServerError
      *                an http 500 status code problem
      * @throws TransformerException 
+     * @throws ObjectNotFoundException 
      */
-    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws OAIInternalServerError, TransformerException {
+    public static String construct(HashMap context, HttpServletRequest request, HttpServletResponse response, Transformer serverTransformer) throws OAIInternalServerError, TransformerException, ObjectNotFoundException {
         Properties properties = (Properties)context.get("OAIHandler.properties");
         AbstractCatalog abstractCatalog = (AbstractCatalog)context.get("OAIHandler.catalog");
         String baseURL = properties.getProperty("OAIHandler.baseURL");

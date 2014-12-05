@@ -12,6 +12,7 @@ import org.dom4j.DocumentException;
 import pt.utl.ist.rest.services.web.WebServices;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.exceptions.InvalidRequestException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +23,6 @@ import pt.utl.ist.util.exceptions.InvalidRequestException;
  */
 public interface ResponseRest {
 
-    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException;
+    public void response(HttpServletRequest request, HttpServletResponse response, WebServices webServices) throws InvalidRequestException, IOException, DocumentException, ParseException, ClassNotFoundException, NoSuchMethodException, InvalidInputException, SQLException, ObjectNotFoundException;
 
 }

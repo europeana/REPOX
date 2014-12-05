@@ -353,10 +353,10 @@ public class HarvestResourceTest extends JerseyTest {
         when(dataManager.getDataSourceContainer(datasetId)).thenThrow(new IOException()).thenReturn(null).thenReturn(defaultDataSourceContainer);
 
         //Internal Server Error    
-        Response response = target.request(MediaType.TEXT_PLAIN).get();
+        Response response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(500, response.getStatus());
         //Non existent
-        response = target.request(MediaType.TEXT_PLAIN).get();
+        response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
 
         DataSource datasource = mock(DataSource.class);
@@ -364,15 +364,15 @@ public class HarvestResourceTest extends JerseyTest {
         when(datasource.getLastLogDataSource()).thenThrow(new ObjectNotFoundException("Log file NOT found!")).thenThrow(new IOException()).thenReturn("Log lines...");
 
         //Non existent
-        response = target.request(MediaType.TEXT_PLAIN).get();
+        response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
 
         //Internal Server Error    
-        response = target.request(MediaType.TEXT_PLAIN).get();
+        response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(500, response.getStatus());
 
         //Valid
-        response = target.request(MediaType.TEXT_PLAIN).get();
+        response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(200, response.getStatus());
     }
 

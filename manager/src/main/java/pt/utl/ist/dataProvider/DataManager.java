@@ -120,7 +120,7 @@ public interface DataManager {
     String getDirPathFtp(String dataSourceId);
 
     //********************RECORDS ********************/
-    Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException;
+    Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
     MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException;
 
