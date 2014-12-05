@@ -32,7 +32,7 @@ public class PropertyUtil {
 
             return properties;
         } catch (Exception e) {
-            throw new IllegalArgumentException("could not load [" + configurationFilename + "]");
+            throw new IllegalArgumentException("Could not load [" + configurationFilename + "]");
         }
     }
 

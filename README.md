@@ -56,6 +56,17 @@ Repox consists of following projects:
 * __Repox Server OAI (repox-server-oai)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; An OAI-PMH endpoint for accessing information of Repox datasets. This module can be build and deployed independently from the repox-gui.
 
+###General Information###
+- - -
+*  A separate configuration file, instead the one on `WEB-INF/classes` directory of the .war, can be used by declaring a JVM system variable of the directory where the  
+required `configuration.properties` file is located, like so `repox.data.dir=/path/to/configuration/dir`
+*  All the configuration files in Repox are always read once and then the information is kept in memory, any changes on the files are not reflected to the memory.  
+Repox overwrites these files on changes, so for example a change that is made on the `configuration.properties` file will not be visible to the implementation,  
+it will only be visible only if Repox is restarted.
+*  For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`.  
+For other configuration needs, this file needs to be edited.
+*  Tests on the Repox build are skipped by default in the `maven-surefire-plugin` and can be activated from the `repox-system` `pom.xml` by changing  
+the property `skipTests` from `true` to `false`.
 
 ###Building Repox###
 - - -
@@ -63,7 +74,6 @@ Repox is a maven project and can be easily build by building the root project wh
 The command to build is:
 
 &nbsp;&nbsp;&nbsp;&nbsp; `clean install -Pproduction`  
-(Tests are skipped, and can be activated by configuring the maven pom's)
 
 ####Profiles####
 
@@ -88,13 +98,8 @@ The command to build is:
     This profile is bound to the `generate-resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `generate-resources -Pgenerate-doc`  
     It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generate them and the applicable  
-    url and document locations can be editted in the `pom.xml` of the module.
-    
+    url and document locations can be edited in the `pom.xml` of the module.
 
-Something to mention is that the application will read the `configuration.properties` file that is located in the configurations directory(if it exists) and will ignore the `configuration.properties` located in the `WEB-INF/classes` directory.
-
-For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`.  
-For other configuration needs, this file needs to be edited.
 
 ###Deploying Repox###
 - - -
