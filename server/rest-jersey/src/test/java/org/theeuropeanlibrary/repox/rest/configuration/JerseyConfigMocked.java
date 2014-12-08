@@ -18,6 +18,7 @@ import org.theeuropeanlibrary.repox.rest.servlets.HarvestResource;
 import org.theeuropeanlibrary.repox.rest.servlets.MappingResource;
 import org.theeuropeanlibrary.repox.rest.servlets.ProvidersResource;
 import org.theeuropeanlibrary.repox.rest.servlets.RecordsResource;
+import org.theeuropeanlibrary.repox.rest.servlets.StatisticsResource;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
@@ -60,12 +61,14 @@ public class JerseyConfigMocked extends ResourceConfig {
         HarvestResource hr = new HarvestResource(dataManager, taskManager);
         MappingResource mr = new MappingResource(dataManager, metadataTransformationManager, metadataSchemaManager);
         RecordsResource rr = new RecordsResource(dataManager, urn);
+        StatisticsResource sr = new StatisticsResource(dataManager);
         register(ar);
         register(pr);
         register(dr);
         register(hr);
         register(mr);
         register(rr);
+        register(sr);
         
         //Features
         packages("org.glassfish.jersey.examples.multipart");

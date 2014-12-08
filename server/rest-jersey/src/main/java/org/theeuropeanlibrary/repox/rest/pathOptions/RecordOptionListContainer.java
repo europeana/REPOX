@@ -58,5 +58,4 @@ public class RecordOptionListContainer extends OptionListContainer {
     public RecordOptionListContainer(List<Option> optionList) {
         super(optionList);
     }
-
 }
