@@ -3,6 +3,7 @@ package org.theeuropeanlibrary.repox.rest.pathOptions;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,6 +25,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class MappingOptionListContainer extends OptionListContainer {
     public static final String MAPPINGS = "mappings";
     public static final String MAPPINGID = "{mappingId}";
+    public static final String MAPPINGIDLITERAL = "mappingId";
     public static final String OPTIONS = "options";
 
     /**
@@ -40,6 +42,11 @@ public class MappingOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over mappings.", baseUri + MAPPINGS, null));
+        optionList.add(new Option("[GET]Get options over mappings.", baseUri + MAPPINGS + "/" + MappingOptionListContainer.OPTIONS, null));
+        optionList.add(new Option("[POST]Create a new mapping - XSL file through HTTP POST.", baseUri + MAPPINGS, null));
+        optionList.add(new Option("[GET]Retrieve a mapping.", baseUri + MAPPINGS, Arrays.asList(MAPPINGIDLITERAL)));
+        optionList.add(new Option("[PUT]Update a mapping.", baseUri + MAPPINGS, Arrays.asList(MAPPINGIDLITERAL)));
+        optionList.add(new Option("[DELETE]Delete a mapping.", baseUri + MAPPINGS, Arrays.asList(MAPPINGIDLITERAL)));
         
         setOptionList(optionList);
     }

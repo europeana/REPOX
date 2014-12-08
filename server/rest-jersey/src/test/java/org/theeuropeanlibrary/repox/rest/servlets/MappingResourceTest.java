@@ -88,7 +88,7 @@ public class MappingResourceTest extends JerseyTest {
     @Test
 //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 1;
+        int numberOfAvailableOptions = 6;
         WebTarget target = target("/" + MappingOptionListContainer.MAPPINGS);
 
         //Check xml options working
