@@ -22,6 +22,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel(value = "An Option List container")
 public class StatisticsOptionListContainer extends OptionListContainer {
 	public static final String STATISTICS = "statistics";
+	public static final String OPTIONS = "options";
 	
 	/**
      * No argument constructor needed for JAXB.
@@ -38,6 +39,8 @@ public class StatisticsOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over Statistics.", baseUri + STATISTICS, null));
+        optionList.add(new Option("[GET]Get options over Statistics.", baseUri + STATISTICS + "/" + OPTIONS, null));
+        optionList.add(new Option("[GET]Retrieve the statistics.", baseUri + STATISTICS, null));
         
         setOptionList(optionList);
     }

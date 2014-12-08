@@ -137,7 +137,7 @@ public class RecordsResource {
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response getRecord(@QueryParam("recordId") String recordId) throws DoesNotExistException, InvalidArgumentsException, IOException {
+    public Response getRecord(@QueryParam("recordId") String recordId) throws DoesNotExistException, InvalidArgumentsException, IOException, InternalServerErrorException {
         Urn recordUrn = null;
         try {
             if (this.urn != null) //For mocking tests

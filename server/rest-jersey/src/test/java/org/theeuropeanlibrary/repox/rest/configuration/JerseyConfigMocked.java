@@ -23,6 +23,7 @@ import org.theeuropeanlibrary.repox.rest.servlets.StatisticsResource;
 import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
+import pt.utl.ist.statistics.StatisticsManager;
 import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.util.Urn;
 
@@ -38,7 +39,9 @@ public class JerseyConfigMocked extends ResourceConfig {
     private static TaskManager taskManager = mock(TaskManager.class);
     private static MetadataTransformationManager metadataTransformationManager = mock(MetadataTransformationManager.class);
     private static MetadataSchemaManager metadataSchemaManager = mock(MetadataSchemaManager.class);
-    private static Urn urn = mock(Urn.class);
+    private static StatisticsManager statisticsManager = mock(StatisticsManager.class);
+
+	private static Urn urn = mock(Urn.class);
 
     /**
      * Creates a new instance of this class.
@@ -61,7 +64,7 @@ public class JerseyConfigMocked extends ResourceConfig {
         HarvestResource hr = new HarvestResource(dataManager, taskManager);
         MappingResource mr = new MappingResource(dataManager, metadataTransformationManager, metadataSchemaManager);
         RecordsResource rr = new RecordsResource(dataManager, urn);
-        StatisticsResource sr = new StatisticsResource(dataManager);
+        StatisticsResource sr = new StatisticsResource(statisticsManager);
         register(ar);
         register(pr);
         register(dr);
@@ -90,4 +93,8 @@ public class JerseyConfigMocked extends ResourceConfig {
     public static MetadataSchemaManager getMetadataSchemaManager() {
         return metadataSchemaManager;
     }
+    
+    public static StatisticsManager getStatisticsManager() {
+		return statisticsManager;
+	}
 }
