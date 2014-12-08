@@ -24,7 +24,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel(value = "An Option List container")
 public class RecordOptionListContainer extends OptionListContainer {
     public static final String RECORDS = "records";
-    public static final String RECORDID = "{recordId}";
+    public static final String RECORDIDLITERAL = "recordId";
     public static final String OPTIONS = "options";
     
     //Query parameters
@@ -47,6 +47,10 @@ public class RecordOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over Records.", baseUri + RECORDS, null));
+        optionList.add(new Option("[GET]Get options over Records.", baseUri + RECORDS + "/" + RecordOptionListContainer.OPTIONS, null));
+        optionList.add(new Option("[GET]Retrieve the record with the provided id.", baseUri + RECORDS, new ArrayList<String>(Arrays.asList(RECORDIDLITERAL))));
+        optionList.add(new Option("[DELETE]Deletes (mark) or permanently erase a record.", baseUri + RECORDS, new ArrayList<String>(Arrays.asList(RECORDIDLITERAL, TYPE))));
+        optionList.add(new Option("[POST]Create a new record.", baseUri + RECORDS, new ArrayList<String>(Arrays.asList(DatasetOptionListContainer.DATASETIDLITERAL, RECORDIDLITERAL))));
         
         setOptionList(optionList);
     }

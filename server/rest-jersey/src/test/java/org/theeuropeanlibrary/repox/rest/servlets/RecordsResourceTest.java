@@ -62,7 +62,7 @@ public class RecordsResourceTest extends JerseyTest {
     @Test
 //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 1;
+        int numberOfAvailableOptions = 5;
         WebTarget target = target("/" + RecordOptionListContainer.RECORDS);
 
         //Check xml options working
