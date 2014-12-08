@@ -108,9 +108,10 @@ public interface AccessPointsManager {
      * @throws IOException
      * @throws DocumentException
      * @throws SQLException
+     * @throws ObjectNotFoundException 
      */
 //    boolean deleteRecords(Urn... recordUrn) throws AccessPointException;
-    boolean deleteRecord(Urn recordUrn) throws IOException, DocumentException, SQLException;
+    boolean deleteRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
     /**
      * Removes a Record from all indexes
@@ -120,9 +121,10 @@ public interface AccessPointsManager {
      * @throws IOException
      * @throws DocumentException
      * @throws SQLException
+     * @throws ObjectNotFoundException 
      */
 //    boolean removeRecords(Urn... recordUrn) throws AccessPointException;
-    boolean removeRecord(Urn recordUrn) throws IOException, DocumentException, SQLException;
+    boolean removeRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
     /**
      * Gets all Record IDs of a given DataSource starting in offset with size

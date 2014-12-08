@@ -47,7 +47,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
     private static final Logger log = Logger.getLogger(SqlAccessPointsManager.class);
 
-    protected DatabaseAccess databaseAccess;
+    protected DatabaseAccess    databaseAccess;
 
     /**
      * Creates a new instance of this class.
@@ -72,8 +72,10 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                     AccessPoint defaultRecordAP = dataSource.getAccessPoints().get(AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
 
                     try {
-                        updateDataSourceAccessPoint(dataSource, defaultTimestampAP.typeOfIndex(), dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD, AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
-                        updateDataSourceAccessPoint(dataSource, defaultRecordAP.typeOfIndex(), dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD, AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
+                        updateDataSourceAccessPoint(dataSource, defaultTimestampAP.typeOfIndex(), dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD,
+                                AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD);
+                        updateDataSourceAccessPoint(dataSource, defaultRecordAP.typeOfIndex(), dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD,
+                                AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD);
                     } catch (SQLException e) {
                         log.error(this.getClass() + ": " + e.getMessage());
                         e.printStackTrace(); //To change body of catch statement use File | Settings | File Templates.
@@ -102,14 +104,14 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
     private void setStatementParameter(PreparedStatement insStatement, Object value, int paramCounter, Class classOfParameter) throws SQLException {
         if (classOfParameter.equals(String.class)) {
-            String valString = (String) value;
+            String valString = (String)value;
             insStatement.setString(paramCounter, (valString.length() > 255 ? valString.substring(0, 255) : valString));
         } else if (classOfParameter.equals(Integer.class)) {
-            insStatement.setInt(paramCounter, (Integer) value);
+            insStatement.setInt(paramCounter, (Integer)value);
         } else if (classOfParameter.equals(Date.class)) {
-            insStatement.setDate(paramCounter, new java.sql.Date((((Date) value).getTime())));
+            insStatement.setDate(paramCounter, new java.sql.Date((((Date)value).getTime())));
         } else if (classOfParameter.equals(byte[].class)) {
-            insStatement.setBytes(paramCounter, (byte[]) value);
+            insStatement.setBytes(paramCounter, (byte[])value);
         } else {
             throw new RuntimeException("Index type not implemented");
         }
@@ -119,18 +121,19 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         Integer isDeletedInteger = (isDeleted ? 1 : 0);
         List<Object[]> allValues = new ArrayList<Object[]>();
         if (value instanceof List) {
-            List valueList = (List) value;
+            List valueList = (List)value;
             for (Object aValueList : valueList) {
-                allValues.add(new Object[]{identifier, isDeletedInteger, aValueList});
+                allValues.add(new Object[] { identifier, isDeletedInteger, aValueList });
             }
         } else {
-            allValues.add(new Object[]{identifier, isDeletedInteger, value});
+            allValues.add(new Object[] { identifier, isDeletedInteger, value });
         }
 
         return allValues;
     }
 
-    private Collection getFieldFromDataSource(DataSource dataSource, String fromDateString, String toDateString, Integer offset, Integer numberResults, String field, Class itemClass) throws SQLException {
+    private Collection getFieldFromDataSource(DataSource dataSource, String fromDateString, String toDateString, Integer offset, Integer numberResults, String field, Class itemClass)
+            throws SQLException {
         if (offset == null || offset < 0) {
             offset = 0;
         }
@@ -211,7 +214,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         }
     }
 
-    private OaiListResponse getHeaderAndRecordFromDataSource(DataSource dataSource, String fromDateString, String toDateString, Integer offset, Integer numberResults, boolean retrieveFullRecord, Class itemClass) throws SQLException, IOException {
+    private OaiListResponse getHeaderAndRecordFromDataSource(DataSource dataSource, String fromDateString, String toDateString, Integer offset, Integer numberResults, boolean retrieveFullRecord,
+            Class itemClass) throws SQLException, IOException {
         OaiListResponse oaiListResponse = new OaiListResponse();
 
         boolean noResultLimit = (numberResults == null || numberResults <= 0);
@@ -235,7 +239,9 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         byte[] recordBytes = (retrieveFullRecord && rs.getBytes(5) != null ? ZipUtil.unzip(rs.getBytes(5)) : null);
 
                         boolean recordDeleted = (rs.getInt(2) == 1);
-                        oaiListResponse.getOaiItems().add(oaiListResponse.new OaiItem(rs.getObject(1).toString(), DateFormatUtils.format(rs.getDate(3), TimeUtil.SHORT_DATE_FORMAT), dataSource.getId(), recordDeleted, recordBytes));
+                        oaiListResponse.getOaiItems().add(
+                                oaiListResponse.new OaiItem(rs.getObject(1).toString(), DateFormatUtils.format(rs.getDate(3), TimeUtil.SHORT_DATE_FORMAT), dataSource.getId(), recordDeleted,
+                                        recordBytes));
                     }
 
                     if (rs.previous() && rs.previous()) { // get the result before last
@@ -372,13 +378,13 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 boolean marcAsDeleted = false;
                 if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                     // check if record exists and if it marked as deleted
-                    marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String) record.getId());
+                    marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
                 }
                 int result = delPs.executeUpdate();
 
                 if (accessPoint instanceof RecordRepoxFullAccessPoint && result > 0) {
                     // update the number of records
-                    LogUtil.addDuplicateRecordCount((String) record.getId(), logFile);
+                    LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSourceId, 1, marcAsDeleted ? 1 : 0);
                 }
             } finally {
@@ -396,17 +402,17 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
                         insPs.clearParameters();
                         if (accessPoint.typeOfIndex().equals(String.class)) {
-                            if (((String) val).length() > 255) {
-                                insPs.setString(1, ((String) val).substring(0, 255));
+                            if (((String)val).length() > 255) {
+                                insPs.setString(1, ((String)val).substring(0, 255));
                             } else {
-                                insPs.setString(1, (String) val);
+                                insPs.setString(1, (String)val);
                             }
                         } else if (accessPoint.typeOfIndex().equals(Integer.class)) {
-                            insPs.setInt(1, (Integer) val);
+                            insPs.setInt(1, (Integer)val);
                         } else if (accessPoint.typeOfIndex().equals(Date.class)) {
-                            insPs.setDate(1, new java.sql.Date(((Date) val).getTime()));
+                            insPs.setDate(1, new java.sql.Date(((Date)val).getTime()));
                         } else if (accessPoint.typeOfIndex().equals(byte[].class)) {
-                            byte[] valueToInsert = ZipUtil.zip((byte[]) val);
+                            byte[] valueToInsert = ZipUtil.zip((byte[])val);
                             insPs.setBytes(1, valueToInsert);
                         } else {
                             throw new RuntimeException("Index type not implemented");
@@ -464,11 +470,11 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             // If Data Source has ids extracted or is IdProvided, the ids are extracted from the records and need
             // to be deleted before being inserted again (for performance: it's faster than updating)
             if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy/*
-                     * ||
-                     * dataSource
-                     * instanceof
-                     * DataSourceOai
-                     */) {
+                                                                                                                                                         * ||
+                                                                                                                                                         * dataSource
+                                                                                                                                                         * instanceof
+                                                                                                                                                         * DataSourceOai
+                                                                                                                                                         */) {
                 String deleteQuery = "delete from " + table + " where nc = ?";
 
                 PreparedStatement delStatement = con.prepareStatement(deleteQuery);
@@ -478,16 +484,16 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         boolean marcAsDeleted = false;
                         if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                             // check if record exists and if it marked as deleted
-                            marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String) record.getId());
+                            marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
                         }
 
-                        delStatement.setString(1, (String) record.getId());
+                        delStatement.setString(1, (String)record.getId());
                         int result = delStatement.executeUpdate();
                         delStatement.clearParameters();
 
                         if (accessPoint instanceof RecordRepoxFullAccessPoint && result > 0) {
                             //                            LogUtil.addEmptyRecordCount(recordId, logFile);
-                            LogUtil.addDuplicateRecordCount((String) record.getId(), logFile);
+                            LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
                             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 1, marcAsDeleted ? 1 : 0);
                         }
                     }
@@ -502,11 +508,11 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 Object valueToInsert;
 
                 if (values.get(i) != null && values.get(i).getClass().equals(byte[].class)) {
-                    valueToInsert = ZipUtil.zip((byte[]) values.get(i));
+                    valueToInsert = ZipUtil.zip((byte[])values.get(i));
                 } else {
                     valueToInsert = values.get(i);
                 }
-                pairsForInsertion.addAll(getTripleArraysToInsert((String) records.get(i).getId(), records.get(i).isDeleted(), valueToInsert));
+                pairsForInsertion.addAll(getTripleArraysToInsert((String)records.get(i).getId(), records.get(i).isDeleted(), valueToInsert));
             }
 
             String pairsValues = "(?, ?, ?)";
@@ -574,7 +580,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     }
 
     @Override
-    protected boolean deleteFromIndex(Urn recordUrn, AccessPoint accessPoint) throws DocumentException, SQLException, IOException {
+    protected boolean deleteFromIndex(Urn recordUrn, AccessPoint accessPoint) throws DocumentException, SQLException, IOException, ObjectNotFoundException {
         Connection con = databaseAccess.openDbConnection();
         if (con == null) {
             return false;
@@ -597,6 +603,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                             return false;
                         }
                     }
+                    else
+                        throw new ObjectNotFoundException("Record with id: " + recordUrn.getRecordId() + " does NOT exist!");
                 } finally {
                     rsMaxRow.close();
                 }
@@ -622,7 +630,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     }
 
     @Override
-    protected boolean removeFromIndex(Urn recordUrn, AccessPoint accessPoint) throws SQLException, IOException, DocumentException {
+    protected boolean removeFromIndex(Urn recordUrn, AccessPoint accessPoint) throws SQLException, IOException, DocumentException, ObjectNotFoundException {
         Connection con = databaseAccess.openDbConnection();
         if (con == null) {
             return false;
@@ -641,7 +649,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 ResultSet rsMaxRow = selectPs.executeQuery();
                 try {
                     if (!rsMaxRow.next()) {
-                        return false;
+                        throw new ObjectNotFoundException("Record with id: " + recordUrn.getRecordId() + " does NOT exist!");
                     }
 
                     query = "delete from " + table + " where nc = " + recId;
@@ -667,7 +675,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
     @Override
     public int[] getRecordCountLastrowPair(DataSource dataSource, Integer fromRow, String fromDate, String toDate) throws SQLException {
-        int[] countLastrowPair = {0, 0, 0};
+        int[] countLastrowPair = { 0, 0, 0 };
         // todo check ... stops here a lot during REPOX execution
         String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
         String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
@@ -726,7 +734,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
                     if (fromRow == null || countLastrowPair[1] > fromRow) {
                         countQuery += fromQueryHelper;
-                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable.toLowerCase() + ".id > " + fromRow + " and " : "") + recordTable.toLowerCase() + ".id <= " + countLastrowPair[1];
+                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable.toLowerCase() + ".id > " + fromRow + " and " : "") + recordTable
+                                .toLowerCase() + ".id <= " + countLastrowPair[1];
 
                         Statement statementCount = con.createStatement();
                         ResultSet rsCount = statementCount.executeQuery(countQuery);
@@ -745,7 +754,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             }
         } catch (Exception e) {
             log.error("ERROR Counting records", e);
-            return new int[]{0, 0};
+            return new int[] { 0, 0 };
         } finally {
             con.close();
         }
@@ -759,7 +768,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     @Override
     public OaiItem getRecord(Urn urnOfRecord) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(urnOfRecord.getDataSourceId());
-        if(dataSourceContainer == null)
+        if (dataSourceContainer == null)
             throw new ObjectNotFoundException("DataSource with id " + urnOfRecord.getDataSourceId() + " NOT found!");
         DataSource dataSource = dataSourceContainer.getDataSource();
 
@@ -768,9 +777,11 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
         Connection con = databaseAccess.openDbConnection();
         try {
-            String query = "select " + recordTable.toLowerCase() + ".nc, " + timestampTable.toLowerCase() + ".deleted" + ", " + timestampTable.toLowerCase() + ".value" + ", " + recordTable.toLowerCase() + ".value";
+            String query = "select " + recordTable.toLowerCase() + ".nc, " + timestampTable.toLowerCase() + ".deleted" + ", " + timestampTable.toLowerCase() + ".value" + ", " + recordTable
+                    .toLowerCase() + ".value";
 
-            query += " from " + recordTable.toLowerCase() + ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = ?" + " and " + recordTable.toLowerCase() + ".nc = " + timestampTable.toLowerCase() + ".nc";
+            query += " from " + recordTable.toLowerCase() + ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = ?" + " and " + recordTable.toLowerCase() + ".nc = " + timestampTable
+                    .toLowerCase() + ".nc";
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
             try {
@@ -784,7 +795,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         byte[] recordBytes = (rs.getBytes(4) != null ? ZipUtil.unzip(rs.getBytes(4)) : null);
                         boolean recordDeleted = (rs.getInt(2) == 1);
                         OaiListResponse oaiListResponse = new OaiListResponse();
-                        item = oaiListResponse.new OaiItem(rs.getObject(1).toString(), DateFormatUtils.format(rs.getDate(3), TimeUtil.SHORT_DATE_FORMAT), dataSource.getId(), recordDeleted, recordBytes);
+                        item = oaiListResponse.new OaiItem(rs.getObject(1).toString(), DateFormatUtils.format(rs.getDate(3), TimeUtil.SHORT_DATE_FORMAT), dataSource.getId(), recordDeleted,
+                                recordBytes);
                     }
                     return item;
                 } finally {

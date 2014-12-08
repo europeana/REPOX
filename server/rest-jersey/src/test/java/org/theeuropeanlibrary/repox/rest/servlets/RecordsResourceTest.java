@@ -5,15 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -23,13 +20,14 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.theeuropeanlibrary.repox.rest.configuration.JerseyConfigMocked;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
@@ -79,7 +77,7 @@ public class RecordsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    //    @Ignore
+    @Ignore
     public void testGetRecord() throws Exception {
         String recordId = "recordIdSample";
         WebTarget target = target("/" + RecordOptionListContainer.RECORDS).queryParam("recordId", recordId);
@@ -104,6 +102,50 @@ public class RecordsResourceTest extends JerseyTest {
         assertEquals(404, response.getStatus());
         //Valid Call
         response = target.request(MediaType.APPLICATION_XML).get();
+        assertEquals(200, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.RecordsResource#removeRecord(String, String)}.
+     * @throws Exception 
+     */
+    @Test
+    //    @Ignore
+    public void testRemoveRecord() throws Exception {
+        String recordId = "recordIdSample";
+        //Deleting
+        //Record not existent
+        WebTarget target = target("/" + RecordOptionListContainer.RECORDS).queryParam("recordId", recordId).queryParam("type", RecordOptionListContainer.DELETE);
+        when(dataManager.deleteRecord(recordId)).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException("Record with id: " + recordId + " does NOT exist!")).thenThrow(new InvalidInputException("Invalid")).thenReturn(MessageType.OK);
+
+        //Internal Server Error
+        Response response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Record not existent
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(404, response.getStatus());
+        //Invalid argument
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(400, response.getStatus());
+        //Valid Call
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(200, response.getStatus());
+
+        //Erasing
+        target = target("/" + RecordOptionListContainer.RECORDS).queryParam("recordId", recordId).queryParam("type", RecordOptionListContainer.ERASE);
+        when(dataManager.eraseRecord(recordId)).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException("Record with id: " + recordId + " does NOT exist!")).thenThrow(new InvalidInputException("Invalid")).thenReturn(MessageType.OK);
+
+        //Internal Server Error
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(500, response.getStatus());
+        //Record not existent
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(404, response.getStatus());
+        //Invalid argument
+        response = target.request(MediaType.APPLICATION_XML).delete();
+        assertEquals(400, response.getStatus());
+        //Valid Call
+        response = target.request(MediaType.APPLICATION_XML).delete();
         assertEquals(200, response.getStatus());
     }
 }

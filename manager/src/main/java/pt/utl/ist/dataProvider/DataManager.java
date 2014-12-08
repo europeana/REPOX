@@ -13,6 +13,7 @@ import org.dom4j.Node;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.Task;
+import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -124,9 +125,9 @@ public interface DataManager {
 
     MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException;
 
-    MessageType deleteRecord(String recordId) throws IOException;
+    MessageType deleteRecord(String recordId) throws IOException, ObjectNotFoundException, DocumentException, SQLException, InvalidInputException;
 
-    MessageType eraseRecord(String recordId) throws IOException;
+    MessageType eraseRecord(String recordId) throws IOException, ObjectNotFoundException, DocumentException, SQLException, InvalidInputException;
 
     MetadataTransformationManager getMetadataTransformationManager();
 

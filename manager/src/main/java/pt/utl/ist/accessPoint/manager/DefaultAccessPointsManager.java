@@ -6,9 +6,11 @@ import org.dom4j.DocumentException;
 import pt.utl.ist.accessPoint.AccessPoint;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,9 +61,12 @@ public abstract class DefaultAccessPointsManager implements AccessPointsManager 
     }
 
     @Override
-    public boolean deleteRecord(Urn recordUrn) throws IOException, DocumentException, SQLException {
+    public boolean deleteRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         boolean result = true;
-        DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(recordUrn.getDataSourceId()).getDataSource();
+        DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(recordUrn.getDataSourceId());
+        if(dataSourceContainer == null)
+            throw new ObjectNotFoundException("DataSource with id: " + recordUrn.getDataSourceId() + " does NOT exist!");
+        DataSource dataSource = dataSourceContainer.getDataSource();
         for (AccessPoint accessPoint : dataSource.getAccessPoints().values()) {
             result = result & deleteFromIndex(recordUrn, accessPoint);
         }
@@ -69,9 +74,12 @@ public abstract class DefaultAccessPointsManager implements AccessPointsManager 
     }
 
     @Override
-    public boolean removeRecord(Urn recordUrn) throws IOException, DocumentException, SQLException {
+    public boolean removeRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException {
         boolean result = true;
-        DataSource dataSource = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(recordUrn.getDataSourceId()).getDataSource();
+        DataSourceContainer dataSourceContainer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(recordUrn.getDataSourceId());
+        if(dataSourceContainer == null)
+            throw new ObjectNotFoundException("DataSource with id: " + recordUrn.getDataSourceId() + " does NOT exist!");
+        DataSource dataSource = dataSourceContainer.getDataSource();
         for (AccessPoint accessPoint : dataSource.getAccessPoints().values()) {
             result = result & removeFromIndex(recordUrn, accessPoint);
         }
@@ -128,8 +136,9 @@ public abstract class DefaultAccessPointsManager implements AccessPointsManager 
      * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.dom4j.DocumentException
+     * @throws ObjectNotFoundException 
      */
-    protected abstract boolean deleteFromIndex(Urn recordUrn, AccessPoint accessPoint) throws DocumentException, SQLException, IOException;
+    protected abstract boolean deleteFromIndex(Urn recordUrn, AccessPoint accessPoint) throws DocumentException, SQLException, IOException, ObjectNotFoundException;
 
     /**
      * Remove a record from an index
@@ -143,7 +152,8 @@ public abstract class DefaultAccessPointsManager implements AccessPointsManager 
      * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.dom4j.DocumentException
+     * @throws ObjectNotFoundException 
      */
-    protected abstract boolean removeFromIndex(Urn recordUrn, AccessPoint accessPoint) throws SQLException, IOException, DocumentException;
+    protected abstract boolean removeFromIndex(Urn recordUrn, AccessPoint accessPoint) throws SQLException, IOException, DocumentException, ObjectNotFoundException;
 
 }

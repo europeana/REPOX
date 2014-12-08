@@ -29,6 +29,8 @@ public class RecordOptionListContainer extends OptionListContainer {
     
     //Query parameters
     public static final String TYPE = "type";
+    public static final String DELETE = "delete";
+    public static final String ERASE = "erase";
 
     /**
      * No argument constructor needed for JAXB.

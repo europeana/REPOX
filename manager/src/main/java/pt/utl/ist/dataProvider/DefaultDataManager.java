@@ -68,6 +68,7 @@ import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.CompareDataUtil;
 import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.Urn;
@@ -3281,21 +3282,16 @@ public class DefaultDataManager implements DataManager {
     }
 
     @Override
-    public MessageType deleteRecord(String recordId) throws IOException {
-        try {
+    public MessageType deleteRecord(String recordId) throws IOException, DocumentException, SQLException, ObjectNotFoundException, InvalidInputException {
             Urn recordUrn = new Urn(recordId);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().deleteRecord(recordUrn);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(recordUrn.getDataSourceId(), 1);
 
             return MessageType.OK;
-        } catch (Exception e) {
-            return MessageType.OTHER;
-        }
     }
 
     @Override
-    public MessageType eraseRecord(String recordId) throws IOException {
-        try {
+    public MessageType eraseRecord(String recordId) throws IOException, DocumentException, SQLException, ObjectNotFoundException, InvalidInputException {
             Urn recordUrn = new Urn(recordId);
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().removeRecord(recordUrn);
 
@@ -3310,10 +3306,6 @@ public class DefaultDataManager implements DataManager {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(recordUrn.getDataSourceId(), 1);
 
             return MessageType.OK;
-        } catch (Exception e) {
-            return MessageType.OTHER;
-        }
-
     }
 
     @Override
