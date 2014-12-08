@@ -7,11 +7,13 @@ import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,10 +34,13 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
+import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
@@ -192,7 +197,7 @@ public class RecordsResource {
             MissingArgumentsException, InvalidArgumentsException {
 
         if (recordId == null || recordId.equals(""))
-            throw new MissingArgumentsException("Missing value: " + "RecordId type missing!");
+            throw new MissingArgumentsException("Missing value: " + "recordId type missing!");
         if (type == null || type.equals("") || (!type.equals(RecordOptionListContainer.DELETE) && !type.equals(RecordOptionListContainer.ERASE)))
             throw new MissingArgumentsException("Missing value: " + "Query parameter type not valid!");
 
@@ -222,5 +227,46 @@ public class RecordsResource {
             }
             return Response.status(200).entity(new Result("Record with id: " + recordId + " erased!")).build();
         }
+    }
+    
+    /**
+     * Create a new record.
+     * Relative path : /records  
+     * @param datasetId 
+     * @param recordId 
+     * @param recordString 
+     * 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws MissingArgumentsException 
+     */
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes(MediaType.APPLICATION_XML)
+    @ApiOperation(value = "Create a new record.", httpMethod = "POST", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 406, message = "MissingArgumentsException"),
+//            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException")
+    })
+    public Response createRecord(@ApiParam(value = "Id of dataset", required = true) @QueryParam("datasetId") String datasetId, @ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId, @ApiParam(value = "Record data", required = true)String recordString) throws DoesNotExistException, MissingArgumentsException {
+        
+        if (datasetId == null || datasetId.equals(""))
+            throw new MissingArgumentsException("Missing value: " + "datasetId type missing!");
+        if (recordId == null || recordId.equals(""))
+            throw new MissingArgumentsException("Missing value: " + "recordId type missing!");
+        if (recordString == null || recordString.equals(""))
+            throw new MissingArgumentsException("Missing value: " + "Record information is empty!");
+        
+        try {
+            dataManager.saveRecord(recordId, datasetId, recordString);
+        } catch (IOException | DocumentException e) {
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
+        }
+        return Response.status(201).entity(new Result("Record with id: " + recordId + " created!")).build();
     }
 }

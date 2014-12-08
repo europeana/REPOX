@@ -3263,7 +3263,7 @@ public class DefaultDataManager implements DataManager {
     }
 
     @Override
-    public MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException {
+    public MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException, ObjectNotFoundException {
         DataSourceContainer dataSourceContainer = getDataSourceContainer(dataSourceId);
         if (dataSourceContainer != null) {
             try {
@@ -3277,7 +3277,8 @@ public class DefaultDataManager implements DataManager {
                 return MessageType.OTHER;
             }
         } else {
-            return MessageType.NOT_FOUND;
+            throw new ObjectNotFoundException("DataSource with id: " + dataSourceId + " does NOT exist!");
+//            return MessageType.NOT_FOUND;
         }
     }
 

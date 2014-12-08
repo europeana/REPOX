@@ -123,7 +123,7 @@ public interface DataManager {
     //********************RECORDS ********************/
     Node getRecord(Urn recordUrn) throws IOException, DocumentException, SQLException, ObjectNotFoundException;
 
-    MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException;
+    MessageType saveRecord(String recordId, String dataSourceId, String recordString) throws IOException, DocumentException, ObjectNotFoundException;
 
     MessageType deleteRecord(String recordId) throws IOException, ObjectNotFoundException, DocumentException, SQLException, InvalidInputException;
 

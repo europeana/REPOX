@@ -2286,7 +2286,7 @@ public class DefaultWebServices implements WebServices {
         RestUtils.writeRestResponse(out, recordResultElement);
     }
 
-    public void saveRecord(OutputStream out, String recordId, String dataSourceId, String recordString) throws IOException, DocumentException {
+    public void saveRecord(OutputStream out, String recordId, String dataSourceId, String recordString) throws IOException, DocumentException, ObjectNotFoundException {
         MessageType returnMessage = ((DefaultDataManager)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()).saveRecord(recordId, dataSourceId, recordString);
         if (returnMessage == MessageType.OK) {
             Element successElement = DocumentHelper.createElement("success");

@@ -5,9 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyString;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,6 +32,7 @@ import pt.utl.ist.dataProvider.DefaultDataManager;
 import pt.utl.ist.dataProvider.MessageType;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
+import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
@@ -56,7 +60,7 @@ public class RecordsResourceTest extends JerseyTest {
      * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.RecordsResource#getOptions()}.
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetOptions() {
         int numberOfAvailableOptions = 1;
         WebTarget target = target("/" + RecordOptionListContainer.RECORDS);
@@ -77,7 +81,7 @@ public class RecordsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    @Ignore
+//    @Ignore
     public void testGetRecord() throws Exception {
         String recordId = "recordIdSample";
         WebTarget target = target("/" + RecordOptionListContainer.RECORDS).queryParam("recordId", recordId);
@@ -110,7 +114,7 @@ public class RecordsResourceTest extends JerseyTest {
      * @throws Exception 
      */
     @Test
-    //    @Ignore
+//        @Ignore
     public void testRemoveRecord() throws Exception {
         String recordId = "recordIdSample";
         //Deleting
@@ -147,5 +151,52 @@ public class RecordsResourceTest extends JerseyTest {
         //Valid Call
         response = target.request(MediaType.APPLICATION_XML).delete();
         assertEquals(200, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.RecordsResource#createRecord(String, String, String)}.
+     * @throws Exception 
+     */
+    @Test
+//    @Ignore
+    public void testCreateRecord() throws Exception {
+        String recordId = "recordIdSample";
+        String datasetId = "datasetIdSample";
+        Document document = DocumentHelper.createDocument();
+        Element root = document.addElement("root");
+        Element node = root.addElement("author")
+                .addAttribute("name", "exampleName")
+                .addText("Some Text");
+        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        XmlUtil.writePrettyPrint(baos, node);
+        baos.toString();
+        
+        when(dataManager.saveRecord(anyString(), anyString(), anyString())).thenThrow(new IOException()).thenThrow(new ObjectNotFoundException("Not found!")).thenReturn(MessageType.OK);
+        
+        //Empty datasetId
+        WebTarget target = target("/" + RecordOptionListContainer.RECORDS).queryParam("datasetId", "").queryParam("recordId", recordId);
+        Response response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(baos.toString(), MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+
+        //Empty recordId
+        target = target("/" + RecordOptionListContainer.RECORDS).queryParam("datasetId", datasetId).queryParam("recordId", "");
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(baos.toString(), MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+        
+        //Empty record data
+        target = target("/" + RecordOptionListContainer.RECORDS).queryParam("datasetId", datasetId).queryParam("recordId", recordId);
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity("", MediaType.APPLICATION_XML), Response.class);
+        assertEquals(406, response.getStatus());
+        
+        //Internal Server error
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(baos.toString(), MediaType.APPLICATION_XML), Response.class);
+        assertEquals(500, response.getStatus());
+        //Not found
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(baos.toString(), MediaType.APPLICATION_XML), Response.class);
+        assertEquals(404, response.getStatus());
+        //Valid call
+        response = target.request(MediaType.APPLICATION_XML).post(Entity.entity(baos.toString(), MediaType.APPLICATION_XML), Response.class);
+        assertEquals(201, response.getStatus());
     }
 }
