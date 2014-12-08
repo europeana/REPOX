@@ -34,11 +34,21 @@ public class RootOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get information about all the options provided ", baseUri + RootOptionListContainer.OPTIONS, null));
+        optionList.add(new Option("[GET]Get information about all the options provided ", baseUri + RootOptionListContainer.OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Aggregators ", baseUri + AggregatorOptionListContainer.AGGREGATORS, null));
+        optionList.add(new Option("[GET]Get further options over Aggregators ", baseUri + AggregatorOptionListContainer.AGGREGATORS + "/" + OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Providers ", baseUri + ProviderOptionListContainer.PROVIDERS, null));
+        optionList.add(new Option("[GET]Get further options over Providers ", baseUri + ProviderOptionListContainer.PROVIDERS + "/" + OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Datasets ", baseUri + DatasetOptionListContainer.DATASETS, null));
+        optionList.add(new Option("[GET]Get further options over Datasets ", baseUri + DatasetOptionListContainer.DATASETS + "/" + OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Harvests ", baseUri + DatasetOptionListContainer.DATASETS + "/" +HarvestOptionListContainer.HARVEST, null));
+        optionList.add(new Option("[GET]Get further options over Harvests ", baseUri + DatasetOptionListContainer.DATASETS + "/" +HarvestOptionListContainer.HARVEST + "/" + OPTIONS, null));
         optionList.add(new Option("[OPTIONS]Get further options over Mappings ", baseUri + MappingOptionListContainer.MAPPINGS, null));
+        optionList.add(new Option("[GET]Get further options over Mappings ", baseUri + MappingOptionListContainer.MAPPINGS + "/" + OPTIONS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Records ", baseUri + RecordOptionListContainer.RECORDS, null));
+        optionList.add(new Option("[GET]Get further options over Records ", baseUri + RecordOptionListContainer.RECORDS + "/" + OPTIONS, null));
+        optionList.add(new Option("[OPTIONS]Get further options over Statistics ", baseUri + StatisticsOptionListContainer.STATISTICS, null));
+        optionList.add(new Option("[GET]Get further options over Statistics ", baseUri + StatisticsOptionListContainer.STATISTICS + "/" + OPTIONS, null));
         
         setOptionList(optionList);
     }

@@ -56,6 +56,7 @@ public class HarvestOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over dataset.", baseUri + DatasetOptionListContainer.DATASETS + "/" + HARVEST, null));
+        optionList.add(new Option("[GET]Get options over dataset.", baseUri + DatasetOptionListContainer.DATASETS + "/" + HARVEST + "/" + OPTIONS, null));
         optionList.add(new Option("[POST]Initiates a new harvest of the dataset with id.", baseUri + DatasetOptionListContainer.DATASETS + "/" + DatasetOptionListContainer.DATASETID + "/" + HARVEST + "/" + START, new ArrayList<String>(Arrays.asList(TYPE))));
         optionList.add(new Option("[DELETE]Cancels a harvesting ingest.", baseUri + DatasetOptionListContainer.DATASETS + "/" + DatasetOptionListContainer.DATASETID + "/" + HARVEST + "/" + CANCEL, null));
         optionList.add(new Option("[POST]Schedules an automatic harvesting.", baseUri + DatasetOptionListContainer.DATASETS + "/" + DatasetOptionListContainer.DATASETID + "/" + HARVEST + "/" + SCHEDULE, new ArrayList<String>(Arrays.asList(INCREMENTAL))));

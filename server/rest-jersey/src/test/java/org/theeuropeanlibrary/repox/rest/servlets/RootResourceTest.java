@@ -35,7 +35,7 @@ public class RootResourceTest extends JerseyTest {
      */
     @Test
     public void testGetOptions() {
-        int numberOfAvailableOptions = 6;
+        int numberOfAvailableOptions = 16;
         WebTarget target = target("/" + RootOptionListContainer.OPTIONS);
 
         //Check xml options working

@@ -49,6 +49,7 @@ public class DatasetOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over dataset.", baseUri + DATASETS, null));
+        optionList.add(new Option("[GET]Get options over dataset.", baseUri + DATASETS + "/" + OPTIONS, null));
         optionList.add(new Option("[GET]Gets a dataset by Id.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[POST]Create a dataset provided in the body of the post call.", baseUri + DATASETS, new ArrayList<String>(Arrays.asList(PROVIDERID))));
         optionList.add(new Option("[DELETE]Delete a dataset by specifying the Id.", baseUri + DATASETS + "/" + DATASETID, null));

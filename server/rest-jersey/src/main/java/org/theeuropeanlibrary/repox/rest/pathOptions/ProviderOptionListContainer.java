@@ -46,6 +46,7 @@ public class ProviderOptionListContainer extends OptionListContainer {
         List<Option> optionList = new ArrayList<Option>();
         //BaseUri has a "/" at the end.
         optionList.add(new Option("[OPTIONS]Get options over provider.", baseUri + PROVIDERS, null));
+        optionList.add(new Option("[GET]Get options over provider.", baseUri + PROVIDERS + "/" + OPTIONS, null));
         optionList.add(new Option("[GET]Gets a provider by Id.", baseUri + PROVIDERS + "/" + PROVIDERID, null));
         optionList.add(new Option("[POST]Create a provider provided in the body of the post call.", baseUri + PROVIDERS, new ArrayList<String>(Arrays.asList(AGGREGATORID))));
         optionList.add(new Option("[DELETE]Delete a provider by specifying the Id.", baseUri + PROVIDERS + "/" + PROVIDERID, null));
