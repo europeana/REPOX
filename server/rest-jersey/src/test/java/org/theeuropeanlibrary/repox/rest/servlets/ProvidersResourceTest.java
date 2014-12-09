@@ -65,7 +65,7 @@ public class ProvidersResourceTest extends JerseyTest {
     @Test
     //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 6;
+        int numberOfAvailableOptions = 7;
         WebTarget target = target("/" + ProviderOptionListContainer.PROVIDERS);
 
         //Check xml options working

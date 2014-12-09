@@ -26,7 +26,7 @@ Repox github site:
 ###Contributor###
 - - - 
 <img src="http://www.theeuropeanlibrary.org/confluence/download/attachments/8880494/TEL_logoe_transparent_AEtry-out.jpg" alt="The European Library" width=200px/>  
-The European Library is the main contributor of refactoring the whole REPOX project as it was originally delivered from v2.3.5 to v3.0 and upwards,  
+The European Library is the main contributor of refactoring the whole REPOX project as it was originally delivered at v2.3.5 and is heading to v3.0 and upwards,  
 including new implementations of REST API's, bug fixing and introducing new features.
 
 ###Repox Structure Overview###
@@ -46,7 +46,7 @@ Repox consists of following projects:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the module for centralization of common resources.
 * __Repox Server (repox-server)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The repox-server module is another parent project that contains the following modules repox-server-rest, repox-server-rest-jersey, repox-server-oai.
-* __Repox Server Rest (repox-server-rest)__  
+* __Repox Server Rest (repox-server-rest)(!DEPRECATED)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the API Restful service for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the full build is initiated, then the `web.xml` of the `repox-gui` is the valid one, so any values in this `web.xml` must be copied in the `web.xml` of the `repox-gui`.
 * __Repox Server Rest Jersey(repox-server-rest-jersey)__  
@@ -64,9 +64,9 @@ required `configuration.properties` file is located, like so `repox.data.dir=/pa
 Repox overwrites these files on changes, so for example a change that is made on the `configuration.properties` file will not be visible to the implementation,  
 it will only be visible only if Repox is restarted.
 *  For development builds the permutations have been reduced in the file `/repox-gui/src/main/java/harvesterUI/HarvesterUI.gwt.xml`.  
-For other configuration needs, this file needs to be edited.
+For other configuration needs, this file needs to be reconfigured.
 *  Tests on the Repox build are skipped by default in the `maven-surefire-plugin` and can be activated from the `repox-system` `pom.xml` by changing  
-the property `skipTests` from `true` to `false`.
+the property `skipTests` from `true` to `false`, after refactoring the only updated test are in `repox-server-rest-jersey`.
 
 ###Building Repox###
 - - -

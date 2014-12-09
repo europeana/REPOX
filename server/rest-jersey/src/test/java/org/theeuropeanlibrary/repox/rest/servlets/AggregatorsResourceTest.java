@@ -57,7 +57,7 @@ public class AggregatorsResourceTest extends JerseyTest {
     @Test
 //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 6;
+        int numberOfAvailableOptions = 7;
         WebTarget target = target("/" + AggregatorOptionListContainer.AGGREGATORS);
 
         //Check xml options working

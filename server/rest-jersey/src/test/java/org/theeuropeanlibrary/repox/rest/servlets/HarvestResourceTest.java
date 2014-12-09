@@ -73,7 +73,7 @@ public class HarvestResourceTest extends JerseyTest {
     @Test
     //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 9;
+        int numberOfAvailableOptions = 10;
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + HarvestOptionListContainer.HARVEST);
 
         //Check xml options working
