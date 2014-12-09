@@ -29,11 +29,13 @@ public class DatasetOptionListContainer extends OptionListContainer {
     public static final String OPTIONS = "options";
     public static final String DATE = "date";
     public static final String COUNT = "count";
+    public static final String EXPORT = "export";
     //Query parameters
     public static final String OFFSET = "offset";
     public static final String NUMBER = "number";
     public static final String PROVIDERID = "providerId";
     public static final String NEWDATASETID = "newDatasetId";
+    public static final String FORMAT = "format";
 
 
     /**

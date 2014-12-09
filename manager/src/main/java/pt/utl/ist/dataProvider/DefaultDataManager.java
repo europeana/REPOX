@@ -3206,16 +3206,18 @@ public class DefaultDataManager implements DataManager {
             File exportDir = new File(dataSource.getExportDir());
             FileUtils.forceMkdir(exportDir);
 
-            if (recordsPerFile.equals("All"))
-                recordsPerFile = "-1";
+            String recsPerFile = recordsPerFile;
+            if (recsPerFile.equals("All"))
+                recsPerFile = "-1";
 
-            if (metadataExportFormat == null) {
+            String format = metadataExportFormat;
+            if (format == null || format.isEmpty()) {
                 // this is a non mandatory field for REST (if it is not defined by user, it uses the default format)
-                metadataExportFormat = dataSource.getMetadataFormat();
+                format = dataSource.getMetadataFormat();
             }
 
             Task exportTask = new DataSourceExportTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), exportDir.getAbsolutePath(),
-                    recordsPerFile, metadataExportFormat);
+                    recsPerFile, format);
 
             if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().isTaskExecuting(exportTask)) {
                 throw new AlreadyExistsException(dataSourceId);
@@ -3223,7 +3225,7 @@ public class DefaultDataManager implements DataManager {
             ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().addOnetimeTask(exportTask);
             saveData();
         } else {
-            throw new ObjectNotFoundException(dataSourceId);
+            throw new ObjectNotFoundException("Datasource with id " + dataSourceId + " NOT found!");
         }
     }
 

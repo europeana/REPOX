@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class DatasetsResourceTest extends JerseyTest {
     @Test
 //    @Ignore
     public void testGetOptions() {
-        int numberOfAvailableOptions = 8;
+        int numberOfAvailableOptions = 10;
         WebTarget target = target("/" + DatasetOptionListContainer.DATASETS);
 
         //Check xml options working
@@ -819,5 +820,27 @@ public class DatasetsResourceTest extends JerseyTest {
         defaultDataSourceContainer.setDataSource(null);
         response = target.request(MediaType.APPLICATION_XML).get();
         assertEquals(404, response.getStatus());
+    }
+
+    /**
+     * Test method for {@link org.theeuropeanlibrary.repox.rest.servlets.DatasetsResource#exportDataset(String, String)}.
+     * @throws Exception 
+     */
+    @Test
+//    @Ignore
+    public void testExportDataset() throws Exception {
+        String datasetId = "SampleDatasetId";
+        WebTarget target = target("/" + DatasetOptionListContainer.DATASETS + "/" + datasetId + "/" + DatasetOptionListContainer.EXPORT).queryParam(DatasetOptionListContainer.FORMAT, "");
+        
+        doThrow(new IOException()).doThrow(new AlreadyExistsException()).doThrow(new ObjectNotFoundException("NOT FOUND!")).doNothing().when(dataManager).startExportDataSource(datasetId, "1000", "");
+        
+        Response response = target.request(MediaType.APPLICATION_XML).post(null, Response.class);
+        assertEquals(500, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).post(null, Response.class);
+        assertEquals(409, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).post(null, Response.class);
+        assertEquals(404, response.getStatus());
+        response = target.request(MediaType.APPLICATION_XML).post(null, Response.class);
+        assertEquals(200, response.getStatus());
     }
 }

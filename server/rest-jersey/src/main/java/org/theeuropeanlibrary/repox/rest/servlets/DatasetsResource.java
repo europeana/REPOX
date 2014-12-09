@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.repox.rest.servlets;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -812,5 +813,40 @@ public class DatasetsResource {
         } catch (DocumentException | IOException | SQLException e) {
             throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
         }
+    }
+    
+    /**
+     * Initiates an export of data.
+     * Relative path : /datasets/{datasetId}/export
+     * @param datasetId 
+     * @param format 
+     * 
+     * @return OK or Error Message
+     * @throws DoesNotExistException 
+     * @throws AlreadyExistsException, InternalServerErrorException 
+     * @throws InternalServerErrorException 
+     */
+    @POST
+    @Path("/" + DatasetOptionListContainer.DATASETID + "/" + DatasetOptionListContainer.EXPORT)
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @ApiOperation(value = "Initiates an export of data.", httpMethod = "POST", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK (Response containing a String message)"),
+            @ApiResponse(code = 404, message = "DoesNotExistException"),
+            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            @ApiResponse(code = 500, message = "InternalServerErrorException") 
+            })
+    public Response exportDataset(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId, @ApiParam(value = "Format of export") @QueryParam("format") String format) throws DoesNotExistException, AlreadyExistsException, InternalServerErrorException {
+        
+        try {
+            dataManager.startExportDataSource(datasetId, "1000", format);
+        } catch (ClassNotFoundException | NoSuchMethodException | DocumentException | IOException | ParseException e) {
+            throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
+        } catch (AlreadyExistsException e) {
+            throw new AlreadyExistsException("Already exists: " + e.getMessage());
+        } catch (ObjectNotFoundException e) {
+            throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
+        }
+        return Response.status(200).entity(new Result("Export of dataset with id: " + datasetId + " started!")).build();
     }
 }
