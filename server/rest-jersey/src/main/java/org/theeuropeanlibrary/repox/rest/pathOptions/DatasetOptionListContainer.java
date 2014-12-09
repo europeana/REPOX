@@ -33,6 +33,7 @@ public class DatasetOptionListContainer extends OptionListContainer {
     public static final String OFFSET = "offset";
     public static final String NUMBER = "number";
     public static final String PROVIDERID = "providerId";
+    public static final String NEWDATASETID = "newDatasetId";
 
 
     /**
@@ -52,6 +53,7 @@ public class DatasetOptionListContainer extends OptionListContainer {
         optionList.add(new Option("[GET]Get options over dataset.", baseUri + DATASETS + "/" + OPTIONS, null));
         optionList.add(new Option("[GET]Gets a dataset by Id.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[POST]Create a dataset provided in the body of the post call.", baseUri + DATASETS, new ArrayList<String>(Arrays.asList(PROVIDERID))));
+        optionList.add(new Option("[POST]Copy an dataset to another dataset with a newDatasetId.", baseUri + DATASETS + "/" + DATASETID, new ArrayList<String>(Arrays.asList(DATASETIDLITERAL, NEWDATASETID))));
         optionList.add(new Option("[DELETE]Delete a dataset by specifying the Id.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[PUT]Update a dataset by specifying the Id on the context path.", baseUri + DATASETS + "/" + DATASETID, null));
         optionList.add(new Option("[GET]Get a list of datasets by specifying a range.", baseUri + DATASETS, new ArrayList<String>(Arrays.asList(PROVIDERID, OFFSET, NUMBER))));

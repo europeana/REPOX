@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,7 +14,6 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -27,26 +25,19 @@ import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
-import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.MessageType;
-import pt.utl.ist.task.Task;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.Urn;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
-import com.google.gson.Gson;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -127,6 +118,7 @@ public class RecordsResource {
      * @throws DoesNotExistException 
      * @throws InvalidArgumentsException 
      * @throws IOException 
+     * @throws InternalServerErrorException 
      */
     @GET
     @Produces({ MediaType.APPLICATION_XML })
@@ -137,7 +129,8 @@ public class RecordsResource {
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response getRecord(@QueryParam("recordId") String recordId) throws DoesNotExistException, InvalidArgumentsException, IOException, InternalServerErrorException {
+    public Response getRecord(@ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId) throws DoesNotExistException, InvalidArgumentsException, IOException,
+            InternalServerErrorException {
         Urn recordUrn = null;
         try {
             if (this.urn != null) //For mocking tests
@@ -192,8 +185,10 @@ public class RecordsResource {
             @ApiResponse(code = 406, message = "MissingArgumentsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response removeRecord(@ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId,
-            @ApiParam(value = "Delete(mark) or erase(permanent)") @DefaultValue(RecordOptionListContainer.DELETE) @QueryParam("type") String type) throws DoesNotExistException,
+    public Response removeRecord(
+            @ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId,
+            @ApiParam(value = "Delete(mark) or erase(permanent)", defaultValue = RecordOptionListContainer.DELETE, allowableValues = RecordOptionListContainer.DELETE + " , " + RecordOptionListContainer.ERASE) @DefaultValue(RecordOptionListContainer.DELETE) @QueryParam("type") String type)
+            throws DoesNotExistException,
             MissingArgumentsException, InvalidArgumentsException {
 
         if (recordId == null || recordId.equals(""))
@@ -228,7 +223,7 @@ public class RecordsResource {
             return Response.status(200).entity(new Result("Record with id: " + recordId + " erased!")).build();
         }
     }
-    
+
     /**
      * Create a new record.
      * Relative path : /records  
@@ -248,18 +243,20 @@ public class RecordsResource {
             @ApiResponse(code = 201, message = "OK (Response containing a String message)"),
             @ApiResponse(code = 404, message = "DoesNotExistException"),
             @ApiResponse(code = 406, message = "MissingArgumentsException"),
-//            @ApiResponse(code = 409, message = "AlreadyExistsException"),
+            //            @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response createRecord(@ApiParam(value = "Id of dataset", required = true) @QueryParam("datasetId") String datasetId, @ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId, @ApiParam(value = "Record data", required = true)String recordString) throws DoesNotExistException, MissingArgumentsException {
-        
+    public Response createRecord(@ApiParam(value = "Id of dataset", required = true) @QueryParam("datasetId") String datasetId,
+            @ApiParam(value = "Id of record", required = true) @QueryParam("recordId") String recordId, @ApiParam(value = "Record data", required = true) String recordString)
+            throws DoesNotExistException, MissingArgumentsException {
+
         if (datasetId == null || datasetId.equals(""))
             throw new MissingArgumentsException("Missing value: " + "datasetId type missing!");
         if (recordId == null || recordId.equals(""))
             throw new MissingArgumentsException("Missing value: " + "recordId type missing!");
         if (recordString == null || recordString.equals(""))
             throw new MissingArgumentsException("Missing value: " + "Record information is empty!");
-        
+
         try {
             dataManager.saveRecord(recordId, datasetId, recordString);
         } catch (IOException | DocumentException e) {

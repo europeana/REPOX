@@ -101,7 +101,7 @@ public class HarvestResource {
         HarvestOptionListContainer harvestOptionListContainer = new HarvestOptionListContainer(uriInfo.getBaseUri());
         return harvestOptionListContainer;
     }
-    
+
     /**
      * Retrieve all the available options for Harvest(For browser visibility).
      * Relative path : /datasets/harvest
@@ -139,8 +139,10 @@ public class HarvestResource {
             @ApiResponse(code = 409, message = "AlreadyExistsException"),
             @ApiResponse(code = 500, message = "InternalServerErrorException")
     })
-    public Response startHarvest(@ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
-            @ApiParam(value = "full|sample") @DefaultValue(HarvestOptionListContainer.SAMPLE) @QueryParam("type") String type) throws AlreadyExistsException, DoesNotExistException {
+    public Response startHarvest(
+            @ApiParam(value = "Id of dataset", required = true) @PathParam("datasetId") String datasetId,
+            @ApiParam(value = "full|sample", defaultValue = HarvestOptionListContainer.SAMPLE, allowableValues = HarvestOptionListContainer.SAMPLE + " , " + HarvestOptionListContainer.FULL) @DefaultValue(HarvestOptionListContainer.SAMPLE) @QueryParam("type") String type)
+            throws AlreadyExistsException, DoesNotExistException {
 
         boolean full = true;
 
@@ -450,7 +452,7 @@ public class HarvestResource {
 
         return Response.status(200).entity(log).build();
     }
-    
+
     /**
      * Gets a list of currently executing dataset harvests.
      * Relative path : /datasets/harvests 
@@ -462,7 +464,7 @@ public class HarvestResource {
     @ApiOperation(value = "Gets a list of currently executing dataset harvests", httpMethod = "GET", response = Task.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
-//            @ApiResponse(code = 404, message = "DoesNotExistException")
+                  //            @ApiResponse(code = 404, message = "DoesNotExistException")
     })
     public Response getCurrentHarvestsList() {
         List<Task> runningTasks = taskManager.getRunningTasks();

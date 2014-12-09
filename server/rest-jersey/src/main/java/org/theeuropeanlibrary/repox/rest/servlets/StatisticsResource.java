@@ -23,8 +23,6 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.StatisticsOptionListContain
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.statistics.DefaultStatisticsManager;
 import pt.utl.ist.statistics.RepoxStatistics;
 import pt.utl.ist.statistics.StatisticsManager;
 
@@ -58,9 +56,7 @@ public class StatisticsResource {
 
 	/**
 	 * Creates a new instance by providing the DataManager. (For Tests)
-	 * 
-	 * @param dataManager
-	 * @param urn
+	 * @param statisticsManager 
 	 */
 	public StatisticsResource(StatisticsManager statisticsManager) {
 		super();
@@ -105,6 +101,7 @@ public class StatisticsResource {
 	 * Relative path : /statistics
 	 * 
 	 * @return the list of the options available wrapped in a container
+	 * @throws InternalServerErrorException 
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })

@@ -274,8 +274,8 @@ public class AggregatorsResource {
             @ApiResponse(code = 200, message = "OK (Response containing a list of aggregators)"),
             @ApiResponse(code = 400, message = "InvalidArgumentsException")
     })
-    public Response getAggregatorList(@ApiParam(value = "Index where to start from", required = false) @DefaultValue("0") @QueryParam("offset") int offset,
-            @ApiParam(value = "Number of aggregators requested", required = false) @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
+    public Response getAggregatorList(@ApiParam(value = "Index where to start from(negative not allowed)", defaultValue = "0") @DefaultValue("0") @QueryParam("offset") int offset,
+            @ApiParam(value = "Number of aggregators requested(-1 to get all)", defaultValue = "-1") @DefaultValue("-1") @QueryParam("number") int number) throws Exception, InvalidArgumentsException {
 
         if (offset < 0)
             throw new InvalidArgumentsException("Offset negative values not allowed!");

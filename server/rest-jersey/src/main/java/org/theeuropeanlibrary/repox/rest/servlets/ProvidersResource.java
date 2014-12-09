@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -363,8 +362,8 @@ public class ProvidersResource {
             @ApiResponse(code = 404, message = "DoesNotExistException")
     })
     public Response getProviderList(@ApiParam(value = "AggregatorId", required = true) @QueryParam("aggregatorId") String aggregatorId,
-            @ApiParam(value = "Index where to start from", required = true) @DefaultValue("0") @QueryParam("offset") int offset,
-            @ApiParam(value = "Number of aggregators requested", required = true) @DefaultValue("-1") @QueryParam("number") int number) throws InvalidArgumentsException, DoesNotExistException {
+            @ApiParam(value = "Index where to start from(negative not allowed)", defaultValue = "0") @DefaultValue("0") @QueryParam("offset") int offset,
+            @ApiParam(value = "Number of aggregators requested(-1 to get all)", defaultValue = "-1") @DefaultValue("-1") @QueryParam("number") int number) throws InvalidArgumentsException, DoesNotExistException {
 
         if (offset < 0)
             throw new InvalidArgumentsException("Offset negative values not allowed!");

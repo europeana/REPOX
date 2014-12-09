@@ -26,7 +26,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.dom4j.DocumentException;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.MultiPart;
-import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.MappingOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
