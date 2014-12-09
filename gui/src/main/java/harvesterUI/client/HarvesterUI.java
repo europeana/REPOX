@@ -280,8 +280,8 @@ public class HarvesterUI implements EntryPoint,HistoryListener {
                 Dispatcher.forwardEvent(AppEvents.ViewAdminForm);
             else if(historyToken.equals("USER_MANAGEMENT"))
                 Dispatcher.forwardEvent(AppEvents.ViewUserManagementForm);
-            else if(historyToken.equals("REST_OPERATIONS"))
-                Dispatcher.forwardEvent(AppEvents.ViewRestRecordOperations);
+//            else if(historyToken.equals("REST_OPERATIONS"))
+//                Dispatcher.forwardEvent(AppEvents.ViewRestRecordOperations);
             else if(historyToken.equals("EDIT_ACCOUNT")){
                 Dispatcher.forwardEvent(AppEvents.LoadMainData);
                 Dispatcher.forwardEvent(AppEvents.ViewAccountEditForm);

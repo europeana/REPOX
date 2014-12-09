@@ -15,7 +15,118 @@
 		<param-value>oaicat.properties</param-value>
 	</context-param>
 
+	<filter>
+		<filter-name>Set-Character-Encoding</filter-name>
+		<filter-class>harvesterUI.server.web.filter.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Set-Character-Encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>HarvesterUI.html</welcome-file>
+	</welcome-file-list>
+
 	<!-- Servlets -->
+	<servlet>
+		<servlet-name>log4j-init</servlet-name>
+		<servlet-class>harvesterUI.server.util.Log4jInitServlet</servlet-class>
+
+		<init-param>
+			<param-name>log4j-init-file</param-name>
+			<param-value>WEB-INF/classes/log4j.configuration</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!-- Servlet OAIHandler -->
+	<servlet>
+		<description>
+			This servlet processes OAI verbs. The initialization parameter names for this servlet
+			are the "servlet path" that will be received by this servlet (after the filename
+			extension is removed). The corresponding value is the name of the action class
+			that will be used to process this request.
+		</description>
+		<servlet-name>OAIHandler</servlet-name>
+		<servlet-class>org.oclc.oai.server.OAIHandler</servlet-class>
+		<!-- Load this servlet at server startup time -->
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>OAIHandler</servlet-name>
+		<url-pattern>/OAIHandler</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet OLDREST -->
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>rest</servlet-name> -->
+<!-- 		<servlet-class>pt.utl.ist.rest.RestServlet</servlet-class> -->
+<!-- 		<load-on-startup>5</load-on-startup> -->
+<!-- 	</servlet> -->
+
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>rest</servlet-name> -->
+<!-- 		<url-pattern>/rest/*</url-pattern> -->
+<!-- 	</servlet-mapping> -->
+
+	<!-- Servlet REST -->
+	<servlet>
+		<servlet-name>jersey-serlvet</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig</param-value>
+		</init-param>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>jersey-serlvet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>JerseyJaxrsConfig</servlet-name>
+		<servlet-class>com.wordnik.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+		<init-param>
+			<param-name>api.version</param-name>
+			<param-value>1.0.0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>swagger.api.basepath</param-name>
+			<param-value>http://localhost:8080/repox-gui-2.6.0-SNAPSHOT/rest</param-value>
+		</init-param>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+
+	<!-- Servlet SRU Record Update -->
+	<servlet>
+		<servlet-name>srurecordupdate</servlet-name>
+		<servlet-class>harvesterUI.server.sru.SruRecordUpdateServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>srurecordupdate</servlet-name>
+		<url-pattern>/srurecordupdate/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- todo security REST.. <security-constraint> <web-resource-collection> 
+		<web-resource-name>secure</web-resource-name> <url-pattern>/rest/aggregators/*</url-pattern> 
+		</web-resource-collection> <auth-constraint> <role-name>manager</role-name> 
+		</auth-constraint> </security-constraint> <login-config> <auth-method>BASIC</auth-method> 
+		<realm-name>file</realm-name> </login-config> <security-role> <role-name>manager</role-name> 
+		</security-role> -->
+
 	<servlet>
 		<servlet-name>repoxServiceImpl</servlet-name>
 		<servlet-class>harvesterUI.server.RepoxServiceImpl</servlet-class>
@@ -222,120 +333,4 @@
 		<servlet-name>openTransformationResultLogFile</servlet-name>
 		<url-pattern>/harvesterui/openTransformationResultLogFile</url-pattern>
 	</servlet-mapping>
-
-	<!-- Servlet OAIHandler -->
-
-	<servlet>
-		<description>
-			This servlet processes OAI verbs. The initialization parameter names for this servlet
-			are the "servlet path" that will be received by this servlet (after the filename
-			extension is removed). The corresponding value is the name of the action class
-			that will be used to process this request.
-		</description>
-		<servlet-name>OAIHandler</servlet-name>
-		<servlet-class>org.oclc.oai.server.OAIHandler</servlet-class>
-		<!-- Load this servlet at server startup time -->
-		<load-on-startup>5</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>OAIHandler</servlet-name>
-		<url-pattern>/OAIHandler</url-pattern>
-	</servlet-mapping>
-
-
-	<!-- Servlet REST -->
-	<servlet>
-		<servlet-name>rest</servlet-name>
-		<servlet-class>pt.utl.ist.rest.RestServlet</servlet-class>
-		<load-on-startup>5</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>rest</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>jersey-serlvet</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>org.theeuropeanlibrary.repox.rest.configuration.JerseyConfig</param-value>
-		</init-param>
-		<load-on-startup>6</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>jersey-serlvet</servlet-name>
-		<url-pattern>/restj/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>JerseyJaxrsConfig</servlet-name>
-		<servlet-class>com.wordnik.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
-		<init-param>
-			<param-name>api.version</param-name>
-			<param-value>1.0.0</param-value>
-		</init-param>
-		<init-param>
-			<param-name>swagger.api.basepath</param-name>
-			<param-value>http://localhost:8080/repox-gui-2.6.0-SNAPSHOT/restj</param-value>
-		</init-param>
-		<load-on-startup>8</load-on-startup>
-	</servlet>
-
-
-	<!-- Servlet SRU Record Update -->
-	<servlet>
-		<servlet-name>srurecordupdate</servlet-name>
-		<servlet-class>harvesterUI.server.sru.SruRecordUpdateServlet</servlet-class>
-		<load-on-startup>5</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>srurecordupdate</servlet-name>
-		<url-pattern>/srurecordupdate/*</url-pattern>
-	</servlet-mapping>
-
-
-	<filter>
-		<filter-name>Set-Character-Encoding</filter-name>
-		<filter-class>harvesterUI.server.web.filter.SetCharacterEncodingFilter</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>Set-Character-Encoding</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-
-	<!-- Default page to serve -->
-	<welcome-file-list>
-		<welcome-file>HarvesterUI.html</welcome-file>
-	</welcome-file-list>
-
-
-	<!-- todo security REST.. <security-constraint> <web-resource-collection> 
-		<web-resource-name>secure</web-resource-name> <url-pattern>/rest/aggregators/*</url-pattern> 
-		</web-resource-collection> <auth-constraint> <role-name>manager</role-name> 
-		</auth-constraint> </security-constraint> <login-config> <auth-method>BASIC</auth-method> 
-		<realm-name>file</realm-name> </login-config> <security-role> <role-name>manager</role-name> 
-		</security-role> -->
-
-	<servlet>
-		<servlet-name>log4j-init</servlet-name>
-		<servlet-class>harvesterUI.server.util.Log4jInitServlet</servlet-class>
-
-		<init-param>
-			<param-name>log4j-init-file</param-name>
-			<param-value>WEB-INF/classes/log4j.configuration</param-value>
-		</init-param>
-
-		<load-on-startup>1</load-on-startup>
-	</servlet>
 </web-app>

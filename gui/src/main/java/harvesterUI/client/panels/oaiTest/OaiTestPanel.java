@@ -182,7 +182,7 @@ public class OaiTestPanel extends ContentPanel {
         othersContainer.add(othersLabel);
         left.add(globalParametersSet);
         left.add(createOperationsFieldSet());
-        left.add(othersContainer);
+//        left.add(othersContainer);
         main.add(left,data);
 
         BorderLayoutData rightData = new BorderLayoutData(Style.LayoutRegion.CENTER, 300,300,350);
