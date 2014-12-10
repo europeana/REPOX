@@ -52,15 +52,15 @@ public class AdminMenu extends WidgetWithRole{
                 }
             });
             adminMenu.add(externalServices);
-            MenuItem restServices = new MenuItem(HarvesterUI.CONSTANTS.restServices());
-            restServices.setIcon(HarvesterUI.ICONS.web_services_icon());
-            restServices.addSelectionListener(new SelectionListener<MenuEvent>() {
-                @Override
-                public void componentSelected(MenuEvent me) {
-                    Dispatcher.get().dispatch(AppEvents.ViewRestRecordOperations);
-                }
-            });
-            adminMenu.add(restServices);
+//            MenuItem restServices = new MenuItem(HarvesterUI.CONSTANTS.restServices());
+//            restServices.setIcon(HarvesterUI.ICONS.web_services_icon());
+//            restServices.addSelectionListener(new SelectionListener<MenuEvent>() {
+//                @Override
+//                public void componentSelected(MenuEvent me) {
+//                    Dispatcher.get().dispatch(AppEvents.ViewRestRecordOperations);
+//                }
+//            });
+//            adminMenu.add(restServices);
 
             MenuItem tagsManager = new MenuItem("Tags Manager");
             tagsManager.setIcon(HarvesterUI.ICONS.tag_icon());

@@ -51,7 +51,7 @@ public class AdminForm extends VerticalPanel {
     //Fields
     private TextField<String> repositoryFolderField, configFilesFolderField, oaiRequestFolderField, ftpRequestField,
             derbyDbFolderField,baseUrnField,repositoryNameField,maxRecordsOaiField, defaultExportFolderField, adminEmailField, smtpServerField,
-            smtpPortField, repoxDefualtEmailSenderField,adminPassField, httpRequestField, sampleRecordsField, ldapHostField,
+            smtpPortField, repoxDefualtEmailSenderField,adminPassField, ldapPassField, httpRequestField, sampleRecordsField, ldapHostField,
             ldapUserPrefixField, ldapLoginDNField, backendUrl;
 
     private CheckBox useCountriesTxtFile, sendEmailAfterIngest, useYaddaStorage, useMailSSLAuthentication, useOAINamespace;
@@ -225,16 +225,22 @@ public class AdminForm extends VerticalPanel {
         ldapHostField.setFieldLabel("LDAP Host");
         ldapHostField.setId("admin_ldapHost");
         simple.add(ldapHostField, formData);
+        
+        ldapPassField = new TextField<String>();
+        ldapPassField.setFieldLabel("LDAP Password");
+        ldapPassField.setId("admin_ldappassField");
+        ldapPassField.setPassword(true);
+        simple.add(ldapPassField, formData);
 
         ldapUserPrefixField = new TextField<String>();
         ldapUserPrefixField.setFieldLabel("LDAP User Prefix");
         ldapUserPrefixField.setId("admin_ldapUserPre");
-        simple.add(ldapUserPrefixField, formData);
+//        simple.add(ldapUserPrefixField, formData);
 
         ldapLoginDNField = new TextField<String>();
         ldapLoginDNField.setFieldLabel("LDAP Login DN");
         ldapLoginDNField.setId("admin_ldapLoginDN");
-        simple.add(ldapLoginDNField, formData);
+//        simple.add(ldapLoginDNField, formData);
 
         checkBoxGroup = new CheckBoxGroup();
         useCountriesTxtFile = new CheckBox();
@@ -283,6 +289,7 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("httpRequestFolder",httpRequestField.getValue());
                 adminInfo.set("sampleRecords",sampleRecordsField.getValue());
                 adminInfo.set("ldapHost",ldapHostField.getValue());
+                adminInfo.set("ldapRootPassword",ldapPassField.getValue());
                 adminInfo.set("ldapUserPrefix",ldapUserPrefixField.getValue());
                 adminInfo.set("ldapLoginDN",ldapLoginDNField.getValue());
                 adminInfo.set("useCountriesTxt",useCountriesTxtFile.getValue());
@@ -349,6 +356,7 @@ public class AdminForm extends VerticalPanel {
                 ftpRequestField.setValue((String)dataModel.get("ftpRequestFolder"));
                 sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));
                 ldapHostField.setValue((String)dataModel.get("ldapHost"));
+                ldapPassField.setValue((String)dataModel.get("ldapRootPassword"));
                 ldapUserPrefixField.setValue((String)dataModel.get("ldapUserPrefix"));
                 ldapLoginDNField.setValue((String)dataModel.get("ldapLoginDN"));
                 useCountriesTxtFile.setValue((Boolean)dataModel.get("useCountriesTxt"));

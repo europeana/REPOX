@@ -191,6 +191,8 @@ public class DefaultProjectManager extends ProjectManager {
             // optional fields
             if(configuration.getLdapHost() != null)
                 adminInfo.set("ldapHost",configuration.getLdapHost());
+            if(configuration.getLdapRootPassword() != null)
+                adminInfo.set("ldapRootPassword",configuration.getLdapRootPassword());
             if(configuration.getLdapUserPrefix() != null)
                 adminInfo.set("ldapUserPrefix",configuration.getLdapUserPrefix());
             if(configuration.getLdapLoginDN() != null)
@@ -232,6 +234,8 @@ public class DefaultProjectManager extends ProjectManager {
                 properties.setProperty("administrator.email.pass",(String)results.get("adminPass"));
             if(results.get("ldapHost") != null)
                 properties.setProperty("ldapHost",(String)results.get("ldapHost"));
+            if(results.get("ldapRootPassword") != null)
+                properties.setProperty("ldapRootPassword",(String)results.get("ldapRootPassword"));
             if(results.get("ldapUserPrefix") != null)
                 properties.setProperty("ldapUserPrefix",(String)results.get("ldapUserPrefix"));
             if(results.get("ldapLoginDN") != null)
