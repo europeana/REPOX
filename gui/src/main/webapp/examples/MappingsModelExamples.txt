@@ -1,0 +1,14 @@
+#Model for POSTing a mapping is not available from swagger.
+#Can be invoked only programmatically since it passed a file to the server.
+
+#[GET]MetadataTransformation Model 
+{
+  "id": "SampleId2",
+  "description": "NONE",
+  "sourceSchemaId": "edm",
+  "destinationSchemaId": "ese",
+  "stylesheet": "myXSLT2",
+  "sourceSchemaVersion": "1.0",
+  "destSchemaVersion": "3.3",
+  "versionTwo": true
+}

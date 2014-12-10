@@ -41,6 +41,9 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_DB_PASSWORD                 = "database.password";
 
     private static final String PROPERTY_LDAP_HOST                   = "ldapHost";
+    private static final String PROPERTY_LDAP_ROOT_DN              = "ldapRootDN";
+    private static final String PROPERTY_LDAP_ROOT_PASSWORD          = "ldapRootPassword";
+    private static final String PROPERTY_LDAP_BASE_PATH              = "ldapBasePath";
     private static final String PROPERTY_LDAP_USER_PREFIX            = "ldapUserPrefix";
     private static final String PROPERTY_LDAP_LOGIN_DN               = "ldapLoginDN";
     private static final String PROPERTY_USE_COUNTRIES_TXT           = "userCountriesTxtFile";
@@ -74,6 +77,9 @@ public abstract class RepoxConfiguration {
 
     //    private String mdrUrl;
     private String              ldapHost;
+    private String              ldapRootDN;
+    private String              ldapRootPassword;
+    private String              ldapBasePath;
     private String              ldapUserPrefix;
     private String              ldapLoginDN;
     private Boolean             useCountriesTxt;
@@ -148,12 +154,18 @@ public abstract class RepoxConfiguration {
         this.databasePassword = configurationProperties.getProperty(PROPERTY_DB_PASSWORD);
 
         this.useCountriesTxt = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_COUNTRIES_TXT) == null ? "true" : configurationProperties.getProperty(PROPERTY_USE_COUNTRIES_TXT));
-        this.sendEmailAfterIngest = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION) == null ? "true" : configurationProperties.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION));
+        this.sendEmailAfterIngest = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION) == null ? "true" : configurationProperties
+                .getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION));
         this.ldapHost = configurationProperties.getProperty(PROPERTY_LDAP_HOST);
+        this.ldapRootDN = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_DN);
+        this.ldapRootPassword = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_PASSWORD);
+        this.ldapBasePath = configurationProperties.getProperty(PROPERTY_LDAP_BASE_PATH);
+        
         this.ldapUserPrefix = configurationProperties.getProperty(PROPERTY_LDAP_USER_PREFIX);
         this.ldapLoginDN = configurationProperties.getProperty(PROPERTY_LDAP_LOGIN_DN);
         this.currentServerOAIUrl = configurationProperties.getProperty(PROPERTY_SERVER_OAI_URL);
-        this.useMailSSLAuthentication = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : configurationProperties.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
+        this.useMailSSLAuthentication = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : configurationProperties
+                .getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
         this.useOAINamespace = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE));
     }
 
@@ -339,5 +351,53 @@ public abstract class RepoxConfiguration {
 
     public boolean isUseOAINamespace() {
         return useOAINamespace;
+    }
+
+    /**
+     * Returns the ldapRootUser.
+     * @return the ldapRootUser
+     */
+    public String getLdapRootDN() {
+        return ldapRootDN;
+    }
+
+    /**
+     * Sets the ldapRootUser to the given value.
+     * @param ldapRootUser the ldapRootUser to set
+     */
+    public void setLdapRootDN(String ldapRootDN) {
+        this.ldapRootDN = ldapRootDN;
+    }
+
+    /**
+     * Returns the ldapRootPassword.
+     * @return the ldapRootPassword
+     */
+    public String getLdapRootPassword() {
+        return ldapRootPassword;
+    }
+
+    /**
+     * Sets the ldapRootPassword to the given value.
+     * @param ldapRootPassword the ldapRootPassword to set
+     */
+    public void setLdapRootPassword(String ldapRootPassword) {
+        this.ldapRootPassword = ldapRootPassword;
+    }
+
+    /**
+     * Returns the ldapBasePath.
+     * @return the ldapBasePath
+     */
+    public String getLdapBasePath() {
+        return ldapBasePath;
+    }
+
+    /**
+     * Sets the ldapBasePath to the given value.
+     * @param ldapBasePath the ldapBasePath to set
+     */
+    public void setLdapBasePath(String ldapBasePath) {
+        this.ldapBasePath = ldapBasePath;
     }
 }

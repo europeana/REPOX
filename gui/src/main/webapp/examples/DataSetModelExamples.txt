@@ -1,0 +1,202 @@
+#Dataset Models examples
+
+#Example for Creating/Updating OAIdataset(containerType=DEFAULT,datasetType=OAI)
+
+#id must validate against the regular expression"[a-zA-Z_0-9]*".
+#Required fields(schema, namespace, metadatformat, oaiSourceURL, oaiSet)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "OAI",
+      "id": "a0660",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": true,
+      "exportDir": "/tmp/example/oai",
+      "recordIdPolicy": {
+        "IdProvided": {}
+      },
+      "oaiSourceURL": "http://valid/oai/url",
+      "oaiSet": "oaiSet"
+    },
+    "nameCode": "a0660",
+    "name": "Austrian Books Online"
+}
+#################################################################
+
+#Example for Creating/Updating DIRdataset(containerType=DEFAULT,datasetType=DIR)
+
+#This example is for folder dataset.
+#Required fields(schema, namespace, metadatformat, sourcesDirPath)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1010",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": true,
+      "exportDir": "/tmp/export",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "/tmp/example/a",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
+    },
+    "nameCode": "a1010",
+    "name": "NormalFolder"
+}
+
+#Example with IdExtracted recordIdPolicy  
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, identifierXpath)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1111",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": true,
+      "exportDir": "/tmp/export",
+      "recordIdPolicy": {
+        "IdExtracted": {
+       		"namespaces": {
+            	"ese": "http://www.europeana.eu/schemas/ese/"
+          	},
+			"identifierXpath": "/recId"
+		}
+      },
+      "sourcesDirPath": "/tmp/example/a",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
+    },
+    "nameCode": "a1010",
+    "name": "NormalFolder"
+}
+
+#Example for ISO2709 format
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, isoVariant, characterEncoding)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1112",
+      "schema": "info:lc/xmlns/marcxchange-v1.xsd",
+      "namespace": "info:lc/xmlns/marcxchange-v1",
+      "description": "NONE",
+      "metadataFormat": "ISO2709",
+      "isSample": false,
+      "exportDir": "/data/repoxData/export/a1011",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "/tmp/ex",
+      "characterEncoding": "UTF_8",
+      "isoVariant": "STANDARD"
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
+    },
+    "nameCode": "a1011",
+    "name": "IsoFolder"
+}
+#Example for MarcXchange format
+#Required fields(schema, namespace, metadatformat, sourcesDirPath, marcFormat)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a1113",
+      "schema": "info:lc/xmlns/marcxchange-v1.xsd",
+      "namespace": "info:lc/xmlns/marcxchange-v1",
+      "description": "NONE",
+      "metadataFormat": "MarcXchange",
+      "isSample": false,
+      "exportDir": "/data/export/a1113",
+      "marcFormat": "MARC21",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "/tmp/mar"
+      "retrieveStrategy": {
+        "FOLDER": {}
+      }
+    },
+    "nameCode": "a1113",
+    "name": "MarcFolder"
+}
+
+
+
+#Example for FTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=FTP)
+#This example is for dataset over ftp.
+#Required fields(schema, namespace, metadatformat, server)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a2021",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": false,
+      "exportDir": "/data/repoxData/export/a2021",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "FTP": {
+          "server": "valid.server.host.example",
+          "user": "username",
+          "password": "password",
+          "ftpPath": "tmp"
+        }
+      }
+    },
+    "nameCode": "a2021",
+    "name": "FTP Example"
+  }
+  
+#Example for HTTPdataset(containerType=DEFAULT,datasetType=DIR, retrieveStrategy=HTTP)
+#This example is for dataset over http.
+#Required fields(schema, namespace, metadatformat, url)
+{
+    "containerType": "DEFAULT",
+    "dataSource": {
+      "dataSetType": "DIR",
+      "id": "a3030",
+      "schema": "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd",
+      "namespace": "http://www.europeana.eu/schemas/ese/",
+      "description": "NONE",
+      "metadataFormat": "ese",
+      "isSample": false,
+      "exportDir": "/tmp/example/http",
+      "recordIdPolicy": {
+        "IdGenerated": {}
+      },
+      "sourcesDirPath": "",
+      "recordXPath": "/rec",
+      "retrieveStrategy": {
+        "HTTP": {
+          "url": "http://example.com"
+        }
+      }
+    },
+    "nameCode": "a3030",
+    "name": "HTTP Example"
+}
+#################################################################

@@ -3,7 +3,6 @@ package harvesterUI.server.userManagement;
 import harvesterUI.client.servlets.userManagement.UserManagementService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
-import harvesterUI.server.ldap.LDAPAuthenticator;
 import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataProviderUI;
@@ -38,6 +37,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.ldap.LDAPAuthenticator;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.XmlUtil;
 
@@ -612,9 +612,9 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public boolean checkLDAPAuthentication(String username, String password) throws ServerSideException{
         String ldapHost = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapHost();
-        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
-        String ldapLoginDN = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapLoginDN();
-        String loginDN = ldapUSerPrefix + username + ldapLoginDN;
-        return LDAPAuthenticator.checkLDAPAuthentication(ldapHost,loginDN,password);
+//        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
+//        String ldapLoginDN = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapLoginDN();
+//        String loginDN = ldapUSerPrefix + username + ldapLoginDN;
+        return LDAPAuthenticator.checkLDAPAuthentication(ldapHost,username,password);
     }
 }
