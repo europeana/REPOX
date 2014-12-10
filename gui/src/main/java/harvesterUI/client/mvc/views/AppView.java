@@ -308,14 +308,14 @@ public class AppView extends View {
 
     public void changeAccordingToRole(UserRole role){
         if(role == UserRole.ANONYMOUS) {
-            Button restServicesButton = new Button(HarvesterUI.CONSTANTS.restServices(),new SelectionListener<ButtonEvent>() {
-                @Override
-                public void componentSelected(ButtonEvent ce) {
-                    Dispatcher.get().dispatch(AppEvents.ViewRestRecordOperations);
-                }
-            });
-            restServicesButton.setIcon(HarvesterUI.ICONS.web_services_icon());
-            toolBar.insert(restServicesButton,6);
+//            Button restServicesButton = new Button(HarvesterUI.CONSTANTS.restServices(),new SelectionListener<ButtonEvent>() {
+//                @Override
+//                public void componentSelected(ButtonEvent ce) {
+//                    Dispatcher.get().dispatch(AppEvents.ViewRestRecordOperations);
+//                }
+//            });
+//            restServicesButton.setIcon(HarvesterUI.ICONS.web_services_icon());
+//            toolBar.insert(restServicesButton,6);
 
             Dispatcher.forwardEvent(AppEvents.RemoveGridOperations);
             Dispatcher.forwardEvent(AppEvents.LoadMainData);
