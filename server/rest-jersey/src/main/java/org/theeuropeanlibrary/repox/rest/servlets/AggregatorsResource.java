@@ -23,6 +23,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.annotation.Secured;
 import org.theeuropeanlibrary.repox.rest.pathOptions.AggregatorOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
@@ -51,6 +54,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Path("/" + AggregatorOptionListContainer.AGGREGATORS)
 @Api(value = "/" + AggregatorOptionListContainer.AGGREGATORS, description = "Rest api for aggregators")
 public class AggregatorsResource {
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     @Context
     UriInfo                   uriInfo;
 

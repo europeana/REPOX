@@ -293,10 +293,10 @@
 		</dependency>
 
 		<!-- LDAP Libs -->
-		<dependency>
-			<groupId>com.novell.ldap</groupId>
-			<artifactId>jldap</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.novell.ldap</groupId> -->
+<!-- 			<artifactId>jldap</artifactId> -->
+<!-- 		</dependency> -->
 
 		<!-- Testing Libs -->
 		<dependency>

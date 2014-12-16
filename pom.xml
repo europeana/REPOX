@@ -141,7 +141,7 @@
 		<commons-lang.commons-lang.version>2.6</commons-lang.commons-lang.version>
 		<commons-beanutils.commons-beanutils.version>1.9.2</commons-beanutils.commons-beanutils.version>
 
-		<spring.version>3.0.4.RELEASE</spring.version>
+		<spring.version>3.2.5.RELEASE</spring.version>
 		<org.springframework.spring-aop.version>${spring.version}</org.springframework.spring-aop.version>
 		<org.springframework.spring-beans.version>${spring.version}</org.springframework.spring-beans.version>
 		<org.springframework.spring-context.version>${spring.version}</org.springframework.spring-context.version>
@@ -150,11 +150,11 @@
 		<org.springframework.spring-web.version>${spring.version}</org.springframework.spring-web.version>
 		<org.springframework.spring-webmvc.version>${spring.version}</org.springframework.spring-webmvc.version>
 		<org.springframework.spring-context-support.version>${spring.version}</org.springframework.spring-context-support.version>
-		<org.springframework.spring-orm.version>3.0.4.RELEASE</org.springframework.spring-orm.version>
-		<org.springframework.security.spring-security-acl.version>3.0.4.RELEASE</org.springframework.security.spring-security-acl.version>
-		<org.springframework.security.spring-security-core.version>3.0.4.RELEASE</org.springframework.security.spring-security-core.version>
-		<org.springframework.security.spring-security-taglibs.version>3.0.4.RELEASE</org.springframework.security.spring-security-taglibs.version>
-		<org.springframework.security.spring-security-config.version>3.0.4.RELEASE</org.springframework.security.spring-security-config.version>
+		<org.springframework.spring-orm.version>3.2.5.RELEASE</org.springframework.spring-orm.version>
+		<org.springframework.security.spring-security-acl.version>3.2.5.RELEASE</org.springframework.security.spring-security-acl.version>
+		<org.springframework.security.spring-security-core.version>3.2.5.RELEASE</org.springframework.security.spring-security-core.version>
+		<org.springframework.security.spring-security-taglibs.version>3.2.5.RELEASE</org.springframework.security.spring-security-taglibs.version>
+		<org.springframework.security.spring-security-config.version>3.2.5.RELEASE</org.springframework.security.spring-security-config.version>
 		<org.springframework.spring-test.version>${spring.version}</org.springframework.spring-test.version>
 		<org.springmodules.spring-modules-validation.version>0.8a</org.springmodules.spring-modules-validation.version>
 
