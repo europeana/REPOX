@@ -12,6 +12,11 @@
  
    <http entry-point-ref="restAuthenticationEntryPoint">
       <intercept-url pattern="/rest/aggregators/**" access="ROLE_ADMIN"/>
+      <intercept-url pattern="/rest/providers/**" access="ROLE_ADMIN"/>
+      <intercept-url pattern="/rest/datasets/**" access="ROLE_ADMIN"/>
+      <intercept-url pattern="/rest/records/**" access="ROLE_ADMIN"/>
+      <intercept-url pattern="/rest/mappings/**" access="ROLE_ADMIN"/>
+      <intercept-url pattern="/rest/statistics/**" access="ROLE_ADMIN"/>
  
       <form-login
          authentication-success-handler-ref="restSuccessHandler"
@@ -21,7 +26,7 @@
    </http>
  
    <beans:bean id="restSuccessHandler"
-      class="org.theeuropeanlibrary.repox.rest.security.MySavedRequestAwareAuthenticationSuccessHandler"/>
+      class="org.theeuropeanlibrary.repox.rest.security.SavedRequestAwareAuthenticationSuccessHandler"/>
    <beans:bean id="restFailureHandler"
       class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
       

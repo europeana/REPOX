@@ -1,3 +1,4 @@
+/* clientTestClass.java - created on Dec 2, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -16,8 +17,6 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 
 import pt.utl.ist.util.XmlUtil;
-
-/* clientTestClass.java - created on Dec 2, 2014, Copyright (c) 2011 The European Library, all rights reserved */
 
 /**
  * 
