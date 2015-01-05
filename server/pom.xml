@@ -16,7 +16,7 @@
 
 	<modules>
 		<module>oai</module>
-		<module>rest</module>
+<!-- 		<module>rest</module> -->
 		<module>rest-jersey</module>
 	</modules>
 

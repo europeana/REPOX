@@ -103,7 +103,7 @@
 		</init-param>
 		<init-param>
 			<param-name>swagger.api.basepath</param-name>
-			<param-value>http://localhost:8080/repox-gui-2.6.0-SNAPSHOT/rest</param-value>
+			<param-value>http://localhost:8080/repox/rest</param-value>
 		</init-param>
 		<load-on-startup>5</load-on-startup>
 	</servlet>

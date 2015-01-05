@@ -61,7 +61,7 @@
 		<repox.repox-server.version>2.6.0-SNAPSHOT</repox.repox-server.version>
 		<repox.repox-server-oai.version>2.6.0-SNAPSHOT</repox.repox-server-oai.version>
 		<repox.repox-server-rest.version>2.6.0-SNAPSHOT</repox.repox-server-rest.version>
-		<repox.repox-server-rest-jersey.version>0.0.1-SNAPSHOT</repox.repox-server-rest-jersey.version>
+		<repox.repox-server-rest-jersey.version>1.0.0-SNAPSHOT</repox.repox-server-rest-jersey.version>
 
 		<repox.repox-commons.version>2.6.0-SNAPSHOT</repox.repox-commons.version>
 		<repox.repox-resources.version>2.6.0-SNAPSHOT</repox.repox-resources.version>
