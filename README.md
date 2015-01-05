@@ -34,7 +34,7 @@ including new implementations of REST API's, bug fixing and introducing new feat
 Repox consists of following projects:
 
 * __Repox Parent (repox-system)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This project is basically the parent project consisting of the modules repox-gui, repox-manager, repox-commons, repox-server(repox-server-client, repox-server-oai), repox-resources
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This project is basically the parent project containing all the modules.
 * __Repox Gui (repox-gui)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The GUI implementation using GWT. This is the main war build that should be deployed in a servlet container.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The URL configuration of swagger-core dynamic JSON generation is located in the `web.xml`.
@@ -52,6 +52,7 @@ Repox consists of following projects:
 * __Repox Server Rest Jersey(repox-server-rest-jersey)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The new RESTful API service, using Jersey 2 framework for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The URL configuration of swagger-core dynamic JSON generation is located in the `web.xml`.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Spring security is configured in the file `security.xml`.   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the full build is initiated, then the `web.xml` of the `repox-gui` is the valid one, so any values in this `web.xml` must be copied in the `web.xml` of the `repox-gui`.
 * __Repox Server OAI (repox-server-oai)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; An OAI-PMH endpoint for accessing information of Repox datasets. This module can be build and deployed independently from the repox-gui.
@@ -97,7 +98,7 @@ The command to build is:
     Repox uses swagger 2.0 for documenting the REST API of `repox-server-rest-jersey`. 
     This profile is bound to the `generate-resources`.  
     &nbsp;&nbsp;&nbsp;&nbsp; `generate-resources -Pgenerate-doc`  
-    It uses Server integration that dynamically provides JSON at runtime. If in any case the json needs to be generated in files, this profile can be used to generate them and the applicable  
+    It uses Server integration that dynamically provides JSON at runtime BUT If in any case the json needs to be generated in files, this profile can be used to generate them and the applicable  
     url and document locations can be edited in the `pom.xml` of the module.
 
 
