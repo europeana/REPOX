@@ -592,6 +592,7 @@
 			<dependency>
 				<groupId>javax.resource</groupId>
 				<artifactId>connector</artifactId>
+				<type>pom</type>
 				<version>${javax.resource.connector.version}</version>
 			</dependency>
 			<dependency>
@@ -819,48 +820,37 @@
 
 	<repositories>
 		<repository>
-			<id>icm.edu</id>
-			<name>Maven Repository</name>
-			<url>http://maven.icm.edu.pl/artifactory/repo/</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>artifactory.eanadev.org</id>
+			<name>artifactory.eanadev.org-releases</name>
+			<url>http://artifactory.eanadev.org/artifactory/ext-release-local</url>
 		</repository>
 
 		<repository>
-			<id>tel.repository</id>
-			<name>Maven Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
-			<layout>default</layout>
+			<id>java.net</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+
+		<!-- Dead repo, avoid it -->
+		<repository>
+			<id>IST-releases</id>
+			<url>http://digmap3.ist.utl.pt:8080/artifactory/libs-release-local/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+
+		<!-- Warsaw repo with old jars. -->
+		<!-- <repository> -->
+		<!-- <id>icm.edu</id> -->
+		<!-- <name>Maven Repository</name> -->
+		<!-- <url>http://maven.icm.edu.pl/artifactory/repo/</url> -->
+		<!-- <layout>default</layout> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </repository> -->
 	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>tel.plugins</id>
-			<name>Maven Plugin Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<distributionManagement>
-		<repository>
-			<id>tel.release</id>
-			<name>TEL Release Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>tel.snapshot</id>
-			<name>TEL Snapshot Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
