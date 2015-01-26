@@ -84,7 +84,7 @@
 		<taglibs.standard.version>1.1.2</taglibs.standard.version>
 		<bsf.bsf.version>2.4.0</bsf.bsf.version>
 		<rhino.js.version>1.7R2</rhino.js.version>
-		<marc4j.marc4j.version>2.3.1</marc4j.marc4j.version>
+		<marc4j.marc4j.version>2.6.3</marc4j.marc4j.version>
 		<org.freemarker.freemarker.version>2.3.20</org.freemarker.freemarker.version>
 		<net.sf.saxon.saxon-xpath.version>8.7</net.sf.saxon.saxon-xpath.version>
 		<org.mortbay.jetty.servlet-api-2.5.version>6.1.14</org.mortbay.jetty.servlet-api-2.5.version>
