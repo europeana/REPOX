@@ -48,6 +48,10 @@
 					<groupId>javax.ws.rs</groupId>
 					<artifactId>jsr311-api</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -239,10 +243,14 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring</artifactId>
 				</exclusion>
-<!-- 				<exclusion> -->
-<!-- 					<groupId>cql-java</groupId> -->
-<!-- 					<artifactId>cql-java</artifactId> -->
-<!-- 				</exclusion> -->
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<!-- <exclusion> -->
+				<!-- <groupId>cql-java</groupId> -->
+				<!-- <artifactId>cql-java</artifactId> -->
+				<!-- </exclusion> -->
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -257,17 +265,17 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring</artifactId>
 				</exclusion>
-<!-- 				<exclusion> -->
-<!-- 					<groupId>cql-java</groupId> -->
-<!-- 					<artifactId>cql-java</artifactId> -->
-<!-- 				</exclusion> -->
+				<!-- <exclusion> -->
+				<!-- <groupId>cql-java</groupId> -->
+				<!-- <artifactId>cql-java</artifactId> -->
+				<!-- </exclusion> -->
 			</exclusions>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.dspace</groupId> -->
-<!-- 			<artifactId>cql-java</artifactId> -->
-<!-- 			<version>1.0</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.dspace</groupId> -->
+		<!-- <artifactId>cql-java</artifactId> -->
+		<!-- <version>1.0</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>

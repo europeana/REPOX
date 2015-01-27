@@ -353,6 +353,10 @@
 					<groupId>com.sun.msv.datatype.xsd</groupId>
 					<artifactId>xsdlib</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

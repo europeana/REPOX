@@ -36,17 +36,21 @@
 	</welcome-file-list>
 
 	<!-- Servlets -->
-	<servlet>
-		<servlet-name>log4j-init</servlet-name>
-		<servlet-class>harvesterUI.server.util.Log4jInitServlet</servlet-class>
 
-		<init-param>
-			<param-name>log4j-init-file</param-name>
-			<param-value>WEB-INF/classes/log4j.configuration</param-value>
-		</init-param>
+	<!-- Configure external log4j configuration -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>log4j-init</servlet-name> -->
+	<!-- <servlet-class>harvesterUI.server.util.Log4jInitServlet</servlet-class> -->
 
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	<!-- <init-param> -->
+	<!-- <param-name>log4j-init-file</param-name> -->
+	<!-- <param-value>WEB-INF/classes/log4j.properties</param-value> -->
+	<!-- </init-param> -->
+
+	<!-- <load-on-startup>1</load-on-startup> -->
+	<!-- </servlet> -->
+
+
 	<!-- Servlet OAIHandler -->
 	<servlet>
 		<description>
@@ -66,19 +70,19 @@
 		<url-pattern>/OAIHandler</url-pattern>
 	</servlet-mapping>
 
-	<!-- Servlet OLDREST -->
-<!-- 	<servlet> -->
-<!-- 		<servlet-name>rest</servlet-name> -->
-<!-- 		<servlet-class>pt.utl.ist.rest.RestServlet</servlet-class> -->
-<!-- 		<load-on-startup>5</load-on-startup> -->
-<!-- 	</servlet> -->
+	<!-- Servlet OLD REST -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>rest</servlet-name> -->
+	<!-- <servlet-class>pt.utl.ist.rest.RestServlet</servlet-class> -->
+	<!-- <load-on-startup>5</load-on-startup> -->
+	<!-- </servlet> -->
 
-<!-- 	<servlet-mapping> -->
-<!-- 		<servlet-name>rest</servlet-name> -->
-<!-- 		<url-pattern>/rest/*</url-pattern> -->
-<!-- 	</servlet-mapping> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>rest</servlet-name> -->
+	<!-- <url-pattern>/rest/*</url-pattern> -->
+	<!-- </servlet-mapping> -->
 
-	<!-- Servlet REST -->
+	<!-- Servlet OLD REST -->
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -107,7 +111,7 @@
 		</init-param>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
-	
+
 	<!-- Spring Security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
