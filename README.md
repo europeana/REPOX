@@ -59,6 +59,7 @@ Repox consists of following projects:
 
 ###General Information###
 - - -
+*  Check the wiki pages for more information - [Wiki](https://github.com/europeana/REPOX/wiki)
 *  A separate configuration file, instead the one on `WEB-INF/classes` directory of the .war, can be used by declaring a JVM system variable of the directory where the  
 required `configuration.properties` file is located, like so `repox.data.dir=/path/to/configuration/dir`
 *  All the configuration files in Repox are always read once and then the information is kept in memory, any changes on the files are not reflected to the memory.  
