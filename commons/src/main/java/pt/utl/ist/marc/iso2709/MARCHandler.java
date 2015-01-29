@@ -1,25 +1,3 @@
-/**
- * MARCHandler.java Version 0.2, November 2001
- *
- * Copyright (C) 2001  Bas Peters (mail@bpeters.com)
- *
- * This file is part of James (Java MARC Events).
- *
- * James is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * James is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with James; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package pt.utl.ist.marc.iso2709;
 
 import pt.utl.ist.util.marc.Leader;
@@ -34,44 +12,6 @@ import pt.utl.ist.util.marc.Leader;
  * The following code from the <code>TaggedPrinter</code> example demonstrates
  * the use of the <code>MARCHandler</code> interface.
  * </p>
- * 
- * <pre>
- * class MARCHandlerImpl implements MARCHandler {
- * 
- *     public void startTape() {
- *     }
- * 
- *     public void startRecord(Leader leader) {
- *         System.out.println(&quot;Leader &quot; + leader.getSerializedForm());
- *     }
- * 
- *     public void controlField(String tag, char[] data) {
- *         System.out.println(tag + &quot; &quot; + data);
- *     }
- * 
- *     public void startDataField(String tag, char ind1, char ind2) {
- *         System.out.print(tag + &quot; &quot; + ind1 + ind2);
- *     }
- * 
- *     public void subfield(char identifier, char[] data) {
- *         // the dollar sign is used as a character
- *         // representation for delimiter
- *         System.out.print(&quot;$&quot; + identifier + data);
- *     }
- * 
- *     public void endDataField(String tag) {
- *         System.out.println();
- *     }
- * 
- *     public void endRecord() {
- *         System.out.println();
- *     }
- * 
- *     public void endTape() {
- *     }
- * 
- * }
- * </pre>
  * 
  * @author Bas Peters - <a href="mailto:mail@bpeters.com">mail@bpeters.com</a>
  * @version 0.2
