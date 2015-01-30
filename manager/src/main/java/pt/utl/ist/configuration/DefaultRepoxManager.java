@@ -16,10 +16,10 @@ import pt.utl.ist.externalServices.ExternalRestServicesManager;
 import pt.utl.ist.metadataSchemas.MetadataSchemaManager;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.rest.statistics.DefaultStatisticsManager;
-import pt.utl.ist.rest.util.DefaultEmailUtil;
 import pt.utl.ist.statistics.RecordCountManager;
 import pt.utl.ist.statistics.StatisticsManager;
 import pt.utl.ist.task.TaskManager;
+import pt.utl.ist.util.DefaultEmailUtil;
 import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
