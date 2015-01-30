@@ -12,24 +12,24 @@ import java.util.Properties;
  */
 public class DefaultRepoxConfiguration extends RepoxConfiguration {
     private static final String PROPERTY_EXPORT_DEFAULT_FOLDER = "exportDefaultFolder";
-    private static final String PROPERTY_ADMIN_EMAIL_PASS = "administrator.email.pass";
+    private static final String PROPERTY_EMAIL_PASS = "default.email.pass";
 
     private String exportDefaultFolder;
-    private String adminEmailPass;
+    private String repoxDefaultEmailPass;
 
 
     public DefaultRepoxConfiguration(Properties configurationProperties) throws IOException {
         super(configurationProperties);
         this.exportDefaultFolder = configurationProperties.getProperty(PROPERTY_EXPORT_DEFAULT_FOLDER);
-        this.adminEmailPass = configurationProperties.getProperty(PROPERTY_ADMIN_EMAIL_PASS);
+        this.repoxDefaultEmailPass = configurationProperties.getProperty(PROPERTY_EMAIL_PASS);
     }
 
     public String getExportDefaultFolder() {
         return exportDefaultFolder;
     }
 
-    public String getAdminEmailPass() {
-        return adminEmailPass;
+    public String getRepoxDefaultEmailPass() {
+        return repoxDefaultEmailPass;
     }
 
     public void setExportDefaultFolder(String exportDefaultFolder) {

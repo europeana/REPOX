@@ -28,7 +28,7 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_ADMINISTRATOR_EMAIL         = "administrator.email";
     private static final String PROPERTY_SMTP_SERVER                 = "smtp.server";
     private static final String PROPERTY_DEFAULT_EMAIL               = "default.email";
-    private static final String PROPERTY_MAIL_PASS                   = "administrator.email.pass";
+    private static final String PROPERTY_MAIL_PASS                   = "default.email.pass";
     private static final String PROPERTY_SMTP_PORT                   = "smtp.port";
 
     private static final String PROPERTY_SAMPLE_RECORDS              = "sample.records";
@@ -41,7 +41,7 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_DB_PASSWORD                 = "database.password";
 
     private static final String PROPERTY_LDAP_HOST                   = "ldapHost";
-    private static final String PROPERTY_LDAP_ROOT_DN              = "ldapRootDN";
+    private static final String PROPERTY_LDAP_ROOT_DN                = "ldapRootDN";
     private static final String PROPERTY_LDAP_ROOT_PASSWORD          = "ldapRootPassword";
     private static final String PROPERTY_LDAP_BASE_PATH              = "ldapBasePath";
     private static final String PROPERTY_LDAP_USER_PREFIX            = "ldapUserPrefix";
@@ -160,7 +160,7 @@ public abstract class RepoxConfiguration {
         this.ldapRootDN = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_DN);
         this.ldapRootPassword = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_PASSWORD);
         this.ldapBasePath = configurationProperties.getProperty(PROPERTY_LDAP_BASE_PATH);
-        
+
         this.ldapUserPrefix = configurationProperties.getProperty(PROPERTY_LDAP_USER_PREFIX);
         this.ldapLoginDN = configurationProperties.getProperty(PROPERTY_LDAP_LOGIN_DN);
         this.currentServerOAIUrl = configurationProperties.getProperty(PROPERTY_SERVER_OAI_URL);

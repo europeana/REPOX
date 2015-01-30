@@ -51,7 +51,7 @@ public class AdminForm extends VerticalPanel {
     //Fields
     private TextField<String> repositoryFolderField, configFilesFolderField, oaiRequestFolderField, ftpRequestField,
             derbyDbFolderField,baseUrnField,repositoryNameField,maxRecordsOaiField, defaultExportFolderField, adminEmailField, smtpServerField,
-            smtpPortField, repoxDefualtEmailSenderField,adminPassField, ldapPassField, httpRequestField, sampleRecordsField, ldapHostField,
+            smtpPortField, repoxDefaultEmailSenderField,repoxDefualtEmailPassField, ldapPassField, httpRequestField, sampleRecordsField, ldapHostField,
             ldapUserPrefixField, ldapLoginDNField, backendUrl;
 
     private CheckBox useCountriesTxtFile, sendEmailAfterIngest, useYaddaStorage, useMailSSLAuthentication, useOAINamespace;
@@ -79,8 +79,10 @@ public class AdminForm extends VerticalPanel {
         simple.setLayout(layout);
 
         ComponentPlugin plugin = new ComponentPlugin() {
+            @Override
             public void init(Component component) {
                 component.addListener(Events.Render, new Listener<ComponentEvent>() {
+                    @Override
                     public void handleEvent(ComponentEvent be) {
                         El elem = be.getComponent().el().findParent(".x-form-element", 3);
                         // should style in external CSS  rather than directly
@@ -196,7 +198,23 @@ public class AdminForm extends VerticalPanel {
         adminEmailField.setFieldLabel(HarvesterUI.CONSTANTS.administratorEmail()+ HarvesterUI.REQUIRED_STR);
         adminEmailField.setId("admin_email");
         adminEmailField.setAllowBlank(false);
+        adminEmailField.addPlugin(plugin);
+        adminEmailField.setData("text", HarvesterUI.CONSTANTS.administratorEmailInfo());
         simple.add(adminEmailField, formData);
+        
+        repoxDefaultEmailSenderField = new TextField<String>();
+        repoxDefaultEmailSenderField.setFieldLabel(HarvesterUI.CONSTANTS.repoxDefaultEmailSender()+ HarvesterUI.REQUIRED_STR);
+        repoxDefaultEmailSenderField.setAllowBlank(false);
+        repoxDefaultEmailSenderField.addPlugin(plugin);
+        repoxDefaultEmailSenderField.setData("text", HarvesterUI.CONSTANTS.repoxDefaultEmailSenderInfo());
+        repoxDefaultEmailSenderField.setId("admin_repoxdefaultemailsenderField");
+        simple.add(repoxDefaultEmailSenderField, formData);
+
+        repoxDefualtEmailPassField = new TextField<String>();
+        repoxDefualtEmailPassField.setFieldLabel(HarvesterUI.CONSTANTS.repoxDefaultEmailPassword());
+        repoxDefualtEmailPassField.setId("admin_repoxdefaultemailpassField");
+        repoxDefualtEmailPassField.setPassword(true);
+        simple.add(repoxDefualtEmailPassField, formData);
 
         smtpServerField = new TextField<String>();
         smtpServerField.setFieldLabel(HarvesterUI.CONSTANTS.smtpServer()+ HarvesterUI.REQUIRED_STR);
@@ -208,18 +226,6 @@ public class AdminForm extends VerticalPanel {
         smtpPortField.setFieldLabel(HarvesterUI.CONSTANTS.smtpPort()+ HarvesterUI.REQUIRED_STR);
         smtpPortField.setId("admin_smtpportfield");
         simple.add(smtpPortField, formData);
-
-        repoxDefualtEmailSenderField = new TextField<String>();
-        repoxDefualtEmailSenderField.setFieldLabel(HarvesterUI.CONSTANTS.repoxDefaultEmailSender()+ HarvesterUI.REQUIRED_STR);
-        repoxDefualtEmailSenderField.setAllowBlank(false);
-        repoxDefualtEmailSenderField.setId("admin_repoxdefaultemailsenderField");
-        simple.add(repoxDefualtEmailSenderField, formData);
-
-        adminPassField = new TextField<String>();
-        adminPassField.setFieldLabel(HarvesterUI.CONSTANTS.administrationEmailPassword());
-        adminPassField.setId("admin_adminpassField");
-        adminPassField.setPassword(true);
-        simple.add(adminPassField, formData);
 
         ldapHostField = new TextField<String>();
         ldapHostField.setFieldLabel("LDAP Host");
@@ -281,10 +287,10 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("baseUrn",baseUrnField.getValue());
                 adminInfo.set("defaultExportFolder",defaultExportFolderField.getValue());
                 adminInfo.set("adminEmail",adminEmailField.getValue());
+                adminInfo.set("repoxDefaultEmailSender",repoxDefaultEmailSenderField.getValue());
+                adminInfo.set("repoxDefaultEmailPass",repoxDefualtEmailPassField.getValue());
                 adminInfo.set("smtpServer",smtpServerField.getValue());
                 adminInfo.set("smtpPort",smtpPortField.getValue());
-                adminInfo.set("repoxDefaultEmailSender",repoxDefualtEmailSenderField.getValue());
-                adminInfo.set("adminPass",adminPassField.getValue());
                 adminInfo.set("ftpRequestFolder",ftpRequestField.getValue());
                 adminInfo.set("httpRequestFolder",httpRequestField.getValue());
                 adminInfo.set("sampleRecords",sampleRecordsField.getValue());
@@ -302,9 +308,11 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("oaiMaxList",maxRecordsOaiField.getValue());
 
                 AsyncCallback callback = new AsyncCallback() {
+                    @Override
                     public void onFailure(Throwable caught) {
                         new ServerExceptionDialog("Failed to get response from server",caught.getMessage()).show();
                     }
+                    @Override
                     public void onSuccess(Object result) {
                         simple.submit();
                         History.newItem("HOME");
@@ -337,9 +345,11 @@ public class AdminForm extends VerticalPanel {
 
     public void editAdminForm() {
         AsyncCallback<AdminInfo> callback = new AsyncCallback<AdminInfo>() {
+            @Override
             public void onFailure(Throwable caught) {
                 new ServerExceptionDialog("Failed to get response from server",caught.getMessage()).show();
             }
+            @Override
             public void onSuccess(AdminInfo dataModel) {
                 repositoryFolderField.setValue((String)dataModel.get("repositoryFolder"));
                 configFilesFolderField.setValue((String)dataModel.get("configFilesFolder"));
@@ -350,8 +360,8 @@ public class AdminForm extends VerticalPanel {
                 adminEmailField.setValue((String)dataModel.get("adminEmail"));
                 smtpServerField.setValue((String)dataModel.get("smtpServer"));
                 smtpPortField.setValue((String)dataModel.get("smtpPort"));
-                repoxDefualtEmailSenderField.setValue((String)dataModel.get("repoxDefualtEmailSender"));
-                adminPassField.setValue((String)dataModel.get("adminPass"));
+                repoxDefaultEmailSenderField.setValue((String)dataModel.get("repoxDefaultEmailSender"));
+                repoxDefualtEmailPassField.setValue((String)dataModel.get("repoxDefaultEmailPass"));
                 httpRequestField.setValue((String)dataModel.get("httpRequestFolder"));
                 ftpRequestField.setValue((String)dataModel.get("ftpRequestFolder"));
                 sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));

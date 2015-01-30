@@ -179,7 +179,7 @@ public class DefaultProjectManager extends ProjectManager {
             adminInfo.set("adminEmail",configuration.getAdministratorEmail());
             adminInfo.set("smtpServer",configuration.getSmtpServer());
             adminInfo.set("smtpPort",configuration.getSmtpPort());
-            adminInfo.set("repoxDefualtEmailSender",configuration.getDefaultEmail());
+            adminInfo.set("repoxDefaultEmailSender",configuration.getDefaultEmail());
             adminInfo.set("httpRequestFolder",configuration.getHttpRequestPath());
             adminInfo.set("ftpRequestFolder",configuration.getFtpRequestPath());
             adminInfo.set("sampleRecords",configuration.getSampleRecords());
@@ -197,8 +197,8 @@ public class DefaultProjectManager extends ProjectManager {
                 adminInfo.set("ldapUserPrefix",configuration.getLdapUserPrefix());
             if(configuration.getLdapLoginDN() != null)
                 adminInfo.set("ldapLoginDN",configuration.getLdapLoginDN());
-            if(configuration.getAdminEmailPass() != null)
-                adminInfo.set("adminPass",configuration.getAdminEmailPass());
+            if(configuration.getRepoxDefaultEmailPass() != null)
+                adminInfo.set("repoxDefaultEmailPass",configuration.getRepoxDefaultEmailPass());
 
             return adminInfo;
         }catch (Exception e){
@@ -230,8 +230,8 @@ public class DefaultProjectManager extends ProjectManager {
             properties.setProperty("useOAINamespace",String.valueOf(results.get("useOAINamespace")));
 
             // optional fields
-            if(results.get("adminPass") != null)
-                properties.setProperty("administrator.email.pass",(String)results.get("adminPass"));
+            if(results.get("repoxDefaultEmailPass") != null)
+                properties.setProperty("default.email.pass",(String)results.get("repoxDefaultEmailPass"));
             if(results.get("ldapHost") != null)
                 properties.setProperty("ldapHost",(String)results.get("ldapHost"));
             if(results.get("ldapRootPassword") != null)
@@ -798,7 +798,6 @@ public class DefaultProjectManager extends ProjectManager {
     @Override
     public ResponseState sendUserDataEmail(String username, String email, String password) throws ServerSideException {
         try {
-            // Europeana
             String fromEmail = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getDefaultEmail();
             String subject = "REPOX User Account Data";
 

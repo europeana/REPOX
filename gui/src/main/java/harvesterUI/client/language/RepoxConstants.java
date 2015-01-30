@@ -482,13 +482,17 @@ public interface RepoxConstants extends Constants{
     @DefaultStringValue("---")
     String administratorEmail();
     @DefaultStringValue("---")
-    String smtpServer();
-    @DefaultStringValue("---")
-    String smtpPort();
+    String administratorEmailInfo();
     @DefaultStringValue("---")
     String repoxDefaultEmailSender();
     @DefaultStringValue("---")
-    String administrationEmailPassword();
+    String repoxDefaultEmailSenderInfo();
+    @DefaultStringValue("---")
+    String repoxDefaultEmailPassword();
+    @DefaultStringValue("---")
+    String smtpServer();
+    @DefaultStringValue("---")
+    String smtpPort();
 
     /*---------------------- User Management ----------------------*/
 
