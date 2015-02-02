@@ -42,11 +42,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.mail.AuthenticationFailedException;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.dom4j.DocumentException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -171,9 +172,10 @@ public class DefaultProjectManager extends ProjectManager {
             adminInfo.set("derbyDbFolder",configuration.getDatabasePath());
             adminInfo.set("baseUrn",configuration.getBaseUrn());
 
-            Properties properties = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
-            adminInfo.set("oaiRepoName",properties.getProperty("Identify.repositoryName","undefined"));
-            adminInfo.set("oaiMaxList",properties.getProperty("DataSourceOAICatalog.maxListSize","undefined"));
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
+            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
+            adminInfo.set("oaiRepoName",properties.getProperty("Identify.repositoryName") == null ? "undefined" : properties.getProperty("Identify.repositoryName").toString());
+            adminInfo.set("oaiMaxList",properties.getProperty("DataSourceOAICatalog.maxListSize") == null ? "undefined" : properties.getProperty("DataSourceOAICatalog.maxListSize").toString());
 
             adminInfo.set("defaultExportFolder",configuration.getExportDefaultFolder());
             adminInfo.set("adminEmail",configuration.getAdministratorEmail());
@@ -193,10 +195,6 @@ public class DefaultProjectManager extends ProjectManager {
                 adminInfo.set("ldapHost",configuration.getLdapHost());
             if(configuration.getLdapRootPassword() != null)
                 adminInfo.set("ldapRootPassword",configuration.getLdapRootPassword());
-            if(configuration.getLdapUserPrefix() != null)
-                adminInfo.set("ldapUserPrefix",configuration.getLdapUserPrefix());
-            if(configuration.getLdapLoginDN() != null)
-                adminInfo.set("ldapLoginDN",configuration.getLdapLoginDN());
             if(configuration.getRepoxDefaultEmailPass() != null)
                 adminInfo.set("repoxDefaultEmailPass",configuration.getRepoxDefaultEmailPass());
 
@@ -210,7 +208,9 @@ public class DefaultProjectManager extends ProjectManager {
     @Override
     public void saveAdminFormInfo(AdminInfo results) throws ServerSideException{
         try{
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+            
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
             properties.setProperty("repository.dir",(String)results.get("repositoryFolder"));
             properties.setProperty("xmlConfig.dir",(String)results.get("configFilesFolder"));
             properties.setProperty("oairequests.dir",(String)results.get("oaiRequestFolder"));
@@ -236,20 +236,21 @@ public class DefaultProjectManager extends ProjectManager {
                 properties.setProperty("ldapHost",(String)results.get("ldapHost"));
             if(results.get("ldapRootPassword") != null)
                 properties.setProperty("ldapRootPassword",(String)results.get("ldapRootPassword"));
-            if(results.get("ldapUserPrefix") != null)
-                properties.setProperty("ldapUserPrefix",(String)results.get("ldapUserPrefix"));
-            if(results.get("ldapLoginDN") != null)
-                properties.setProperty("ldapLoginDN",(String)results.get("ldapLoginDN"));
+//            if(results.get("ldapUserPrefix") != null)
+//                properties.setProperty("ldapUserPrefix",(String)results.get("ldapUserPrefix"));
+//            if(results.get("ldapLoginDN") != null)
+//                properties.setProperty("ldapLoginDN",(String)results.get("ldapLoginDN"));
 
-            Properties oaiProperties = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
+            PropertiesConfigurationLayout oaiPropertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
+            PropertiesConfiguration oaiConfiguration = oaiPropertiesConfigrationLayout.getConfiguration();
             if(results.get("oaiRepoName") != null)
-                oaiProperties.setProperty("Identify.repositoryName",(String)results.get("oaiRepoName"));
+                oaiConfiguration.setProperty("Identify.repositoryName",(String)results.get("oaiRepoName"));
             if(results.get("oaiMaxList") != null)
-                oaiProperties.setProperty("DataSourceOAICatalog.maxListSize",(String)results.get("oaiMaxList"));
+                oaiConfiguration.setProperty("DataSourceOAICatalog.maxListSize",(String)results.get("oaiMaxList"));
 
-            PropertyUtil.saveProperties(oaiProperties, "oaicat.properties");
+            PropertyUtil.saveProperties(oaiPropertiesConfigrationLayout, "oaicat.properties");
             reloadOAIProperties(results.getReloadOAIPropertiesUrl());
-            PropertyUtil.saveProperties(properties, DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertyUtil.saveProperties(propertiesConfigrationLayout, DefaultRepoxContextUtil.CONFIG_FILE);
             ConfigSingleton.getRepoxContextUtil().reloadProperties();
 //            System.out.println("Done save admin");
         }catch (Exception e){

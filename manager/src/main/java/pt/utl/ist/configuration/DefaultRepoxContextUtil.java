@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Properties;
 
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
@@ -39,11 +39,12 @@ public class DefaultRepoxContextUtil implements RepoxContextUtil {
 
     private static DefaultRepoxManager repoxManager;
 
+    @Override
     public DefaultRepoxManager getRepoxManager() {
         try {
             if (repoxManager == null) {
-                Properties configurationProperties = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
-                DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationProperties);
+                PropertiesConfigurationLayout configurationPropertiesLayout = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
+                DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationPropertiesLayout);
 
                 String configurationPath = configuration.getXmlConfigPath();
                 File countriesFile = new File(configurationPath + File.separator + "countries.txt");
@@ -70,10 +71,11 @@ public class DefaultRepoxContextUtil implements RepoxContextUtil {
         }
     }
 
+    @Override
     public DefaultRepoxManager getRepoxManagerTest() {
         try {
-            Properties configurationProperties = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
-            DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationProperties);
+            PropertiesConfigurationLayout configurationPropertiesLayout = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
+            DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationPropertiesLayout);
             log.warn("Using TEST configuration properties file: " + TEST_CONFIG_FILE);
             repoxManager = new DefaultRepoxManager(configuration, DATA_PROVIDERS_FILENAME, STATISTICS_FILENAME, RECORD_COUNTS_FILENAME, SCHEDULED_TASKS_FILENAME, RECOVERABLE_TASKS_FILENAME, METADATA_TRANSFORMATIONS_FILENAME, OLD_TASKS_FILENAME, EXTERNAL_SERVICES_FILENAME, METADATA_SCHEMAS_FILENAME, TAGS_FILENAME);
         } catch (IOException e) {
@@ -94,10 +96,11 @@ public class DefaultRepoxContextUtil implements RepoxContextUtil {
         return repoxManager;
     }
 
+    @Override
     public void reloadProperties() {
         try {
-            Properties configurationProperties = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
-            DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationProperties);
+            PropertiesConfigurationLayout configurationPropertiesLayout = PropertyUtil.loadCorrectedConfiguration(CONFIG_FILE);
+            DefaultRepoxConfiguration configuration = new DefaultRepoxConfiguration(configurationPropertiesLayout);
             log.warn("Using DEFAULT configuration properties file: " + CONFIG_FILE);
             repoxManager = new DefaultRepoxManager(configuration, DATA_PROVIDERS_FILENAME, STATISTICS_FILENAME, RECORD_COUNTS_FILENAME, SCHEDULED_TASKS_FILENAME, RECOVERABLE_TASKS_FILENAME, METADATA_TRANSFORMATIONS_FILENAME, OLD_TASKS_FILENAME, EXTERNAL_SERVICES_FILENAME, METADATA_SCHEMAS_FILENAME, TAGS_FILENAME);
         } catch (Exception e) {

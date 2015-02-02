@@ -1,7 +1,9 @@
 package pt.utl.ist.configuration;
 
 import java.io.IOException;
-import java.util.Properties;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,10 +20,11 @@ public class DefaultRepoxConfiguration extends RepoxConfiguration {
     private String repoxDefaultEmailPass;
 
 
-    public DefaultRepoxConfiguration(Properties configurationProperties) throws IOException {
-        super(configurationProperties);
-        this.exportDefaultFolder = configurationProperties.getProperty(PROPERTY_EXPORT_DEFAULT_FOLDER);
-        this.repoxDefaultEmailPass = configurationProperties.getProperty(PROPERTY_EMAIL_PASS);
+    public DefaultRepoxConfiguration(PropertiesConfigurationLayout configurationPropertiesLayout) throws IOException {
+        super(configurationPropertiesLayout);
+        PropertiesConfiguration configuration = configurationPropertiesLayout.getConfiguration();
+        this.exportDefaultFolder = configuration.getProperty(PROPERTY_EXPORT_DEFAULT_FOLDER).toString();
+        this.repoxDefaultEmailPass = configuration.getProperty(PROPERTY_EMAIL_PASS).toString();
     }
 
     public String getExportDefaultFolder() {

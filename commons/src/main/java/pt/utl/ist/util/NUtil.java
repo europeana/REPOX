@@ -35,26 +35,26 @@ public class NUtil {
         }
     }
 
-    /**
-     * @param filename
-     * @return Properties from class path
-     */
-    public static Properties loadPropertiesFromClassPath(String filename) {
-        URL url = null;
-        try {
-            url = Thread.currentThread().getContextClassLoader().getResource(filename);
-            if (url == null) {
-                url = (new File(filename)).toURI().toURL();
-            }
-            InputStream strIn = url.openStream();
-            Properties properties = new Properties();
-            properties.load(strIn);
-            strIn.close();
-            return properties;
-        } catch (Exception e) {
-            throw new RuntimeException(url.getFile(), e);
-        }
-    }
+//    /**
+//     * @param filename
+//     * @return Properties from class path
+//     */
+//    public static Properties loadPropertiesFromClassPath(String filename) {
+//        URL url = null;
+//        try {
+//            url = Thread.currentThread().getContextClassLoader().getResource(filename);
+//            if (url == null) {
+//                url = (new File(filename)).toURI().toURL();
+//            }
+//            InputStream strIn = url.openStream();
+//            Properties properties = new Properties();
+//            properties.load(strIn);
+//            strIn.close();
+//            return properties;
+//        } catch (Exception e) {
+//            throw new RuntimeException(url.getFile(), e);
+//        }
+//    }
 
     /**
      * @param resourceName

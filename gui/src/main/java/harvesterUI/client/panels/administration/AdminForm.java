@@ -238,14 +238,14 @@ public class AdminForm extends VerticalPanel {
         ldapPassField.setPassword(true);
         simple.add(ldapPassField, formData);
 
-        ldapUserPrefixField = new TextField<String>();
-        ldapUserPrefixField.setFieldLabel("LDAP User Prefix");
-        ldapUserPrefixField.setId("admin_ldapUserPre");
+//        ldapUserPrefixField = new TextField<String>();
+//        ldapUserPrefixField.setFieldLabel("LDAP User Prefix");
+//        ldapUserPrefixField.setId("admin_ldapUserPre");
 //        simple.add(ldapUserPrefixField, formData);
 
-        ldapLoginDNField = new TextField<String>();
-        ldapLoginDNField.setFieldLabel("LDAP Login DN");
-        ldapLoginDNField.setId("admin_ldapLoginDN");
+//        ldapLoginDNField = new TextField<String>();
+//        ldapLoginDNField.setFieldLabel("LDAP Login DN");
+//        ldapLoginDNField.setId("admin_ldapLoginDN");
 //        simple.add(ldapLoginDNField, formData);
 
         checkBoxGroup = new CheckBoxGroup();
@@ -296,8 +296,8 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("sampleRecords",sampleRecordsField.getValue());
                 adminInfo.set("ldapHost",ldapHostField.getValue());
                 adminInfo.set("ldapRootPassword",ldapPassField.getValue());
-                adminInfo.set("ldapUserPrefix",ldapUserPrefixField.getValue());
-                adminInfo.set("ldapLoginDN",ldapLoginDNField.getValue());
+//                adminInfo.set("ldapUserPrefix",ldapUserPrefixField.getValue());
+//                adminInfo.set("ldapLoginDN",ldapLoginDNField.getValue());
                 adminInfo.set("useCountriesTxt",useCountriesTxtFile.getValue());
                 adminInfo.set("sendEmailAfterIngest",sendEmailAfterIngest.getValue());
                 adminInfo.set("useYaddaStorage",useYaddaStorage.getValue());
@@ -367,8 +367,8 @@ public class AdminForm extends VerticalPanel {
                 sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));
                 ldapHostField.setValue((String)dataModel.get("ldapHost"));
                 ldapPassField.setValue((String)dataModel.get("ldapRootPassword"));
-                ldapUserPrefixField.setValue((String)dataModel.get("ldapUserPrefix"));
-                ldapLoginDNField.setValue((String)dataModel.get("ldapLoginDN"));
+//                ldapUserPrefixField.setValue((String)dataModel.get("ldapUserPrefix"));
+//                ldapLoginDNField.setValue((String)dataModel.get("ldapLoginDN"));
                 useCountriesTxtFile.setValue((Boolean)dataModel.get("useCountriesTxt"));
                 sendEmailAfterIngest.setValue((Boolean)dataModel.get("sendEmailAfterIngest"));
                 useYaddaStorage.setValue((Boolean)dataModel.get("useYaddaStorage"));

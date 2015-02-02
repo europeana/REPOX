@@ -2,7 +2,9 @@ package pt.utl.ist.configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 
 /**
  * Created by IntelliJ IDEA. User: GPedrosa Date: 06-04-2011 Time: 11:42 To
@@ -34,7 +36,6 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_SAMPLE_RECORDS              = "sample.records";
     private static final String PROPERTY_DB_DIR                      = "database.dir";
     private static final String PROPERTY_DB_DRIVER_CLASSNAME         = "database.driverClassName";
-    private static final String PROPERTY_DB_EMBEDDED_DRIVER          = "database.embeddedDriver";
     private static final String PROPERTY_DB_URL                      = "database.url";
     private static final String PROPERTY_DB_CREATE                   = "database.create";
     private static final String PROPERTY_DB_USER                     = "database.user";
@@ -44,8 +45,6 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_LDAP_ROOT_DN                = "ldapRootDN";
     private static final String PROPERTY_LDAP_ROOT_PASSWORD          = "ldapRootPassword";
     private static final String PROPERTY_LDAP_BASE_PATH              = "ldapBasePath";
-    private static final String PROPERTY_LDAP_USER_PREFIX            = "ldapUserPrefix";
-    private static final String PROPERTY_LDAP_LOGIN_DN               = "ldapLoginDN";
     private static final String PROPERTY_USE_COUNTRIES_TXT           = "userCountriesTxtFile";
     private static final String PROPERTY_SEND_EMAIL_AFTER_INGESTION  = "sendEmailAfterIngest";
     private static final String PROPERTY_SERVER_OAI_URL              = "currentServerOAIUrl";
@@ -69,19 +68,15 @@ public abstract class RepoxConfiguration {
 
     private String              databasePath;
     private String              databaseDriverClassName;
-    private boolean             databaseEmbeddedDriver;
     private String              databaseUrl;
     private boolean             databaseCreate;
     private String              databaseUser;
     private String              databasePassword;
 
-    //    private String mdrUrl;
     private String              ldapHost;
     private String              ldapRootDN;
     private String              ldapRootPassword;
     private String              ldapBasePath;
-    private String              ldapUserPrefix;
-    private String              ldapLoginDN;
     private Boolean             useCountriesTxt;
     private Boolean             sendEmailAfterIngest;
     private String              currentServerOAIUrl;
@@ -90,37 +85,37 @@ public abstract class RepoxConfiguration {
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param configurationProperties
+     * @param configurationPropertiesLayout 
      * @throws IOException
      */
-    public RepoxConfiguration(Properties configurationProperties) throws IOException {
+    public RepoxConfiguration(PropertiesConfigurationLayout configurationPropertiesLayout) throws IOException {
         super();
-
-        this.baseUrn = configurationProperties.getProperty(PROPERTY_BASE_URN);
-        this.repositoryPath = configurationProperties.getProperty(PROPERTY_REPOSITORY_DIR);
+        PropertiesConfiguration configuration = configurationPropertiesLayout.getConfiguration();
+        
+        this.baseUrn = (String)configuration.getProperty(PROPERTY_BASE_URN);
+        this.repositoryPath = (String)configuration.getProperty(PROPERTY_REPOSITORY_DIR);
         File repositoryFile = new File(repositoryPath);
         if (!repositoryFile.exists()) {
             repositoryFile.mkdirs();
         }
-        this.xmlConfigPath = configurationProperties.getProperty(PROPERTY_XML_CONFIG_DIR);
+        this.xmlConfigPath = (String)configuration.getProperty(PROPERTY_XML_CONFIG_DIR);
         File xmlConfigFile = new File(xmlConfigPath);
         if (!xmlConfigFile.exists()) {
             xmlConfigFile.mkdirs();
         }
-        this.oaiRequestPath = configurationProperties.getProperty(PROPERTY_OAI_REQUEST_DIR);
+        this.oaiRequestPath = (String)configuration.getProperty(PROPERTY_OAI_REQUEST_DIR);
         File oaiRequestFile = new File(oaiRequestPath);
         if (!oaiRequestFile.exists()) {
             oaiRequestFile.mkdirs();
         }
 
-        this.ftpRequestPath = configurationProperties.getProperty(PROPERTY_FTP_REQUEST_DIR);
+        this.ftpRequestPath = (String)configuration.getProperty(PROPERTY_FTP_REQUEST_DIR);
         File ftpRequestFile = new File(ftpRequestPath);
         if (!ftpRequestFile.exists()) {
             ftpRequestFile.mkdirs();
         }
 
-        this.httpRequestPath = configurationProperties.getProperty(PROPERTY_HTTP_REQUEST_DIR);
+        this.httpRequestPath = (String)configuration.getProperty(PROPERTY_HTTP_REQUEST_DIR);
         File httpRequestFile = new File(httpRequestPath);
         if (!httpRequestFile.exists()) {
             httpRequestFile.mkdirs();
@@ -131,42 +126,38 @@ public abstract class RepoxConfiguration {
             tempDir.mkdirs();
         }
 
-        if (configurationProperties.getProperty(PROPERTY_SAMPLE_RECORDS) != null) {
+        if (configuration.getProperty(PROPERTY_SAMPLE_RECORDS) != null) {
             try {
-                this.sampleRecords = Integer.valueOf(configurationProperties.getProperty(PROPERTY_SAMPLE_RECORDS));
+                this.sampleRecords = Integer.valueOf((String)configuration.getProperty(PROPERTY_SAMPLE_RECORDS));
             } catch (Exception e) {
                 this.sampleRecords = 1000;
             }
         } else {
             this.sampleRecords = 1000;
         }
-        this.smtpPort = configurationProperties.getProperty(PROPERTY_SMTP_PORT);
-        this.mailPassword = configurationProperties.getProperty(PROPERTY_MAIL_PASS);
-        this.defaultEmail = configurationProperties.getProperty(PROPERTY_DEFAULT_EMAIL);
-        this.administratorEmail = configurationProperties.getProperty(PROPERTY_ADMINISTRATOR_EMAIL);
-        this.smtpServer = configurationProperties.getProperty(PROPERTY_SMTP_SERVER);
-        this.databasePath = configurationProperties.getProperty(PROPERTY_DB_DIR);
-        this.databaseDriverClassName = configurationProperties.getProperty(PROPERTY_DB_DRIVER_CLASSNAME);
-        this.databaseEmbeddedDriver = Boolean.parseBoolean(configurationProperties.getProperty(PROPERTY_DB_EMBEDDED_DRIVER));
-        this.databaseUrl = configurationProperties.getProperty(PROPERTY_DB_URL);
-        this.databaseCreate = Boolean.parseBoolean(configurationProperties.getProperty(PROPERTY_DB_CREATE));
-        this.databaseUser = configurationProperties.getProperty(PROPERTY_DB_USER);
-        this.databasePassword = configurationProperties.getProperty(PROPERTY_DB_PASSWORD);
+        this.smtpPort = (String)configuration.getProperty(PROPERTY_SMTP_PORT);
+        this.mailPassword = (String)configuration.getProperty(PROPERTY_MAIL_PASS);
+        this.defaultEmail = (String)configuration.getProperty(PROPERTY_DEFAULT_EMAIL);
+        this.administratorEmail = (String)configuration.getProperty(PROPERTY_ADMINISTRATOR_EMAIL);
+        this.smtpServer = (String)configuration.getProperty(PROPERTY_SMTP_SERVER);
+        this.databasePath = (String)configuration.getProperty(PROPERTY_DB_DIR);
+        this.databaseDriverClassName = (String)configuration.getProperty(PROPERTY_DB_DRIVER_CLASSNAME);
+        this.databaseUrl = (String)configuration.getProperty(PROPERTY_DB_URL);
+        this.databaseCreate = Boolean.parseBoolean((String)configuration.getProperty(PROPERTY_DB_CREATE));
+        this.databaseUser = (String)configuration.getProperty(PROPERTY_DB_USER);
+        this.databasePassword = (String)configuration.getProperty(PROPERTY_DB_PASSWORD);
 
-        this.useCountriesTxt = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_COUNTRIES_TXT) == null ? "true" : configurationProperties.getProperty(PROPERTY_USE_COUNTRIES_TXT));
-        this.sendEmailAfterIngest = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION) == null ? "true" : configurationProperties
+        this.useCountriesTxt = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_COUNTRIES_TXT) == null ? "true" : (String)configuration.getProperty(PROPERTY_USE_COUNTRIES_TXT));
+        this.sendEmailAfterIngest = Boolean.valueOf((String)configuration.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION) == null ? "true" : (String)configuration
                 .getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION));
-        this.ldapHost = configurationProperties.getProperty(PROPERTY_LDAP_HOST);
-        this.ldapRootDN = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_DN);
-        this.ldapRootPassword = configurationProperties.getProperty(PROPERTY_LDAP_ROOT_PASSWORD);
-        this.ldapBasePath = configurationProperties.getProperty(PROPERTY_LDAP_BASE_PATH);
+        this.ldapHost = (String)configuration.getProperty(PROPERTY_LDAP_HOST);
+        this.ldapRootDN = (String)configuration.getProperty(PROPERTY_LDAP_ROOT_DN);
+        this.ldapRootPassword = (String)configuration.getProperty(PROPERTY_LDAP_ROOT_PASSWORD);
+        this.ldapBasePath = (String)configuration.getProperty(PROPERTY_LDAP_BASE_PATH);
 
-        this.ldapUserPrefix = configurationProperties.getProperty(PROPERTY_LDAP_USER_PREFIX);
-        this.ldapLoginDN = configurationProperties.getProperty(PROPERTY_LDAP_LOGIN_DN);
-        this.currentServerOAIUrl = configurationProperties.getProperty(PROPERTY_SERVER_OAI_URL);
-        this.useMailSSLAuthentication = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : configurationProperties
-                .getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
-        this.useOAINamespace = Boolean.valueOf(configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : configurationProperties.getProperty(PROPERTY_USE_OAI_NAMESPACE));
+        this.currentServerOAIUrl = (String)configuration.getProperty(PROPERTY_SERVER_OAI_URL);
+        this.useMailSSLAuthentication = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : (String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
+        this.useOAINamespace = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : (String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE));
     }
 
     public String getBaseUrn() {
@@ -249,14 +240,6 @@ public abstract class RepoxConfiguration {
         this.databaseDriverClassName = databaseDriverClassName;
     }
 
-    public boolean isDatabaseEmbeddedDriver() {
-        return databaseEmbeddedDriver;
-    }
-
-    public void setDatabaseEmbeddedDriver(boolean databaseEmbeddedDriver) {
-        this.databaseEmbeddedDriver = databaseEmbeddedDriver;
-    }
-
     public String getDatabaseUrl() {
         return databaseUrl;
     }
@@ -333,14 +316,6 @@ public abstract class RepoxConfiguration {
         return ldapHost;
     }
 
-    public String getLdapUserPrefix() {
-        return ldapUserPrefix;
-    }
-
-    public String getLdapLoginDN() {
-        return ldapLoginDN;
-    }
-
     public String getCurrentServerOAIUrl() {
         return currentServerOAIUrl;
     }
@@ -363,7 +338,7 @@ public abstract class RepoxConfiguration {
 
     /**
      * Sets the ldapRootUser to the given value.
-     * @param ldapRootUser the ldapRootUser to set
+     * @param ldapRootDN 
      */
     public void setLdapRootDN(String ldapRootDN) {
         this.ldapRootDN = ldapRootDN;

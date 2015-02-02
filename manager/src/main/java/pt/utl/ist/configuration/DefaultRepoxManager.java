@@ -113,6 +113,7 @@ public class DefaultRepoxManager implements RepoxManager {
 
     public DefaultRepoxManager(DefaultRepoxConfiguration configuration, String dataProvidersFilename, String statisticsFilename, String recordCountsFilename, String schedulerFilename, String ongoingTasksFilename, String metadataTransformationsFilename, String oldTasksFileName,
                                  String externalServicesFilename, String metadataSchemasFilename, String tagsFilename) throws DocumentException, ParseException, SQLException, IOException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException {
+        log.info("DefaultRepoxManager creating.");
         this.configuration = configuration;
 
         File countries = new File(configuration.getXmlConfigPath() + "/" + DefaultRepoxContextUtil.COUNTRIES_FILENAME);
@@ -164,6 +165,8 @@ public class DefaultRepoxManager implements RepoxManager {
         taskManager = new TaskManager(scheduledTasksFile, ongoingTasksFile);
         taskManagerThread = new Thread(taskManager);
         taskManagerThread.start();
+        
+        log.info("DefaultRepoxManager created.");
     }
 
     /**

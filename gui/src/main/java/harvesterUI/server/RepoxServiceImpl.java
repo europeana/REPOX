@@ -17,8 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -36,106 +37,109 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
 
     private RepoxDataExchangeManager repoxDataExchangeManager = null;
 
-    private static ProjectManager projectManager;
+    private static ProjectManager    projectManager;
 
     public RepoxServiceImpl() {
         repoxDataExchangeManager = new RepoxDataExchangeManager();
 
-        Properties properties = PropertyUtil.loadGuiConfiguration("gui.properties");
-        ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type"));
+        PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadGuiConfiguration("gui.properties");
+        PropertiesConfiguration configuration = propertiesConfigrationLayout.getConfiguration();
+        ProjectType projectType = ProjectType.valueOf(configuration.getProperty("project.type").toString());
 
-        switch (projectType){
-//            case LIGHT:
-//                projectManager = new LightManager();
-//                break;
-            case DEFAULT:
-                projectManager = new DefaultProjectManager();
-                break;
+        switch (projectType) {
+        //            case LIGHT:
+        //                projectManager = new LightManager();
+        //                break;
+        case DEFAULT:
+        default:
+            projectManager = new DefaultProjectManager();
+            break;
         }
     }
 
-    public static ProjectManager getProjectManager(){
+    public static ProjectManager getProjectManager() {
         return projectManager;
     }
 
-    public static RepoxManager getRepoxManager() throws ServerSideException{
-        try{
+    public static RepoxManager getRepoxManager() throws ServerSideException {
+        try {
             return ConfigSingleton.getRepoxContextUtil().getRepoxManager();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    /**
-     *
-     * Data Lists
-     *
-     */
-
-    public Map<String,String> getFullCountryList() throws ServerSideException{
-        try{
+    @Override
+    public Map<String, String> getFullCountryList() throws ServerSideException {
+        try {
             return getProjectManager().getFullCountryList();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public List<String> getFullCharacterEncodingList() throws ServerSideException{
-        try{
+    @Override
+    public List<String> getFullCharacterEncodingList() throws ServerSideException {
+        try {
             return repoxDataExchangeManager.getFullCharacterEncodingList();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    /*
-    * Administrator settings
-    */
-    public AdminInfo loadAdminFormInfo() throws ServerSideException{
+    @Override
+    public AdminInfo loadAdminFormInfo() throws ServerSideException {
         return getProjectManager().loadAdminFormInfo();
     }
 
-    public void saveAdminFormInfo(AdminInfo results) throws ServerSideException{
+    @Override
+    public void saveAdminFormInfo(AdminInfo results) throws ServerSideException {
         getProjectManager().saveAdminFormInfo(results);
     }
 
-    public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType,String username) throws ServerSideException{
-        return getProjectManager().getStatisticsInfo(statisticsType,username);
+    @Override
+    public RepoxStatisticsUI getStatisticsInfo(StatisticsType statisticsType, String username) throws ServerSideException {
+        return getProjectManager().getStatisticsInfo(statisticsType, username);
     }
 
-    public String getRepoxVersion() throws ServerSideException{
-        try{
-            Properties properties = PropertyUtil.loadGuiConfiguration("gui.properties");
-            return properties.getProperty("repox.version");
-        }catch (Exception e){
+    @Override
+    public String getRepoxVersion() throws ServerSideException {
+        try {
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadGuiConfiguration("gui.properties");
+            PropertiesConfiguration configuration = propertiesConfigrationLayout.getConfiguration();
+            return configuration.getProperty("repox.version").toString();
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public MainConfigurationInfo getInitialConfigData() throws ServerSideException{
-        try{
-            Properties properties = PropertyUtil.loadGuiConfiguration("gui.properties");
+    @Override
+    public MainConfigurationInfo getInitialConfigData() throws ServerSideException {
+        try {
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadGuiConfiguration("gui.properties");
+            PropertiesConfiguration configuration = propertiesConfigrationLayout.getConfiguration();
 
-            ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type"));
+            ProjectType projectType = ProjectType.valueOf(configuration.getProperty("project.type").toString());
             String repositoryFodlerPath = RepoxServiceImpl.getRepoxManager().getConfiguration().getRepositoryPath();
-            MainConfigurationInfo mainConfigurationInfo = new MainConfigurationInfo(projectType,repositoryFodlerPath);
+            MainConfigurationInfo mainConfigurationInfo = new MainConfigurationInfo(projectType, repositoryFodlerPath);
 
-            if(getProjectManager() instanceof DefaultProjectManager){
+            if (getProjectManager() instanceof DefaultProjectManager) {
                 String defaultExportFolder = ((DefaultRepoxConfiguration)RepoxServiceImpl.getRepoxManager().getConfiguration()).getExportDefaultFolder();
                 mainConfigurationInfo.setDefaultExportFolder(defaultExportFolder);
             }
 
             return mainConfigurationInfo;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
+    @Override
     public ExternalServiceResultUI getValidationState(String dataSetID) throws ServerSideException {
         try {
             SAXReader reader = new SAXReader();
@@ -143,22 +147,23 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
 
             String reportFile = document.valueOf("//response/reportFile");
 
-            if(reportFile == null || reportFile.equals("NOT_FOUND"))
+            if (reportFile == null || reportFile.equals("NOT_FOUND"))
                 return null;
 
             String state = document.valueOf("//report/status");
             String htmlReport = document.valueOf("//report/warnings/@resultFile");
 
-            return new ExternalServiceResultUI(state,htmlReport);
-        }catch (DocumentException e){
+            return new ExternalServiceResultUI(state, htmlReport);
+        } catch (DocumentException e) {
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public Double getTimezoneOffset(String clientTimezone){
+    @Override
+    public Double getTimezoneOffset(String clientTimezone) {
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("Z");
         String serverOffset = simpleDateFormat.format(now);
@@ -166,68 +171,69 @@ public class RepoxServiceImpl extends RemoteServiceServlet implements RepoxServi
         double clientTimeOffset = getClientTimeInUTC(clientTimezone);
         double serverTimeOffset = getServerTimeInUTC(serverOffset);
 
-        if(clientTimeOffset == serverTimeOffset)
+        if (clientTimeOffset == serverTimeOffset)
             return 0.0;
         else
-            return serverTimeOffset+clientTimeOffset;
+            return serverTimeOffset + clientTimeOffset;
     }
 
-    public double getClientTimeInUTC(String time){
-        if(time.contains("+")){
-            return getSplitTime(time,"+");
-        }else if(time.contains("-")){
-            return getSplitTime(time,"-");
+    public double getClientTimeInUTC(String time) {
+        if (time.contains("+")) {
+            return getSplitTime(time, "+");
+        } else if (time.contains("-")) {
+            return getSplitTime(time, "-");
         }
         return 0;
     }
 
-    private double getSplitTime(String value, String operator){
+    private double getSplitTime(String value, String operator) {
         double finalValue;
         String[] tokens = value.split("\\" + operator);
         String hourPart = tokens[1];
-        if(hourPart.contains(":")){
+        if (hourPart.contains(":")) {
             String[] minTokens = hourPart.split(":");
-            finalValue = Double.valueOf(minTokens[0])+0.5;
+            finalValue = Double.valueOf(minTokens[0]) + 0.5;
         } else
             finalValue = Double.valueOf(hourPart);
 
-        if(operator.equals("-"))
+        if (operator.equals("-"))
             return -finalValue;
         else
             return finalValue;
     }
 
-    public double getServerTimeInUTC(String time){
-        if(time.contains("+")){
+    public double getServerTimeInUTC(String time) {
+        if (time.contains("+")) {
             return getServerSplitTime(time, "+");
-        }else if(time.contains("-")){
+        } else if (time.contains("-")) {
             return getServerSplitTime(time, "-");
         }
         return 0;
     }
 
-    private double getServerSplitTime(String value, String operator){
+    private double getServerSplitTime(String value, String operator) {
         double finalValue;
         String[] tokens = value.split("\\" + operator);
         String hourAndMinPart = tokens[1];
-        if(hourAndMinPart.endsWith("30")){
-            int hours = Integer.valueOf(hourAndMinPart.substring(0,2));
-            finalValue = Double.valueOf(hours)+0.5;
-        } else{
-            String serverTime = hourAndMinPart.replace("0","");
-            if(serverTime.isEmpty())
+        if (hourAndMinPart.endsWith("30")) {
+            int hours = Integer.valueOf(hourAndMinPart.substring(0, 2));
+            finalValue = Double.valueOf(hours) + 0.5;
+        } else {
+            String serverTime = hourAndMinPart.replace("0", "");
+            if (serverTime.isEmpty())
                 finalValue = 0.0;
             else
                 finalValue = Double.valueOf(serverTime);
         }
 
-        if(operator.equals("-"))
+        if (operator.equals("-"))
             return -finalValue;
         else
             return finalValue;
     }
 
-    public Boolean transformationResultFileExists(String dataSetId, String transformationId){
-        return TransformationResultLogger.hasTransformationResultFile(dataSetId,transformationId);
+    @Override
+    public Boolean transformationResultFileExists(String dataSetId, String transformationId) {
+        return TransformationResultLogger.hasTransformationResultFile(dataSetId, transformationId);
     }
 }

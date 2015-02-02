@@ -6,6 +6,7 @@ package harvesterUI.server.sru;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -28,6 +29,9 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.dom4j.Element;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -57,8 +61,9 @@ public class SruRecordUpdateServlet extends HttpServlet {
     {
         super.init(servletConfig);
 
-        Properties properties = PropertyUtil.loadGuiConfiguration("gui.properties");
-        ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type"));
+        PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadGuiConfiguration("gui.properties");
+        PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
+        ProjectType projectType = ProjectType.valueOf(properties.getProperty("project.type").toString());
 
         if(projectType == ProjectType.LIGHT){
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());

@@ -26,6 +26,8 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -513,9 +515,10 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
         try {
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
             properties.setProperty("firstTimeUser","false");
-            PropertyUtil.saveProperties(properties, DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertyUtil.saveProperties(propertiesConfigrationLayout, DefaultRepoxContextUtil.CONFIG_FILE);
 
             SAXReader reader = new SAXReader();
             String createRepoxUser = "http://repox.ist.utl.pt/repoxManagementServices/rest/createRegistration?name="+name+
@@ -565,8 +568,9 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public boolean isFirstTimeRepoxUsed() throws ServerSideException {
         try{
-            Properties properties = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
-            boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser"));
+            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
+            boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser").toString());
             if(!isFirstTime){
                 trySendRegistrationFromXML();
             }

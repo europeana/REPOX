@@ -1,12 +1,15 @@
 package pt.utl.ist.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Properties;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 
 /**
  */
@@ -15,7 +18,7 @@ public class PropertyUtil {
      * @param configurationFilename
      * @return Properties
      */
-    public static Properties loadCorrectedConfiguration(String configurationFilename) {
+    public static PropertiesConfigurationLayout loadCorrectedConfiguration(String configurationFilename) {
         try {
             // Use -Drepox.data.dir=D:\Projectos in the VM parameters in order to pass an already existing configuration.properties and gui.properties
             String configsDataDir = System.getProperty("repox.data.dir");
@@ -26,11 +29,15 @@ public class PropertyUtil {
                 URL configurationURL = Thread.currentThread().getContextClassLoader().getResource(configurationFilename);
                 configurationFile = URLDecoder.decode(configurationURL.getFile(), "ISO-8859-1");
             }
+            
+            PropertiesConfiguration propertiesConfigration = new PropertiesConfiguration();
+            PropertiesConfigurationLayout propertiesConfigrationLayout = new PropertiesConfigurationLayout(propertiesConfigration);
+            propertiesConfigrationLayout.load(new FileReader(configurationFile));
 
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(configurationFile));
+//            Properties properties = new Properties();
+//            properties.load(new FileInputStream(configurationFile));
 
-            return properties;
+            return propertiesConfigrationLayout;
         } catch (Exception e) {
             throw new IllegalArgumentException("Could not load [" + configurationFilename + "]");
         }
@@ -57,23 +64,28 @@ public class PropertyUtil {
      * @param configurationFilename
      * @return Properties
      */
-    public static Properties loadGuiConfiguration(String configurationFilename) {
+    public static PropertiesConfigurationLayout loadGuiConfiguration(String configurationFilename) {
         try {
             URL configurationURL = Thread.currentThread().getContextClassLoader().getResource(configurationFilename);
             String configurationFile = URLDecoder.decode(configurationURL.getFile(), "ISO-8859-1");
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(configurationFile));
-            return properties;
+            
+            PropertiesConfiguration propertiesConfigration = new PropertiesConfiguration();
+            PropertiesConfigurationLayout propertiesConfigrationLayout = new PropertiesConfigurationLayout(propertiesConfigration);
+            propertiesConfigrationLayout.load(new FileReader(configurationFile));
+            
+//            Properties properties = new Properties();
+//            properties.load(new FileInputStream(configurationFile));
+            return propertiesConfigrationLayout;
         } catch (Exception e) {
             throw new IllegalArgumentException("could not load [" + configurationFilename + "]");
         }
     }
 
     /**
-     * @param properties
+     * @param propertiesConfigrationLayout 
      * @param name
      */
-    public static void saveProperties(Properties properties, String name) {
+    public static void saveProperties(PropertiesConfigurationLayout propertiesConfigrationLayout, String name) {
         try {
             // Use -Drepox.data.dir=D:\Projectos in the VM parameters in order to pass an already existing configuration.properties and gui.properties
             String configsDataDir = System.getProperty("repox.data.dir");
@@ -84,9 +96,14 @@ public class PropertyUtil {
                 URL configurationURL = Thread.currentThread().getContextClassLoader().getResource(name);
                 configurationFile = URLDecoder.decode(configurationURL.getFile(), "ISO-8859-1");
             }
-            properties.store(new FileOutputStream(configurationFile), null);
+
+            propertiesConfigrationLayout.save(new FileWriter(configurationFile));
+                        
+//            properties.store(new FileOutputStream(configurationFile), null);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ConfigurationException e) {
+            throw new RuntimeException("Caused by ConfigurationException", e);
         }
     }
 }

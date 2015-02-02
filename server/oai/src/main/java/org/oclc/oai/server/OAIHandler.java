@@ -38,6 +38,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oclc.oai.server.catalog.AbstractCatalog;
@@ -91,8 +93,9 @@ public class OAIHandler extends HttpServlet {
         super.init(config);
         this.initialConfig = config;
 
-        Properties propertiesGui = PropertyUtil.loadGuiConfiguration("gui.properties");
-        projectType = ProjectType.valueOf(propertiesGui.getProperty("project.type"));
+        PropertiesConfigurationLayout configurationPropertiesLayout = PropertyUtil.loadGuiConfiguration("gui.properties");
+        PropertiesConfiguration configuration = configurationPropertiesLayout.getConfiguration();
+        projectType = ProjectType.valueOf(configuration.getProperty("project.type").toString());
 
         if (projectType == ProjectType.DEFAULT) {
             ConfigSingleton.setRepoxContextUtil(new DefaultRepoxContextUtil());

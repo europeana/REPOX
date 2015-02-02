@@ -92,7 +92,7 @@
 		<xerces.xercesImpl.version>2.11.0</xerces.xercesImpl.version>
 		<net.sourceforge.stripes.stripes.version>1.5.8</net.sourceforge.stripes.stripes.version>
 		<c3p0.c3p0.version>0.9.1.2</c3p0.c3p0.version>
-<!-- 		<org.slf4j.slf4j-log4j12.version>1.7.7</org.slf4j.slf4j-log4j12.version> -->
+		<!-- <org.slf4j.slf4j-log4j12.version>1.7.7</org.slf4j.slf4j-log4j12.version> -->
 		<gxt.gxt.version>2.2.5</gxt.gxt.version>
 		<org.mindrot.jbcrypt.version>0.3m</org.mindrot.jbcrypt.version>
 		<rome.rome.version>1.0</rome.rome.version>
@@ -140,6 +140,7 @@
 		<commons-dbcp.commons-dbcp.version>1.4</commons-dbcp.commons-dbcp.version>
 		<commons-lang.commons-lang.version>2.6</commons-lang.commons-lang.version>
 		<commons-beanutils.commons-beanutils.version>1.9.2</commons-beanutils.commons-beanutils.version>
+		<commons-configuration.commons-configuration>1.10</commons-configuration.commons-configuration>
 
 		<spring.version>3.2.5.RELEASE</spring.version>
 		<org.springframework.spring-aop.version>${spring.version}</org.springframework.spring-aop.version>
@@ -715,12 +716,12 @@
 				<artifactId>spring-test</artifactId>
 				<version>${org.springframework.spring-test.version}</version>
 			</dependency>
-<!-- 			<dependency> -->
-<!-- 				<groupId>org.slf4j</groupId> -->
-<!-- 				<artifactId>slf4j-log4j12</artifactId> -->
-<!-- 				<version>${org.slf4j.slf4j-log4j12.version}</version> -->
-				<!-- <version>1.6.1</version> -->
-<!-- 			</dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>org.slf4j</groupId> -->
+			<!-- <artifactId>slf4j-log4j12</artifactId> -->
+			<!-- <version>${org.slf4j.slf4j-log4j12.version}</version> -->
+			<!-- <version>1.6.1</version> -->
+			<!-- </dependency> -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
@@ -735,6 +736,11 @@
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>${com.google.code.gson.gson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${commons-configuration.commons-configuration}</version>
 			</dependency>
 
 			<!--Ext GWT Libs -->
