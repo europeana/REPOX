@@ -122,7 +122,7 @@ public class DefaultRepoxManager implements RepoxManager {
         }
 
         File metadataTransformation = new File(configuration.getXmlConfigPath() + "/" + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
-        if (!countries.exists()) {
+        if (!metadataTransformation.exists()) {
             FileUtilSecond.createFile("/" + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME, metadataTransformation);
         }
 
