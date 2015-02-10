@@ -3096,7 +3096,8 @@ public class DefaultDataManager implements DataManager {
     /**
      * Start the data source ingestion
      * @param dataSourceId
-     * @param fullIngest
+     * @param full Is it a normal ingest or sample?
+     * @param fullIngest Is it a full ingest or an incemental ingest?
      * @throws SecurityException 
      * @throws DocumentException
      * @throws IOException
@@ -3121,6 +3122,7 @@ public class DefaultDataManager implements DataManager {
             else
             {
                 dataSource.setMaxRecord4Sample(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSampleRecords());
+                //It's always true the fullIngest for sample ingestion
                 harvestTask = new DataSourceIngestTask(String.valueOf(dataSource.getNewTaskId()), dataSource.getId(), "true");
             }
             

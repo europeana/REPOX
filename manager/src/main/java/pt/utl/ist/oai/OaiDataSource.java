@@ -181,6 +181,7 @@ public class OaiDataSource extends DataSource{
         Date startIngestTime = new Date();
         LogUtil.startLogInfo(logFile, startIngestTime, ingestStatus.name(), id);
 
+        //Clear everything if its a full ingest
         if (fullIngest) {
             boolean successfulDeletion = emptyRecords();
             if (!successfulDeletion) {

@@ -24,28 +24,29 @@ import java.util.*;
 /**
  */
 public class OaiHarvester implements RunnableStoppable {
-    private static final Logger log                        = Logger.getLogger(OaiHarvester.class);
-    private static final int    SIZE_HTTP_PROTOCOL         = 7;                                // http://
-    private static final int    MAX_OAI_VERB_RETRIES       = 3;
-    private static final String SERVERS_FILENAME           = "servers.txt";                    //tab separated file with the servers
-    private static final String OAI_COMPLETE_DATE_FORMAT   = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String OAI_DATE_FORMAT            = "yyyy-MM-dd";
-    public static final String  REQUEST_FILENAME_START     = "recordsRequest";
+    private static final Logger log                            = Logger.getLogger(OaiHarvester.class);
+    private static final int    SIZE_HTTP_PROTOCOL             = 7;                                   // http://
+    private static final int    MAX_OAI_VERB_RETRIES           = 3;
+    private static final String SERVERS_FILENAME               = "servers.txt";                       //tab separated file with the servers
+    private static final String OAI_COMPLETE_DATE_FORMAT       = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String OAI_DATE_FORMAT                = "yyyy-MM-dd";
+    public static final String  REQUEST_FILENAME_START         = "recordsRequest";
+    private static final short MAX_CONCURRENT_FILES_IN_SYSTEM = 10;
 
-    private boolean             stopExecution              = false;
+    private boolean             stopExecution                  = false;
     private String              sourceUrl;
     private String              sourceSet;
     //	  YYYY = four-digit year ; MM = two-digit month (01=January, etc.) ; DD = two-digit day of month (01 through 31)
-    private String              fromDateString;                                                //Date format: YYYY-MM-DD
-    private String              untilDateString;                                               //Date format: YYYY-MM-DD
+    private String              fromDateString;                                                       //Date format: YYYY-MM-DD
+    private String              untilDateString;                                                      //Date format: YYYY-MM-DD
     private ResponseTransformer responseTransformer;
     private String              metadataFormat;
     private File                logFile;
     private String              outputDirname;
-    private int                 maxRecord4Sample           = -1;                               // -1 ingest all
-    private int                 numberOfRecords2Harvest    = -1;                               // -1 value not calculated yet; 0 -> unknown info
-    private int                 numberOfRecordsPerResponse = -1;                               // -1 value not calculated yet; 0 -> unknown info
-    private ArrayList<Long>     statisticsHarvest          = new ArrayList<Long>();
+    private int                 maxRecord4Sample               = -1;                                  // -1 ingest all
+    private int                 numberOfRecords2Harvest        = -1;                                  // -1 value not calculated yet; 0 -> unknown info
+    private int                 numberOfRecordsPerResponse     = -1;                                  // -1 value not calculated yet; 0 -> unknown info
+    private ArrayList<Long>     statisticsHarvest              = new ArrayList<Long>();
 
     public String getSourceUrl() {
         return sourceUrl;
@@ -178,7 +179,9 @@ public class OaiHarvester implements RunnableStoppable {
         int ingestionRecords = 0;
 
         try {
-            if (logFile == null || (!logFile.exists() && !logFile.createNewFile())) { throw new IOException("Unable to create log file: " + logFile.getAbsolutePath()); }
+            if (logFile == null || (!logFile.exists() && !logFile.createNewFile())) {
+                throw new IOException("Unable to create log file: " + logFile.getAbsolutePath());
+            }
 
             StringUtil.simpleLog("Starting OAI Harvest URL: " + sourceUrl + " - Set:" + sourceSet, this.getClass(), logFile);
 
@@ -216,6 +219,14 @@ public class OaiHarvester implements RunnableStoppable {
             ingestionRecords += listRecords.getDocument().getElementsByTagName("record").getLength();
 
             while (listRecords != null) {
+                //Block when a number of files in system, continue when there is space again
+                while (getRequestFile(currentRequest - MAX_CONCURRENT_FILES_IN_SYSTEM).exists()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ie) { /* safe to ignore */
+                    }
+                }
+
                 if (stopExecution) {
                     StringUtil.simpleLog("Stop signal received. Exiting harvest.", this.getClass(), logFile);
                     return;
@@ -392,7 +403,8 @@ public class OaiHarvester implements RunnableStoppable {
         int length = errors.getLength();
         for (int i = 0; i < length; ++i) {
             Node item = errors.item(i);
-            if (item.getAttributes() != null && item.getAttributes().getNamedItem("code") != null && item.getAttributes().getNamedItem("code").getNodeValue() != null && item.getAttributes().getNamedItem("code").getNodeValue().equals("badResumptionToken")) {
+            if (item.getAttributes() != null && item.getAttributes().getNamedItem("code") != null && item.getAttributes().getNamedItem("code").getNodeValue() != null && item.getAttributes()
+                    .getNamedItem("code").getNodeValue().equals("badResumptionToken")) {
                 StringUtil.simpleLog("badResumptionToken in operation ListRecords, restarting harvest", this.getClass(), logFile);
                 return true;
             }
