@@ -3,7 +3,7 @@ package pt.utl.ist.characters;
 import pt.utl.ist.marc.MarcField;
 import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.MarcSubfield;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -300,7 +300,7 @@ public class HorizonConverter implements CharacterConverterI {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        MarcRecord r = new MarcRecord(FileUtilSecond.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
+        MarcRecord r = new MarcRecord(FileUtil.readFileToString(new File("c:/desktop/teste_cccm_2709.hzr")));
         //    	Record r=HorizonClient.getRecord(""+1106184, HorizonClient.IdentificationSpace.NCB);
         System.err.println(r);
         //HorizonConverter.convertRecord(r);

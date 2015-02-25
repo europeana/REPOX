@@ -53,7 +53,7 @@ import pt.utl.ist.statistics.RecordCount;
 import pt.utl.ist.statistics.RecordCountManager;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.task.Task.Status;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TarGz;
 import pt.utl.ist.util.TimeUtil;
@@ -268,7 +268,7 @@ public class DirectoryImporterDataSource extends DataSource{
         }
 
         File sourcesDir = new File(sourcesDirPath);
-        File[] changedFiles = FileUtilSecond.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
+        File[] changedFiles = FileUtil.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
 
         StringUtil.simpleLog("Importing from directory: " + sourcesDirPath, this.getClass(), logFile);
 
@@ -710,7 +710,7 @@ public class DirectoryImporterDataSource extends DataSource{
         try {
             if (numberOfRecords2Harvest == -1) {
                 File sourcesDir = new File(sourcesDirPath);
-                File[] changedFiles = FileUtilSecond.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
+                File[] changedFiles = FileUtil.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
                 numberOfRecords2Harvest = 0;
 
                 for (File file : changedFiles) {

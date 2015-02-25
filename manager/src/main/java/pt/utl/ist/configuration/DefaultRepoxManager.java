@@ -23,7 +23,7 @@ import pt.utl.ist.statistics.RecordCountManager;
 import pt.utl.ist.statistics.StatisticsManager;
 import pt.utl.ist.task.TaskManager;
 import pt.utl.ist.util.DefaultEmailUtil;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
 
 /**
@@ -123,7 +123,7 @@ public class DefaultRepoxManager implements RepoxManager {
         if (!countries.exists()) {
                 InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.COUNTRIES_FILENAME);
                 OutputStream os = new FileOutputStream(countries);
-                FileUtilSecond.transferData(inputStream, os);
+                FileUtil.transferData(inputStream, os);
                 os.close();
                 inputStream.close();
         }
@@ -132,7 +132,7 @@ public class DefaultRepoxManager implements RepoxManager {
         if (!metadataTransformation.exists()) {
             InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
             OutputStream os = new FileOutputStream(metadataTransformation);
-            FileUtilSecond.transferData(inputStream, os);
+            FileUtil.transferData(inputStream, os);
             os.close();
             inputStream.close();
         }

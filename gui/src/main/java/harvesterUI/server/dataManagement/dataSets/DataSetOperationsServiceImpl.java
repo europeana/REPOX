@@ -50,7 +50,7 @@ import pt.utl.ist.marc.DirectoryImporterDataSource;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.ScheduledTask;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -173,7 +173,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
                 url = null;
 
             // Url doesn't exist
-            if(url != null && !FileUtilSecond.checkUrl(inputURL))
+            if(url != null && !FileUtil.checkUrl(inputURL))
                 return "URL_NOT_EXISTS";
 
             return "SUCCESS";

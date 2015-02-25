@@ -110,7 +110,7 @@ public class DomUtil {
      */
     public static void saveDomToFile(Node doc, File file) throws IOException {
         String b = domToString(doc, true);
-        FileUtilSecond.writeToFile(file, b, "UTF-8");
+        FileUtil.writeToFile(file, b, "UTF-8");
     }
 
     /** Transforms a DOM via a stylesheet, and returns the result in a String
@@ -308,7 +308,7 @@ public class DomUtil {
         try {
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(new org.xml.sax.InputSource(new StringReader(FileUtilSecond.readFileToString(doc, encoding))));
+            return builder.parse(new org.xml.sax.InputSource(new StringReader(FileUtil.readFileToString(doc, encoding))));
         } catch (javax.xml.parsers.ParserConfigurationException e) {
             throw new RuntimeException(e);
         } catch (java.io.IOException e) {

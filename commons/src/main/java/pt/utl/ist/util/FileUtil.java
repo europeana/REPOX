@@ -36,10 +36,10 @@ import org.apache.commons.net.ftp.FTPClient;
  *
  * @author  Nuno Freire
  */
-public class FileUtilSecond {
+public class FileUtil {
 
     /** Creates a new instance of ConfigFiles */
-    public FileUtilSecond() {
+    public FileUtil() {
     }
 
     /**
@@ -318,7 +318,7 @@ public class FileUtilSecond {
             String fullText = "";
 
             try {
-                is = FileUtilSecond.class.getResourceAsStream(inputStr);
+                is = FileUtil.class.getResourceAsStream(inputStr);
                 br = new BufferedReader(new InputStreamReader(is));
                 while (null != (line = br.readLine())) {
                     fullText += line + "\n";

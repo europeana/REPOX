@@ -56,7 +56,7 @@ import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.metadataTransformation.MetadataTransformationManager;
 import pt.utl.ist.oai.OaiDataSource;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
@@ -156,7 +156,7 @@ public class DefaultSaveData {
                         } else if(dataSourceUI.getRetrieveStartegy().equals(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY)) {
                             // Check FTP connection
                             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty()) {
-                                if(!FileUtilSecond.checkFtpServer(dataSourceUI.getServer(),"Normal",dataSourceUI.getFolderPath(),
+                                if(!FileUtil.checkFtpServer(dataSourceUI.getServer(),"Normal",dataSourceUI.getFolderPath(),
                                         dataSourceUI.getUser(),dataSourceUI.getPassword())){
                                     saveDataResponse.setResponseState(ResponseState.FTP_CONNECTION_FAILED);
                                     return saveDataResponse;
@@ -343,7 +343,7 @@ public class DefaultSaveData {
                             }
                             // Check FTP connection
                             if(dataSourceUI.getUser() != null && !dataSourceUI.getUser().isEmpty()) {
-                                if(!FileUtilSecond.checkFtpServer(dataSourceUI.getServer(), "Normal", dataSourceUI.getFolderPath(),
+                                if(!FileUtil.checkFtpServer(dataSourceUI.getServer(), "Normal", dataSourceUI.getFolderPath(),
                                         dataSourceUI.getUser(), dataSourceUI.getPassword())){
                                     saveDataResponse.setResponseState(ResponseState.FTP_CONNECTION_FAILED);
                                     return saveDataResponse;

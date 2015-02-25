@@ -86,7 +86,7 @@ import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.CompareUtil;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.XmlUtil;
@@ -670,7 +670,7 @@ public abstract class DataSource {
                 org.dom4j.Document document = reader.read(logFile);
                 logElement = document.getRootElement();
             } catch (DocumentException e) {
-                ArrayList<String> logFileContent = FileUtilSecond.readFile(new File(getLogsDir(), getLogFilenames().get(0)));
+                ArrayList<String> logFileContent = FileUtil.readFile(new File(getLogsDir(), getLogFilenames().get(0)));
 
                 logElement = DocumentHelper.createElement("log");
 
@@ -855,7 +855,7 @@ public abstract class DataSource {
         File lastTaskFile = new File(getTasksDir(), LAST_TASK_FILENAME);
         if (lastTaskFile.exists()) {
             File backupFile = new File(lastTaskFile.getParent(), lastTaskFile.getName() + ".bkp");
-            FileUtilSecond.copyFile(lastTaskFile, backupFile);
+            FileUtil.copyFile(lastTaskFile, backupFile);
         }
 
         BufferedWriter writer = null;
@@ -976,7 +976,7 @@ public abstract class DataSource {
         if (!syncDateFile.exists()) {
             return "";
         }
-        String dateString = FileUtilSecond.readFile(syncDateFile, 0);
+        String dateString = FileUtil.readFile(syncDateFile, 0);
         try {
             return dateString;
         } catch (Exception e) {
@@ -1002,7 +1002,7 @@ public abstract class DataSource {
         if (!syncDateFile.exists()) {
             return -1;
         }
-        String sample = FileUtilSecond.readFile(syncDateFile, 1);
+        String sample = FileUtil.readFile(syncDateFile, 1);
         return Integer.valueOf(sample);
     }
 
@@ -1014,7 +1014,7 @@ public abstract class DataSource {
         if (!syncDateFile.exists()) {
             return -1;
         }
-        String sample = FileUtilSecond.readFile(syncDateFile, 1);
+        String sample = FileUtil.readFile(syncDateFile, 1);
         try {
             return Integer.valueOf(sample);
         } catch (Exception e) {

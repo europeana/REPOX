@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -117,7 +117,7 @@ public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
      */
     public static String getOutputHttpPath(String url, String set) {
         String httpRequestPath = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getHttpRequestPath();
-        String outputDirString = httpRequestPath + File.separator + FileUtilSecond.sanitizeToValidFilename(url) + "-" + FileUtilSecond.sanitizeToValidFilename(set);
+        String outputDirString = httpRequestPath + File.separator + FileUtil.sanitizeToValidFilename(url) + "-" + FileUtil.sanitizeToValidFilename(set);
         return outputDirString;
     }
 

@@ -14,7 +14,7 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.DataSourcesMonitor;
 import pt.utl.ist.statistics.RecordCountManager;
 import pt.utl.ist.task.ScheduledTask.Frequency;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.RunnableStoppable;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
@@ -549,7 +549,7 @@ public class TaskManager implements RunnableStoppable {
         if (configurationFile.exists()) {
             // Backup configuration file
             File backupFile = new File(configurationFile.getParent(), configurationFile.getName() + ".bkp");
-            FileUtilSecond.copyFile(configurationFile, backupFile);
+            FileUtil.copyFile(configurationFile, backupFile);
 
             Iterator<ScheduledTask> iterator = scheduledTasks.iterator();
             while (iterator.hasNext()) {

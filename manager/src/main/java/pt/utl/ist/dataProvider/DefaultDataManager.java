@@ -67,7 +67,7 @@ import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.Task;
 import pt.utl.ist.util.CompareDataUtil;
 import pt.utl.ist.util.ExternalServiceUtil;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.InvalidInputException;
 import pt.utl.ist.util.ProviderType;
 import pt.utl.ist.util.TimeUtil;
@@ -748,7 +748,7 @@ public class DefaultDataManager implements DataManager {
                     generatedHomepageUrl = homepageUrl;
 
                 // test if URL is valid
-                if (!FileUtilSecond.checkUrl(generatedHomepageUrl)) {
+                if (!FileUtil.checkUrl(generatedHomepageUrl)) {
                     throw new Exception();
                 }
                 newAggregator.setHomepage(generatedHomepageUrl);
@@ -820,7 +820,7 @@ public class DefaultDataManager implements DataManager {
                         newHomepageUrl = homepage;
 
                     // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(newHomepageUrl)) {
+                    if (!FileUtil.checkUrl(newHomepageUrl)) {
                         throw new Exception();
                     }
                     aggregator.setHomepage(newHomepageUrl);
@@ -1027,7 +1027,7 @@ public class DefaultDataManager implements DataManager {
                         generatedHomepage = homepage;
 
                     // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(generatedHomepage)) {
+                    if (!FileUtil.checkUrl(generatedHomepage)) {
                         throw new Exception();
                     }
                     newDataProvider.setHomepage(generatedHomepage);
@@ -1197,7 +1197,7 @@ public class DefaultDataManager implements DataManager {
                         newHomepageUrl = homepage;
 
                     // test if URL is valid
-                    if (!FileUtilSecond.checkUrl(newHomepageUrl)) {
+                    if (!FileUtil.checkUrl(newHomepageUrl)) {
                         throw new Exception();
                     }
                     dataProvider.setHomepage(newHomepageUrl);
@@ -1875,7 +1875,7 @@ public class DefaultDataManager implements DataManager {
                 } else
                     newId = DataSource.generateId(name);
 
-                if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(newOaiSourceURL)) {
+                if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(newOaiSourceURL)) {
                     DataSource newDataSource = new OaiDataSource(dataProvider, newId, description, schema, namespace, metadataFormat, newOaiSourceURL,
                             oaiSet, new IdProvidedRecordIdPolicy(), new TreeMap<String, MetadataTransformation>());
 
@@ -2228,7 +2228,7 @@ public class DefaultDataManager implements DataManager {
                     //                                recordIdPolicy, new TreeMap<String, MetadataTransformation>(), recordXPath, new HashMap<String, String>());
 
                     // Check FTP connection
-                    if (!FileUtilSecond.checkFtpServer(ftpRetrieveStrategy.getServer(), ftpRetrieveStrategy.getIdTypeAccess(), ftpRetrieveStrategy.getFtpPath(), ftpRetrieveStrategy.getUser(),
+                    if (!FileUtil.checkFtpServer(ftpRetrieveStrategy.getServer(), ftpRetrieveStrategy.getIdTypeAccess(), ftpRetrieveStrategy.getFtpPath(), ftpRetrieveStrategy.getUser(),
                             ftpRetrieveStrategy.getPassword())) {
                         throw new InvalidArgumentsException("Ftp connection failed");
                     }
@@ -2300,7 +2300,7 @@ public class DefaultDataManager implements DataManager {
             DataProvider dataProvider = getDataProvider(dataProviderId);
 
             if (dataProvider != null) {
-                if (url.equals("") || !FileUtilSecond.checkUrl(url))
+                if (url.equals("") || !FileUtil.checkUrl(url))
                     throw new InvalidArgumentsException("url");
 
                 FileRetrieveStrategy retrieveStrategy = new HttpFileRetrieveStrategy(url);
@@ -2530,7 +2530,7 @@ public class DefaultDataManager implements DataManager {
             } else
                 newId = oldId;//Keep oldId if id is empty
 
-            if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtilSecond.checkUrl(newOaiSourceURL)) {
+            if (new java.net.URL(newOaiSourceURL).openConnection().getHeaderField(0) != null && FileUtil.checkUrl(newOaiSourceURL)) {
                 DataProvider dataProviderParent = getDataProviderParent(oldId);
                 if (dataProviderParent != null) {
                     if (!(dataSource instanceof OaiDataSource)) {

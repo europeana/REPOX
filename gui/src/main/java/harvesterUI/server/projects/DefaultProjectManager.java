@@ -70,7 +70,7 @@ import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.OldTaskReviewer;
 import pt.utl.ist.util.Country;
 import pt.utl.ist.util.DefaultEmailUtil;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
@@ -901,7 +901,7 @@ public class DefaultProjectManager extends ProjectManager {
                 url = null;
 
             // Url doesn't exist
-            if(url != null && !FileUtilSecond.checkUrl(aggregatorUI.getHomepage())){
+            if(url != null && !FileUtil.checkUrl(aggregatorUI.getHomepage())){
                 saveDataResponse.setResponseState(ResponseState.URL_NOT_EXISTS);
                 return saveDataResponse;
             }

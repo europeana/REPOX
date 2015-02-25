@@ -16,12 +16,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.derby.iapi.services.io.FileUtil;
 import org.apache.log4j.Logger;
 
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -112,7 +111,7 @@ public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     public static String getOutputFtpPath(String server, String set) {
         String ftpRequestPath = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getFtpRequestPath();
 
-        String outputDirString = ftpRequestPath + File.separator + FileUtilSecond.sanitizeToValidFilename(server) + "-" + FileUtilSecond.sanitizeToValidFilename(set);
+        String outputDirString = ftpRequestPath + File.separator + FileUtil.sanitizeToValidFilename(server) + "-" + FileUtil.sanitizeToValidFilename(set);
 
         return outputDirString;
     }

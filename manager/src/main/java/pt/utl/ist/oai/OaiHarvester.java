@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.RunnableStoppable;
 import pt.utl.ist.util.StringUtil;
 
@@ -171,7 +171,7 @@ public class OaiHarvester implements RunnableStoppable {
 
         int endIndex = (url.indexOf("/", SIZE_HTTP_PROTOCOL) > 0 ? url.indexOf("/", SIZE_HTTP_PROTOCOL) : url.length());
         String setName = (set != null ? set : "ALL");
-        String outputDirString = oaiRequestPath + File.separator + FileUtilSecond.sanitizeToValidFilename(url.substring(SIZE_HTTP_PROTOCOL, endIndex)) + "-" + FileUtilSecond.sanitizeToValidFilename(setName);
+        String outputDirString = oaiRequestPath + File.separator + FileUtil.sanitizeToValidFilename(url.substring(SIZE_HTTP_PROTOCOL, endIndex)) + "-" + FileUtil.sanitizeToValidFilename(setName);
 
         return outputDirString;
     }
