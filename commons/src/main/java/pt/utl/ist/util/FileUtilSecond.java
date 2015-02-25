@@ -282,12 +282,9 @@ public class FileUtilSecond {
     public static void transferData(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[4096];
         int i = 0;
-        do {
-            i = in.read(buf);
-            if (i != -1) {
-                out.write(buf, 0, i);
-            }
-        } while (i != -1);
+        while ((i = in.read(buf)) > 0) {
+            out.write(buf, 0, i);
+        }
     }
 
     /**

@@ -1,7 +1,10 @@
 package pt.utl.ist.configuration;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
 
@@ -116,14 +119,22 @@ public class DefaultRepoxManager implements RepoxManager {
         log.info("DefaultRepoxManager creating.");
         this.configuration = configuration;
 
-        File countries = new File(configuration.getXmlConfigPath() + "/" + DefaultRepoxContextUtil.COUNTRIES_FILENAME);
+        File countries = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.COUNTRIES_FILENAME);
         if (!countries.exists()) {
-            FileUtilSecond.createFile("/" + DefaultRepoxContextUtil.COUNTRIES_FILENAME, countries);
+                InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.COUNTRIES_FILENAME);
+                OutputStream os = new FileOutputStream(countries);
+                FileUtilSecond.transferData(inputStream, os);
+                os.close();
+                inputStream.close();
         }
 
-        File metadataTransformation = new File(configuration.getXmlConfigPath() + "/" + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
+        File metadataTransformation = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
         if (!metadataTransformation.exists()) {
-            FileUtilSecond.createFile("/" + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME, metadataTransformation);
+            InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
+            OutputStream os = new FileOutputStream(metadataTransformation);
+            FileUtilSecond.transferData(inputStream, os);
+            os.close();
+            inputStream.close();
         }
 
         File statisticsFile = new File(configuration.getXmlConfigPath(), statisticsFilename);

@@ -22,7 +22,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
@@ -63,7 +62,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     public UserManagementServiceImpl() {
         try {
-            usersFile = new File(RepoxServiceImpl.getRepoxManager().getConfiguration().getXmlConfigPath(), "users.xml");
+            usersFile = new File(RepoxServiceImpl.getRepoxManager().getConfiguration().getXmlConfigPath(), DefaultRepoxContextUtil.USERS_FILENAME);
         } catch (ServerSideException e) {
             e.printStackTrace();
         }
@@ -94,6 +93,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return this.getThreadLocalRequest().getSession();
     }
 
+    @Override
     public PagingLoadResult<User> getPagedUsers(PagingLoadConfig config) throws ServerSideException{
         List<User> userList = getUsers();
         ArrayList<User> sublist = new ArrayList<User>();
@@ -108,6 +108,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return new BasePagingLoadResult<User>(sublist, config.getOffset(), userList.size());
     }
 
+    @Override
     public PagingLoadResult<DataProviderUI> getPagedAvailableDataProviders(PagingLoadConfig config) throws ServerSideException{
         List<DataProviderUI> userList = getAvailableDataProviders();
         ArrayList<DataProviderUI> sublist = new ArrayList<DataProviderUI>();
@@ -122,6 +123,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return new BasePagingLoadResult<DataProviderUI>(sublist, config.getOffset(), userList.size());
     }
 
+    @Override
     public List<DataProviderUI> getAvailableDataProviders(){
         List<DataProviderUI> availableDataProviders = new ArrayList<DataProviderUI>();
         try {
@@ -138,6 +140,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return availableDataProviders;
     }
 
+    @Override
     public String validateSessionId(String sessionId) throws ServerSideException {
         try{
             if(getSession().getAttribute("sid") != null){
@@ -153,6 +156,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public UserAuthentication confirmLogin(String user, String password) throws ServerSideException {
         UserAuthentication loginData = new UserAuthentication();
         try{
@@ -190,6 +194,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public List<User> getUsers() throws ServerSideException {
         try{
             SAXReader reader = new SAXReader();
@@ -226,6 +231,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return new DataProviderUser(username,pass,role,mail,dpIds);
     }
 
+    @Override
     public User getUser(String userName) throws ServerSideException {
         try{
             SAXReader reader = new SAXReader();
@@ -272,6 +278,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return false;
     }
 
+    @Override
     public ResponseState saveUser(User user, String oldUserName, boolean isUpdate) throws ServerSideException {
         try {
             if(!user.getUserName().equals(oldUserName) && userExists(user.getUserName()))
@@ -380,6 +387,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public void removeUsers(List<User> users) throws ServerSideException {
         try{
             SAXReader reader = new SAXReader();
@@ -401,6 +409,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public ResponseState resetUserPassword(String userName) throws ServerSideException {
         try {
             SAXReader reader = new SAXReader();
@@ -448,10 +457,12 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return new BigInteger(130, new SecureRandom()).toString(32);
     }
 
+    @Override
     public String sendFeedbackEmail(String userEmail, String title, String message, String messageType) throws ServerSideException {
         return RepoxServiceImpl.getProjectManager().sendFeedbackEmail(userEmail, title, message, messageType);
     }
 
+    @Override
     public String savePerPageData(String username, int dataPerPage) throws ServerSideException {
         try {
             SAXReader reader = new SAXReader();
@@ -497,6 +508,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 //        }
 //    }
 
+    @Override
     public void addUserActivityData(String serverUrl){
         try{
             String email = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getAdministratorEmail();
@@ -513,6 +525,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
         try {
             PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
@@ -566,6 +579,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
+    @Override
     public boolean isFirstTimeRepoxUsed() throws ServerSideException {
         try{
             PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
@@ -614,6 +628,7 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         return RepoxServiceImpl.getProjectManager().sendUserDataEmail(username, email, password);
     }
 
+    @Override
     public boolean checkLDAPAuthentication(String username, String password) throws ServerSideException{
         String ldapHost = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapHost();
 //        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
