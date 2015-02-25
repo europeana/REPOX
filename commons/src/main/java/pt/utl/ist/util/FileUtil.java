@@ -104,7 +104,9 @@ public class FileUtil {
             }
             br.close();
 
-            if (textoList.size() >= lineNumber + 1) { return textoList.get(lineNumber); }
+            if (textoList.size() >= lineNumber + 1) {
+                return textoList.get(lineNumber);
+            }
             return null;
         } catch (Exception e) {
             return null;
@@ -158,7 +160,10 @@ public class FileUtil {
         // It needs to be an int type.
         // Before converting to an int type, check
         // to ensure that file is not larger than Integer.MAX_VALUE.
-        if (length > Integer.MAX_VALUE) { throw new IOException("File is too large" + file.getName()); }
+        if (length > Integer.MAX_VALUE) {
+            is.close();
+            throw new IOException("File is too large" + file.getName());
+        }
 
         // Create the byte array to hold the data
         byte[] bytes = new byte[(int)length];
@@ -171,7 +176,10 @@ public class FileUtil {
         }
 
         // Ensure all the bytes have been read in
-        if (offset < bytes.length) { throw new IOException("Could not completely read file " + file.getName()); }
+        if (offset < bytes.length) {
+            is.close();
+            throw new IOException("Could not completely read file " + file.getName());
+        }
 
         // Close the input stream and return bytes
         is.close();
@@ -264,7 +272,8 @@ public class FileUtil {
         for (File file : files) {
             if (file.isDirectory()) {
                 File subTarget = new File(targetDir, file.getName());
-                if (!subTarget.exists()) subTarget.mkdir();
+                if (!subTarget.exists())
+                    subTarget.mkdir();
                 copyDirContents(file, subTarget);
             } else {
                 copyFileToDir(file, targetDir);
@@ -284,7 +293,8 @@ public class FileUtil {
                 deleteDir(file);
             } else {
                 boolean succ = file.delete();
-                if (!succ) return false;
+                if (!succ)
+                    return false;
             }
         }
         boolean succ = sourceDir.delete();
@@ -327,8 +337,10 @@ public class FileUtil {
                 e.printStackTrace();
             } finally {
                 try {
-                    if (br != null) br.close();
-                    if (is != null) is.close();
+                    if (br != null)
+                        br.close();
+                    if (is != null)
+                        is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -355,7 +367,9 @@ public class FileUtil {
         try {
             HttpURLConnection.setFollowRedirects(false);
             HttpURLConnection con = (HttpURLConnection)new URL(URLName).openConnection();
-            if (con.getResponseCode() != HttpURLConnection.HTTP_OK && con.getResponseCode() != HttpURLConnection.HTTP_INTERNAL_ERROR && con.getResponseCode() != HttpURLConnection.HTTP_MULT_CHOICE && con.getResponseCode() != HttpURLConnection.HTTP_MOVED_PERM && con.getResponseCode() != HttpURLConnection.HTTP_MOVED_TEMP) exists = false;
+            if (con.getResponseCode() != HttpURLConnection.HTTP_OK && con.getResponseCode() != HttpURLConnection.HTTP_INTERNAL_ERROR && con.getResponseCode() != HttpURLConnection.HTTP_MULT_CHOICE && con
+                    .getResponseCode() != HttpURLConnection.HTTP_MOVED_PERM && con.getResponseCode() != HttpURLConnection.HTTP_MOVED_TEMP)
+                exists = false;
         } catch (IOException ex) {
             exists = false;
         }
@@ -378,14 +392,20 @@ public class FileUtil {
             ftp.connect(server);
 
             if (idType.equals("Normal")) {
-                if (!ftp.login(user, password)) { return false; }
+                if (!ftp.login(user, password)) {
+                    return false;
+                }
             }
-            else if(idType.equals("Anonymous"))
+            else if (idType.equals("Anonymous"))
             {
-                if(!ftp.login("anonymous", "")) { return false; }
+                if (!ftp.login("anonymous", "")) {
+                    return false;
+                }
             }
 
-            if (!ftp.changeWorkingDirectory(ftpPath)) { return false; }
+            if (!ftp.changeWorkingDirectory(ftpPath)) {
+                return false;
+            }
 
             return true;
         } catch (IOException e) {
@@ -417,10 +437,7 @@ public class FileUtil {
         }
         return count;
     }
-    
-    
-    
-    
+
     /**
      * @param name
      * @return String of the sanitized name
@@ -446,10 +463,12 @@ public class FileUtil {
         changedFilesList.toArray(changedFiles);
         //Arrays.sort(changedFiles, NameFileComparator.NAME_INSENSITIVE_COMPARATOR);
         Arrays.sort(changedFiles, new Comparator<File>() {
+            @Override
             public int compare(File file1, File file2) {
                 if (file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase()) < 0)
                     return -1;
-                else if (file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase()) > 0) return 1;
+                else if (file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase()) > 0)
+                    return 1;
                 return 0;
             }
         });
@@ -481,7 +500,6 @@ public class FileUtil {
     public static boolean isFileChanged(Date fromDate, File file) {
         return fromDate == null || file.lastModified() > fromDate.getTime();
     }
-
 
     /**
      * @param arrgs

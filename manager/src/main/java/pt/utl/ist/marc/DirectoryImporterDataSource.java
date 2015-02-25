@@ -68,7 +68,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @XmlRootElement(name = "DirectoryDatasource")
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(value = "A DirectoryDatasource")
-public class DirectoryImporterDataSource extends DataSource{
+public class DirectoryImporterDataSource extends DataSource {
     private static final Logger  log = Logger.getLogger(DirectoryImporterDataSource.class);
 
     @XmlElement
@@ -173,7 +173,7 @@ public class DirectoryImporterDataSource extends DataSource{
     public DirectoryImporterDataSource() {
         super();
     }
-    
+
     /**
      * Copy constructor for JAXB fields.
      * @param directoryImporterDataSource
@@ -188,7 +188,7 @@ public class DirectoryImporterDataSource extends DataSource{
         this.exportDir = directoryImporterDataSource.getExportDir();
         this.marcFormat = directoryImporterDataSource.getMarcFormat();
         this.recordIdPolicy = directoryImporterDataSource.getRecordIdPolicy();
-        
+
         this.sourcesDirPath = directoryImporterDataSource.getSourcesDirPath();
         this.recordXPath = directoryImporterDataSource.getRecordXPath();
         this.characterEncoding = directoryImporterDataSource.getCharacterEncoding();
@@ -377,7 +377,8 @@ public class DirectoryImporterDataSource extends DataSource{
                     } catch (FileNotFoundException e) {
                         StringUtil.simpleLog("Error importing file " + file.getAbsolutePath() + ": " + e.getMessage(), this.getClass(), logFile);
                     } finally {
-                        in.close();
+                        if (in != null)
+                            in.close();
                     }
                 } else if (file.getName().endsWith(".tar.gz")) {
                     // tar.gz file
@@ -722,6 +723,7 @@ public class DirectoryImporterDataSource extends DataSource{
                         while ((in.getNextEntry()) != null) {
                             numberOfRecords2Harvest++;
                         }
+                        in.close();
 
                     } else if (file.getName().endsWith(".tar.gz")) {
                         // tar.gz file

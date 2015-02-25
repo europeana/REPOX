@@ -245,7 +245,7 @@ public class MetadataTransformationManager {
 
             Iterator<MetadataTransformation> transformationIterator = transformationsList.iterator();
             while (transformationIterator.hasNext()) {
-                MetadataTransformation metadataTransformation = (MetadataTransformation)transformationIterator.next();
+                MetadataTransformation metadataTransformation = transformationIterator.next();
                 if (metadataTransformation.getId().equals(metadataTransformationId)) {
                     transformationIterator.remove();
                     metadataTransformations.put(sourceFormat, transformationsList);
@@ -530,6 +530,7 @@ public class MetadataTransformationManager {
 }
 
 class TransformationComparator implements Comparator<MetadataTransformation> {
+    @Override
     public int compare(MetadataTransformation mT1, MetadataTransformation mT2) {
         return mT1.getId().compareTo(mT2.getId());
     }
