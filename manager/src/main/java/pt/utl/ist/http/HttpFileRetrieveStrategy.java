@@ -4,16 +4,6 @@
  */
 package pt.utl.ist.http;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
-
-import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.util.FileUtil;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +16,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
+import pt.utl.ist.util.FileUtilSecond;
+
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  */
@@ -117,7 +117,7 @@ public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
      */
     public static String getOutputHttpPath(String url, String set) {
         String httpRequestPath = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getHttpRequestPath();
-        String outputDirString = httpRequestPath + File.separator + FileUtil.sanitizeToValidFilename(url) + "-" + FileUtil.sanitizeToValidFilename(set);
+        String outputDirString = httpRequestPath + File.separator + FileUtilSecond.sanitizeToValidFilename(url) + "-" + FileUtilSecond.sanitizeToValidFilename(set);
         return outputDirString;
     }
 

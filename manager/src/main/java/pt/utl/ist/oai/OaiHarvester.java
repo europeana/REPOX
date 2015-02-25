@@ -1,5 +1,22 @@
 package pt.utl.ist.oai;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.verb.ListRecords;
@@ -9,17 +26,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.RunnableStoppable;
 import pt.utl.ist.util.StringUtil;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  */
@@ -162,7 +171,7 @@ public class OaiHarvester implements RunnableStoppable {
 
         int endIndex = (url.indexOf("/", SIZE_HTTP_PROTOCOL) > 0 ? url.indexOf("/", SIZE_HTTP_PROTOCOL) : url.length());
         String setName = (set != null ? set : "ALL");
-        String outputDirString = oaiRequestPath + File.separator + FileUtil.sanitizeToValidFilename(url.substring(SIZE_HTTP_PROTOCOL, endIndex)) + "-" + FileUtil.sanitizeToValidFilename(setName);
+        String outputDirString = oaiRequestPath + File.separator + FileUtilSecond.sanitizeToValidFilename(url.substring(SIZE_HTTP_PROTOCOL, endIndex)) + "-" + FileUtilSecond.sanitizeToValidFilename(setName);
 
         return outputDirString;
     }

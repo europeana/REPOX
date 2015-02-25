@@ -4,41 +4,21 @@
  */
 package pt.utl.ist.marc;
 
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
-
-import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.dataSource.*;
-import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
-import pt.utl.ist.http.HttpFileRetrieveStrategy;
-import pt.utl.ist.marc.CharacterEncoding;
-import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
-import pt.utl.ist.metadataTransformation.MetadataTransformation;
-import pt.utl.ist.recordPackage.RecordRepox;
-import pt.utl.ist.reports.LogUtil;
-import pt.utl.ist.statistics.RecordCount;
-import pt.utl.ist.statistics.RecordCountManager;
-import pt.utl.ist.task.Task;
-import pt.utl.ist.task.Task.Status;
-import pt.utl.ist.util.FileUtil;
-import pt.utl.ist.util.StringUtil;
-import pt.utl.ist.util.TarGz;
-import pt.utl.ist.util.TimeUtil;
-import pt.utl.ist.util.date.DateUtil;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,6 +28,40 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
+import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
+import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
+import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
+import pt.utl.ist.http.HttpFileRetrieveStrategy;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
+import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.recordPackage.RecordRepox;
+import pt.utl.ist.reports.LogUtil;
+import pt.utl.ist.statistics.RecordCount;
+import pt.utl.ist.statistics.RecordCountManager;
+import pt.utl.ist.task.Task;
+import pt.utl.ist.task.Task.Status;
+import pt.utl.ist.util.FileUtilSecond;
+import pt.utl.ist.util.StringUtil;
+import pt.utl.ist.util.TarGz;
+import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.date.DateUtil;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  */
@@ -254,7 +268,7 @@ public class DirectoryImporterDataSource extends DataSource{
         }
 
         File sourcesDir = new File(sourcesDirPath);
-        File[] changedFiles = FileUtil.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
+        File[] changedFiles = FileUtilSecond.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
 
         StringUtil.simpleLog("Importing from directory: " + sourcesDirPath, this.getClass(), logFile);
 
@@ -696,7 +710,7 @@ public class DirectoryImporterDataSource extends DataSource{
         try {
             if (numberOfRecords2Harvest == -1) {
                 File sourcesDir = new File(sourcesDirPath);
-                File[] changedFiles = FileUtil.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
+                File[] changedFiles = FileUtilSecond.getChangedFiles(getLastUpdate(), sourcesDir.listFiles());
                 numberOfRecords2Harvest = 0;
 
                 for (File file : changedFiles) {

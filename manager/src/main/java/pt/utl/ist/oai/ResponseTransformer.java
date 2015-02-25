@@ -37,7 +37,7 @@ import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.reports.LogUtil;
-import pt.utl.ist.util.FileUtil;
+import pt.utl.ist.util.FileUtilSecond;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.XmlUtil;
 
@@ -201,7 +201,7 @@ public class ResponseTransformer {
             Element currentElement = iterator.next();
             String identifier = sanitizeRecordElement(currentElement);
 
-            String recordPath = recordsOutputDir.getAbsolutePath() + "/" + FileUtil.sanitizeToValidFilename(identifier) + ".xml";
+            String recordPath = recordsOutputDir.getAbsolutePath() + File.separator + FileUtilSecond.sanitizeToValidFilename(identifier) + ".xml";
             log.debug("recordPath " + recordPath);
 
             OutputStream outputStream = new FileOutputStream(recordPath);
