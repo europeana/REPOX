@@ -30,6 +30,13 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	
+	<!-- Has to be after the JerseyJaxrsConfig -->
+	<servlet>
+		<servlet-name>swagger-bootstrap</servlet-name>
+		<servlet-class>org.theeuropeanlibrary.repox.rest.configuration.SwaggerBootstrap</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
 
 	<!-- Spring Security -->
 	<filter>

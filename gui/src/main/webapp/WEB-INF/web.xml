@@ -112,6 +112,13 @@
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 
+	<!-- Has to be after the JerseyJaxrsConfig -->
+	<servlet>
+		<servlet-name>swagger-bootstrap</servlet-name>
+		<servlet-class>org.theeuropeanlibrary.repox.rest.configuration.SwaggerBootstrap</servlet-class>
+		<load-on-startup>6</load-on-startup>
+	</servlet>
+
 	<!-- Spring Security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
