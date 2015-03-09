@@ -182,7 +182,7 @@ public class AppView extends View {
         help.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent ce) {
-                Window.open("http://repox.ist.utl.pt/doc.html","","");
+                Window.open("http://repox.sysresearch.org/doc.html","","");
             }});
         toolBar.add(help);
 
