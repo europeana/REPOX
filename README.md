@@ -9,7 +9,7 @@ REPOX is a framework to manage data spaces. It comprises several channels to imp
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is developed in Java, so it can be deployed in any operating system that has an available Java virtual machine.
 
 * __Easy deployment__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is available with an easy installer, which includes all the required software.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With the new wiki pages, there are full instructions on how to deploy an instance.
 
 * __Support for several data formats and encodings__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It supports UNIMARC and MARC21 schemas, and encodings in ISO 2709 (including several variants), MarcXchange or MARCXML. During the course of the TELplus project, support will be added for other possible encodings required by the partners.
@@ -25,13 +25,13 @@ Repox github site:
 
 ###Contributor###
 - - - 
-<img src="http://www.theeuropeanlibrary.org/confluence/download/attachments/8880494/TEL_logoe_transparent_AEtry-out.jpg" alt="The European Library" width=200px/>  
-The European Library is the main contributor of refactoring the whole REPOX project as it was originally delivered at v2.3.5 and is heading to v3.0 and upwards,  
+<img src="http://www.theeuropeanlibrary.org/confluence/download/attachments/8880494/TEL_logoe_transparent_AEtry-out.jpg" alt="The European Library" width=200px/> <img src="http://www.axes-project.eu/wp-content/uploads/2012/02/europeana.jpg" alt="Europeana" width=200px/>  
+The European Library and Europeana are the main contributors of refactoring the whole REPOX project as it was originally delivered at v2.3.5 and is heading to v3.0 and upwards,  
 including new implementations of REST API's, bug fixing and introducing new features.
 
 ###Repox Structure Overview###
 - - - 
-Repox consists of following projects:
+Repox consists of the following modules:
 
 * __Repox Parent (repox-system)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This project is basically the parent project containing all the modules.
@@ -46,9 +46,6 @@ Repox consists of following projects:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the module for centralization of common resources.
 * __Repox Server (repox-server)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The repox-server module is another parent project that contains the following modules repox-server-rest, repox-server-rest-jersey, repox-server-oai.
-* __Repox Server Rest (repox-server-rest)(!DEPRECATED)__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is the API Restful service for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the full build is initiated, then the `web.xml` of the `repox-gui` is the valid one, so any values in this `web.xml` must be copied in the `web.xml` of the `repox-gui`.
 * __Repox Server Rest Jersey(repox-server-rest-jersey)__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The new RESTful API service, using Jersey 2 framework for accessing Repox functionality. This module can be build and deployed independently from the repox-gui.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The URL configuration of swagger-core dynamic JSON generation is located in the `web.xml`.  
