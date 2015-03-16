@@ -192,8 +192,6 @@
 					<version>${org.apache.maven.plugins.maven-release-plugin.version}</version>
 					<configuration>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
-						<!-- <autoVersionSubmodules>true</autoVersionSubmodules> -->
-						<!-- <pushChanges>false</pushChanges> -->
 					</configuration>
 				</plugin>
 

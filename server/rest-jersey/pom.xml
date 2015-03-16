@@ -155,7 +155,7 @@
 									<basePath>${development.url}</basePath>
 									<!-- <basePath>http://localhost:8181/repox-server-rest-jersey-0.0.1-SNAPSHOT/rest</basePath> -->
 									<swaggerInternalFilter>com.wordnik.swagger.config.DefaultSpecFilter</swaggerInternalFilter>
-									<!---General parameters END -->
+									<!-- General parameters END -->
 
 									<apiInfo>
 										<title>REPOX SERVER REST JERSEY</title>
@@ -167,13 +167,13 @@
 										<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
 									</apiInfo>
 
-									<!---Document generation parameters BEGIN -->
+									<!-- Document generation parameters BEGIN -->
 									<outputTemplate>templates/strapdown.html.mustache</outputTemplate>
 									<mustacheFileRoot>templates/</mustacheFileRoot>
 									<outputPath>${documentation.dir}document.html</outputPath>
-									<!---Document generation parameters END -->
+									<!--Document generation parameters END -->
 
-									<!---Swagger JSON parameters BEGIN -->
+									<!-- Swagger JSON parameters BEGIN -->
 									<swaggerDirectory>${documentation.dir}</swaggerDirectory>
 									<swaggerUIDocBasePath>${development.url.doc}</swaggerUIDocBasePath>
 									<useOutputFlatStructure>true</useOutputFlatStructure>
