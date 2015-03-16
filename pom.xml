@@ -169,7 +169,7 @@
 		<com.wordnik.swagger-jersey2-jaxrs_2.11.version>1.3.10</com.wordnik.swagger-jersey2-jaxrs_2.11.version>
 		<com.wordnik.swagger-core_2.11.version>1.3.10</com.wordnik.swagger-core_2.11.version>
 
-		<jersey.version>2.13</jersey.version>
+		<jersey.version>2.17</jersey.version>
 
 		<!-- Plugin Versions -->
 		<org.apache.maven.plugins.maven-release-plugin.version>2.5.1</org.apache.maven.plugins.maven-release-plugin.version>
