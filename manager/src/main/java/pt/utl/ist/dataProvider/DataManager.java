@@ -86,6 +86,8 @@ public interface DataManager {
     List<DataProvider> loadDataProvidersFromFile(File file2Read, File repositoryPath) throws DocumentException, IOException, ParseException;
 
     //********************DATA SOURCE CONTAINER ********************/
+    boolean checkIfDataSourceExists(String dataSourceId);
+    
     boolean moveDataSource(String newDataProviderID, String idDataSource2Move) throws IOException, DocumentException;
 
     void setDataSetSampleState(boolean isSample, DataSource dataSource);
@@ -137,4 +139,5 @@ public interface DataManager {
     boolean isIdValid(String id);
 
     void removeLogsAndOldTasks(String dataSourceId) throws IOException, DocumentException;
+
 }
