@@ -192,6 +192,7 @@
 					<version>${org.apache.maven.plugins.maven-release-plugin.version}</version>
 					<configuration>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
+						<!-- Specify arguments needed from the command line -->
 					</configuration>
 				</plugin>
 
