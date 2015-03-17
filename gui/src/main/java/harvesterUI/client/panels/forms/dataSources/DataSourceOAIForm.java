@@ -400,8 +400,8 @@ public class DataSourceOAIForm extends DataSourceForm {
         if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             saveDataSource(dataSourceUI,oldDataSetId, DatasetType.OAI,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
                     metadataFormat,name.getValue(),nameCode.getValue(),exportPath.getValue());
-        else
-            saveDataSource(dataSourceUI,oldDataSetId,DatasetType.OAI,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
-                    metadataFormat,"","","");
+//        else
+//            saveDataSource(dataSourceUI,oldDataSetId,DatasetType.OAI,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
+//                    metadataFormat,"","","");
     }
 }
