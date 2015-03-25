@@ -37,9 +37,9 @@ public class DefaultRepoxManager implements RepoxManager {
     private static final Logger           log = Logger.getLogger(DefaultRepoxManager.class);
     private static String                 baseUrn;
 
-    private DefaultRepoxConfiguration   configuration;
+    private DefaultRepoxConfiguration     configuration;
     private AccessPointsManager           accessPointsManager;
-    private DefaultDataManager          dataManager;
+    private DefaultDataManager            dataManager;
     private StatisticsManager             statisticsManager;
     private RecordCountManager            recordCountManager;
     private TaskManager                   taskManager;
@@ -48,7 +48,7 @@ public class DefaultRepoxManager implements RepoxManager {
     private MetadataSchemaManager         metadataSchemaManager;
     private TagsManager                   tagsManager;
     private Thread                        taskManagerThread;
-    private DefaultEmailUtil            emailClient;
+    private DefaultEmailUtil              emailClient;
 
     @Override
     public DefaultRepoxConfiguration getConfiguration() {
@@ -114,18 +114,20 @@ public class DefaultRepoxManager implements RepoxManager {
         this.emailClient = emailClient;
     }
 
-    public DefaultRepoxManager(DefaultRepoxConfiguration configuration, String dataProvidersFilename, String statisticsFilename, String recordCountsFilename, String schedulerFilename, String ongoingTasksFilename, String metadataTransformationsFilename, String oldTasksFileName,
-                                 String externalServicesFilename, String metadataSchemasFilename, String tagsFilename) throws DocumentException, ParseException, SQLException, IOException, ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException {
+    public DefaultRepoxManager(DefaultRepoxConfiguration configuration, String dataProvidersFilename, String statisticsFilename, String recordCountsFilename, String schedulerFilename,
+                               String ongoingTasksFilename, String metadataTransformationsFilename, String oldTasksFileName,
+                               String externalServicesFilename, String metadataSchemasFilename, String tagsFilename) throws DocumentException, ParseException, SQLException, IOException,
+                                                                                                                    ClassNotFoundException, NoSuchMethodException, IllegalFileFormatException {
         log.info("DefaultRepoxManager creating.");
         this.configuration = configuration;
 
         File countries = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.COUNTRIES_FILENAME);
         if (!countries.exists()) {
-                InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.COUNTRIES_FILENAME);
-                OutputStream os = new FileOutputStream(countries);
-                FileUtil.transferData(inputStream, os);
-                os.close();
-                inputStream.close();
+            InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.COUNTRIES_FILENAME);
+            OutputStream os = new FileOutputStream(countries);
+            FileUtil.transferData(inputStream, os);
+            os.close();
+            inputStream.close();
         }
 
         File metadataTransformation = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
@@ -137,6 +139,7 @@ public class DefaultRepoxManager implements RepoxManager {
             inputStream.close();
         }
 
+        //This file is never created, everything is created on the fly
         File statisticsFile = new File(configuration.getXmlConfigPath(), statisticsFilename);
         this.statisticsManager = new DefaultStatisticsManager(statisticsFile);
 
@@ -176,7 +179,7 @@ public class DefaultRepoxManager implements RepoxManager {
         taskManager = new TaskManager(scheduledTasksFile, ongoingTasksFile);
         taskManagerThread = new Thread(taskManager);
         taskManagerThread.start();
-        
+
         log.info("DefaultRepoxManager created.");
     }
 

@@ -110,7 +110,7 @@ public class DefaultDataManager implements DataManager {
         this.metadataSchemaManager = metadataSchemaManager;
         this.oldTasksFile = oldTasksFile;
         loadAggregators(repositoryPath, defaultExportDir);
-        loadAllDataList();
+//        loadAllDataList();
         if (!this.dataFile.exists()) {
             try {
                 saveData();
@@ -233,10 +233,10 @@ public class DefaultDataManager implements DataManager {
         SAXReader reader = new SAXReader();
         Document document = reader.read(file2Read);
 
-        if (configuration != null && configuration.getCurrentServerOAIUrl() != null) {
-            ExternalServiceUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
-            XmlUtil.writePrettyPrint(dataFile, document);
-        }
+//        if (configuration != null && configuration.getCurrentServerOAIUrl() != null) {
+//            ExternalServiceUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
+//            XmlUtil.writePrettyPrint(dataFile, document);
+//        }
 
         Element root = document.getRootElement();
 
