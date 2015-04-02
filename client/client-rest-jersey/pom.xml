@@ -11,4 +11,62 @@
 	<artifactId>repox-client-rest-jersey</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-manager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>repox</groupId>
+			<artifactId>repox-server-rest-jersey</artifactId>
+			<classifier>classes</classifier>
+		</dependency>
+
+		<!-- JERSEY libs(Versions are managed from the bom) -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-jaxb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

@@ -47,7 +47,7 @@
 		<module>commons</module>
 		<module>gui</module>
 		<module>resources</module>
-		<module>repox-client</module>
+		<module>client</module>
 	</modules>
 
 	<properties>
@@ -335,6 +335,12 @@
 				<artifactId>repox-server-rest-jersey</artifactId>
 				<version>${repox.repox-server-rest-jersey.version}</version>
 				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>repox</groupId>
+				<artifactId>repox-server-rest-jersey</artifactId>
+				<version>${repox.repox-server-rest-jersey.version}</version>
+				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
 				<groupId>repox</groupId>
