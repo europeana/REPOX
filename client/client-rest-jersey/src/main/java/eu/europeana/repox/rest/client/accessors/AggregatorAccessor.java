@@ -12,6 +12,9 @@
  * the Licence.
  */
 package eu.europeana.repox.rest.client.accessors;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -33,23 +36,46 @@ import pt.utl.ist.util.exceptions.DoesNotExistException;
  */
 public class AggregatorAccessor {
 
-  private String restUrl;
+  private URL restUrl;
   private Client client = JerseyClientBuilder.newClient();
   private static final Logger LOGGER = LoggerFactory.getLogger(AggregatorAccessor.class);
 
-  public AggregatorAccessor(String restUrl, String username, String password) {
+  /**
+   * Setup AggregatorAccessor with the target Url, username and password
+   * @param restUrl
+   * @param username
+   * @param passwordS
+   * @throws MalformedURLException 
+   */
+  public AggregatorAccessor(URL restUrl, String username, String password) throws MalformedURLException {
     super();
-    this.restUrl = restUrl;
-    // TODO check if there is a / at the end
     
+    this.restUrl = restUrl.toString().charAt(restUrl.toString().length() -1) == '/' ? new URL(restUrl.toString().substring(0, restUrl.toString().length() - 1)) : restUrl;
+    HttpAuthenticationFeature authfeature = HttpAuthenticationFeature.basic(username, password);
+    client.register(authfeature);
+  }
+  
+  /**
+   * Only used for tests.
+   * Setup AggregatorAccessor with the target Url, username and password
+   * @param restUrl
+   * @param username
+   * @param password
+   * @param target
+   * @throws MalformedURLException 
+   */
+  public AggregatorAccessor(URL restUrl, String username, String password, Client client) throws MalformedURLException {
+    super();
+    this.restUrl = restUrl.toString().charAt(restUrl.toString().length() -1) == '/' ? new URL(restUrl.toString().substring(0, restUrl.toString().length() - 1)) : restUrl;
+    this.client = client;
     HttpAuthenticationFeature authfeature = HttpAuthenticationFeature.basic(username, password);
     client.register(authfeature);
   }
   
   
-  public static void main(String[] args) throws DoesNotExistException {
-  AggregatorAccessor aa = new AggregatorAccessor("http://localhost:8080/repox/rest", "temporary", "temporary");
-  Aggregator aggregator = aa.getAggregator("A0r");
+  public static void main(String[] args) throws DoesNotExistException, MalformedURLException {
+  AggregatorAccessor aa = new AggregatorAccessor(new URL("http://localhost:8080/repox/rest/"), "temporary", "temporary");
+  Aggregator aggregator = aa.getAggregator("A0r0");
 //  
 //  System.out.println(aggregator.getId());
   
@@ -77,15 +103,12 @@ public class AggregatorAccessor {
 
     return aggregator;
   }
-  
-//  public boolean
 
-  public String getRestUrl() {
+  public URL getRestUrl() {
     return restUrl;
   }
 
-  public void setRestUrl(String restUrl) {
+  public void setRestUrl(URL restUrl) {
     this.restUrl = restUrl;
   }
-
 }
