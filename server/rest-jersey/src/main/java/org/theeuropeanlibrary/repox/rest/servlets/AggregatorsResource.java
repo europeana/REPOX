@@ -263,7 +263,7 @@ public class AggregatorsResource {
     }
 
     /**
-     * Get a list of aggregators in the specified range.
+     * Get a list of aggregators in the specified range. Returned number can be smaller than the requested.
      * Offset not allowed negative. If number is negative then it returns all the items from offset until the total number of items.
      * Relative path : /aggregators
      * @param offset Query parameter on the context
