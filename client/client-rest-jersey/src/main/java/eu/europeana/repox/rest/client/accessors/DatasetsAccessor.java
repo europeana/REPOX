@@ -18,9 +18,12 @@ package eu.europeana.repox.rest.client.accessors;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,11 +32,14 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
+import org.theeuropeanlibrary.repox.rest.pathOptions.ProviderOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -105,11 +111,72 @@ public class DatasetsAccessor {
     return datasetContainer;
   }
   
-  public static void main(String[] args) throws MalformedURLException, DoesNotExistException {
+  /**
+   * Delete an dataset by specifying the Id.
+   * 
+   * @param datasetId
+   * @throws DoesNotExistException
+   */
+  public void deleteDataset(String datasetId) throws DoesNotExistException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + datasetId);
+    Response response = target.request(MediaType.APPLICATION_JSON).delete();
+    if (response.getStatus() == 404) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("deleteDataset(..) failure! : " + errorMessage.getResult());
+      throw new DoesNotExistException(errorMessage.getResult());
+    } else if (response.getStatus() == 500) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("deleteDataset(..) failure! : " + errorMessage.getResult());
+      throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("deleteDataset(..) success!");
+  }
+  
+  /**
+   * Get a list of datasets in the specified range. Returned number can be smaller than the
+   * requested. Offset not allowed negative. If number is negative then it returns all the items
+   * from offset until the total number of items.
+   * 
+   * @param providerId
+   * @param offset
+   * @param number
+   * @return
+   * @throws InvalidArgumentsException
+   * @throws DoesNotExistException 
+   */
+  public List<DataSourceContainer> getDatasetList(String providerId, int offset, int number) throws InvalidArgumentsException, DoesNotExistException{
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS)
+            .queryParam(DatasetOptionListContainer.PROVIDERID, providerId)
+            .queryParam(ProviderOptionListContainer.OFFSET, offset)
+            .queryParam(ProviderOptionListContainer.NUMBER, number);
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
+    if (response.getStatus() == 400) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("getDatasetList(..) failure! : " + errorMessage.getResult());
+      throw new InvalidArgumentsException(errorMessage.getResult());
+    }
+    else if(response.getStatus() == 404) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("getDatasetList(..) failure! : " + errorMessage.getResult());
+      throw new DoesNotExistException(errorMessage.getResult());
+    }
+    List<DataSourceContainer> subList = response.readEntity(new GenericType<List<DataSourceContainer>>() {});
+    LOGGER.info("getDatasetList(..) success!");
+
+    return subList;
+  }
+  
+  public static void main(String[] args) throws MalformedURLException, DoesNotExistException, InvalidArgumentsException {
     DatasetsAccessor da = new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
-    
+//    DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
 //    System.out.println(dataset.getDataSource());
+//    da.deleteDataset("exd0");
+    
+    List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
+    
+    System.out.println(datasetList.get(0).getDataSource().getId());
   }
 
 }

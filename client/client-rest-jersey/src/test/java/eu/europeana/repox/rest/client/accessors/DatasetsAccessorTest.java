@@ -15,11 +15,15 @@ package eu.europeana.repox.rest.client.accessors;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,6 +37,7 @@ import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -86,5 +91,51 @@ public class DatasetsAccessorTest {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     da.getDataset("D0r0");
+  }
+
+  // Tests for DeleteDataset
+  @Test
+  public void testDeleteDataset() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    da.deleteDataset("d0r0");
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testDeleteDatasetDoesNotExist() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    da.deleteDataset("d0r0");
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testDeleteDatasetInternalServerError() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    da.deleteDataset("d0r0");
+  }
+
+  // Tests for GetDatasetList
+  @Test
+  public void testGetDatasetList() throws InvalidArgumentsException, DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    da.getDatasetList("P0r0", 0, 1);
+    Mockito.when(response.readEntity(new GenericType<List<DataSourceContainer>>() {})).thenReturn(
+        new ArrayList<DataSourceContainer>());
+  }
+
+  @Test(expected = InvalidArgumentsException.class)
+  public void testGetDatasetListInvalidArguments() throws InvalidArgumentsException,
+      DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(400);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    da.getDatasetList("P0r0", 0, 1);
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testGetDatasetDoesNotExist() throws InvalidArgumentsException, DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    da.getDatasetList("P0r0", 0, 1);
   }
 }
