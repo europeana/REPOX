@@ -1861,7 +1861,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
                     newDataSource.setExportDir(exportPath);
                     newDataSource.setMarcFormat(marcFormat);
@@ -1914,7 +1915,8 @@ public class DefaultDataManager implements DataManager {
                 DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                 dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                 newDataSource.initAccessPoints();
-                newDataSource.setMetadataTransformations(metadataTransformations);
+                if(metadataTransformations != null)
+                  newDataSource.setMetadataTransformations(metadataTransformations);
                 newDataSource.setExternalRestServices(externalRestServices);
                 newDataSource.setExportDir(exportPath);
                 newDataSource.setMarcFormat(marcFormat);
@@ -2013,7 +2015,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
@@ -2109,7 +2112,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
@@ -2200,7 +2204,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
 
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager()
@@ -2313,7 +2318,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
                     newDataSource.setMarcFormat(marcFormat);
 
@@ -2410,7 +2416,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
                     newDataSource.setMarcFormat(marcFormat);
 
@@ -2508,7 +2515,8 @@ public class DefaultDataManager implements DataManager {
                     DefaultDataSourceContainer dataSourceContainer = new DefaultDataSourceContainer(newDataSource, nameCode, name, exportPath);
                     dataProvider.getDataSourceContainers().put(newDataSource.getId(), dataSourceContainer);
                     newDataSource.initAccessPoints();
-                    newDataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      newDataSource.setMetadataTransformations(metadataTransformations);
                     newDataSource.setExternalRestServices(externalRestServices);
                     newDataSource.setMarcFormat(marcFormat);
 
@@ -2568,7 +2576,8 @@ public class DefaultDataManager implements DataManager {
                 dataSource.setDescription(description);
                 dataSource.setSchema(schema);
                 dataSource.setNamespace(namespace);
-                dataSource.setMetadataFormat(metadataFormat);
+                if(metadataTransformations != null)
+                  dataSource.setMetadataFormat(metadataFormat);
                 dataSource.setMetadataTransformations(metadataTransformations);
                 dataSource.setExternalRestServices(externalRestServices);
                 dataSource.setMarcFormat(marcFormat);
@@ -2641,7 +2650,8 @@ public class DefaultDataManager implements DataManager {
                     dataSource.setMetadataFormat(metadataFormat);
                     ((OaiDataSource)dataSource).setOaiSourceURL(newOaiSourceURL);
                     ((OaiDataSource)dataSource).setOaiSet(oaiSet);
-                    dataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setMarcFormat(marcFormat);
                     dataSource.setExportDir(exportPath);
@@ -2726,7 +2736,8 @@ public class DefaultDataManager implements DataManager {
                 dataSource.setNamespace(namespace);
                 dataSource.setRecordIdPolicy(recordIdPolicy);
                 ((DataSourceZ3950)dataSource).setHarvestMethod(harvestMethod);
-                dataSource.setMetadataTransformations(metadataTransformations);
+                if(metadataTransformations != null)
+                  dataSource.setMetadataTransformations(metadataTransformations);
                 dataSource.setExternalRestServices(externalRestServices);
                 dataSource.setExportDir(exportPath);
 
@@ -2817,7 +2828,8 @@ public class DefaultDataManager implements DataManager {
                 dataSource.setNamespace(namespace);
                 dataSource.setRecordIdPolicy(recordIdPolicy);
                 ((DataSourceZ3950)dataSource).setHarvestMethod(harvestMethod);
-                dataSource.setMetadataTransformations(metadataTransformations);
+                if(metadataTransformations != null)
+                  dataSource.setMetadataTransformations(metadataTransformations);
                 dataSource.setExternalRestServices(externalRestServices);
                 dataSource.setExportDir(exportPath);
 
@@ -2893,7 +2905,8 @@ public class DefaultDataManager implements DataManager {
                 dataSource.setNamespace(namespace);
                 dataSource.setRecordIdPolicy(recordIdPolicy);
                 ((DataSourceZ3950)dataSource).setHarvestMethod(harvestMethod);
-                dataSource.setMetadataTransformations(metadataTransformations);
+                if(metadataTransformations != null)
+                  dataSource.setMetadataTransformations(metadataTransformations);
                 dataSource.setExternalRestServices(externalRestServices);
                 dataSource.setExportDir(exportPath);
 
@@ -2990,7 +3003,8 @@ public class DefaultDataManager implements DataManager {
                     ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(FtpFileRetrieveStrategy.getOutputFtpPath(server, newId));
                     ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
                     ((DirectoryImporterDataSource)dataSource).setNamespaces(new HashMap<String, String>());
-                    dataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
                     dataSource.setMarcFormat(marcFormat);
@@ -3085,7 +3099,8 @@ public class DefaultDataManager implements DataManager {
                     ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(HttpFileRetrieveStrategy.getOutputHttpPath(url, newId));
                     ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
                     ((DirectoryImporterDataSource)dataSource).setNamespaces(new HashMap<String, String>());
-                    dataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
                     dataSource.setMarcFormat(marcFormat);
@@ -3179,7 +3194,8 @@ public class DefaultDataManager implements DataManager {
                     ((DirectoryImporterDataSource)dataSource).setSourcesDirPath(sourcesDirPath);
                     ((DirectoryImporterDataSource)dataSource).setRecordXPath(recordXPath);
                     ((DirectoryImporterDataSource)dataSource).setNamespaces(namespaces);
-                    dataSource.setMetadataTransformations(metadataTransformations);
+                    if(metadataTransformations != null)
+                      dataSource.setMetadataTransformations(metadataTransformations);
                     dataSource.setExternalRestServices(externalRestServices);
                     dataSource.setExportDir(exportPath);
                     dataSource.setMarcFormat(marcFormat);
