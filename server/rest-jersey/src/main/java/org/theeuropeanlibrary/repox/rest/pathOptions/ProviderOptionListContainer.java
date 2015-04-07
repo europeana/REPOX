@@ -29,8 +29,8 @@ public class ProviderOptionListContainer extends OptionListContainer {
     //Query parameters
     public static final String OFFSET = "offset";
     public static final String NUMBER = "number";
-    public static final String AGGREGATORID = "aggregotorId";
-    public static final String NEWAGGREGATORID = "newAggregotorId";
+    public static final String AGGREGATORID = "aggregatorId";
+    public static final String NEWAGGREGATORID = "newAggregatorId";
     
     /**
      * No argument constructor needed for JAXB.
