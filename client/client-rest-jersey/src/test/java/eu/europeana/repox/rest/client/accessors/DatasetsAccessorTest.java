@@ -33,11 +33,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
-import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
-import pt.utl.ist.util.ProviderType;
+import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
+import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -197,4 +199,71 @@ public class DatasetsAccessorTest {
        "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
        "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
  }
+ 
+//Tests for CreateDatasetFile
+@Test
+public void testCreateDatasetFile() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(201);
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
+
+@Test(expected = InvalidArgumentsException.class)
+public void testCreateDatasetFileInvalidArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(400);
+  Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
+
+@Test(expected = DoesNotExistException.class)
+public void testCreateDatasetFileDoesNotExist() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(404);
+  Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
+
+@Test(expected = MissingArgumentsException.class)
+public void testCreateDatasetFileMissingArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(406);
+  Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
+
+@Test(expected = AlreadyExistsException.class)
+public void testCreateDatasetFileAlreadyExists() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(409);
+  Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
+
+@Test(expected = InternalServerErrorException.class)
+public void testCreateDatasetFileInternalServerError() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+  Mockito.when(response.getStatus()).thenReturn(500);
+  Mockito.when(response.readEntity(Result.class))
+      .thenReturn(new Result("Internal Server Error!"));
+  da.createDatasetFile("P0r0", null, "ExampleOAI",
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+}
 }

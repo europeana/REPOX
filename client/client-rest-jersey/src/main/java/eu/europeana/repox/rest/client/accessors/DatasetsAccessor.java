@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
@@ -37,9 +36,15 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
+import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
+import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
+import pt.utl.ist.marc.CharacterEncoding;
+import pt.utl.ist.marc.DirectoryImporterDataSource;
+import pt.utl.ist.marc.FolderFileRetrieveStrategy;
+import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
@@ -177,7 +182,7 @@ public class DatasetsAccessor {
 
 
   /**
-   * Create a dataset.
+   * Create a dataset oai.
    * 
    * @param providerId
    * @param id
@@ -244,19 +249,98 @@ public class DatasetsAccessor {
     LOGGER.info("createDatasetOai(..) success!");
   }
 
-  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
-      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException, AlreadyExistsException {
-    DatasetsAccessor da =
-        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
-    // System.out.println(dataset.getDataSource());
-    // da.deleteDataset("exd0");
-//    List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
-//    System.out.println(datasetList.get(0).getDataSource().getId());
+  /**
+   * Create a dataset directory, ftp, http.
+   * 
+   * @param providerId
+   * @param id
+   * @param name
+   * @param schema
+   * @param description
+   * @param namespace
+   * @param metadataFormat
+   * @param marcFormat
+   * @param oaiUrl
+   * @param oaiSet
+   * @param exportDir
+   * @param extractStrategy
+   * @param retrieveStrategy
+   * @param characterEncoding
+   * @param isoVariant
+   * @param sourceDirectory
+   * @param recordXPath
+   * @param recordIdPolicy
+   * @param metadataTransformations
+   * @throws InvalidArgumentsException
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws AlreadyExistsException
+   * @throws InternalServerErrorException
+   */
+  public void createDatasetFile(String providerId, String id, String name, String schema,
+      String description, String namespace, String metadataFormat, String marcFormat,
+      String exportDir, RecordIdPolicy recordIdPolicy, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, Iso2709Variant isoVariant, String sourceDirectory, String recordXPath,
+      Map<String, MetadataTransformation> metadataTransformations)
+      throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS).queryParam(
+            DatasetOptionListContainer.PROVIDERID, providerId);
     
-    da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
-        "http://www.europeana.eu/schemas/ese/", "ese", null, "http://oai.onb.ac.at/repox2/OAIHandler", "abo", 
-        "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+    DirectoryImporterDataSource directoryImporterDataSource = new DirectoryImporterDataSource(null, id, description, schema, 
+        namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourceDirectory, recordIdPolicy, 
+        metadataTransformations, recordXPath, null);
+    directoryImporterDataSource.setIsoVariant(isoVariant);    
+    directoryImporterDataSource.setExportDir(exportDir);
+    
+    DefaultDataSourceContainer defaultDataSourceContainer =
+        new DefaultDataSourceContainer(directoryImporterDataSource, "a0661", "Example Dataset", null);
+
+    Response response =
+        target.request(MediaType.APPLICATION_JSON).post(
+            Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_JSON), Response.class);
+
+    switch (response.getStatus()) {
+      case 400:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new InvalidArgumentsException(errorMessage.getResult());
+      case 404:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("createDatasetFile(..) success!");
   }
+
+//  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
+//      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
+//      AlreadyExistsException {
+//    DatasetsAccessor da =
+//        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+//    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
+//    // System.out.println(dataset.getDataSource());
+//    // da.deleteDataset("exd0");
+//    // List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
+//    // System.out.println(datasetList.get(0).getDataSource().getId());
+//
+//    da.createDatasetFile("P0r0", null, "ExampleOAI",
+//        "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//        "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+//        new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+//        CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+//  }
 
 }
