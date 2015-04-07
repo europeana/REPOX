@@ -1,15 +1,15 @@
 /*
  * Copyright 2007-2015 The Europeana Foundation
  * 
- * Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved by the
- * European Commission; You may not use this work except in compliance with the Licence.
+ * Licensed under the EUPL, Version 1.1 (the "License") and subsequent versions as approved by the
+ * European Commission; You may not use this work except in compliance with the License.
  * 
- * You may obtain a copy of the Licence at: http://joinup.ec.europa.eu/software/page/eupl
+ * You may obtain a copy of the License at: http://joinup.ec.europa.eu/software/page/eupl
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" basis, without warranties or conditions of any kind, either express
- * or implied. See the Licence for the specific language governing permissions and limitations under
- * the Licence.
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package eu.europeana.repox.rest.client.accessors;
 
@@ -87,17 +87,6 @@ public class AggregatorsAccessor {
     HttpAuthenticationFeature authfeature = HttpAuthenticationFeature.basic(username, password);
     client.register(authfeature);
   }
-
-//  public static void main(String[] args) throws DoesNotExistException, MalformedURLException,
-//      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
-//      AlreadyExistsException {
-//    AggregatorsAccessor aa =
-//        new AggregatorsAccessor(new URL("http://localhost:8080/repox/rest/"), "temporary",
-//            "temporary");
-//    LOGGER.debug("OK");
-//    aa.updateAggregator("ValidId", "ValidId2", "Greeces", "GR", "http://example.com");
-//    LOGGER.debug("OK");
-//  }
 
   /**
    * Retrieve the aggregator with the provided id.
@@ -217,7 +206,7 @@ public class AggregatorsAccessor {
   }
 
   /**
-   * Update an aggregator by specifying the Id. Aggregator Id can be null if there is no need to
+   * Update an aggregator by specifying the Id. Aggregator newId can be null if there is no need to
    * change the id.
    * 
    * @param id
