@@ -101,14 +101,14 @@ public class ProvidersAccessorTest {
   }
 
   @Test(expected = DoesNotExistException.class)
-  public void testDeleteProviderInternalServerError() throws DoesNotExistException {
+  public void testDeleteProviderDoesNotExist() throws DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     pa.deleteProvider("Pr0");
   }
 
   @Test(expected = InternalServerErrorException.class)
-  public void testDeleteProviderDoesNotExist() throws DoesNotExistException {
+  public void testDeleteProviderInternalServerError() throws DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(500);
     Mockito.when(response.readEntity(Result.class))
         .thenReturn(new Result("Internal Server Error!"));
@@ -117,7 +117,7 @@ public class ProvidersAccessorTest {
 
   // Tests for GetProviderList
   @Test
-  public void testGetProviderList() throws InvalidArgumentsException {
+  public void testGetProviderList() throws InvalidArgumentsException, DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(200);
     pa.getProviderList("A0r0", 0, 1);
     Mockito.when(response.readEntity(new GenericType<List<DataProvider>>() {})).thenReturn(
@@ -125,9 +125,16 @@ public class ProvidersAccessorTest {
   }
 
   @Test(expected = InvalidArgumentsException.class)
-  public void testGetProviderListInvalidArguments() throws InvalidArgumentsException {
+  public void testGetProviderListInvalidArguments() throws InvalidArgumentsException, DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(400);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    pa.getProviderList("A0r0", 0, 1);
+  }
+  
+  @Test(expected = DoesNotExistException.class)
+  public void testGetProviderListDoesNotExist() throws InvalidArgumentsException, DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     pa.getProviderList("A0r0", 0, 1);
   }
 
