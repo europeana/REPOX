@@ -86,6 +86,7 @@ public class AggregatorsAccessor {
     this.client = client;
     HttpAuthenticationFeature authfeature = HttpAuthenticationFeature.basic(username, password);
     client.register(authfeature);
+    LOGGER.info("AggregatorAccessor created with target url: {}", this.restUrl);
   }
 
   /**
