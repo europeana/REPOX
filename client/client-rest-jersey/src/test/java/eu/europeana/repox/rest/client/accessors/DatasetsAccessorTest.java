@@ -36,8 +36,12 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
+import pt.utl.ist.util.ProviderType;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -138,4 +142,59 @@ public class DatasetsAccessorTest {
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
     da.getDatasetList("P0r0", 0, 1);
   }
+  
+//Tests for CreateDatasetOai
+ @Test
+ public void testCreateDatasetOai() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(201);
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
+
+ @Test(expected = InvalidArgumentsException.class)
+ public void testCreateDatasetOaiInvalidArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(400);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
+
+ @Test(expected = DoesNotExistException.class)
+ public void testCreateDatasetOaiDoesNotExist() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(404);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
+
+ @Test(expected = MissingArgumentsException.class)
+ public void testCreateDatasetOaiMissingArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(406);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
+
+ @Test(expected = AlreadyExistsException.class)
+ public void testCreateDatasetOaiAlreadyExists() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(409);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
+
+ @Test(expected = InternalServerErrorException.class)
+ public void testCreateDatasetOaiInternalServerError() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
+   Mockito.when(response.getStatus()).thenReturn(500);
+   Mockito.when(response.readEntity(Result.class))
+       .thenReturn(new Result("Internal Server Error!"));
+   da.createDatasetOai("P0r0", null, "ExampleOAI", "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+       "http://www.europeana.eu/schemas/ese/", "ese", null, "http://example.com/handler", "abo", 
+       "/tmp/export/a0661", new IdProvidedRecordIdPolicy(), null);
+ }
 }
