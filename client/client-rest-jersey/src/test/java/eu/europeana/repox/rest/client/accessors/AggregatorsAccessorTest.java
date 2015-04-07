@@ -43,7 +43,7 @@ import pt.utl.ist.util.exceptions.MissingArgumentsException;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Apr 2, 2015
  */
-public class AggregatorAccessorTest {
+public class AggregatorsAccessorTest {
   private static URL restUrl;
   private static String username = "username";
   private static String password = "password";
@@ -51,7 +51,7 @@ public class AggregatorAccessorTest {
   private static WebTarget webTarget;
   private static Builder builder;
   private static Response response;
-  private static AggregatorAccessor aa;
+  private static AggregatorsAccessor aa;
 
   @BeforeClass
   public static void setUp() throws IOException {
@@ -60,7 +60,7 @@ public class AggregatorAccessorTest {
     webTarget = Mockito.mock(WebTarget.class);
     builder = Mockito.mock(Builder.class);
     response = Mockito.mock(Response.class);
-    aa = new AggregatorAccessor(restUrl, username, password, client);
+    aa = new AggregatorsAccessor(restUrl, username, password, client);
 
     Mockito.when(client.target(Mockito.anyString())).thenReturn(webTarget);
     Mockito.when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(builder);

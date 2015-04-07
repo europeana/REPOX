@@ -42,11 +42,11 @@ import pt.utl.ist.util.exceptions.MissingArgumentsException;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Apr 2, 2015
  */
-public class AggregatorAccessor {
+public class AggregatorsAccessor {
 
   private URL restUrl;
   private Client client = JerseyClientBuilder.newClient();
-  private static final Logger LOGGER = LoggerFactory.getLogger(AggregatorAccessor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AggregatorsAccessor.class);
 
   /**
    * Setup AggregatorAccessor with the target Url, username and password
@@ -56,7 +56,7 @@ public class AggregatorAccessor {
    * @param passwordS
    * @throws MalformedURLException
    */
-  public AggregatorAccessor(URL restUrl, String username, String password)
+  public AggregatorsAccessor(URL restUrl, String username, String password)
       throws MalformedURLException {
     super();
 
@@ -77,7 +77,7 @@ public class AggregatorAccessor {
    * @param target
    * @throws MalformedURLException
    */
-  AggregatorAccessor(URL restUrl, String username, String password, Client client)
+  AggregatorsAccessor(URL restUrl, String username, String password, Client client)
       throws MalformedURLException {
     super();
     this.restUrl =
@@ -88,16 +88,16 @@ public class AggregatorAccessor {
     client.register(authfeature);
   }
 
-  public static void main(String[] args) throws DoesNotExistException, MalformedURLException,
-      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
-      AlreadyExistsException {
-    AggregatorAccessor aa =
-        new AggregatorAccessor(new URL("http://localhost:8080/repox/rest/"), "temporary",
-            "temporary");
-    LOGGER.debug("OK");
-    aa.updateAggregator("ValidId", "ValidId2", "Greeces", "GR", "http://example.com");
-    LOGGER.debug("OK");
-  }
+//  public static void main(String[] args) throws DoesNotExistException, MalformedURLException,
+//      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
+//      AlreadyExistsException {
+//    AggregatorsAccessor aa =
+//        new AggregatorsAccessor(new URL("http://localhost:8080/repox/rest/"), "temporary",
+//            "temporary");
+//    LOGGER.debug("OK");
+//    aa.updateAggregator("ValidId", "ValidId2", "Greeces", "GR", "http://example.com");
+//    LOGGER.debug("OK");
+//  }
 
   /**
    * Retrieve the aggregator with the provided id.
