@@ -92,7 +92,7 @@ public class ProvidersAccessor {
    * Retrieve the provider with the provided id.
    * 
    * @param aggregatorId
-   * @return Aggregator
+   * @return DataProvider
    * @throws DoesNotExistException
    */
   public DataProvider getProvider(String providerId) throws DoesNotExistException {

@@ -89,11 +89,7 @@ public class AggregatorsAccessorTest {
   public void testGetAggregatorDoesNotExist() throws DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
-
-    // First call get exception
-    Aggregator aggregator = null;
-    aggregator = aa.getAggregator("A0r0");
-    Assert.assertNull(aggregator);
+    aa.getAggregator("A0r0");
   }
 
   // Tests for DeleteAggregator
