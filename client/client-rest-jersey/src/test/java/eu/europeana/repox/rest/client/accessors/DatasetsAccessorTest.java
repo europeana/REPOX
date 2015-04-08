@@ -141,7 +141,7 @@ public class DatasetsAccessorTest {
   @Test(expected = DoesNotExistException.class)
   public void testGetDatasetDoesNotExist() throws InvalidArgumentsException, DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     da.getDatasetList("P0r0", 0, 1);
   }
 
@@ -168,7 +168,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(404);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     exampleCreateDatasetOai();
   }
 
@@ -223,7 +223,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(404);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     exampleCreateDatasetFile();
   }
 
@@ -278,7 +278,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(404);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     exampleUpdateDatasetOai();
   }
 
@@ -333,7 +333,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(404);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     exampleUpdateDatasetFile();
   }
 
@@ -388,7 +388,7 @@ public class DatasetsAccessorTest {
      InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
      AlreadyExistsException {
    Mockito.when(response.getStatus()).thenReturn(404);
-   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
    da.copyDataset("ds0", "ds1");
  }
 
@@ -418,6 +418,30 @@ public class DatasetsAccessorTest {
    Mockito.when(response.readEntity(Result.class))
        .thenReturn(new Result("Internal Server Error!"));
    da.copyDataset("ds0", "ds1");
+ }
+ 
+ // Tests for GetDatasetLastIngestionDate
+ @Test
+ public void testGetDatasetLastIngestionDate() throws DoesNotExistException {
+   Mockito.when(response.getStatus()).thenReturn(200);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(
+       new Result("ok"));
+   String datasetLastIngestionDate = da.getDatasetLastIngestionDate("ds0");
+   Assert.assertNotNull(datasetLastIngestionDate);
+ }
+ 
+ @Test(expected = DoesNotExistException.class)
+ public void testGetDatasetLastIngestionDateDoesNotExist() throws InternalServerErrorException, DoesNotExistException{
+   Mockito.when(response.getStatus()).thenReturn(404);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+   da.getDatasetLastIngestionDate("ds0");
+ }
+ 
+ @Test(expected = InternalServerErrorException.class)
+ public void testGetDatasetLastIngestionDateInternalServerError() throws InternalServerErrorException, DoesNotExistException{
+   Mockito.when(response.getStatus()).thenReturn(500);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Internal Server Error!"));
+   da.getDatasetLastIngestionDate("ds0");
  }
 
   //Private example methods called from many
