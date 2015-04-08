@@ -203,7 +203,7 @@ public class DatasetsAccessor {
    * @throws AlreadyExistsException
    * @throws InternalServerErrorException
    */
-  public void createDatasetOai(String providerId, String id, String name, String schema,
+  public void createDatasetOai(String providerId, String id, String name, String nameCode, boolean isSample, String schema,
       String description, String namespace, String metadataFormat, String marcFormat,
       String oaiUrl, String oaiSet, String exportDir, RecordIdPolicy recordIdPolicy,
       Map<String, MetadataTransformation> metadataTransformations)
@@ -217,8 +217,9 @@ public class DatasetsAccessor {
             recordIdPolicy, metadataTransformations);
     oaiDataSource.setMarcFormat(marcFormat);
     oaiDataSource.setExportDir(exportDir);
+    oaiDataSource.setIsSample(isSample);
     DefaultDataSourceContainer defaultDataSourceContainer =
-        new DefaultDataSourceContainer(oaiDataSource, "a0661", "Example Dataset", null);
+        new DefaultDataSourceContainer(oaiDataSource, nameCode, name, null);
 
     Response response =
         target.request(MediaType.APPLICATION_JSON).post(
@@ -277,7 +278,7 @@ public class DatasetsAccessor {
    * @throws AlreadyExistsException
    * @throws InternalServerErrorException
    */
-  public void createDatasetFile(String providerId, String id, String name, String schema,
+  public void createDatasetFile(String providerId, String id, String name, String nameCode, boolean isSample, String schema,
       String description, String namespace, String metadataFormat, String marcFormat,
       String exportDir, RecordIdPolicy recordIdPolicy, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, Iso2709Variant isoVariant, String sourceDirectory, String recordXPath,
       Map<String, MetadataTransformation> metadataTransformations)
@@ -292,9 +293,10 @@ public class DatasetsAccessor {
         metadataTransformations, recordXPath, null);
     directoryImporterDataSource.setIsoVariant(isoVariant);    
     directoryImporterDataSource.setExportDir(exportDir);
+    directoryImporterDataSource.setIsSample(isSample);
     
     DefaultDataSourceContainer defaultDataSourceContainer =
-        new DefaultDataSourceContainer(directoryImporterDataSource, "a0661", "Example Dataset", null);
+        new DefaultDataSourceContainer(directoryImporterDataSource, nameCode, name, null);
 
     Response response =
         target.request(MediaType.APPLICATION_JSON).post(
@@ -324,23 +326,151 @@ public class DatasetsAccessor {
     }
     LOGGER.info("createDatasetFile(..) success!");
   }
+  
+  /**
+   * Update a dataset by specifying the Id.
+   * @param id
+   * @param newId
+   * @param name
+   * @param nameCode
+   * @param isSample
+   * @param schema
+   * @param description
+   * @param namespace
+   * @param metadataFormat
+   * @param marcFormat
+   * @param oaiUrl
+   * @param oaiSet
+   * @param exportDir
+   * @param recordIdPolicy
+   * @param metadataTransformations
+   * @throws InvalidArgumentsException
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws AlreadyExistsException
+   * @throws InternalServerErrorException
+   */
+  public void updateDatasetOai(String id, String newId, String name, String nameCode, boolean isSample, String schema,
+      String description, String namespace, String metadataFormat, String marcFormat,
+      String oaiUrl, String oaiSet, String exportDir, RecordIdPolicy recordIdPolicy,
+      Map<String, MetadataTransformation> metadataTransformations) throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException, InternalServerErrorException
+  {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id);
+    
+    OaiDataSource oaiDataSource =
+        new OaiDataSource(null, newId, description, schema, namespace, metadataFormat, oaiUrl, oaiSet,
+            recordIdPolicy, metadataTransformations);
+    oaiDataSource.setMarcFormat(marcFormat);
+    oaiDataSource.setExportDir(exportDir);
+    oaiDataSource.setIsSample(isSample);
+    DefaultDataSourceContainer defaultDataSourceContainer =
+        new DefaultDataSourceContainer(oaiDataSource, nameCode, name, null);
 
-//  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
-//      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
-//      AlreadyExistsException {
-//    DatasetsAccessor da =
-//        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-//    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
-//    // System.out.println(dataset.getDataSource());
-//    // da.deleteDataset("exd0");
-//    // List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
-//    // System.out.println(datasetList.get(0).getDataSource().getId());
-//
-//    da.createDatasetFile("P0r0", null, "ExampleOAI",
+    Response response =
+        target.request(MediaType.APPLICATION_JSON).put(
+            Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_JSON), Response.class);
+
+    switch (response.getStatus()) {
+      case 400:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetOai(..) failure! : " + errorMessage.getResult());
+        throw new InvalidArgumentsException(errorMessage.getResult());
+      case 404:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetOai(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetOai(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetOai(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetOai(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("updateDatasetOai(..) success!");
+  }
+  
+  public void updateDatasetFile(String id, String newId, String name, String nameCode, boolean isSample, String schema,
+      String description, String namespace, String metadataFormat, String marcFormat,
+      String exportDir, RecordIdPolicy recordIdPolicy, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, Iso2709Variant isoVariant, String sourceDirectory, String recordXPath,
+      Map<String, MetadataTransformation> metadataTransformations)
+      throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id);
+    
+    DirectoryImporterDataSource directoryImporterDataSource = new DirectoryImporterDataSource(null, id, description, schema, 
+        namespace, metadataFormat, extractStrategy, retrieveStrategy, characterEncoding, sourceDirectory, recordIdPolicy, 
+        metadataTransformations, recordXPath, null);
+    directoryImporterDataSource.setIsoVariant(isoVariant);    
+    directoryImporterDataSource.setExportDir(exportDir);
+    directoryImporterDataSource.setIsSample(isSample);
+    
+    DefaultDataSourceContainer defaultDataSourceContainer =
+        new DefaultDataSourceContainer(directoryImporterDataSource, nameCode, name, null);
+
+    Response response =
+        target.request(MediaType.APPLICATION_JSON).put(
+            Entity.entity(defaultDataSourceContainer, MediaType.APPLICATION_JSON), Response.class);
+
+    switch (response.getStatus()) {
+      case 400:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new InvalidArgumentsException(errorMessage.getResult());
+      case 404:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateDatasetFile(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("updateDatasetFile(..) success!");
+  }
+  
+
+  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
+      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
+      AlreadyExistsException {
+    DatasetsAccessor da =
+        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
+    // System.out.println(dataset.getDataSource());
+    // da.deleteDataset("exd0");
+    // List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
+    // System.out.println(datasetList.get(0).getDataSource().getId());
+    
+//    da.createDatasetFile("P0r0", null, "ExampleOAI", "nc", true,
 //        "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
 //        "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
 //        new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
 //        CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
-//  }
+//    da.updateDatasetOai("a0662", "a0660", "ABO", "a0660", true,
+//        "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//        "http://www.europeana.eu/schemas/ese/", "ese", null, "http://oai.onb.ac.at/repox2/OAIHandler", "abo", "/tmp/export3/a0660", 
+//        new IdProvidedRecordIdPolicy(), null);
+    
+    da.updateDatasetFile("ncr0", null, "ExampleOAIAfter", "nc", true,
+      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+  }
 
 }
