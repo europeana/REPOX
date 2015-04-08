@@ -451,7 +451,7 @@ public class DatasetsAccessorTest {
     Mockito.when(response.getStatus()).thenReturn(200);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("10"));
     int datasetRecordCount = da.getDatasetRecordCount("ds0");
-    Assert.assertNotNull(datasetRecordCount);
+    Assert.assertEquals(10, datasetRecordCount);
   }
 
   @Test(expected = DoesNotExistException.class)
