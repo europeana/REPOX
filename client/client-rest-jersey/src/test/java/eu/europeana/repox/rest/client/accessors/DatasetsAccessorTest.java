@@ -177,7 +177,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
     exampleCreateDatasetOai();
   }
 
@@ -232,7 +232,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
     exampleCreateDatasetFile();
   }
 
@@ -287,7 +287,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
     exampleUpdateDatasetOai();
   }
 
@@ -342,7 +342,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
     exampleUpdateDatasetFile();
   }
 
@@ -396,7 +396,7 @@ public class DatasetsAccessorTest {
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
       AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
     da.copyDataset("ds0", "ds1");
   }
 
