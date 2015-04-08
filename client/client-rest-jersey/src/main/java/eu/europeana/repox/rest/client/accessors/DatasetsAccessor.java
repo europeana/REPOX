@@ -524,6 +524,13 @@ public class DatasetsAccessor {
     LOGGER.info("copyDataset(..) success!");
   }
 
+  /**
+   * Get the last ingestion date of the dataset.
+   * @param id
+   * @return
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
   public String getDatasetLastIngestionDate(String id) throws DoesNotExistException,
       InternalServerErrorException {
     WebTarget target =
@@ -543,6 +550,34 @@ public class DatasetsAccessor {
     LOGGER.info("getDatasetLastIngestionDate(..) success!");
     Result result = response.readEntity(Result.class);
     return result.getResult();
+  }
+  
+  /**
+   * Get the number of records of the dataset.
+   * @param id
+   * @return
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public int getDatasetRecordCount(String id) throws DoesNotExistException, InternalServerErrorException
+  {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/" + DatasetOptionListContainer.COUNT);
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetRecordCount(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetRecordCount(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("getDatasetRecordCount(..) success!");
+    Result result = response.readEntity(Result.class);
+    return Integer.parseInt(result.getResult());
   }
 
   public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
@@ -576,7 +611,8 @@ public class DatasetsAccessor {
     // CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
 
 //    da.copyDataset("a0660", "a0662");
-    System.out.println(da.getDatasetLastIngestionDate("a0660"));
+//    System.out.println(da.getDatasetLastIngestionDate("a0660"));
+    System.out.println(da.getDatasetRecordCount("a0660"));
   }
 
 }
