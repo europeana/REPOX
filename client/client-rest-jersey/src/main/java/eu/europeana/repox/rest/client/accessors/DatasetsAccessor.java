@@ -396,6 +396,33 @@ public class DatasetsAccessor {
     LOGGER.info("updateDatasetOai(..) success!");
   }
   
+  /**
+   * Update a dataset by specifying the Id.
+   * @param id
+   * @param newId
+   * @param name
+   * @param nameCode
+   * @param isSample
+   * @param schema
+   * @param description
+   * @param namespace
+   * @param metadataFormat
+   * @param marcFormat
+   * @param exportDir
+   * @param recordIdPolicy
+   * @param extractStrategy
+   * @param retrieveStrategy
+   * @param characterEncoding
+   * @param isoVariant
+   * @param sourceDirectory
+   * @param recordXPath
+   * @param metadataTransformations
+   * @throws InvalidArgumentsException
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws AlreadyExistsException
+   * @throws InternalServerErrorException
+   */
   public void updateDatasetFile(String id, String newId, String name, String nameCode, boolean isSample, String schema,
       String description, String namespace, String metadataFormat, String marcFormat,
       String exportDir, RecordIdPolicy recordIdPolicy, FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy, CharacterEncoding characterEncoding, Iso2709Variant isoVariant, String sourceDirectory, String recordXPath,
@@ -444,6 +471,35 @@ public class DatasetsAccessor {
     LOGGER.info("updateDatasetFile(..) success!");
   }
   
+  public void copyDataset(String id, String newId) throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException
+  {
+    WebTarget target = client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id).queryParam("newDatasetId", newId);
+    Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(null, MediaType.APPLICATION_JSON), Response.class);
+    
+    switch (response.getStatus()) {
+      case 400:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("copyDataset(..) failure! : " + errorMessage.getResult());
+        throw new InvalidArgumentsException(errorMessage.getResult());
+      case 404:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("copyDataset(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("copyDataset(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("copyDataset(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("copyDataset(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("copyDataset(..) success!");
+  }
 
   public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
       InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
@@ -466,11 +522,13 @@ public class DatasetsAccessor {
 //        "http://www.europeana.eu/schemas/ese/", "ese", null, "http://oai.onb.ac.at/repox2/OAIHandler", "abo", "/tmp/export3/a0660", 
 //        new IdProvidedRecordIdPolicy(), null);
     
-    da.updateDatasetFile("ncr0", null, "ExampleOAIAfter", "nc", true,
-      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
-      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
-      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
-      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+//    da.updateDatasetFile("ncr0", null, "ExampleOAIAfter", "nc", true,
+//      "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//      "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661", 
+//      new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new FolderFileRetrieveStrategy(), 
+//      CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+    
+    da.copyDataset("a0660", "a0662");
   }
 
 }

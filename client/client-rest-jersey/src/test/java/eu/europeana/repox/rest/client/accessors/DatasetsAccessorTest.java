@@ -364,6 +364,61 @@ public class DatasetsAccessorTest {
         .thenReturn(new Result("Internal Server Error!"));
     exampleUpdateDatasetFile();
   }
+  
+//Tests for CopyDataset
+ @Test
+ public void testCopyDataset() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(201);
+   da.copyDataset("ds0", "ds1");
+ }
+
+ @Test(expected = InvalidArgumentsException.class)
+ public void testCopyDatasetInvalidArguments() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(400);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.copyDataset("ds0", "ds1");
+ }
+
+ @Test(expected = DoesNotExistException.class)
+ public void testCopyDatasetDoesNotExist() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(404);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.copyDataset("ds0", "ds1");
+ }
+
+ @Test(expected = MissingArgumentsException.class)
+ public void testCopyDatasetMissingArguments() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(406);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+   da.copyDataset("ds0", "ds1");
+ }
+
+ @Test(expected = AlreadyExistsException.class)
+ public void testCopyDatasetAlreadyExists() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(409);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
+   da.copyDataset("ds0", "ds1");
+ }
+
+ @Test(expected = InternalServerErrorException.class)
+ public void testCopyDatasetInternalServerError() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(500);
+   Mockito.when(response.readEntity(Result.class))
+       .thenReturn(new Result("Internal Server Error!"));
+   da.copyDataset("ds0", "ds1");
+ }
 
   //Private example methods called from many
   private void exampleCreateDatasetOai() throws InternalServerErrorException,
