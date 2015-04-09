@@ -15,6 +15,7 @@ package eu.europeana.repox.rest.client.accessors;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
@@ -31,6 +32,8 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.task.ScheduledTask;
+import pt.utl.ist.task.ScheduledTask.Frequency;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
@@ -122,19 +125,20 @@ public class HarvestAccessor {
     Result errorMessage = response.readEntity(Result.class);
     LOGGER.info("startHarvest(..) success! : " + errorMessage.getResult());
   }
-  
+
   /**
    * Cancels a harvesting ingest.
+   * 
    * @param id
    * @throws DoesNotExistException
    * @throws InternalServerErrorException
    */
-  public void cancelHarvest(String id) throws DoesNotExistException, InternalServerErrorException
-  {
-    WebTarget target = client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL);
-    
-    Response response =
-        target.request(MediaType.APPLICATION_JSON).delete();
+  public void cancelHarvest(String id) throws DoesNotExistException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+            + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL);
+
+    Response response = target.request(MediaType.APPLICATION_JSON).delete();
 
     switch (response.getStatus()) {
       case 404:
@@ -150,14 +154,71 @@ public class HarvestAccessor {
     LOGGER.info("cancelHarvest(..) success! : " + errorMessage.getResult());
   }
 
+  /**
+   * Schedules an automatic harvesting.
+   * @param id
+   * @param firstDateTime
+   * @param frequency
+   * @param xmonths
+   * @param incremental
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws AlreadyExistsException
+   */
+  public void scheduleHarvest(String id, Calendar firstDateTime, Frequency frequency, int xmonths,
+      boolean incremental) throws DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException {
+    WebTarget target =
+        client.target(
+            restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+                + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE)
+            .queryParam(HarvestOptionListContainer.INCREMENTAL, incremental);
+    
+    ScheduledTask scheduledTask = new ScheduledTask();
+    scheduledTask.setFirstRun(firstDateTime);
+    scheduledTask.setFrequency(frequency);
+    scheduledTask.setXmonths(new Integer(xmonths));
+
+    Response response =
+        target.request(MediaType.APPLICATION_JSON).post(
+            Entity.entity(scheduledTask, MediaType.APPLICATION_JSON), Response.class);
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("scheduleHarvest(..) success!");
+  }
+
 
   public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
-      DoesNotExistException {
+      DoesNotExistException, MissingArgumentsException {
     HarvestAccessor ha =
         new HarvestAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-//    ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
-    
-    ha.cancelHarvest("a0660");
+    // ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
+
+//    ha.cancelHarvest("a0660");
+    Calendar date = Calendar.getInstance();
+    date.set(Calendar.YEAR, 2015);
+    date.set(Calendar.MONTH, Calendar.APRIL);
+    date.set(Calendar.DAY_OF_MONTH, 9);
+    date.set(Calendar.HOUR_OF_DAY, 13);
+    date.set(Calendar.MINUTE, 22);
+    ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
 
   }
 
