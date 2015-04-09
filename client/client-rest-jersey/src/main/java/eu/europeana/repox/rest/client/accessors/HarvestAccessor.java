@@ -156,6 +156,7 @@ public class HarvestAccessor {
 
   /**
    * Schedules an automatic harvesting.
+   * 
    * @param id
    * @param firstDateTime
    * @param frequency
@@ -173,7 +174,7 @@ public class HarvestAccessor {
             restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
                 + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULE)
             .queryParam(HarvestOptionListContainer.INCREMENTAL, incremental);
-    
+
     ScheduledTask scheduledTask = new ScheduledTask();
     scheduledTask.setFirstRun(firstDateTime);
     scheduledTask.setFrequency(frequency);
@@ -204,6 +205,28 @@ public class HarvestAccessor {
     LOGGER.info("scheduleHarvest(..) success!");
   }
 
+  public void deleteScheduledTask(String id, String taskId) throws DoesNotExistException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+            + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES + "/"
+            + taskId);
+    
+    Response response = target.request(MediaType.APPLICATION_JSON).delete();
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("deleteScheduledTask(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("deleteScheduledTask(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result errorMessage = response.readEntity(Result.class);
+    LOGGER.info("deleteScheduledTask(..) success! : " + errorMessage.getResult());
+  }
+
 
   public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
       DoesNotExistException, MissingArgumentsException {
@@ -211,14 +234,16 @@ public class HarvestAccessor {
         new HarvestAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
     // ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
 
-//    ha.cancelHarvest("a0660");
-    Calendar date = Calendar.getInstance();
-    date.set(Calendar.YEAR, 2015);
-    date.set(Calendar.MONTH, Calendar.APRIL);
-    date.set(Calendar.DAY_OF_MONTH, 9);
-    date.set(Calendar.HOUR_OF_DAY, 13);
-    date.set(Calendar.MINUTE, 22);
-    ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
+    // ha.cancelHarvest("a0660");
+//    Calendar date = Calendar.getInstance();
+//    date.set(Calendar.YEAR, 2015);
+//    date.set(Calendar.MONTH, Calendar.APRIL);
+//    date.set(Calendar.DAY_OF_MONTH, 9);
+//    date.set(Calendar.HOUR_OF_DAY, 13);
+//    date.set(Calendar.MINUTE, 22);
+//    ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
+    
+    ha.deleteScheduledTask("a0660", "a0660_4");
 
   }
 

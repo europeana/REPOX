@@ -171,5 +171,28 @@ public class HarvestAccessorTest {
     ha.scheduleHarvest("ds0", Calendar.getInstance(), Frequency.WEEKLY, 10, false);
   }
 
+//Tests for deleteScheduledTask
+ @Test
+ public void testDeleteScheduledTask() throws AlreadyExistsException, DoesNotExistException {
+   Mockito.when(response.getStatus()).thenReturn(200);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+   ha.deleteScheduledTask("ds0", "ds0_2");
+ }
 
+ @Test(expected = DoesNotExistException.class)
+ public void testDeleteScheduledTaskDoesNotExist() throws DoesNotExistException,
+     AlreadyExistsException, MissingArgumentsException {
+   Mockito.when(response.getStatus()).thenReturn(404);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+   ha.deleteScheduledTask("ds0", "ds0_2");
+ }
+
+ @Test(expected = InternalServerErrorException.class)
+ public void testDeleteScheduledTaskInternalServerError() throws AlreadyExistsException,
+     DoesNotExistException, MissingArgumentsException {
+   Mockito.when(response.getStatus()).thenReturn(500);
+   Mockito.when(response.readEntity(Result.class))
+       .thenReturn(new Result("Internal Server Error!"));
+   ha.deleteScheduledTask("ds0", "ds0_2");
+ }
 }
