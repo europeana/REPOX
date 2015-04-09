@@ -22,7 +22,6 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,9 +34,9 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
-import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.ScheduledTask.Frequency;
+import pt.utl.ist.task.Task;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
@@ -239,7 +238,8 @@ public class HarvestAccessor {
     LOGGER.info("deleteScheduledTask(..) success! : " + errorMessage.getResult());
   }
 
-  public List<ScheduledTask> getDatasetScheduledTasks(String id) throws DoesNotExistException, InternalServerErrorException {
+  public List<ScheduledTask> getDatasetScheduledTasks(String id) throws DoesNotExistException,
+      InternalServerErrorException {
     WebTarget target =
         client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
             + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES);
@@ -268,7 +268,8 @@ public class HarvestAccessor {
    * @return String containing the status
    * @throws DoesNotExistException
    */
-  public String getDatasetHarvestingStatus(String id) throws DoesNotExistException, InternalServerErrorException {
+  public String getDatasetHarvestingStatus(String id) throws DoesNotExistException,
+      InternalServerErrorException {
     WebTarget target =
         client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
             + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.STATUS);
@@ -291,16 +292,18 @@ public class HarvestAccessor {
 
   /**
    * Gets the logs of the last ingest.
+   * 
    * @param id
    * @return String with xml of the log
    * @throws DoesNotExistException
    * @throws InternalServerErrorException
    */
-  public String getDatasetLastIngestLog(String id) throws DoesNotExistException, InternalServerErrorException {
+  public String getDatasetLastIngestLog(String id) throws DoesNotExistException,
+      InternalServerErrorException {
     WebTarget target =
         client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
             + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG);
-    Response response = target.request(MediaType.APPLICATION_XML).get(); //Needs to be xml
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
 
     switch (response.getStatus()) {
       case 404:
@@ -315,6 +318,21 @@ public class HarvestAccessor {
     Result result = response.readEntity(Result.class);
     LOGGER.info("getDatasetLastIngestLog(..) success!");
     return result.getResult();
+  }
+
+  /**
+   * Gets a list of currently executing dataset harvests.
+   * @return list with the running tasks
+   */
+  public List<Task> getCurrentHarvestsList() {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/"
+            + HarvestOptionListContainer.HARVESTS);
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+    List<Task> tasksList = response.readEntity(new GenericType<List<Task>>() {});
+    LOGGER.info("getCurrentHarvestsList(..) success!");
+    return tasksList;
   }
 
   public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
@@ -335,8 +353,10 @@ public class HarvestAccessor {
     // ha.deleteScheduledTask("a0660", "a0660_4");
 
     // List<ScheduledTask> datasetScheduledTasks = ha.getDatasetScheduledTasks("a0660");
-//    System.out.println(ha.getDatasetHarvestingStatus("a0660"));
+    // System.out.println(ha.getDatasetHarvestingStatus("a0660"));
     System.out.println(ha.getDatasetLastIngestLog("a0660"));
+    
+//    System.out.println(ha.getCurrentHarvestsList().size());
   }
 
 }

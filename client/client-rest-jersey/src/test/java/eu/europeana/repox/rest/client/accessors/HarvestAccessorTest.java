@@ -62,7 +62,6 @@ public class HarvestAccessorTest {
 
     Mockito.when(client.target(Mockito.anyString())).thenReturn(webTarget);
     Mockito.when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(builder);
-    Mockito.when(webTarget.request(MediaType.APPLICATION_XML)).thenReturn(builder);
     Mockito.when(webTarget.queryParam(Mockito.anyString(), Mockito.anyObject())).thenReturn(
         webTarget);
     Mockito.when(builder.get()).thenReturn(response);
@@ -265,7 +264,14 @@ public class HarvestAccessorTest {
         .thenReturn(new Result("Internal Server Error!"));
     ha.getDatasetLastIngestLog("ds0");
   }
-
+  
+//Tests for GetCurrentHarvestsList
+ @Test
+ public void testGetCurrentHarvestsList(){
+   Mockito.when(response.getStatus()).thenReturn(200);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+   ha.getCurrentHarvestsList();
+ }
 
 
 }
