@@ -38,12 +38,9 @@ import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.dataProvider.dataSource.FileExtractStrategy;
 import pt.utl.ist.dataProvider.dataSource.FileRetrieveStrategy;
-import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.RecordIdPolicy;
-import pt.utl.ist.dataProvider.dataSource.SimpleFileExtractStrategy;
 import pt.utl.ist.marc.CharacterEncoding;
 import pt.utl.ist.marc.DirectoryImporterDataSource;
-import pt.utl.ist.marc.FolderFileRetrieveStrategy;
 import pt.utl.ist.marc.iso2709.shared.Iso2709Variant;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
 import pt.utl.ist.oai.OaiDataSource;
@@ -53,13 +50,15 @@ import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
+ * Access functionality to the datasets.
+ * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Apr 7, 2015
  */
 public class DatasetsAccessor {
   private URL restUrl;
   private Client client = JerseyClientBuilder.newClient();
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProvidersAccessor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DatasetsAccessor.class);
 
   /**
    * Setup DatasetsAccessor with the target Url, username and password

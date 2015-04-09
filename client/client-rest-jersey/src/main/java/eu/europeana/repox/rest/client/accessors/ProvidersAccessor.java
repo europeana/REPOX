@@ -40,6 +40,8 @@ import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
+ * Access functionality to the providers.
+ * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Apr 7, 2015
  */

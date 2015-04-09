@@ -42,7 +42,7 @@ public class HarvestAccessorTest {
   private static DatasetsAccessor da;
 
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void setUpBeforeClass() throws IOException {
     restUrl = new URL("http://examp.com/er");
     client = Mockito.mock(Client.class);
     webTarget = Mockito.mock(WebTarget.class);
