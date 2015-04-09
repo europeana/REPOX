@@ -16,11 +16,14 @@ package eu.europeana.repox.rest.client.accessors;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,11 +35,11 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.DatasetOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.HarvestOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.task.ScheduledTask.Frequency;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
-import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
@@ -205,12 +208,21 @@ public class HarvestAccessor {
     LOGGER.info("scheduleHarvest(..) success!");
   }
 
-  public void deleteScheduledTask(String id, String taskId) throws DoesNotExistException, InternalServerErrorException {
+  /**
+   * Deletes an automatic harvesting.
+   * 
+   * @param id
+   * @param taskId
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public void deleteScheduledTask(String id, String taskId) throws DoesNotExistException,
+      InternalServerErrorException {
     WebTarget target =
         client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
             + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES + "/"
             + taskId);
-    
+
     Response response = target.request(MediaType.APPLICATION_JSON).delete();
 
     switch (response.getStatus()) {
@@ -227,6 +239,83 @@ public class HarvestAccessor {
     LOGGER.info("deleteScheduledTask(..) success! : " + errorMessage.getResult());
   }
 
+  public List<ScheduledTask> getDatasetScheduledTasks(String id) throws DoesNotExistException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+            + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.SCHEDULES);
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetScheduledTasks(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetScheduledTasks(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    List<ScheduledTask> scheduleTasksList =
+        response.readEntity(new GenericType<List<ScheduledTask>>() {});
+    LOGGER.info("getDatasetScheduledTasks(..) success!");
+    return scheduleTasksList;
+  }
+
+  /**
+   * Gets the status of a specific dataset harvesting.
+   * 
+   * @param id
+   * @return String containing the status
+   * @throws DoesNotExistException
+   */
+  public String getDatasetHarvestingStatus(String id) throws DoesNotExistException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+            + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.STATUS);
+    Response response = target.request(MediaType.APPLICATION_JSON).get();
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetHarvestingStatus(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetHarvestingStatus(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result result = response.readEntity(Result.class);
+    LOGGER.info("getDatasetHarvestingStatus(..) success!");
+    return result.getResult();
+  }
+
+  /**
+   * Gets the logs of the last ingest.
+   * @param id
+   * @return String with xml of the log
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public String getDatasetLastIngestLog(String id) throws DoesNotExistException, InternalServerErrorException {
+    WebTarget target =
+        client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
+            + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG);
+    Response response = target.request(MediaType.APPLICATION_XML).get(); //Needs to be xml
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetLastIngestLog(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("getDatasetLastIngestLog(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result result = response.readEntity(Result.class);
+    LOGGER.info("getDatasetLastIngestLog(..) success!");
+    return result.getResult();
+  }
 
   public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
       DoesNotExistException, MissingArgumentsException {
@@ -235,16 +324,19 @@ public class HarvestAccessor {
     // ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
 
     // ha.cancelHarvest("a0660");
-//    Calendar date = Calendar.getInstance();
-//    date.set(Calendar.YEAR, 2015);
-//    date.set(Calendar.MONTH, Calendar.APRIL);
-//    date.set(Calendar.DAY_OF_MONTH, 9);
-//    date.set(Calendar.HOUR_OF_DAY, 13);
-//    date.set(Calendar.MINUTE, 22);
-//    ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
-    
-    ha.deleteScheduledTask("a0660", "a0660_4");
+    // Calendar date = Calendar.getInstance();
+    // date.set(Calendar.YEAR, 2015);
+    // date.set(Calendar.MONTH, Calendar.APRIL);
+    // date.set(Calendar.DAY_OF_MONTH, 10);
+    // date.set(Calendar.HOUR_OF_DAY, 13);
+    // date.set(Calendar.MINUTE, 22);
+    // ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
 
+    // ha.deleteScheduledTask("a0660", "a0660_4");
+
+    // List<ScheduledTask> datasetScheduledTasks = ha.getDatasetScheduledTasks("a0660");
+//    System.out.println(ha.getDatasetHarvestingStatus("a0660"));
+    System.out.println(ha.getDatasetLastIngestLog("a0660"));
   }
 
 }

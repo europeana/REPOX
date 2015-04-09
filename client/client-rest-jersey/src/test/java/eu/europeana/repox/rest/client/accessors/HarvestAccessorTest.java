@@ -62,9 +62,10 @@ public class HarvestAccessorTest {
 
     Mockito.when(client.target(Mockito.anyString())).thenReturn(webTarget);
     Mockito.when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(builder);
+    Mockito.when(webTarget.request(MediaType.APPLICATION_XML)).thenReturn(builder);
     Mockito.when(webTarget.queryParam(Mockito.anyString(), Mockito.anyObject())).thenReturn(
         webTarget);
-    // Mockito.when(builder.get()).thenReturn(response);
+    Mockito.when(builder.get()).thenReturn(response);
     Mockito.when(builder.delete()).thenReturn(response);
     Mockito.when(
         builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
@@ -171,28 +172,100 @@ public class HarvestAccessorTest {
     ha.scheduleHarvest("ds0", Calendar.getInstance(), Frequency.WEEKLY, 10, false);
   }
 
-//Tests for deleteScheduledTask
- @Test
- public void testDeleteScheduledTask() throws AlreadyExistsException, DoesNotExistException {
-   Mockito.when(response.getStatus()).thenReturn(200);
-   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
-   ha.deleteScheduledTask("ds0", "ds0_2");
- }
+  // Tests for deleteScheduledTask
+  @Test
+  public void testDeleteScheduledTask() throws AlreadyExistsException, DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+    ha.deleteScheduledTask("ds0", "ds0_2");
+  }
 
- @Test(expected = DoesNotExistException.class)
- public void testDeleteScheduledTaskDoesNotExist() throws DoesNotExistException,
-     AlreadyExistsException, MissingArgumentsException {
-   Mockito.when(response.getStatus()).thenReturn(404);
-   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
-   ha.deleteScheduledTask("ds0", "ds0_2");
- }
+  @Test(expected = DoesNotExistException.class)
+  public void testDeleteScheduledTaskDoesNotExist() throws DoesNotExistException,
+      AlreadyExistsException, MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ha.deleteScheduledTask("ds0", "ds0_2");
+  }
 
- @Test(expected = InternalServerErrorException.class)
- public void testDeleteScheduledTaskInternalServerError() throws AlreadyExistsException,
-     DoesNotExistException, MissingArgumentsException {
-   Mockito.when(response.getStatus()).thenReturn(500);
-   Mockito.when(response.readEntity(Result.class))
-       .thenReturn(new Result("Internal Server Error!"));
-   ha.deleteScheduledTask("ds0", "ds0_2");
- }
+  @Test(expected = InternalServerErrorException.class)
+  public void testDeleteScheduledTaskInternalServerError() throws AlreadyExistsException,
+      DoesNotExistException, MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ha.deleteScheduledTask("ds0", "ds0_2");
+  }
+
+  // Tests for GetDatasetScheduledTasks
+  @Test
+  public void testGetDatasetScheduledTasks() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+    ha.getDatasetScheduledTasks("ds0");
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testGetDatasetScheduledTasksDoesNotExist() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ha.getDatasetScheduledTasks("ds0");
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testGetDatasetScheduledTasksInternalServerError() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ha.getDatasetScheduledTasks("ds0");
+  }
+
+  // Tests for GetDatasetHarvestingStatus
+  @Test
+  public void testGetDatasetHarvestingStatus() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+    ha.getDatasetHarvestingStatus("ds0");
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testGetDatasetHarvestingStatusDoesNotExist() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ha.getDatasetHarvestingStatus("ds0");
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testGetDatasetHarvestingStatusInternalServerError() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ha.getDatasetHarvestingStatus("ds0");
+  }
+
+  // Tests for GetDatasetLastIngestLog
+  @Test
+  public void testGetDatasetLastIngestLog() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+    ha.getDatasetLastIngestLog("ds0");
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testGetDatasetLastIngestLogDoesNotExist() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ha.getDatasetLastIngestLog("ds0");
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testGetDatasetLastIngestLogInternalServerError() throws DoesNotExistException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ha.getDatasetLastIngestLog("ds0");
+  }
+
+
+
 }
