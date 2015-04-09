@@ -95,7 +95,7 @@ public class HarvestAccessor {
    * @throws DoesNotExistException
    */
   public void startHarvest(String id, String type) throws AlreadyExistsException,
-      DoesNotExistException {
+      DoesNotExistException, InternalServerErrorException {
     WebTarget target =
         client.target(
             restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/"
@@ -122,13 +122,42 @@ public class HarvestAccessor {
     Result errorMessage = response.readEntity(Result.class);
     LOGGER.info("startHarvest(..) success! : " + errorMessage.getResult());
   }
+  
+  /**
+   * Cancels a harvesting ingest.
+   * @param id
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public void cancelHarvest(String id) throws DoesNotExistException, InternalServerErrorException
+  {
+    WebTarget target = client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.CANCEL);
+    
+    Response response =
+        target.request(MediaType.APPLICATION_JSON).delete();
+
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("cancelHarvest(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("cancelHarvest(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result errorMessage = response.readEntity(Result.class);
+    LOGGER.info("cancelHarvest(..) success! : " + errorMessage.getResult());
+  }
 
 
   public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
       DoesNotExistException {
     HarvestAccessor ha =
         new HarvestAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
+//    ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
+    
+    ha.cancelHarvest("a0660");
 
   }
 
