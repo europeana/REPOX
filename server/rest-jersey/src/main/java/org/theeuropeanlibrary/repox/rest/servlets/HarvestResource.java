@@ -414,7 +414,7 @@ public class HarvestResource {
      */
     @GET
     @Path("/" + DatasetOptionListContainer.DATASETID + "/" + HarvestOptionListContainer.HARVEST + "/" + HarvestOptionListContainer.LOG)
-    @Produces({ MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Gets the logs of the last ingest.", httpMethod = "GET", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing an Dataset)"),
@@ -450,7 +450,7 @@ public class HarvestResource {
             //            throw new InternalServerErrorException("Error in server : " + e.getMessage());
         }
 
-        return Response.status(200).entity(log).build();
+        return Response.status(200).entity(new Result(log)).build();
     }
 
     /**
