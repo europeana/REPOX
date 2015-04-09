@@ -285,7 +285,7 @@ public class HarvestResource {
                     throw new InternalServerErrorException("Error in server : " + e.getMessage());
                 }
 
-                return Response.status(201).entity(new Result("Task for dataset with id " + datasetId + " created!")).build();
+                return Response.status(201).entity(new Result("Task for dataset with id '" + datasetId + "' created!")).build();
             }
             else
                 return Response.status(500).entity(new Result("Invalid task instance in body!")).build();
