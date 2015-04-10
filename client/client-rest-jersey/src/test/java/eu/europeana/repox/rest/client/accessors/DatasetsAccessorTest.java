@@ -471,6 +471,37 @@ public class DatasetsAccessorTest {
     da.getDatasetRecordCount("ds0");
   }
 
+  // Tests for ExportDataset
+  @Test
+  public void testExportDataset() throws DoesNotExistException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(201);
+    da.exportDataset("ds0", null);
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testExportDatasetDoesNotExist() throws DoesNotExistException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    da.exportDataset("ds0", null);
+  }
+
+
+  @Test(expected = AlreadyExistsException.class)
+  public void testExportDatasetAlreadyExists() throws DoesNotExistException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(409);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
+    da.exportDataset("ds0", null);
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testExportDatasetInternalServerError() throws DoesNotExistException,
+      AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    da.exportDataset("ds0", null);
+  }
+
   // Private example methods called from many
   private void exampleCreateDatasetOai() throws InternalServerErrorException,
       InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,

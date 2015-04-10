@@ -578,6 +578,35 @@ public class DatasetsAccessor {
     Result result = response.readEntity(Result.class);
     return Integer.parseInt(result.getResult());
   }
+  
+  /**
+   * Initiates an export of data.
+   * @param id
+   * @param format
+   * @throws DoesNotExistException
+   * @throws AlreadyExistsException
+   */
+  public void exportDataset(String id, String format) throws DoesNotExistException, AlreadyExistsException
+  {
+    WebTarget target = client.target(restUrl + "/" + DatasetOptionListContainer.DATASETS + "/" + id + "/" + DatasetOptionListContainer.EXPORT).queryParam(DatasetOptionListContainer.FORMAT, format);
+    Response response = target.request(MediaType.APPLICATION_JSON).post(null, Response.class);
+    
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("exportDataset(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("exportDataset(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("exportDataset(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("exportDataset(..) success!");
+  }
 
   public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
       InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
@@ -611,7 +640,8 @@ public class DatasetsAccessor {
 
 //    da.copyDataset("a0660", "a0662");
 //    System.out.println(da.getDatasetLastIngestionDate("a0660"));
-    System.out.println(da.getDatasetRecordCount("a0660"));
+//    System.out.println(da.getDatasetRecordCount("a0660"));
+    da.exportDataset("a0660", null);
   }
 
 }
