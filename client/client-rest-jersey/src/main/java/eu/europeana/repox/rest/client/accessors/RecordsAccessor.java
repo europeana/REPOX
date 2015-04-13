@@ -13,17 +13,27 @@
  */
 package eu.europeana.repox.rest.client.accessors;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
@@ -31,10 +41,13 @@ import org.slf4j.LoggerFactory;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
+import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -146,6 +159,29 @@ public class RecordsAccessor {
     Result result = response.readEntity(Result.class);
     LOGGER.info("removeRecord(..) success! : " + result.getResult());
   }
+  
+  public void createRecord(String datasetId, String recordId, String record) throws DoesNotExistException, MissingArgumentsException, InternalServerErrorException
+  {    
+    WebTarget target = client.target(restUrl + "/" + RecordOptionListContainer.RECORDS).queryParam("datasetId", datasetId).queryParam("recordId", recordId);
+    Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(record, MediaType.APPLICATION_XML), Response.class);
+    
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createRecord(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createRecord(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createRecord(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result result = response.readEntity(Result.class);
+    LOGGER.info("createRecord(..) success! : " + result.getResult());
+  }
 
   public static void main(String[] args) throws MalformedURLException, InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, UnsupportedEncodingException, FileNotFoundException, MissingArgumentsException {
     RecordsAccessor ra =
@@ -156,7 +192,8 @@ public class RecordsAccessor {
 //    String s = ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808");
 //    System.out.println(s);
     
-    ra.removeRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808", RecordOptionListContainer.ERASE);
+//    ra.removeRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808", RecordOptionListContainer.ERASE);
+    ra.createRecord("ncr0", "id0", "<root>nothing</root>");
   }
 
 }

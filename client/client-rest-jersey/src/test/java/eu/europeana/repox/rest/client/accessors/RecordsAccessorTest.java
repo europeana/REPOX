@@ -18,6 +18,7 @@ import java.net.URL;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -63,74 +64,111 @@ public class RecordsAccessorTest {
     Mockito.when(webTarget.queryParam(Mockito.anyString(), Mockito.anyObject())).thenReturn(
         webTarget);
     Mockito.when(builder.get()).thenReturn(response);
-     Mockito.when(builder.delete()).thenReturn(response);
-    // Mockito.when(
-    // builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
-    // Mockito.any(Class.class))).thenReturn(response);
-    // Mockito.when(
-    // builder.put(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
-    // Mockito.any(Class.class))).thenReturn(response);
+    Mockito.when(builder.delete()).thenReturn(response);
+    Mockito.when(
+        builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
+            Mockito.any(Class.class))).thenReturn(response);
+    Mockito.when(
+        builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_XML),
+            Mockito.any(Class.class))).thenReturn(response);
   }
 
   // Tests for GetRecord
   @Test
-  public void testGetRecord() throws DoesNotExistException, InternalServerErrorException, InvalidArgumentsException {
+  public void testGetRecord() throws DoesNotExistException, InternalServerErrorException,
+      InvalidArgumentsException {
     Mockito.when(response.getStatus()).thenReturn(200);
-    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("<root>xml record</root>"));
+    Mockito.when(response.readEntity(Result.class)).thenReturn(
+        new Result("<root>xml record</root>"));
     String record = ra.getRecord("recordId");
     Assert.assertNotNull(record);
   }
 
   @Test(expected = DoesNotExistException.class)
-  public void testGetRecordDoesNotExist() throws DoesNotExistException, InternalServerErrorException, InvalidArgumentsException {
+  public void testGetRecordDoesNotExist() throws DoesNotExistException,
+      InternalServerErrorException, InvalidArgumentsException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     ra.getRecord("recordId");
   }
 
   @Test(expected = InternalServerErrorException.class)
-  public void testGetRecordInternalServerError() throws DoesNotExistException, InternalServerErrorException, InvalidArgumentsException {
+  public void testGetRecordInternalServerError() throws DoesNotExistException,
+      InternalServerErrorException, InvalidArgumentsException {
     Mockito.when(response.getStatus()).thenReturn(500);
     Mockito.when(response.readEntity(Result.class))
         .thenReturn(new Result("Internal Server Error!"));
     ra.getRecord("recordId");
   }
 
-//Tests for RemoveRecord
- @Test
- public void testRemoveRecord() throws InternalServerErrorException,
-     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
-     AlreadyExistsException {
-   Mockito.when(response.getStatus()).thenReturn(200);
-   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
- }
+  // Tests for RemoveRecord
+  @Test
+  public void testRemoveRecord() throws InternalServerErrorException, InvalidArgumentsException,
+      DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(200);
+    ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+  }
 
- @Test(expected = DoesNotExistException.class)
- public void testRemoveRecordDoesNotExist() throws InternalServerErrorException,
-     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
-     AlreadyExistsException {
-   Mockito.when(response.getStatus()).thenReturn(404);
-   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
-   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
- }
+  @Test(expected = DoesNotExistException.class)
+  public void testRemoveRecordDoesNotExist() throws InternalServerErrorException,
+      InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+  }
 
- @Test(expected = MissingArgumentsException.class)
- public void testRemoveRecordMissingArguments() throws InternalServerErrorException,
-     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
-     AlreadyExistsException {
-   Mockito.when(response.getStatus()).thenReturn(406);
-   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
-   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
- }
+  @Test(expected = MissingArgumentsException.class)
+  public void testRemoveRecordMissingArguments() throws InternalServerErrorException,
+      InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(406);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
+    ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+  }
 
- @Test(expected = InternalServerErrorException.class)
- public void testRemoveRecordInternalServerError() throws InternalServerErrorException,
-     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
-     AlreadyExistsException {
-   Mockito.when(response.getStatus()).thenReturn(500);
-   Mockito.when(response.readEntity(Result.class))
-       .thenReturn(new Result("Internal Server Error!"));
-   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
- }
+  @Test(expected = InternalServerErrorException.class)
+  public void testRemoveRecordInternalServerError() throws InternalServerErrorException,
+      InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+  }
+
+  // Tests for CreateRecord
+  @Test
+  public void testCreateRecord() throws InternalServerErrorException, DoesNotExistException,
+      MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(201);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Success!"));
+    ra.createRecord("ds0", "rd0", "<root>example</root>");
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testCreateRecordDoesNotExist() throws InternalServerErrorException,
+      DoesNotExistException, MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ra.createRecord("ds0", "rd0", "<root>example</root>");
+  }
+
+  @Test(expected = MissingArgumentsException.class)
+  public void testCreateRecordMissingArguments() throws InternalServerErrorException,
+      DoesNotExistException, MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(406);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
+    ra.createRecord("ds0", "rd0", "<root>example</root>");
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testCreateRecordInternalServerError() throws InternalServerErrorException,
+      DoesNotExistException, MissingArgumentsException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ra.createRecord("ds0", "rd0", "<root>example</root>");
+  }
 
 }
