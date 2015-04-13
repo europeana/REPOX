@@ -185,6 +185,58 @@ public class MappingsAccessor {
     }
     LOGGER.info("createMapping(..) success!");
   }
+  
+  /**
+   * Update a mapping.
+   * @param id
+   * @param metadataTransformation
+   * @param file
+   * @throws InvalidArgumentsException
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws AlreadyExistsException
+   * @throws InternalServerErrorException
+   */
+  public void updateMapping(String id, MetadataTransformation metadataTransformation, File file)
+      throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+      AlreadyExistsException, InternalServerErrorException {
+    WebTarget target = client.register(MultiPartFeature.class).target(restUrl + "/" + MappingOptionListContainer.MAPPINGS + "/" + id);
+
+    // MediaType of the body part will be derived from the file.
+    final FileDataBodyPart filePart =
+        new FileDataBodyPart(file.getName(), file, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+    MultiPart multiPartEntity = new MultiPart();
+    multiPartEntity.bodyPart(new BodyPart(metadataTransformation, MediaType.APPLICATION_XML_TYPE));
+    multiPartEntity.bodyPart(filePart);
+
+    Response response =
+        target.request().put(Entity.entity(multiPartEntity, new MediaType("multipart", "mixed")),
+            Response.class);
+
+    switch (response.getStatus()) {
+      case 400:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+        throw new InvalidArgumentsException(errorMessage.getResult());
+      case 404:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("updateMapping(..) success!");
+  }
 
   public static void main(String[] args) throws MalformedURLException, DoesNotExistException, InternalServerErrorException, InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException {
     MappingsAccessor ma =
@@ -197,9 +249,9 @@ public class MappingsAccessor {
     String description = "NONE";
     String srcSchemaId = "edm";
     String srcSchemaVersion = "1.0";
-    String destSchemaId = "ese";
-    String destSchemaVersion = "3.3";
-    String xslFilename = "myXSLT2";
+    String destSchemaId = "lido";
+    String destSchemaVersion = "1";
+    String xslFilename = "myXSLT3";
     boolean isXslVersion2 = true;
 
     MetadataTransformation mtdTransformation = new MetadataTransformation();
@@ -213,7 +265,7 @@ public class MappingsAccessor {
     mtdTransformation.setVersionTwo(isXslVersion2);
     
     File xlst = new File("/tmp/example.xsl");
-    ma.createMapping(mtdTransformation, xlst);
+    ma.updateMapping("SampleId2", mtdTransformation, xlst);
 
   }
 
