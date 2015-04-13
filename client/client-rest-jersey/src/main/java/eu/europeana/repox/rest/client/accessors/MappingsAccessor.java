@@ -238,35 +238,35 @@ public class MappingsAccessor {
     LOGGER.info("updateMapping(..) success!");
   }
 
-  public static void main(String[] args) throws MalformedURLException, DoesNotExistException, InternalServerErrorException, InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException {
-    MappingsAccessor ma =
-        new MappingsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-
-    // System.out.println(ma.getMapping("Example").getDestinationSchemaId());
-//    ma.deleteMapping("Example");
-    
-    String id = "SampleId2";
-    String description = "NONE";
-    String srcSchemaId = "edm";
-    String srcSchemaVersion = "1.0";
-    String destSchemaId = "lido";
-    String destSchemaVersion = "1";
-    String xslFilename = "myXSLT3";
-    boolean isXslVersion2 = true;
-
-    MetadataTransformation mtdTransformation = new MetadataTransformation();
-    mtdTransformation.setId(id);
-    mtdTransformation.setDescription(description);
-    mtdTransformation.setSourceSchemaId(srcSchemaId);
-    mtdTransformation.setDestinationSchemaId(destSchemaId);
-    mtdTransformation.setStylesheet(xslFilename);
-    mtdTransformation.setSourceSchemaVersion(srcSchemaVersion);
-    mtdTransformation.setDestSchemaVersion(destSchemaVersion);
-    mtdTransformation.setVersionTwo(isXslVersion2);
-    
-    File xlst = new File("/tmp/example.xsl");
-    ma.updateMapping("SampleId2", mtdTransformation, xlst);
-
-  }
+//  public static void main(String[] args) throws MalformedURLException, DoesNotExistException, InternalServerErrorException, InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException {
+//    MappingsAccessor ma =
+//        new MappingsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+//
+//    // System.out.println(ma.getMapping("Example").getDestinationSchemaId());
+////    ma.deleteMapping("Example");
+//    
+//    String id = "SampleId2";
+//    String description = "NONE";
+//    String srcSchemaId = "edm";
+//    String srcSchemaVersion = "1.0";
+//    String destSchemaId = "lido";
+//    String destSchemaVersion = "1";
+//    String xslFilename = "myXSLT3";
+//    boolean isXslVersion2 = true;
+//
+//    MetadataTransformation mtdTransformation = new MetadataTransformation();
+//    mtdTransformation.setId(id);
+//    mtdTransformation.setDescription(description);
+//    mtdTransformation.setSourceSchemaId(srcSchemaId);
+//    mtdTransformation.setDestinationSchemaId(destSchemaId);
+//    mtdTransformation.setStylesheet(xslFilename);
+//    mtdTransformation.setSourceSchemaVersion(srcSchemaVersion);
+//    mtdTransformation.setDestSchemaVersion(destSchemaVersion);
+//    mtdTransformation.setVersionTwo(isXslVersion2);
+//    
+//    File xlst = new File("/tmp/example.xsl");
+//    ma.updateMapping("SampleId2", mtdTransformation, xlst);
+//
+//  }
 
 }

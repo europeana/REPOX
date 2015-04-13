@@ -181,6 +181,15 @@ public class MappingResource {
             MetadataTransformation mapping = getMapping(oldMappingId);
             TransformationsFileManager.deleteTransformationFiles(FilenameUtils.removeExtension(mapping.getStylesheet()), xsltDir, metadataTransformationManager.getXmapDir());
         }
+
+        String srcXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getSourceSchemaId(), Double.valueOf(metadataTransformation.getSourceSchemaVersion()));
+        if (srcXsdLink == null)
+            throw new DoesNotExistException("Schema with id " + metadataTransformation.getSourceSchemaId() + " and version " + metadataTransformation.getSourceSchemaVersion() + " does NOT exist!");
+        String destXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getDestinationSchemaId(), Double.valueOf(metadataTransformation.getDestSchemaVersion()));
+        if (destXsdLink == null)
+            throw new DoesNotExistException("Schema with id " + metadataTransformation.getDestinationSchemaId() + " and version " + metadataTransformation.getDestSchemaVersion() + " does NOT exist!");
+        String destNamespace = metadataSchemaManager.getMetadataSchema(metadataTransformation.getDestinationSchemaId()).getNamespace();
+        
         TransformationsFileManager.Response result = TransformationsFileManager.writeXslFile(metadataTransformation.getStylesheet() + ".xsl", xsltDir, xsltInputStream);
 
         if (result == TransformationsFileManager.Response.ERROR) {
@@ -192,14 +201,6 @@ public class MappingResource {
         else if (result == TransformationsFileManager.Response.XSL_ALREADY_EXISTS) {
             throw new AlreadyExistsException("Already exists: " + "Error creating Mapping: id \"" + metadataTransformation.getId() + "\" xslt filename already exists.");
         }
-
-        String srcXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getSourceSchemaId(), Double.valueOf(metadataTransformation.getSourceSchemaVersion()));
-        if (srcXsdLink == null)
-            throw new DoesNotExistException("Schema with id " + metadataTransformation.getSourceSchemaId() + " and version " + metadataTransformation.getSourceSchemaVersion() + " does NOT exist!");
-        String destXsdLink = metadataSchemaManager.getSchemaXSD(metadataTransformation.getDestinationSchemaId(), Double.valueOf(metadataTransformation.getDestSchemaVersion()));
-        if (destXsdLink == null)
-            throw new DoesNotExistException("Schema with id " + metadataTransformation.getDestinationSchemaId() + " and version " + metadataTransformation.getDestSchemaVersion() + " does NOT exist!");
-        String destNamespace = metadataSchemaManager.getMetadataSchema(metadataTransformation.getDestinationSchemaId()).getNamespace();
 
         metadataTransformation.setEditable(false);
         metadataTransformation.setSourceSchema(srcXsdLink);
