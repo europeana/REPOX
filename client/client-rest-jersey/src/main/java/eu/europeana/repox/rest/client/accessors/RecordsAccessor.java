@@ -56,7 +56,7 @@ import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 public class RecordsAccessor {
   private URL restUrl;
   private Client client = JerseyClientBuilder.newClient();
-  private static final Logger LOGGER = LoggerFactory.getLogger(DatasetsAccessor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RecordsAccessor.class);
 
   /**
    * Setup RecordsAccessor with the target Url, username and password
@@ -160,6 +160,15 @@ public class RecordsAccessor {
     LOGGER.info("removeRecord(..) success! : " + result.getResult());
   }
   
+  /**
+   * Create a new record.
+   * @param datasetId
+   * @param recordId
+   * @param record
+   * @throws DoesNotExistException
+   * @throws MissingArgumentsException
+   * @throws InternalServerErrorException
+   */
   public void createRecord(String datasetId, String recordId, String record) throws DoesNotExistException, MissingArgumentsException, InternalServerErrorException
   {    
     WebTarget target = client.target(restUrl + "/" + RecordOptionListContainer.RECORDS).queryParam("datasetId", datasetId).queryParam("recordId", recordId);
@@ -183,17 +192,17 @@ public class RecordsAccessor {
     LOGGER.info("createRecord(..) success! : " + result.getResult());
   }
 
-  public static void main(String[] args) throws MalformedURLException, InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, UnsupportedEncodingException, FileNotFoundException, MissingArgumentsException {
-    RecordsAccessor ra =
-        new RecordsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    
-//    System.out.println(ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%2BZ103526808"));
-    
-//    String s = ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808");
-//    System.out.println(s);
-    
-//    ra.removeRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808", RecordOptionListContainer.ERASE);
-    ra.createRecord("ncr0", "id0", "<root>nothing</root>");
-  }
+//  public static void main(String[] args) throws MalformedURLException, InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, UnsupportedEncodingException, FileNotFoundException, MissingArgumentsException {
+//    RecordsAccessor ra =
+//        new RecordsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+//    
+////    System.out.println(ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%2BZ103526808"));
+//    
+////    String s = ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808");
+////    System.out.println(s);
+//    
+////    ra.removeRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808", RecordOptionListContainer.ERASE);
+//    ra.createRecord("ncr0", "id0", "<root>nothing</root>");
+//  }
 
 }

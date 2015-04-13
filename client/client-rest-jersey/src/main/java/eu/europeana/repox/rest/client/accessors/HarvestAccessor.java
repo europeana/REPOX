@@ -335,28 +335,28 @@ public class HarvestAccessor {
     return tasksList;
   }
 
-  public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
-      DoesNotExistException, MissingArgumentsException {
-    HarvestAccessor ha =
-        new HarvestAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    // ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
-
-    // ha.cancelHarvest("a0660");
-    // Calendar date = Calendar.getInstance();
-    // date.set(Calendar.YEAR, 2015);
-    // date.set(Calendar.MONTH, Calendar.APRIL);
-    // date.set(Calendar.DAY_OF_MONTH, 10);
-    // date.set(Calendar.HOUR_OF_DAY, 13);
-    // date.set(Calendar.MINUTE, 22);
-    // ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
-
-    // ha.deleteScheduledTask("a0660", "a0660_4");
-
-    // List<ScheduledTask> datasetScheduledTasks = ha.getDatasetScheduledTasks("a0660");
-    // System.out.println(ha.getDatasetHarvestingStatus("a0660"));
-    System.out.println(ha.getDatasetLastIngestLog("a0660"));
-    
-//    System.out.println(ha.getCurrentHarvestsList().size());
-  }
+//  public static void main(String[] args) throws MalformedURLException, AlreadyExistsException,
+//      DoesNotExistException, MissingArgumentsException {
+//    HarvestAccessor ha =
+//        new HarvestAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+//    // ha.startHarvest("a0660", HarvestOptionListContainer.FULL);
+//
+//    // ha.cancelHarvest("a0660");
+//    // Calendar date = Calendar.getInstance();
+//    // date.set(Calendar.YEAR, 2015);
+//    // date.set(Calendar.MONTH, Calendar.APRIL);
+//    // date.set(Calendar.DAY_OF_MONTH, 10);
+//    // date.set(Calendar.HOUR_OF_DAY, 13);
+//    // date.set(Calendar.MINUTE, 22);
+//    // ha.scheduleHarvest("a0660", date, Frequency.DAILY, 2, false);
+//
+//    // ha.deleteScheduledTask("a0660", "a0660_4");
+//
+//    // List<ScheduledTask> datasetScheduledTasks = ha.getDatasetScheduledTasks("a0660");
+//    // System.out.println(ha.getDatasetHarvestingStatus("a0660"));
+//    System.out.println(ha.getDatasetLastIngestLog("a0660"));
+//    
+////    System.out.println(ha.getCurrentHarvestsList().size());
+//  }
 
 }

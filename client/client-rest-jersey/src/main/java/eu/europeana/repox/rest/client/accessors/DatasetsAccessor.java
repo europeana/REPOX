@@ -608,40 +608,40 @@ public class DatasetsAccessor {
     LOGGER.info("exportDataset(..) success!");
   }
 
-  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
-      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
-      AlreadyExistsException {
-    DatasetsAccessor da =
-        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
-    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
-    // System.out.println(dataset.getDataSource());
-    // da.deleteDataset("exd0");
-    // List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
-    // System.out.println(datasetList.get(0).getDataSource().getId());
-
-    // da.createDatasetFile("P0r0", null, "ExampleOAI", "nc", true,
-    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
-    // "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661",
-    // new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new
-    // FolderFileRetrieveStrategy(),
-    // CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
-    // da.updateDatasetOai("a0662", "a0660", "ABO", "a0660", true,
-    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
-    // "http://www.europeana.eu/schemas/ese/", "ese", null,
-    // "http://oai.onb.ac.at/repox2/OAIHandler", "abo", "/tmp/export3/a0660",
-    // new IdProvidedRecordIdPolicy(), null);
-
-    // da.updateDatasetFile("ncr0", null, "ExampleOAIAfter", "nc", true,
-    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
-    // "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661",
-    // new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new
-    // FolderFileRetrieveStrategy(),
-    // CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
-
-//    da.copyDataset("a0660", "a0662");
-//    System.out.println(da.getDatasetLastIngestionDate("a0660"));
-//    System.out.println(da.getDatasetRecordCount("a0660"));
-    da.exportDataset("a0660", null);
-  }
+//  public static void main(String[] args) throws MalformedURLException, DoesNotExistException,
+//      InvalidArgumentsException, InternalServerErrorException, MissingArgumentsException,
+//      AlreadyExistsException {
+//    DatasetsAccessor da =
+//        new DatasetsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
+//    // DefaultDataSourceContainer dataset = (DefaultDataSourceContainer) da.getDataset("a0660");
+//    // System.out.println(dataset.getDataSource());
+//    // da.deleteDataset("exd0");
+//    // List<DataSourceContainer> datasetList = da.getDatasetList("P0r0", 0, 5);
+//    // System.out.println(datasetList.get(0).getDataSource().getId());
+//
+//    // da.createDatasetFile("P0r0", null, "ExampleOAI", "nc", true,
+//    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//    // "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661",
+//    // new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new
+//    // FolderFileRetrieveStrategy(),
+//    // CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+//    // da.updateDatasetOai("a0662", "a0660", "ABO", "a0660", true,
+//    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//    // "http://www.europeana.eu/schemas/ese/", "ese", null,
+//    // "http://oai.onb.ac.at/repox2/OAIHandler", "abo", "/tmp/export3/a0660",
+//    // new IdProvidedRecordIdPolicy(), null);
+//
+//    // da.updateDatasetFile("ncr0", null, "ExampleOAIAfter", "nc", true,
+//    // "http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd", "NONE",
+//    // "http://www.europeana.eu/schemas/ese/", "ese", null, "/tmp/export/a0661",
+//    // new IdProvidedRecordIdPolicy(), new SimpleFileExtractStrategy(), new
+//    // FolderFileRetrieveStrategy(),
+//    // CharacterEncoding.UTF_8, Iso2709Variant.STANDARD, "/sample/dir", "SamplerecordXPath", null);
+//
+////    da.copyDataset("a0660", "a0662");
+////    System.out.println(da.getDatasetLastIngestionDate("a0660"));
+////    System.out.println(da.getDatasetRecordCount("a0660"));
+//    da.exportDataset("a0660", null);
+//  }
 
 }

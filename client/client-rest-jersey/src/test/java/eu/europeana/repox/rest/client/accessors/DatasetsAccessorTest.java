@@ -93,7 +93,7 @@ public class DatasetsAccessorTest {
   }
 
   @Test(expected = DoesNotExistException.class)
-  public void testGetProviderDoesNotExist() throws DoesNotExistException {
+  public void testGetDatasetDoesNotExist() throws DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     da.getDataset("D0r0");
@@ -139,7 +139,7 @@ public class DatasetsAccessorTest {
   }
 
   @Test(expected = DoesNotExistException.class)
-  public void testGetDatasetDoesNotExist() throws InvalidArgumentsException, DoesNotExistException {
+  public void testGetDatasetListDoesNotExist() throws InvalidArgumentsException, DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
     da.getDatasetList("P0r0", 0, 1);
