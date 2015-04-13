@@ -13,14 +13,6 @@
  */
 package eu.europeana.repox.rest.client.accessors;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -31,9 +23,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
@@ -41,13 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
-import pt.utl.ist.dataProvider.MessageType;
-import pt.utl.ist.util.XmlUtil;
-import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.MissingArgumentsException;
-import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
