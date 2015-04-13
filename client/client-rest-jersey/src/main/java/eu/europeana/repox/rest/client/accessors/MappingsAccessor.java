@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -84,6 +85,12 @@ public class MappingsAccessor {
     LOGGER.info("MappingsAccessor created with target url: {}", this.restUrl);
   }
 
+  /**
+   * Retrieve a mapping.
+   * @param id
+   * @return
+   * @throws DoesNotExistException
+   */
   public MetadataTransformation getMapping(String id) throws DoesNotExistException {
     WebTarget target =
         client.target(restUrl + "/" + MappingOptionListContainer.MAPPINGS + "/" + id);
@@ -99,12 +106,35 @@ public class MappingsAccessor {
     LOGGER.info("getMapping(..) success!");
     return metadataTransformation;
   }
+  
+  /**
+   * Delete a mapping.
+   * @param id
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public void deleteMapping(String id) throws DoesNotExistException, InternalServerErrorException
+  {
+    WebTarget target = client.target(restUrl + "/" + MappingOptionListContainer.MAPPINGS + "/" + id);
+    Response response = target.request(MediaType.APPLICATION_JSON).delete();
+    if (response.getStatus() == 404) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("deleteMapping(..) failure! : " + errorMessage.getResult());
+      throw new DoesNotExistException(errorMessage.getResult());
+    } else if (response.getStatus() == 500) {
+      Result errorMessage = response.readEntity(Result.class);
+      LOGGER.warn("deleteMapping(..) failure! : " + errorMessage.getResult());
+      throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    LOGGER.info("deleteMapping(..) success!");
+  }
 
   public static void main(String[] args) throws MalformedURLException, DoesNotExistException {
     MappingsAccessor ma =
         new MappingsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
     
-    System.out.println(ma.getMapping("Example").getDestinationSchemaId());
+//    System.out.println(ma.getMapping("Example").getDestinationSchemaId());
+    ma.deleteMapping("Example");
 
   }
 
