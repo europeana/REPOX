@@ -15,6 +15,7 @@ package eu.europeana.repox.rest.client.accessors;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -26,6 +27,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +37,10 @@ import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
+import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -60,18 +65,17 @@ public class MappingsAccessorTest {
     response = Mockito.mock(Response.class);
     ma = new MappingsAccessor(restUrl, username, password, client);
 
+    Mockito.when(client.register(MultiPartFeature.class)).thenReturn(client);
     Mockito.when(client.target(Mockito.anyString())).thenReturn(webTarget);
     Mockito.when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(builder);
+    Mockito.when(webTarget.request()).thenReturn(builder);
     Mockito.when(webTarget.queryParam(Mockito.anyString(), Mockito.anyObject())).thenReturn(
         webTarget);
     Mockito.when(builder.get()).thenReturn(response);
     Mockito.when(builder.delete()).thenReturn(response);
-    // Mockito.when(
-    // builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
-    // Mockito.any(Class.class))).thenReturn(response);
-    // Mockito.when(
-    // builder.put(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
-    // Mockito.any(Class.class))).thenReturn(response);
+    Mockito.when(
+        builder.post(Entity.entity(Mockito.any(Class.class), new MediaType("multipart", "mixed")),
+            Mockito.any(Class.class))).thenReturn(response);
   }
 
   // Tests for GetMapping
@@ -114,4 +118,46 @@ public class MappingsAccessorTest {
     ma.deleteMapping("map0");
   }
 
+  // Tests for CreateMapping
+  @Test
+  public void testCreateMapping() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(201);
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
+
+  @Test(expected = InvalidArgumentsException.class)
+  public void testCreateMappingInvalidArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(400);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
+
+  @Test(expected = DoesNotExistException.class)
+  public void testCreateMappingDoesNotExist() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(404);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
+
+  @Test(expected = MissingArgumentsException.class)
+  public void testCreateMappingMissingArguments() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(406);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void testCreateMappingAlreadyExists() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(409);
+    Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
+
+  @Test(expected = InternalServerErrorException.class)
+  public void testCreateMappingInternalServerError() throws InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
+    Mockito.when(response.getStatus()).thenReturn(500);
+    Mockito.when(response.readEntity(Result.class))
+        .thenReturn(new Result("Internal Server Error!"));
+    ma.createMapping(new MetadataTransformation(), new File("/tmp/example.xsl"));
+  }
 }
