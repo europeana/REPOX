@@ -27,10 +27,13 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -60,7 +63,7 @@ public class RecordsAccessorTest {
     Mockito.when(webTarget.queryParam(Mockito.anyString(), Mockito.anyObject())).thenReturn(
         webTarget);
     Mockito.when(builder.get()).thenReturn(response);
-    // Mockito.when(builder.delete()).thenReturn(response);
+     Mockito.when(builder.delete()).thenReturn(response);
     // Mockito.when(
     // builder.post(Entity.entity(Mockito.any(Class.class), MediaType.APPLICATION_JSON),
     // Mockito.any(Class.class))).thenReturn(response);
@@ -93,6 +96,41 @@ public class RecordsAccessorTest {
     ra.getRecord("recordId");
   }
 
+//Tests for RemoveRecord
+ @Test
+ public void testRemoveRecord() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(200);
+   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+ }
 
+ @Test(expected = DoesNotExistException.class)
+ public void testRemoveRecordDoesNotExist() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(404);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Does not exist!"));
+   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+ }
+
+ @Test(expected = MissingArgumentsException.class)
+ public void testRemoveRecordMissingArguments() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(406);
+   Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Missing argument!"));
+   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+ }
+
+ @Test(expected = InternalServerErrorException.class)
+ public void testRemoveRecordInternalServerError() throws InternalServerErrorException,
+     InvalidArgumentsException, DoesNotExistException, MissingArgumentsException,
+     AlreadyExistsException {
+   Mockito.when(response.getStatus()).thenReturn(500);
+   Mockito.when(response.readEntity(Result.class))
+       .thenReturn(new Result("Internal Server Error!"));
+   ra.removeRecord("recordId", RecordOptionListContainer.DELETE);
+ }
 
 }

@@ -31,8 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.theeuropeanlibrary.repox.rest.pathOptions.RecordOptionListContainer;
 import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 
+import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.DoesNotExistException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
+import pt.utl.ist.util.exceptions.MissingArgumentsException;
 
 /**
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
@@ -113,15 +115,48 @@ public class RecordsAccessor {
     Result result = response.readEntity(Result.class);
     return result.getResult();
   }
+  
+  /**
+   * Deletes (mark) or permanently erase a record.
+   * @param id
+   * @param type
+   * @throws MissingArgumentsException
+   * @throws DoesNotExistException
+   * @throws InternalServerErrorException
+   */
+  public void removeRecord(String id, String type) throws MissingArgumentsException, DoesNotExistException, InternalServerErrorException
+  {
+    WebTarget target = client.target(restUrl + "/" + RecordOptionListContainer.RECORDS).queryParam("recordId", id).queryParam("type", type);
+    Response response = target.request(MediaType.APPLICATION_JSON).delete();
+    
+    switch (response.getStatus()) {
+      case 404:
+        Result errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("removeRecord(..) failure! : " + errorMessage.getResult());
+        throw new DoesNotExistException(errorMessage.getResult());
+      case 406:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("removeRecord(..) failure! : " + errorMessage.getResult());
+        throw new MissingArgumentsException(errorMessage.getResult());
+      case 500:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("removeRecord(..) failure! : " + errorMessage.getResult());
+        throw new InternalServerErrorException(errorMessage.getResult());
+    }
+    Result result = response.readEntity(Result.class);
+    LOGGER.info("removeRecord(..) success! : " + result.getResult());
+  }
 
-  public static void main(String[] args) throws MalformedURLException, InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, UnsupportedEncodingException, FileNotFoundException {
+  public static void main(String[] args) throws MalformedURLException, InternalServerErrorException, InvalidArgumentsException, DoesNotExistException, UnsupportedEncodingException, FileNotFoundException, MissingArgumentsException {
     RecordsAccessor ra =
         new RecordsAccessor(new URL("http://localhost:8080/repox/rest"), "temporary", "temporary");
     
 //    System.out.println(ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%2BZ103526808"));
     
-    String s = ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808");
-    System.out.println(s);
+//    String s = ra.getRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808");
+//    System.out.println(s);
+    
+    ra.removeRecord("oai:the.european.library.a0660:urn:onb.ac.at:abo:http://data.onb.ac.at/ABO/%252BZ103526808", RecordOptionListContainer.ERASE);
   }
 
 }
