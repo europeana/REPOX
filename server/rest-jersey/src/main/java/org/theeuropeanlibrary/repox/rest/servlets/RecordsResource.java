@@ -121,7 +121,7 @@ public class RecordsResource {
      * @throws InternalServerErrorException 
      */
     @GET
-    @Produces({ MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @ApiOperation(value = "Get specific record.", httpMethod = "GET", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK (Response containing a Record)"),
@@ -162,7 +162,7 @@ public class RecordsResource {
         else
             throw new DoesNotExistException("Does NOT exist: " + "Record with id " + recordId + " NOT found!");
 
-        return Response.status(200).entity(baos.toString("UTF-8")).build();
+        return Response.status(200).entity(new Result(baos.toString("UTF-8"))).build();
     }
 
     /**

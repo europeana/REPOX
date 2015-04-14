@@ -47,7 +47,7 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_LDAP_BASE_PATH              = "ldapBasePath";
     private static final String PROPERTY_USE_COUNTRIES_TXT           = "userCountriesTxtFile";
     private static final String PROPERTY_SEND_EMAIL_AFTER_INGESTION  = "sendEmailAfterIngest";
-    private static final String PROPERTY_SERVER_OAI_URL              = "currentServerOAIUrl";
+//    private static final String PROPERTY_SERVER_OAI_URL              = "currentServerOAIUrl";
     private static final String PROPERTY_USE_MAIL_AUTHENTICATION     = "useMailSSLAuthentication";
     private static final String PROPERTY_USE_OAI_NAMESPACE           = "useOAINamespace";
 
@@ -79,7 +79,7 @@ public abstract class RepoxConfiguration {
     private String              ldapBasePath;
     private Boolean             useCountriesTxt;
     private Boolean             sendEmailAfterIngest;
-    private String              currentServerOAIUrl;
+//    private String              currentServerOAIUrl;
     private boolean             useMailSSLAuthentication;
     private boolean             useOAINamespace;
 
@@ -155,7 +155,7 @@ public abstract class RepoxConfiguration {
         this.ldapRootPassword = (String)configuration.getProperty(PROPERTY_LDAP_ROOT_PASSWORD);
         this.ldapBasePath = (String)configuration.getProperty(PROPERTY_LDAP_BASE_PATH);
 
-        this.currentServerOAIUrl = (String)configuration.getProperty(PROPERTY_SERVER_OAI_URL);
+//        this.currentServerOAIUrl = (String)configuration.getProperty(PROPERTY_SERVER_OAI_URL);
         this.useMailSSLAuthentication = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : (String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
         this.useOAINamespace = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : (String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE));
     }
@@ -316,9 +316,9 @@ public abstract class RepoxConfiguration {
         return ldapHost;
     }
 
-    public String getCurrentServerOAIUrl() {
-        return currentServerOAIUrl;
-    }
+//    public String getCurrentServerOAIUrl() {
+//        return currentServerOAIUrl;
+//    }
 
     public boolean isUseMailSSLAuthentication() {
         return useMailSSLAuthentication;

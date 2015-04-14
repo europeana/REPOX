@@ -19,6 +19,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.theeuropeanlibrary.repox.rest.pathOptions.Result;
 import org.theeuropeanlibrary.repox.rest.pathOptions.StatisticsOptionListContainer;
 
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -104,7 +105,7 @@ public class StatisticsResource {
 	 * @throws InternalServerErrorException 
 	 */
 	@GET
-	@Produces({ MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@ApiOperation(value = "Retrieve the statistics.", httpMethod = "GET", response = String.class)
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "OK (Response containing a String message)"),
@@ -127,7 +128,7 @@ public class StatisticsResource {
 				writer.write(statisticsReport);
 				writer.close();
 			}
-			return Response.status(200).entity(baos.toString("UTF-8")).build();
+			return Response.status(200).entity(new Result(baos.toString("UTF-8"))).build();
 		} catch (IOException | DocumentException | SQLException e) {
 			throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
 		}
