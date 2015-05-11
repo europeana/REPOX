@@ -143,7 +143,7 @@ public class ProvidersAccessorTest {
   public void testCreateProvider() throws InternalServerErrorException, InvalidArgumentsException,
       MissingArgumentsException, AlreadyExistsException, DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(201);
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -153,7 +153,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(400);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -163,7 +163,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -173,7 +173,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(406);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -183,7 +183,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException {
     Mockito.when(response.getStatus()).thenReturn(409);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -194,7 +194,7 @@ public class ProvidersAccessorTest {
     Mockito.when(response.getStatus()).thenReturn(500);
     Mockito.when(response.readEntity(Result.class))
         .thenReturn(new Result("Internal Server Error!"));
-    pa.createProvider("A0r0", "Id", "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.createProvider("A0r0", "Id", "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -203,7 +203,7 @@ public class ProvidersAccessorTest {
   public void testUpdateProvider() throws InvalidArgumentsException, DoesNotExistException,
       MissingArgumentsException, AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(201);
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -212,7 +212,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(400);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -221,7 +221,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(404);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Already exist!"));
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -230,7 +230,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(406);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -239,7 +239,7 @@ public class ProvidersAccessorTest {
       DoesNotExistException, MissingArgumentsException, AlreadyExistsException {
     Mockito.when(response.getStatus()).thenReturn(409);
     Mockito.when(response.readEntity(Result.class)).thenReturn(new Result("Invalid argument!"));
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 
@@ -249,7 +249,7 @@ public class ProvidersAccessorTest {
     Mockito.when(response.getStatus()).thenReturn(500);
     Mockito.when(response.readEntity(Result.class))
         .thenReturn(new Result("Internal Server Error!"));
-    pa.updateProvider("P0r0", null, null, "ProviderName", "GR", "NONE", "P0", "example.com",
+    pa.updateProvider("P0r0", null, null, "ProviderName", "Greece", "GR", "NONE", "P0", "example.com",
         ProviderType.LIBRARY, "test@test.com");
   }
 }
