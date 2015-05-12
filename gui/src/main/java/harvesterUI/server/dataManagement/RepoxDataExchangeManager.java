@@ -74,7 +74,7 @@ public class RepoxDataExchangeManager {
             DirectoryImporterDataSource dataSourceDirectoryImporter = (DirectoryImporterDataSource) dataSource;
             if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FolderFileRetrieveStrategy) {
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.marc.DataSourceFolder");
+                dataSourceUI.setRetrieveStartegy(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
                 FtpFileRetrieveStrategy dataSourceFtp = (FtpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
@@ -82,13 +82,13 @@ public class RepoxDataExchangeManager {
                 dataSourceUI.setUser(dataSourceFtp.getUser());
                 dataSourceUI.setPassword(dataSourceFtp.getPassword());
                 dataSourceUI.setFolderPath(dataSourceFtp.getFtpPath());
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceFtp");
+                dataSourceUI.setRetrieveStartegy(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY);
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof HttpFileRetrieveStrategy) {
                 HttpFileRetrieveStrategy dataSourceHttp = (HttpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setHttpURL(dataSourceHttp.getUrl());
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceHttp");
+                dataSourceUI.setRetrieveStartegy(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY);
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
 
