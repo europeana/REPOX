@@ -297,7 +297,6 @@ public class DataSourceOAIForm extends DataSourceForm {
         recordSet.setValue(dataSourceUI.getDataSourceSet());
         description.setValue(dataSourceUI.getDescription());
         exportPath.setValue(dataSourceUI.getExportDirectory());
-        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder());
 
         setsCombo.hide();
         setsCombo.setAllowBlank(true);
