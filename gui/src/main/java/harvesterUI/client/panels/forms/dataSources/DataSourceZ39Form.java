@@ -331,6 +331,7 @@ public class DataSourceZ39Form extends DataSourceForm {
         exportPath = new TextField<String>();
         exportPath.setFieldLabel(HarvesterUI.CONSTANTS.exportPath());
         exportPath.setId("exportPathField");
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
         dataSet.add(exportPath, formData);
 
         addIsSampleCheckBox(dataSet);
@@ -480,7 +481,8 @@ public class DataSourceZ39Form extends DataSourceForm {
         database.clear();
         maximumID.clear();
         earliestDate.clear();
-        exportPath.clear();
+//        exportPath.clear();
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
         if(fileUploadField.isRendered())
             fileUploadField.clear();
 

@@ -333,12 +333,12 @@ public abstract class DataSourceForm extends DefaultFormPanel {
 //            dataSourceUI.setExportDirectory(exprtP != null ? exprtP.trim() : "");
         }
 
-        if(dataSourceUI.getExportDirectory().isEmpty()) {
-            String dsExportPath;
+        if(dataSourceUI.getExportDirectory().isEmpty() || dataSourceUI.getExportDirectory().equals(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/")) {
+            String dsExportPath = null;
             if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
                 dsExportPath = HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/" + record_set;
-            else
-                dsExportPath = HarvesterUI.getMainConfigurationData().getRepositoryFolderPath() + "/" + record_set + "/export";
+//            else
+//                dsExportPath = HarvesterUI.getMainConfigurationData().getRepositoryFolderPath() + "/" + record_set + "/export";
             dataSourceUI.setExportDirectory(dsExportPath);
         } else {
             dataSourceUI.setExportDirectory(dataSourceUI.getExportDirectory());

@@ -119,6 +119,7 @@ public class DataSourceSruForm extends DataSourceForm {
         recordSet.setValue(dataSourceUI.getDataSourceSet());
         description.setValue(dataSourceUI.getDescription());
         exportPath.setValue(dataSourceUI.getExportDirectory());
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
 
         // Europeana Fields
         if(HarvesterUI.getProjectType() == ProjectType.DEFAULT) {
@@ -133,7 +134,8 @@ public class DataSourceSruForm extends DataSourceForm {
         fillMetadataComboStore(false);
         edit = false;
         oldDataSetId = "";
-        exportPath.clear();
+//        exportPath.clear();
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
 
         setResetNamespaces();
         setResetOutputSet(parent);

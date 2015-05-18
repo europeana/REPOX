@@ -195,6 +195,7 @@ public class DataSourceFolderForm extends DataSourceForm {
         exportPath = new TextField<String>();
         exportPath.setFieldLabel(HarvesterUI.CONSTANTS.exportPath());
         exportPath.setId("exportPathField");
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
     }
 
     private void createIDPolicyBoxes(){
@@ -495,7 +496,8 @@ public class DataSourceFolderForm extends DataSourceForm {
         setResetNamespaces();
         setResetOutputSet(parent);
         dataSourceServicesPanel.resetValues();
-        exportPath.clear();
+//        exportPath.clear();
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
 
         idPolicyCombo.getStore().clearFilters();
         retrieveVariantCombo.getStore().clearFilters();
