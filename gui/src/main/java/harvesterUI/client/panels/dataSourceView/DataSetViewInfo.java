@@ -132,17 +132,17 @@ public class DataSetViewInfo extends ContentPanel {
         dataSetOperationsToolbar.setAssociatedDataSourceUI(dataSourceUI);
 
         String ingest = dataSourceUI.getIngest();
-        String delimType = "[ ]+";
-        String[] tokensType = ingest.split(delimType);
-        String typeOfDS = tokensType[0];
+//        String delimType = "[ ]+";
+//        String[] tokensType = ingest.split(delimType);
+//        String typeOfDS = tokensType[0];
 
-        if(typeOfDS.equals("Folder"))
+        if(ingest.contains("Folder"))
             dataSetInfoForm = dataSetFolderViewInfo.showInfo(dataSourceUI);
-        if(typeOfDS.equals("OAI-PMH"))
+        if(ingest.contains("OAI-PMH"))
             dataSetInfoForm = dataSetOAIViewInfo.showInfo(dataSourceUI);
-        if(typeOfDS.equals("Z3950"))
+        if(ingest.contains("Z3950"))
             dataSetInfoForm = dataSetZ39ViewInfo.showInfo(dataSourceUI);
-        if(typeOfDS.equals("Yadda"))
+        if(ingest.contains("Yadda"))
             dataSetInfoForm = dataSetYaddaViewInfo.showInfo(dataSourceUI);
 
         add(dataSetInfoForm,formData);

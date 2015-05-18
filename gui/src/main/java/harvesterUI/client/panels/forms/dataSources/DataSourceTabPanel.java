@@ -102,24 +102,24 @@ public class DataSourceTabPanel extends FormDialog {
         setHeading(HarvesterUI.CONSTANTS.editDataSet()+": " + dataSourceUI.getDataSourceSet());
         setIcon(HarvesterUI.ICONS.operation_edit());
         String type = dataSourceUI.getIngest();
-        String delimType = "[ ]+";
-        String[] tokensType = type.split(delimType);
-        String parsedType = tokensType[0];
+//        String delimType = "[ ]+";
+//        String[] tokensType = type.split(delimType);
+//        String parsedType = tokensType[0];
 
 
-        if(parsedType.equals("OAI-PMH")){
+        if(type.contains("OAI-PMH")){
             tabPanel.setSelection(oaiTab);
             dataSourceOAIForm.setResetOutputSet(dataSourceUI.getDataSetParent());
             dataSourceOAIForm.setEditMode(dataSourceUI);
-        } else if(parsedType.equals("Folder")){
+        } else if(type.contains("Folder")){
             tabPanel.setSelection(folderTab);
             dataSourceFolderForm.setResetOutputSet(dataSourceUI.getDataSetParent());
             dataSourceFolderForm.setEditMode(dataSourceUI);
-        } else if(parsedType.equals("Z3950")){
+        } else if(type.contains("Z3950")){
             tabPanel.setSelection(z39Tab);
             dataSourceZ39Form.setResetOutputSet(dataSourceUI.getDataSetParent());
             dataSourceZ39Form.setEditMode(dataSourceUI);
-        } else if(parsedType.equals("SRU")){
+        } else if(type.contains("SRU")){
             tabPanel.setSelection(sruTab);
             dataSourceSruForm.setResetOutputSet(dataSourceUI.getDataSetParent());
             dataSourceSruForm.setEditMode(dataSourceUI);

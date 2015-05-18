@@ -70,13 +70,15 @@ public class RepoxDataExchangeManager {
         else if(dataSource instanceof SruRecordUpdateDataSource) {
             dataSourceUI.setIngest("SRU " + dataSourceUI.getSourceMDFormat());
         }else if(dataSource instanceof DirectoryImporterDataSource) {
-            dataSourceUI.setIngest("Folder " + dataSourceUI.getSourceMDFormat());
+//        	dataSourceUI.setIngest("Folder " + dataSourceUI.getSourceMDFormat());
             DirectoryImporterDataSource dataSourceDirectoryImporter = (DirectoryImporterDataSource) dataSource;
             if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FolderFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(File Sytem) " + dataSourceUI.getSourceMDFormat());
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
                 dataSourceUI.setRetrieveStartegy(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(FTP) " + dataSourceUI.getSourceMDFormat());
                 FtpFileRetrieveStrategy dataSourceFtp = (FtpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setServer(dataSourceFtp.getServer());
                 dataSourceUI.setUser(dataSourceFtp.getUser());
@@ -86,6 +88,7 @@ public class RepoxDataExchangeManager {
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof HttpFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(HTTP) " + dataSourceUI.getSourceMDFormat());
                 HttpFileRetrieveStrategy dataSourceHttp = (HttpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setHttpURL(dataSourceHttp.getUrl());
                 dataSourceUI.setRetrieveStartegy(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY);
