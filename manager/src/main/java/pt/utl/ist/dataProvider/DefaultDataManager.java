@@ -347,11 +347,11 @@ public class DefaultDataManager implements DataManager {
                     Element recordIdPolicyNode = currentDataSourceElement.element("recordIdPolicy");
                     String recordIdPolicyClass = recordIdPolicyNode.attributeValue("type");
                     RecordIdPolicy recordIdPolicy;
-                    if (recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName())) {
+                    if (recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.class.getSimpleName()) || recordIdPolicyClass.equals(IdGeneratedRecordIdPolicy.IDGENERATED)) {
                         recordIdPolicy = new IdGeneratedRecordIdPolicy();
-                    } else if (recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName())) {
+                    } else if (recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.class.getSimpleName()) || recordIdPolicyClass.equals(IdProvidedRecordIdPolicy.IDPROVIDED)) {
                         recordIdPolicy = new IdProvidedRecordIdPolicy();
-                    } else if (recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName())) {
+                    } else if (recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.class.getSimpleName()) || recordIdPolicyClass.equals(IdExtractedRecordIdPolicy.IDEXTRACTED)) {
                         String identifierXpath = recordIdPolicyNode.element("idXpath").getText();
                         Map<String, String> namespaces = new TreeMap<String, String>();
                         Element namespacesElement = recordIdPolicyNode.element("namespaces");
