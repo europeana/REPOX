@@ -109,8 +109,17 @@ public class DefaultDataManager implements DataManager {
         this.metadataTransformationManager = metadataTransformationManager;
         this.metadataSchemaManager = metadataSchemaManager;
         this.oldTasksFile = oldTasksFile;
+        
+        long start = System.currentTimeMillis();
+        log.info("loadAggregators start.");
         loadAggregators(repositoryPath, defaultExportDir);
+        long end = System.currentTimeMillis();
+        log.info("loadAggregators end in : " + (start - end)/(60*1000F) + " mins");
+        
 //        loadAllDataList();
+        
+        start = System.currentTimeMillis();
+        log.info("saveData start.");
         if (!this.dataFile.exists()) {
             try {
                 saveData();
@@ -118,6 +127,8 @@ public class DefaultDataManager implements DataManager {
                 log.error("Can't create DataProviders configuration file", e);
             }
         }
+        end = System.currentTimeMillis();
+        log.info("saveData end in : " + (start - end)/(60*1000F) + " mins");
     }
 
     private void loadAllDataList() {
@@ -230,8 +241,12 @@ public class DefaultDataManager implements DataManager {
             IOException, ParseException {
         List<Aggregator> aggregatorsLoaded = new ArrayList<Aggregator>();
 
+        long start = System.currentTimeMillis();
+        log.info("Document creating.");
         SAXReader reader = new SAXReader();
         Document document = reader.read(file2Read);
+        long end = System.currentTimeMillis();
+        log.info("Document created in : " + (start - end)/(60*1000F) + " mins");
 
 //        if (configuration != null && configuration.getCurrentServerOAIUrl() != null) {
 //            ExternalServiceUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
@@ -240,7 +255,14 @@ public class DefaultDataManager implements DataManager {
 
         Element root = document.getRootElement();
 
+        start = System.currentTimeMillis();
+        log.info("Document parsing.");
+        long counter= 0;
         for (Iterator aggIterator = root.elementIterator("aggregator"); aggIterator.hasNext();) {
+        	counter++;
+        	long startAg = System.currentTimeMillis();
+            log.info("Document parsing of aggregator " + counter + ".");	
+        	
             // read aggregator from XML file
             Element currentElementAgg = (Element)aggIterator.next();
 
@@ -400,7 +422,7 @@ public class DefaultDataManager implements DataManager {
 
                         FileRetrieveStrategy retrieveStrategy;
                         //FTP
-                        if (retrieveStrategyString != null && retrieveStrategyString.equals(FtpFileRetrieveStrategy.class.getName())) {
+                        if (retrieveStrategyString != null && (retrieveStrategyString.equals(FtpFileRetrieveStrategy.class.getName()) || retrieveStrategyString.equals("pt.utl.ist.repox.ftp.DataSourceFtp"))) {
 
                             String server = currentRetrieveStrategy.elementText("server");
 
@@ -417,7 +439,7 @@ public class DefaultDataManager implements DataManager {
                             retrieveStrategy = new FtpFileRetrieveStrategy(server, user, password, idType, ftpPath);
                         }
                         //HTTP
-                        else if (retrieveStrategyString != null && retrieveStrategyString.equals(HttpFileRetrieveStrategy.class.getName())) {
+                        else if (retrieveStrategyString != null && retrieveStrategyString.equals(HttpFileRetrieveStrategy.class.getName()) || (retrieveStrategyString.equals("pt.utl.ist.repox.http.DataSourceHttp"))) {
 
                             String url = currentRetrieveStrategy.elementText("url");
                             retrieveStrategy = new HttpFileRetrieveStrategy(url);
@@ -431,13 +453,13 @@ public class DefaultDataManager implements DataManager {
                         Map<String, String> namespaces = null;
                         FileExtractStrategy extractStrategy = null;
 
-                        if (extractStrategyString.equals(Iso2709FileExtractStrategy.class.getSimpleName())) {
+                        if (extractStrategyString.equals(Iso2709FileExtractStrategy.class.getSimpleName()) || extractStrategyString.equals("Iso2709FileExtract")) {
                             characterEncoding = CharacterEncoding.get(currentDataSourceElement.attributeValue("characterEncoding"));
                             String isoImplementationClass = currentDataSourceElement.attributeValue("isoImplementationClass");
                             extractStrategy = new Iso2709FileExtractStrategy(isoImplementationClass);
-                        } else if (extractStrategyString.equals(MarcXchangeFileExtractStrategy.class.getSimpleName())) {
+                        } else if (extractStrategyString.equals(MarcXchangeFileExtractStrategy.class.getSimpleName()) || extractStrategyString.equals("MarcXchangeFileExtract")) {
                             extractStrategy = new MarcXchangeFileExtractStrategy();
-                        } else if (extractStrategyString.equals(SimpleFileExtractStrategy.class.getSimpleName())) {
+                        } else if (extractStrategyString.equals(SimpleFileExtractStrategy.class.getSimpleName()) || extractStrategyString.equals("SimpleFileExtract")) {
                             extractStrategy = new SimpleFileExtractStrategy();
 
                             Element splitRecordsElement = currentDataSourceElement.element("splitRecords");
@@ -646,14 +668,24 @@ public class DefaultDataManager implements DataManager {
                 aggregator.addDataProvider(dataProvider);
             }
             aggregatorsLoaded.add(aggregator);
+            
+            long endAg = System.currentTimeMillis();
+            log.info("Document parsed aggregator " + counter + " in : " + (startAg - endAg)/(60*1000F) + " mins");
         }
+        end = System.currentTimeMillis();
+        log.info("Document parsed in : " + (start - end)/(60*1000F) + " mins");
+        
         //save new dataProviders.xml format
         if (aggregators != null && aggregators.size() > 0) {
             aggregators.addAll(aggregatorsLoaded);
         } else {
             aggregators = aggregatorsLoaded;
         }
+        start = System.currentTimeMillis();
+        log.info("SaveData start.");
         saveData();
+        end = System.currentTimeMillis();
+        log.info("SaveData end : " + (start - end)/(60*1000F) + " mins");
 
         return aggregatorsLoaded;
     }
