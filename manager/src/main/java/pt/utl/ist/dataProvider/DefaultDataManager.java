@@ -246,7 +246,7 @@ public class DefaultDataManager implements DataManager {
         SAXReader reader = new SAXReader();
         Document document = reader.read(file2Read);
         long end = System.currentTimeMillis();
-        log.info("Document created in : " + (start - end)/(60*1000F) + " mins");
+        log.info("Document created in : " + (end - start)/(60*1000F) + " mins");
 
 //        if (configuration != null && configuration.getCurrentServerOAIUrl() != null) {
 //            ExternalServiceUtil.replaceAllExternalServices(document, configuration.getCurrentServerOAIUrl());
@@ -268,6 +268,8 @@ public class DefaultDataManager implements DataManager {
 
             Aggregator aggregator = new Aggregator();
             aggregator.setId(currentElementAgg.attributeValue("id"));
+            
+            log.info("Document parsing of aggregator " + aggregator.getId() + ".");
 
             if (currentElementAgg.element("url") != null) {
                 aggregator.setHomepage(currentElementAgg.elementText("url"));
@@ -670,10 +672,10 @@ public class DefaultDataManager implements DataManager {
             aggregatorsLoaded.add(aggregator);
             
             long endAg = System.currentTimeMillis();
-            log.info("Document parsed aggregator " + counter + " in : " + (startAg - endAg)/(60*1000F) + " mins");
+            log.info("Document parsed aggregator " + counter + " in : " + (endAg - startAg)/(60*1000F) + " mins");
         }
         end = System.currentTimeMillis();
-        log.info("Document parsed in : " + (start - end)/(60*1000F) + " mins");
+        log.info("Document parsed in : " + (end - start)/(60*1000F) + " mins");
         
         //save new dataProviders.xml format
         if (aggregators != null && aggregators.size() > 0) {
@@ -685,7 +687,7 @@ public class DefaultDataManager implements DataManager {
         log.info("SaveData start.");
         saveData();
         end = System.currentTimeMillis();
-        log.info("SaveData end : " + (start - end)/(60*1000F) + " mins");
+        log.info("SaveData end : " + (end - start)/(60*1000F) + " mins");
 
         return aggregatorsLoaded;
     }
