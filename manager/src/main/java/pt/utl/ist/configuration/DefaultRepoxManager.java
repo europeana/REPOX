@@ -123,7 +123,6 @@ public class DefaultRepoxManager implements RepoxManager {
         this.configuration = configuration;
 
         long start = System.currentTimeMillis();
-        log.info("Countries File creating.");
         File countries = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.COUNTRIES_FILENAME);
         if (!countries.exists()) {
             InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.COUNTRIES_FILENAME);
@@ -133,10 +132,8 @@ public class DefaultRepoxManager implements RepoxManager {
             inputStream.close();
         }
         long end = System.currentTimeMillis();
-        log.info("Countries File created in : " + (end - start)/(60*1000F) + " mins");
 
         start = System.currentTimeMillis();
-        log.info("MetadataTransformation File creating.");
         File metadataTransformation = new File(configuration.getXmlConfigPath() + File.separator + DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
         if (!metadataTransformation.exists()) {
             InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DefaultRepoxContextUtil.METADATA_TRANSFORMATIONS_FILENAME);
@@ -146,7 +143,6 @@ public class DefaultRepoxManager implements RepoxManager {
             inputStream.close();
         }
         end = System.currentTimeMillis();
-        log.info("MetadataTransformation File created in : " + (end - start)/(60*1000F) + " mins");
 
         start = System.currentTimeMillis();
         log.info("DefaultStatisticsManager creating.");
