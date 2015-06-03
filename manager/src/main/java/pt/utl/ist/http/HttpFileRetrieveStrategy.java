@@ -35,6 +35,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class HttpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log = Logger.getLogger(HttpFileRetrieveStrategy.class);
     public static final String HTTPFILERETRIEVESTRATEGY = "HttpFileRetrieveStrategy";
+    public static final String OLDCLASS = "pt.utl.ist.repox.http.DataSourceHttp";
 
     @XmlElement
     @ApiModelProperty(required = true)

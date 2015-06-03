@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 /**
  */
 public class SimpleFileExtractStrategy implements FileExtractStrategy {
+  public static final String OLDCLASS = "SimpleFileExtract";
     private static final Logger log = Logger.getLogger(SimpleFileExtractStrategy.class);
 
     @Override

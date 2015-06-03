@@ -27,6 +27,7 @@ import java.util.List;
 /**
  */
 public class Iso2709FileExtractStrategy implements FileExtractStrategy {
+  public static final String OLDCLASS = "Iso2709FileExtract";
     //	MetadataFormat.ISO2709;
 
     private static final Logger log = Logger.getLogger(Iso2709FileExtractStrategy.class);

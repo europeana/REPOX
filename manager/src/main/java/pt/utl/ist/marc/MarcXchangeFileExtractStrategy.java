@@ -27,6 +27,7 @@ import java.util.Iterator;
 /**
  */
 public class MarcXchangeFileExtractStrategy implements FileExtractStrategy {
+  public static final String OLDCLASS = "MarcXchangeFileExtract";
     //	MetadataFormat.MarcXchange;
 
     private static final Logger log = Logger.getLogger(MarcXchangeFileExtractStrategy.class);

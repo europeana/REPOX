@@ -454,7 +454,7 @@ public class DefaultDataManager implements DataManager {
             // FTP
             if (retrieveStrategyString != null
                 && (retrieveStrategyString.equals(FtpFileRetrieveStrategy.class.getName()) || retrieveStrategyString
-                    .equals("pt.utl.ist.repox.ftp.DataSourceFtp"))) {
+                    .equals(FtpFileRetrieveStrategy.OLDCLASS))) {
 
               String server = currentRetrieveStrategy.elementText("server");
 
@@ -474,7 +474,7 @@ public class DefaultDataManager implements DataManager {
             // HTTP
             else if (retrieveStrategyString != null
                 && retrieveStrategyString.equals(HttpFileRetrieveStrategy.class.getName())
-                || (retrieveStrategyString.equals("pt.utl.ist.repox.http.DataSourceHttp"))) {
+                || (retrieveStrategyString.equals(HttpFileRetrieveStrategy.OLDCLASS))) {
 
               String url = currentRetrieveStrategy.elementText("url");
               retrieveStrategy = new HttpFileRetrieveStrategy(url);
@@ -489,7 +489,7 @@ public class DefaultDataManager implements DataManager {
             FileExtractStrategy extractStrategy = null;
 
             if (extractStrategyString.equals(Iso2709FileExtractStrategy.class.getSimpleName())
-                || extractStrategyString.equals("Iso2709FileExtract")) {
+                || extractStrategyString.equals(Iso2709FileExtractStrategy.OLDCLASS)) {
               characterEncoding =
                   CharacterEncoding.get(currentDataSourceElement
                       .attributeValue("characterEncoding"));
@@ -497,11 +497,11 @@ public class DefaultDataManager implements DataManager {
                   currentDataSourceElement.attributeValue("isoImplementationClass");
               extractStrategy = new Iso2709FileExtractStrategy(isoImplementationClass);
             } else if (extractStrategyString.equals(MarcXchangeFileExtractStrategy.class
-                .getSimpleName()) || extractStrategyString.equals("MarcXchangeFileExtract")) {
+                .getSimpleName()) || extractStrategyString.equals(MarcXchangeFileExtractStrategy.OLDCLASS)) {
               extractStrategy = new MarcXchangeFileExtractStrategy();
             } else if (extractStrategyString
                 .equals(SimpleFileExtractStrategy.class.getSimpleName())
-                || extractStrategyString.equals("SimpleFileExtract")) {
+                || extractStrategyString.equals(SimpleFileExtractStrategy.OLDCLASS)) {
               extractStrategy = new SimpleFileExtractStrategy();
 
               Element splitRecordsElement = currentDataSourceElement.element("splitRecords");

@@ -33,6 +33,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class FtpFileRetrieveStrategy implements FileRetrieveStrategy {
     private static final Logger log       = Logger.getLogger(FtpFileRetrieveStrategy.class);
     public static final String FTPFILERETRIEVESTRATEGY = "FtpFileRetrieveStrategy";
+    public static final String OLDCLASS = "pt.utl.ist.repox.ftp.DataSourceFtp";
     
     /** DataSourceFtp NORMAL */
     public static final String  NORMAL    = "Normal";
