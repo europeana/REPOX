@@ -87,7 +87,7 @@ public class PostgresqlDatabaseAccess implements DatabaseAccess {
 
     @Override
     public void createTableIndexes(Connection con, String idType, String table, String valueType, boolean indexValue) {
-        String createTableQuery = "CREATE SEQUENCE idseq_" + table + ";" + "CREATE TABLE " + table + " (id integer NOT NULL PRIMARY KEY DEFAULT nextval('idseq_" + table + "'), " + "nc " + idType + " NOT NULL, " + "value " + valueType + ", deleted SMALLINT)";
+        String createTableQuery = "DROP SEQUENCE IF EXISTS idseq_" +  table + ";" + "CREATE SEQUENCE idseq_" + table + ";" + "CREATE TABLE " + table + " (id integer NOT NULL PRIMARY KEY DEFAULT nextval('idseq_" + table + "'), " + "nc " + idType + " NOT NULL, " + "value " + valueType + ", deleted SMALLINT)";
         log.info(createTableQuery);
         SqlUtil.runUpdate(createTableQuery, con);
 

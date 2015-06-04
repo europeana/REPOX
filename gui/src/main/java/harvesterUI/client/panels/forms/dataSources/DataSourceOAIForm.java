@@ -54,7 +54,6 @@ public class DataSourceOAIForm extends DataSourceForm {
     private TextField<String> oaiUrl, oaiSet;
     private SimpleComboBox<String> setsCombo, mdPrefixesCombo;
 
-    // Europeana Fields
     private TextField<String> name, nameCode,exportPath;
 
     public DataSourceOAIForm(FormData data) {
@@ -269,6 +268,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         exportPath = new TextField<String>();
         exportPath.setFieldLabel(HarvesterUI.CONSTANTS.exportPath());
         exportPath.setId("exportPathField");
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
         dataSet.add(exportPath, formData);
 
         addIsSampleCheckBox(dataSet);
@@ -321,7 +321,7 @@ public class DataSourceOAIForm extends DataSourceForm {
         setsCombo.hide();
         oaiSet.show();
         mdPrefixesCombo.hide();
-        exportPath.clear();
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
 
         setResetNamespaces();
         setResetOutputSet(parent);

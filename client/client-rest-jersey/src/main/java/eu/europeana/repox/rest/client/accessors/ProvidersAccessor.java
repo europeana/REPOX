@@ -177,6 +177,7 @@ public class ProvidersAccessor {
    * @param id Should be null, it is generated internally
    * @param name
    * @param country
+   * @param countryCode
    * @param description
    * @param nameCode
    * @param homepage
@@ -188,7 +189,7 @@ public class ProvidersAccessor {
    * @throws InternalServerErrorException
    * @throws DoesNotExistException
    */
-  public void createProvider(String aggregatorId, String id, String name, String country,
+  public void createProvider(String aggregatorId, String id, String name, String country, String countryCode, 
       String description, String nameCode, String homepage, ProviderType providerType, String email)
       throws InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException,
       InternalServerErrorException, DoesNotExistException {
@@ -202,6 +203,7 @@ public class ProvidersAccessor {
         new DataProvider(id, name, null, description, null, nameCode, homepage,
             providerType, email);
     provider.setCountry(country);
+    provider.setCountryCode(countryCode);
     Response response =
         target.request(MediaType.APPLICATION_JSON).post(
             Entity.entity(provider, MediaType.APPLICATION_JSON), Response.class);
@@ -250,7 +252,7 @@ public class ProvidersAccessor {
    * @throws MissingArgumentsException
    * @throws AlreadyExistsException 
    */
-  public void updateProvider(String id, String newId, String newAggregatorId, String name, String country,
+  public void updateProvider(String id, String newId, String newAggregatorId, String name, String country, String countryCode,
       String description, String nameCode, String homepage, ProviderType providerType, String email) throws InvalidArgumentsException, DoesNotExistException, MissingArgumentsException, AlreadyExistsException{
     WebTarget target =
         client.target(restUrl + "/" + ProviderOptionListContainer.PROVIDERS + "/" + id).queryParam(
@@ -260,6 +262,7 @@ public class ProvidersAccessor {
         new DataProvider(newId, name, null, description, null, nameCode, homepage,
             providerType, email);
     provider.setCountry(country);
+    provider.setCountryCode(countryCode);
     Response response =
         target.request(MediaType.APPLICATION_JSON).put(
             Entity.entity(provider, MediaType.APPLICATION_JSON), Response.class);

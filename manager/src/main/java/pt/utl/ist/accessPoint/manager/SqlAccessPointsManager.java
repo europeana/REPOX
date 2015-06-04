@@ -681,83 +681,86 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
         Connection con = databaseAccess.openDbConnection();
 
-        try {
-            TimeUtil.startTimers();
-            TimeUtil.getTimeSinceLastTimerArray(1);
-
-            String maxRowQuery = "select max(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase();
-            String countQuery = "select count(" + recordTable.toLowerCase() + ".nc) from " + recordTable.toLowerCase();
-            String deletedQuery = "select count(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase() + " where deleted > 0";
-
-            String fromQueryHelper = "";
-            if (fromDate != null || toDate != null) {
-                fromQueryHelper += ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = " + timestampTable.toLowerCase() + ".nc";
-                if (fromDate != null) {
-                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value >= '" + fromDate + "'";
-                }
-                if (toDate != null) {
-                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value <= '" + toDate + "'";
-                }
-            }
-
-            maxRowQuery += fromQueryHelper;
-            if (fromQueryHelper.contains("where")) {
-                deletedQuery = deletedQuery.replace(" where deleted > 0", "");
-                deletedQuery += fromQueryHelper + " and " + recordTable.toLowerCase() + ".deleted > 0";
-            } else {
-                deletedQuery += fromQueryHelper;
-            }
-
-            //			countLastrowPair[1] = SqlUtil.getCount(maxQuery, con);
-            Statement statementMaxRow = con.createStatement();
-            try {
-                ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
-                try {
-                    if (rsMaxRow.next()) {
-                        countLastrowPair[1] = rsMaxRow.getInt(1);
-                    }
-                    log.debug(maxRowQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
-                } finally {
-                    rsMaxRow.close();
-                }
-            } finally {
-                statementMaxRow.close();
-            }
-
-            Statement deletedRow = con.createStatement();
-            try {
-                ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
-                try {
-                    if (rsDeletedRow.next()) {
-                        countLastrowPair[2] = rsDeletedRow.getInt(1);
-                    }
-
-                    if (fromRow == null || countLastrowPair[1] > fromRow) {
-                        countQuery += fromQueryHelper;
-                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable.toLowerCase() + ".id > " + fromRow + " and " : "") + recordTable
-                                .toLowerCase() + ".id <= " + countLastrowPair[1];
-
-                        Statement statementCount = con.createStatement();
-                        ResultSet rsCount = statementCount.executeQuery(countQuery);
-                        if (rsCount.next()) {
-                            countLastrowPair[0] = rsCount.getInt(1);
-                        }
-                        log.info(countQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
-                    }
-
-                    return countLastrowPair;
-                } finally {
-                    rsDeletedRow.close();
-                }
-            } finally {
-                deletedRow.close();
-            }
-        } catch (Exception e) {
-            log.error("ERROR Counting records", e);
-            return new int[] { 0, 0 };
-        } finally {
-            con.close();
-        }
+        if(!tableExists(AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD, con) || !tableExists(AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD, con))
+        	return new int[] { 0, 0, 0};
+        	
+	        try {
+	            TimeUtil.startTimers();
+	            TimeUtil.getTimeSinceLastTimerArray(1);
+	
+	            String maxRowQuery = "select max(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase();
+	            String countQuery = "select count(" + recordTable.toLowerCase() + ".nc) from " + recordTable.toLowerCase();
+	            String deletedQuery = "select count(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase() + " where deleted > 0";
+	
+	            String fromQueryHelper = "";
+	            if (fromDate != null || toDate != null) {
+	                fromQueryHelper += ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = " + timestampTable.toLowerCase() + ".nc";
+	                if (fromDate != null) {
+	                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value >= '" + fromDate + "'";
+	                }
+	                if (toDate != null) {
+	                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value <= '" + toDate + "'";
+	                }
+	            }
+	
+	            maxRowQuery += fromQueryHelper;
+	            if (fromQueryHelper.contains("where")) {
+	                deletedQuery = deletedQuery.replace(" where deleted > 0", "");
+	                deletedQuery += fromQueryHelper + " and " + recordTable.toLowerCase() + ".deleted > 0";
+	            } else {
+	                deletedQuery += fromQueryHelper;
+	            }
+	
+	            //			countLastrowPair[1] = SqlUtil.getCount(maxQuery, con);
+	            Statement statementMaxRow = con.createStatement();
+	            try {
+	                ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
+	                try {
+	                    if (rsMaxRow.next()) {
+	                        countLastrowPair[1] = rsMaxRow.getInt(1);
+	                    }
+	                    log.debug(maxRowQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
+	                } finally {
+	                    rsMaxRow.close();
+	                }
+	            } finally {
+	                statementMaxRow.close();
+	            }
+	
+	            Statement deletedRow = con.createStatement();
+	            try {
+	                ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
+	                try {
+	                    if (rsDeletedRow.next()) {
+	                        countLastrowPair[2] = rsDeletedRow.getInt(1);
+	                    }
+	
+	                    if (fromRow == null || countLastrowPair[1] > fromRow) {
+	                        countQuery += fromQueryHelper;
+	                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable.toLowerCase() + ".id > " + fromRow + " and " : "") + recordTable
+	                                .toLowerCase() + ".id <= " + countLastrowPair[1];
+	
+	                        Statement statementCount = con.createStatement();
+	                        ResultSet rsCount = statementCount.executeQuery(countQuery);
+	                        if (rsCount.next()) {
+	                            countLastrowPair[0] = rsCount.getInt(1);
+	                        }
+	                        log.info(countQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
+	                    }
+	
+	                    return countLastrowPair;
+	                } finally {
+	                    rsDeletedRow.close();
+	                }
+	            } finally {
+	                deletedRow.close();
+	            }
+	        } catch (Exception e) {
+	            log.error("ERROR Counting records", e);
+	            return new int[] { 0, 0, 0};
+	        } finally {
+	            con.close();
+	        }
     }
 
     @Override

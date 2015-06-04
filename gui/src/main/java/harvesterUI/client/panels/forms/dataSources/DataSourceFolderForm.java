@@ -195,6 +195,7 @@ public class DataSourceFolderForm extends DataSourceForm {
         exportPath = new TextField<String>();
         exportPath.setFieldLabel(HarvesterUI.CONSTANTS.exportPath());
         exportPath.setId("exportPathField");
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
     }
 
     private void createIDPolicyBoxes(){
@@ -249,7 +250,7 @@ public class DataSourceFolderForm extends DataSourceForm {
 
     private void createRetrieveVariant() {
         final ListStore<ModelData> retrieveVariantStore = new ListStore<ModelData>();
-        retrieveVariantStore.add(new Attribute("country","Folder"));
+        retrieveVariantStore.add(new Attribute("country","File System"));
         retrieveVariantStore.add(new Attribute("country","FTP"));
         retrieveVariantStore.add(new Attribute("country","HTTP"));
 
@@ -265,7 +266,7 @@ public class DataSourceFolderForm extends DataSourceForm {
 
             @Override
             public void selectionChanged(SelectionChangedEvent<ModelData> se) {
-                if(se.getSelectedItem().get("value").equals("Folder"))
+                if(se.getSelectedItem().get("value").equals("File System"))
                     addFolderFields();
                 else {
                     folderPath.hide();
@@ -495,7 +496,8 @@ public class DataSourceFolderForm extends DataSourceForm {
         setResetNamespaces();
         setResetOutputSet(parent);
         dataSourceServicesPanel.resetValues();
-        exportPath.clear();
+//        exportPath.clear();
+        exportPath.setValue(HarvesterUI.getMainConfigurationData().getDefaultExportFolder() + "/");
 
         idPolicyCombo.getStore().clearFilters();
         retrieveVariantCombo.getStore().clearFilters();
@@ -558,12 +560,16 @@ public class DataSourceFolderForm extends DataSourceForm {
         String idXPath = idXPathField.getValue();
         String variant = retrieveVariantCombo.getValue().get("value");
         String dsRetrieveStrat = "";
-        if(variant.equals("Folder"))
+        if(variant.equals("File System")){
             dsRetrieveStrat = FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY;
+//            dataSourceUI.setIngest("Folder(File Sytem) " + metadataFormat.trim());
+        }
         else if(variant.equals("FTP")) {
             dsRetrieveStrat = FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY;
+//            dataSourceUI.setIngest("Folder(FTP) " + metadataFormat.trim());
         } else if(variant.equals("HTTP")) {
             dsRetrieveStrat = HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY;
+//            dataSourceUI.setIngest("Folder(HTTP) " + metadataFormat.trim());
         }
         String serverUrl = server.getValue();
         String userId = user.getValue();
@@ -592,7 +598,7 @@ public class DataSourceFolderForm extends DataSourceForm {
                     parent.getCountryCode().trim(),desc.trim(), "", "", "",
                     "", idPolicy.trim(), metadataFormat.trim());
         }
-
+        
         dataSourceUI.setIngest("Folder " + metadataFormat.trim());
         dataSourceUI.setSourceMDFormat(metadataFormat.trim());
         if(httpURL != null){
@@ -626,9 +632,9 @@ public class DataSourceFolderForm extends DataSourceForm {
         if(HarvesterUI.getProjectType() == ProjectType.DEFAULT)
             saveDataSource(dataSourceUI,oldDataSetId, DatasetType.FOLDER,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
                     metadataFormat,name.getValue(),nameCode.getValue(),exportPath.getValue());
-        else
-            saveDataSource(dataSourceUI,oldDataSetId,DatasetType.FOLDER,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
-                    metadataFormat,"","","");
+//        else
+//            saveDataSource(dataSourceUI,oldDataSetId,DatasetType.FOLDER,dataSourceSchemaForm.getSchema().getValue(),dataSourceSchemaForm.getMetadataNamespace().getValue(),
+//                    metadataFormat,"","","");
     }
 }
 

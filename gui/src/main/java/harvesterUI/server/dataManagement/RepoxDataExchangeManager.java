@@ -70,25 +70,28 @@ public class RepoxDataExchangeManager {
         else if(dataSource instanceof SruRecordUpdateDataSource) {
             dataSourceUI.setIngest("SRU " + dataSourceUI.getSourceMDFormat());
         }else if(dataSource instanceof DirectoryImporterDataSource) {
-            dataSourceUI.setIngest("Folder " + dataSourceUI.getSourceMDFormat());
+//        	dataSourceUI.setIngest("Folder " + dataSourceUI.getSourceMDFormat());
             DirectoryImporterDataSource dataSourceDirectoryImporter = (DirectoryImporterDataSource) dataSource;
             if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FolderFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(File Sytem) " + dataSourceUI.getSourceMDFormat());
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.marc.DataSourceFolder");
+                dataSourceUI.setRetrieveStartegy(FolderFileRetrieveStrategy.FOLDERFILERETRIEVESTRATEGY);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof FtpFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(FTP) " + dataSourceUI.getSourceMDFormat());
                 FtpFileRetrieveStrategy dataSourceFtp = (FtpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setServer(dataSourceFtp.getServer());
                 dataSourceUI.setUser(dataSourceFtp.getUser());
                 dataSourceUI.setPassword(dataSourceFtp.getPassword());
                 dataSourceUI.setFolderPath(dataSourceFtp.getFtpPath());
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceFtp");
+                dataSourceUI.setRetrieveStartegy(FtpFileRetrieveStrategy.FTPFILERETRIEVESTRATEGY);
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
             else if(dataSourceDirectoryImporter.getRetrieveStrategy() instanceof HttpFileRetrieveStrategy) {
+            	dataSourceUI.setIngest("Folder(HTTP) " + dataSourceUI.getSourceMDFormat());
                 HttpFileRetrieveStrategy dataSourceHttp = (HttpFileRetrieveStrategy) dataSourceDirectoryImporter.getRetrieveStrategy();
                 dataSourceUI.setHttpURL(dataSourceHttp.getUrl());
-                dataSourceUI.setRetrieveStartegy("pt.utl.ist.repox.ftp.DataSourceHttp");
+                dataSourceUI.setRetrieveStartegy(HttpFileRetrieveStrategy.HTTPFILERETRIEVESTRATEGY);
                 loadIdExtractedInfo(dataSourceDirectoryImporter,dataSource,dataSourceUI);
             }
 

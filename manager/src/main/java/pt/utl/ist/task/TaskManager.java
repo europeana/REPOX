@@ -128,13 +128,13 @@ public class TaskManager implements RunnableStoppable {
                 }
             }
         } catch (IllegalFileFormatException e) {
-            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).");
+            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).", e);
             return new ArrayList<ScheduledTask>();
         } catch (ParseException e) {
-            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).");
+            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).", e);
             return new ArrayList<ScheduledTask>();
         } catch (DocumentException e) {
-            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).");
+            log.error("Error loading the scheduled Tasks file (scheduledTasks.xml).", e);
             return new ArrayList<ScheduledTask>();
         }
         return new ArrayList<ScheduledTask>();
@@ -174,6 +174,13 @@ public class TaskManager implements RunnableStoppable {
                 for (int i = 0; i < parameters.length; i++) {
                     paramTypes[i] = String.class;
                 }
+                
+                //Fix path for backwards compatibility
+                if(runnable.equals("pt.utl.ist.repox.task.IngestDataSource"))
+                	runnable = IngestDataSource.class.getCanonicalName();
+                else if(runnable.equals("pt.utl.ist.repox.task.ExportToFilesystem"))
+                	runnable = ExportToFilesystem.class.getCanonicalName();
+                
                 Class<RunnableStoppable> taskClass = (Class<RunnableStoppable>)Class.forName(runnable);
                 Constructor<RunnableStoppable> cons = taskClass.getConstructor(paramTypes);
                 RunnableStoppable newInstance = cons.newInstance((Object[])parameters);
@@ -230,6 +237,12 @@ public class TaskManager implements RunnableStoppable {
                 for (int i = 0; i < parameters.length; i++) {
                     paramTypes[i] = String.class;
                 }
+                //Fix path for backwards compatibility
+                if(runnable.equals("pt.utl.ist.repox.task.IngestDataSource"))
+                	runnable = IngestDataSource.class.getCanonicalName();
+                else if(runnable.equals("pt.utl.ist.repox.task.ExportToFilesystem"))
+                	runnable = ExportToFilesystem.class.getCanonicalName();
+                
                 Class<RunnableStoppable> taskClass = (Class<RunnableStoppable>)Class.forName(runnable);
                 Constructor<RunnableStoppable> cons = taskClass.getConstructor(paramTypes);
                 RunnableStoppable newInstance = cons.newInstance((Object[])parameters);
