@@ -730,6 +730,11 @@ public class DirectoryImporterDataSource extends DataSource {
                         File tempDir = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getTempDir();
                         List<File> listFiles = TarGz.unTarGz(file, tempDir);
                         numberOfRecords2Harvest += listFiles.size();
+                        for(File f : listFiles)
+                        {
+                          if(f.exists())
+                            f.delete();
+                        }
                     } else {
                         numberOfRecords2Harvest++;
                     }
