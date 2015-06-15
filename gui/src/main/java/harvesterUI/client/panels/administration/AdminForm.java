@@ -132,13 +132,13 @@ public class AdminForm extends VerticalPanel {
         httpRequestField.setAllowBlank(false);
         simple.add(httpRequestField, formData);
 
-        derbyDbFolderField = new TextField<String>();
-        derbyDbFolderField.setFieldLabel(HarvesterUI.CONSTANTS.derbyDatabaseFolder()+ HarvesterUI.REQUIRED_STR);
-        derbyDbFolderField.setId("admin_derbyDBField");
-        derbyDbFolderField.addPlugin(plugin);
-        derbyDbFolderField.setData("text", HarvesterUI.CONSTANTS.derbyDatabaseFolderExample());
-        derbyDbFolderField.setAllowBlank(false);
-        simple.add(derbyDbFolderField, formData);
+//        derbyDbFolderField = new TextField<String>();
+//        derbyDbFolderField.setFieldLabel(HarvesterUI.CONSTANTS.derbyDatabaseFolder()+ HarvesterUI.REQUIRED_STR);
+//        derbyDbFolderField.setId("admin_derbyDBField");
+//        derbyDbFolderField.addPlugin(plugin);
+//        derbyDbFolderField.setData("text", HarvesterUI.CONSTANTS.derbyDatabaseFolderExample());
+//        derbyDbFolderField.setAllowBlank(false);
+//        simple.add(derbyDbFolderField, formData);
 
         sampleRecordsField = new TextField<String>();
         sampleRecordsField.setFieldLabel(HarvesterUI.CONSTANTS.sampleRecords()+ HarvesterUI.REQUIRED_STR);
@@ -283,7 +283,7 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("repositoryFolder",repositoryFolderField.getValue());
                 adminInfo.set("configFilesFolder",configFilesFolderField.getValue());
                 adminInfo.set("oaiRequestFolder",oaiRequestFolderField.getValue());
-                adminInfo.set("derbyDbFolder",derbyDbFolderField.getValue());
+//                adminInfo.set("derbyDbFolder",derbyDbFolderField.getValue());
                 adminInfo.set("baseUrn",baseUrnField.getValue());
                 adminInfo.set("defaultExportFolder",defaultExportFolderField.getValue());
                 adminInfo.set("adminEmail",adminEmailField.getValue());
@@ -354,7 +354,7 @@ public class AdminForm extends VerticalPanel {
                 repositoryFolderField.setValue((String)dataModel.get("repositoryFolder"));
                 configFilesFolderField.setValue((String)dataModel.get("configFilesFolder"));
                 oaiRequestFolderField.setValue((String)dataModel.get("oaiRequestFolder"));
-                derbyDbFolderField.setValue((String)dataModel.get("derbyDbFolder"));
+//                derbyDbFolderField.setValue((String)dataModel.get("derbyDbFolder"));
                 baseUrnField.setValue((String)dataModel.get("baseUrn"));
                 defaultExportFolderField.setValue((String)dataModel.get("defaultExportFolder"));
                 adminEmailField.setValue((String)dataModel.get("adminEmail"));

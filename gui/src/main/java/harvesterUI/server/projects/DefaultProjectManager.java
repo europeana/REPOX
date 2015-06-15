@@ -169,7 +169,7 @@ public class DefaultProjectManager extends ProjectManager {
             adminInfo.set("repositoryFolder",configuration.getRepositoryPath());
             adminInfo.set("configFilesFolder",configuration.getXmlConfigPath());
             adminInfo.set("oaiRequestFolder", configuration.getOaiRequestPath());
-            adminInfo.set("derbyDbFolder",configuration.getDatabasePath());
+//            adminInfo.set("derbyDbFolder",configuration.getDatabasePath());
             adminInfo.set("baseUrn",configuration.getBaseUrn());
 
             PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");

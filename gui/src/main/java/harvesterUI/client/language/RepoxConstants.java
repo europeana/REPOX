@@ -463,10 +463,10 @@ public interface RepoxConstants extends Constants{
     String httpRequestsFolder();
     @DefaultStringValue("---")
     String httpRequestsFolderExample();
-    @DefaultStringValue("---")
-    String derbyDatabaseFolder();
-    @DefaultStringValue("---")
-    String derbyDatabaseFolderExample();
+//    @DefaultStringValue("---")
+//    String derbyDatabaseFolder();
+//    @DefaultStringValue("---")
+//    String derbyDatabaseFolderExample();
     @DefaultStringValue("---")
     String sampleRecords();
     @DefaultStringValue("---")

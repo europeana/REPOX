@@ -34,7 +34,7 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_SMTP_PORT                   = "smtp.port";
 
     private static final String PROPERTY_SAMPLE_RECORDS              = "sample.records";
-    private static final String PROPERTY_DB_DIR                      = "database.dir";
+//    private static final String PROPERTY_DB_DIR                      = "database.dir";
     private static final String PROPERTY_DB_DRIVER_CLASSNAME         = "database.driverClassName";
     private static final String PROPERTY_DB_URL                      = "database.url";
     private static final String PROPERTY_DB_CREATE                   = "database.create";
@@ -66,7 +66,7 @@ public abstract class RepoxConfiguration {
 
     private int                 sampleRecords;
 
-    private String              databasePath;
+//    private String              databasePath;
     private String              databaseDriverClassName;
     private String              databaseUrl;
     private boolean             databaseCreate;
@@ -140,7 +140,7 @@ public abstract class RepoxConfiguration {
         this.defaultEmail = (String)configuration.getProperty(PROPERTY_DEFAULT_EMAIL);
         this.administratorEmail = (String)configuration.getProperty(PROPERTY_ADMINISTRATOR_EMAIL);
         this.smtpServer = (String)configuration.getProperty(PROPERTY_SMTP_SERVER);
-        this.databasePath = (String)configuration.getProperty(PROPERTY_DB_DIR);
+//        this.databasePath = (String)configuration.getProperty(PROPERTY_DB_DIR);
         this.databaseDriverClassName = (String)configuration.getProperty(PROPERTY_DB_DRIVER_CLASSNAME);
         this.databaseUrl = (String)configuration.getProperty(PROPERTY_DB_URL);
         this.databaseCreate = Boolean.parseBoolean((String)configuration.getProperty(PROPERTY_DB_CREATE));
@@ -224,13 +224,13 @@ public abstract class RepoxConfiguration {
         this.smtpServer = smtpServer;
     }
 
-    public String getDatabasePath() {
-        return databasePath;
-    }
-
-    public void setDatabasePath(String databasePath) {
-        this.databasePath = databasePath;
-    }
+//    public String getDatabasePath() {
+//        return databasePath;
+//    }
+//
+//    public void setDatabasePath(String databasePath) {
+//        this.databasePath = databasePath;
+//    }
 
     public String getDatabaseDriverClassName() {
         return databaseDriverClassName;
