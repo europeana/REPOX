@@ -568,15 +568,10 @@ public class DefaultDataManager implements DataManager {
 
               harvestMethod = new IdSequenceHarvester(target, maximumId);
             }
-            long startDsZ39 = System.currentTimeMillis();
-            log.info("Create datasource Z39.");
-
+            
             dataSource =
                 new DataSourceZ3950(dataProvider, id, description, schema, namespace,
                     harvestMethod, recordIdPolicy, metadataTransformations);
-
-            long endDsZ39 = System.currentTimeMillis();
-            log.info("Create datasource Z39 in: " + (endDsZ39 - startDsZ39));
           } else {
             throw new RuntimeException("Loading configuration from Data Source of type "
                 + dataSourceType + " not implemented");
