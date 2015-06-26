@@ -189,7 +189,7 @@ public class ProvidersAccessor {
    * @throws InternalServerErrorException
    * @throws DoesNotExistException
    */
-  public void createProvider(String aggregatorId, String id, String name, String country, String countryCode, 
+  public String createProvider(String aggregatorId, String id, String name, String country, String countryCode, 
       String description, String nameCode, String homepage, ProviderType providerType, String email)
       throws InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException,
       InternalServerErrorException, DoesNotExistException {
@@ -231,6 +231,8 @@ public class ProvidersAccessor {
         throw new InternalServerErrorException(errorMessage.getResult());
     }
     LOGGER.info("createProvider(..) success!");
+    Result result = response.readEntity(Result.class);
+    return result.getResult().substring(result.getResult().indexOf("<") + 1, result.getResult().indexOf(">"));
   }
   
   /**

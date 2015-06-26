@@ -350,7 +350,7 @@ public class DatasetsResource {
                     }
                 }
             }
-            return Response.created(null).entity(new Result("DataSet with id = " + id + " and name = " + name + " created successfully")).build();
+            return Response.created(null).entity(new Result("DataSet with id = <" + id + "> and name = " + name + " created successfully")).build();
         }
         return Response.status(500).entity(new Result("Invalid dataSourceContainer instance in body!")).build();
     }

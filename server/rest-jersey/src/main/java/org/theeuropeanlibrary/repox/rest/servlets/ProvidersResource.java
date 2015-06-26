@@ -239,7 +239,7 @@ public class ProvidersResource {
     return Response
         .created(null)
         .entity(
-            new Result("DataProvider with id = " + createdProvider.getId() + " and name = "
+            new Result("DataProvider with id = <" + createdProvider.getId() + "> and name = "
                 + createdProvider.getName() + " created successfully")).build();
   }
 

@@ -202,7 +202,7 @@ public class DatasetsAccessor {
    * @throws AlreadyExistsException
    * @throws InternalServerErrorException
    */
-  public void createDatasetOai(String providerId, String id, String name, String nameCode,
+  public String createDatasetOai(String providerId, String id, String name, String nameCode,
       boolean isSample, String schema, String description, String namespace, String metadataFormat,
       String marcFormat, String oaiUrl, String oaiSet, String exportDir,
       RecordIdPolicy recordIdPolicy, Map<String, MetadataTransformation> metadataTransformations)
@@ -247,6 +247,8 @@ public class DatasetsAccessor {
         throw new InternalServerErrorException(errorMessage.getResult());
     }
     LOGGER.info("createDatasetOai(..) success!");
+    Result result = response.readEntity(Result.class);
+    return result.getResult().substring(result.getResult().indexOf("<") + 1, result.getResult().indexOf(">"));
   }
 
   /**
@@ -277,7 +279,7 @@ public class DatasetsAccessor {
    * @throws AlreadyExistsException
    * @throws InternalServerErrorException
    */
-  public void createDatasetFile(String providerId, String id, String name, String nameCode,
+  public String createDatasetFile(String providerId, String id, String name, String nameCode,
       boolean isSample, String schema, String description, String namespace, String metadataFormat,
       String marcFormat, String exportDir, RecordIdPolicy recordIdPolicy,
       FileExtractStrategy extractStrategy, FileRetrieveStrategy retrieveStrategy,
@@ -327,6 +329,8 @@ public class DatasetsAccessor {
         throw new InternalServerErrorException(errorMessage.getResult());
     }
     LOGGER.info("createDatasetFile(..) success!");
+    Result result = response.readEntity(Result.class);
+    return result.getResult().substring(result.getResult().indexOf("<") + 1, result.getResult().indexOf(">"));
   }
 
   /**
