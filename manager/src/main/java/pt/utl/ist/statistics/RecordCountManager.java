@@ -357,15 +357,18 @@ public class RecordCountManager implements Runnable {
   }
 
   public void run() {
-    GregorianCalendar now = new GregorianCalendar();
-    try {
-      if (isTimeForFullCount(now)) {
-        generateCounts(true); // Force full count
-      } else if (isTimeToRun(now)) {
-        generateCounts(false);
+    while (true) {
+      GregorianCalendar now = new GregorianCalendar();
+      try {
+        if (isTimeForFullCount(now)) {
+          generateCounts(true); // Force full count
+        } else if (isTimeToRun(now)) {
+          generateCounts(false);
+        }
+        Thread.sleep(MAX_WAIT_TIME_CHANGES);
+      } catch (Exception e) {
+        log.error("Error counting records", e);
       }
-    } catch (Exception e) {
-      log.error("Error counting records", e);
     }
   }
 }
