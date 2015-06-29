@@ -98,6 +98,7 @@ public class AdminForm extends VerticalPanel {
         repositoryFolderField.addPlugin(plugin);
         repositoryFolderField.setData("text",HarvesterUI.CONSTANTS.repositoryFolderExample());
         repositoryFolderField.setAllowBlank(false);
+        repositoryFolderField.setReadOnly(true);
         simple.add(repositoryFolderField, formData);
 
         configFilesFolderField = new TextField<String>();
@@ -106,6 +107,7 @@ public class AdminForm extends VerticalPanel {
         configFilesFolderField.addPlugin(plugin);
         configFilesFolderField.setData("text", HarvesterUI.CONSTANTS.configurationFilesFolderExample());
         configFilesFolderField.setAllowBlank(false);
+        configFilesFolderField.setReadOnly(true);
         simple.add(configFilesFolderField, formData);
 
         oaiRequestFolderField = new TextField<String>();
@@ -114,6 +116,7 @@ public class AdminForm extends VerticalPanel {
         oaiRequestFolderField.addPlugin(plugin);
         oaiRequestFolderField.setData("text", HarvesterUI.CONSTANTS.oaiPmhRequestsFolderExample());
         oaiRequestFolderField.setAllowBlank(false);
+        oaiRequestFolderField.setReadOnly(true);
         simple.add(oaiRequestFolderField, formData);
 
         ftpRequestField = new TextField<String>();
@@ -122,6 +125,7 @@ public class AdminForm extends VerticalPanel {
         ftpRequestField.addPlugin(plugin);
         ftpRequestField.setData("text", HarvesterUI.CONSTANTS.ftpRequestsFolderExample());
         ftpRequestField.setAllowBlank(false);
+        ftpRequestField.setReadOnly(true);
         simple.add(ftpRequestField, formData);
 
         httpRequestField = new TextField<String>();
@@ -130,6 +134,7 @@ public class AdminForm extends VerticalPanel {
         httpRequestField.addPlugin(plugin);
         httpRequestField.setData("text", HarvesterUI.CONSTANTS.httpRequestsFolderExample());
         httpRequestField.setAllowBlank(false);
+        httpRequestField.setReadOnly(true);
         simple.add(httpRequestField, formData);
 
 //        derbyDbFolderField = new TextField<String>();
@@ -176,6 +181,7 @@ public class AdminForm extends VerticalPanel {
         defaultExportFolderField.addPlugin(plugin);
         defaultExportFolderField.setId("admin_defaultExportField");
         defaultExportFolderField.setData("text", HarvesterUI.CONSTANTS.defaultExportFolderExample());
+        defaultExportFolderField.setReadOnly(true);
         defaultExportFolderField.setAllowBlank(false);
 
         // Only for Europeana version
