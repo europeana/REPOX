@@ -214,7 +214,7 @@ public class DefaultProjectManager extends ProjectManager {
             properties.setProperty("repository.dir",(String)results.get("repositoryFolder"));
             properties.setProperty("xmlConfig.dir",(String)results.get("configFilesFolder"));
             properties.setProperty("oairequests.dir",(String)results.get("oaiRequestFolder"));
-            properties.setProperty("database.dir",(String)results.get("derbyDbFolder"));
+//            properties.setProperty("database.dir",(String)results.get("derbyDbFolder"));
             properties.setProperty("baseurn",(String)results.get("baseUrn"));
             properties.setProperty("exportDefaultFolder",(String)results.get("defaultExportFolder"));
             properties.setProperty("administrator.email",(String)results.get("adminEmail"));
