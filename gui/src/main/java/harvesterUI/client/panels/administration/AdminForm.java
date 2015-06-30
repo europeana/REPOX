@@ -99,7 +99,7 @@ public class AdminForm extends VerticalPanel {
     repositoryFolderField.addPlugin(plugin);
     repositoryFolderField.setData("text", HarvesterUI.CONSTANTS.repositoryFolderExample());
     repositoryFolderField.setAllowBlank(false);
-    repositoryFolderField.setReadOnly(true);
+    repositoryFolderField.setEnabled(false);
     simple.add(repositoryFolderField, formData);
 
     configFilesFolderField = new TextField<String>();
@@ -109,7 +109,7 @@ public class AdminForm extends VerticalPanel {
     configFilesFolderField.addPlugin(plugin);
     configFilesFolderField.setData("text", HarvesterUI.CONSTANTS.configurationFilesFolderExample());
     configFilesFolderField.setAllowBlank(false);
-    configFilesFolderField.setReadOnly(true);
+    configFilesFolderField.setEnabled(false);
     simple.add(configFilesFolderField, formData);
 
     oaiRequestFolderField = new TextField<String>();
@@ -119,7 +119,7 @@ public class AdminForm extends VerticalPanel {
     oaiRequestFolderField.addPlugin(plugin);
     oaiRequestFolderField.setData("text", HarvesterUI.CONSTANTS.oaiPmhRequestsFolderExample());
     oaiRequestFolderField.setAllowBlank(false);
-    oaiRequestFolderField.setReadOnly(true);
+    oaiRequestFolderField.setEnabled(false);
     simple.add(oaiRequestFolderField, formData);
 
     ftpRequestField = new TextField<String>();
@@ -129,7 +129,7 @@ public class AdminForm extends VerticalPanel {
     ftpRequestField.addPlugin(plugin);
     ftpRequestField.setData("text", HarvesterUI.CONSTANTS.ftpRequestsFolderExample());
     ftpRequestField.setAllowBlank(false);
-    ftpRequestField.setReadOnly(true);
+    ftpRequestField.setEnabled(false);
     simple.add(ftpRequestField, formData);
 
     httpRequestField = new TextField<String>();
@@ -139,7 +139,7 @@ public class AdminForm extends VerticalPanel {
     httpRequestField.addPlugin(plugin);
     httpRequestField.setData("text", HarvesterUI.CONSTANTS.httpRequestsFolderExample());
     httpRequestField.setAllowBlank(false);
-    httpRequestField.setReadOnly(true);
+    httpRequestField.setEnabled(false);
     simple.add(httpRequestField, formData);
 
     defaultExportFolderField = new TextField<String>();
@@ -148,12 +148,9 @@ public class AdminForm extends VerticalPanel {
     defaultExportFolderField.addPlugin(plugin);
     defaultExportFolderField.setId("admin_defaultExportField");
     defaultExportFolderField.setData("text", HarvesterUI.CONSTANTS.defaultExportFolderExample());
-    defaultExportFolderField.setReadOnly(true);
+    defaultExportFolderField.setEnabled(false);
     defaultExportFolderField.setAllowBlank(false);
-
-    // Only for Europeana version
-    if (HarvesterUI.getProjectType() == ProjectType.DEFAULT)
-      simple.add(defaultExportFolderField, formData);
+    simple.add(defaultExportFolderField, formData);
 
     // derbyDbFolderField = new TextField<String>();
     // derbyDbFolderField.setFieldLabel(HarvesterUI.CONSTANTS.derbyDatabaseFolder()+
@@ -196,12 +193,6 @@ public class AdminForm extends VerticalPanel {
         "Maximum number of records listed for each ListRecords OAI call (Ex: 250)");
     maxRecordsOaiField.setAllowBlank(false);
     simple.add(maxRecordsOaiField, formData);
-
-    // Only for Eudml version
-    // useYaddaStorage = new CheckBox();
-    // checkBoxGroup.setId("useYaddaStorage");
-    // checkBoxGroup.setFieldLabel("Store in Yadda?");
-    // checkBoxGroup.add(useYaddaStorage);
 
     backendUrl = new TextField<String>();
     backendUrl.setFieldLabel("Eudml backend Url " + HarvesterUI.REQUIRED_STR);
@@ -255,16 +246,6 @@ public class AdminForm extends VerticalPanel {
     ldapPassField.setPassword(true);
     simple.add(ldapPassField, formData);
 
-    // ldapUserPrefixField = new TextField<String>();
-    // ldapUserPrefixField.setFieldLabel("LDAP User Prefix");
-    // ldapUserPrefixField.setId("admin_ldapUserPre");
-    // simple.add(ldapUserPrefixField, formData);
-
-    // ldapLoginDNField = new TextField<String>();
-    // ldapLoginDNField.setFieldLabel("LDAP Login DN");
-    // ldapLoginDNField.setId("admin_ldapLoginDN");
-    // simple.add(ldapLoginDNField, formData);
-
     CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     checkBoxGroup = new CheckBoxGroup();
     useCountriesTxtFile = new CheckBox();
@@ -303,7 +284,6 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("repositoryFolder", repositoryFolderField.getValue());
                 adminInfo.set("configFilesFolder", configFilesFolderField.getValue());
                 adminInfo.set("oaiRequestFolder", oaiRequestFolderField.getValue());
-                // adminInfo.set("derbyDbFolder",derbyDbFolderField.getValue());
                 adminInfo.set("baseUrn", baseUrnField.getValue());
                 adminInfo.set("defaultExportFolder", defaultExportFolderField.getValue());
                 adminInfo.set("adminEmail", adminEmailField.getValue());
@@ -316,11 +296,8 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("sampleRecords", sampleRecordsField.getValue());
                 adminInfo.set("ldapHost", ldapHostField.getValue());
                 adminInfo.set("ldapRootPassword", ldapPassField.getValue());
-                // adminInfo.set("ldapUserPrefix",ldapUserPrefixField.getValue());
-                // adminInfo.set("ldapLoginDN",ldapLoginDNField.getValue());
                 adminInfo.set("useCountriesTxt", useCountriesTxtFile.getValue());
                 adminInfo.set("sendEmailAfterIngest", sendEmailAfterIngest.getValue());
-                // adminInfo.set("useYaddaStorage",useYaddaStorage.getValue());
                 adminInfo.set("useMailSSLAuthentication", useMailSSLAuthentication.getValue());
                 adminInfo.set("useOAINamespace", useOAINamespace.getValue());
                 adminInfo.set("backendUrl", backendUrl.getValue());
@@ -392,11 +369,8 @@ public class AdminForm extends VerticalPanel {
         sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));
         ldapHostField.setValue((String) dataModel.get("ldapHost"));
         ldapPassField.setValue((String) dataModel.get("ldapRootPassword"));
-        // ldapUserPrefixField.setValue((String)dataModel.get("ldapUserPrefix"));
-        // ldapLoginDNField.setValue((String)dataModel.get("ldapLoginDN"));
         useCountriesTxtFile.setValue((Boolean) dataModel.get("useCountriesTxt"));
         sendEmailAfterIngest.setValue((Boolean) dataModel.get("sendEmailAfterIngest"));
-        // useYaddaStorage.setValue((Boolean)dataModel.get("useYaddaStorage"));
         useMailSSLAuthentication.setValue((Boolean) dataModel.get("useMailSSLAuthentication"));
         useOAINamespace.setValue((Boolean) dataModel.get("useOAINamespace"));
         backendUrl.setValue((String) dataModel.get("backendUrl"));
