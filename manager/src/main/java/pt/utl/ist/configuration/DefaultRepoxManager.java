@@ -54,6 +54,10 @@ public class DefaultRepoxManager implements RepoxManager {
         return configuration;
     }
 
+    public void setConfiguration(DefaultRepoxConfiguration configuration) {
+      this.configuration = configuration;
+    }
+
     @Override
     public AccessPointsManager getAccessPointsManager() {
         return accessPointsManager;

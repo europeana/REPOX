@@ -96,14 +96,15 @@ public class DefaultRepoxContextUtil implements RepoxContextUtil {
       DefaultRepoxConfiguration configuration =
           new DefaultRepoxConfiguration(configurationPropertiesLayout);
       log.warn("Using DEFAULT configuration properties file: " + CONFIG_FILE);
+      repoxManager.setConfiguration(configuration);
       // TODO The below call has to be changed to update only values that are allowed to be changed
       // while the application is running, because the below method recreates the manager and
       // generates new threads
-      repoxManager =
-          new DefaultRepoxManager(configuration, DATA_PROVIDERS_FILENAME, STATISTICS_FILENAME,
-              RECORD_COUNTS_FILENAME, SCHEDULED_TASKS_FILENAME, RECOVERABLE_TASKS_FILENAME,
-              METADATA_TRANSFORMATIONS_FILENAME, OLD_TASKS_FILENAME, EXTERNAL_SERVICES_FILENAME,
-              METADATA_SCHEMAS_FILENAME, TAGS_FILENAME);
+//      repoxManager =
+//          new DefaultRepoxManager(configuration, DATA_PROVIDERS_FILENAME, STATISTICS_FILENAME,
+//              RECORD_COUNTS_FILENAME, SCHEDULED_TASKS_FILENAME, RECOVERABLE_TASKS_FILENAME,
+//              METADATA_TRANSFORMATIONS_FILENAME, OLD_TASKS_FILENAME, EXTERNAL_SERVICES_FILENAME,
+//              METADATA_SCHEMAS_FILENAME, TAGS_FILENAME);
     } catch (Exception e) {
       log.fatal("Unable to load RepoxManager", e);
     }
