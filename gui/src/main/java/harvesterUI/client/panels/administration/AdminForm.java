@@ -52,7 +52,7 @@ public class AdminForm extends VerticalPanel {
       repoxDefaultEmailSenderField, repoxDefualtEmailPassField, ldapPassField, httpRequestField,
       sampleRecordsField, ldapHostField, backendUrl;
 
-  private CheckBox useCountriesTxtFile, sendEmailAfterIngest, useMailSSLAuthentication,
+  private CheckBox useCountriesTxtFile, sendEmailAfterIngest,
       useOAINamespace;
 
   public AdminForm() {
@@ -252,12 +252,12 @@ public class AdminForm extends VerticalPanel {
     checkBoxGroup.add(sendEmailAfterIngest);
     simple.add(checkBoxGroup, formData);
 
-    checkBoxGroup = new CheckBoxGroup();
-    useMailSSLAuthentication = new CheckBox();
-    checkBoxGroup.setId("useMailSSLAuthentication");
-    checkBoxGroup.setFieldLabel("Use SSL Mail Authentication?");
-    checkBoxGroup.add(useMailSSLAuthentication);
-    simple.add(checkBoxGroup, formData);
+//    checkBoxGroup = new CheckBoxGroup();
+//    useMailSSLAuthentication = new CheckBox();
+//    checkBoxGroup.setId("useMailSSLAuthentication");
+//    checkBoxGroup.setFieldLabel("Use SSL Mail Authentication?");
+//    checkBoxGroup.add(useMailSSLAuthentication);
+//    simple.add(checkBoxGroup, formData);
 
     checkBoxGroup = new CheckBoxGroup();
     useOAINamespace = new CheckBox();
@@ -289,7 +289,7 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("ldapRootPassword", ldapPassField.getValue());
                 adminInfo.set("useCountriesTxt", useCountriesTxtFile.getValue());
                 adminInfo.set("sendEmailAfterIngest", sendEmailAfterIngest.getValue());
-                adminInfo.set("useMailSSLAuthentication", useMailSSLAuthentication.getValue());
+//                adminInfo.set("useMailSSLAuthentication", useMailSSLAuthentication.getValue());
                 adminInfo.set("useOAINamespace", useOAINamespace.getValue());
                 adminInfo.set("backendUrl", backendUrl.getValue());
                 adminInfo.set("oaiRepoName", repositoryNameField.getValue());
@@ -361,7 +361,7 @@ public class AdminForm extends VerticalPanel {
         ldapPassField.setValue((String) dataModel.get("ldapRootPassword"));
         useCountriesTxtFile.setValue((Boolean) dataModel.get("useCountriesTxt"));
         sendEmailAfterIngest.setValue((Boolean) dataModel.get("sendEmailAfterIngest"));
-        useMailSSLAuthentication.setValue((Boolean) dataModel.get("useMailSSLAuthentication"));
+//        useMailSSLAuthentication.setValue((Boolean) dataModel.get("useMailSSLAuthentication"));
         useOAINamespace.setValue((Boolean) dataModel.get("useOAINamespace"));
         backendUrl.setValue((String) dataModel.get("backendUrl"));
         repositoryNameField.setValue((String) dataModel.get("oaiRepoName"));

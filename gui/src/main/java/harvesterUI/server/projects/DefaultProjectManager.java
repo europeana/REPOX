@@ -169,7 +169,6 @@ public class DefaultProjectManager extends ProjectManager {
             adminInfo.set("repositoryFolder",configuration.getRepositoryPath());
             adminInfo.set("configFilesFolder",configuration.getXmlConfigPath());
             adminInfo.set("oaiRequestFolder", configuration.getOaiRequestPath());
-//            adminInfo.set("derbyDbFolder",configuration.getDatabasePath());
             adminInfo.set("baseUrn",configuration.getBaseUrn());
 
             PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
@@ -187,7 +186,7 @@ public class DefaultProjectManager extends ProjectManager {
             adminInfo.set("sampleRecords",configuration.getSampleRecords());
             adminInfo.set("useCountriesTxt",configuration.getUseCountriesTxt());
             adminInfo.set("sendEmailAfterIngest",configuration.getSendEmailAfterIngest());
-            adminInfo.set("useMailSSLAuthentication",configuration.isUseMailSSLAuthentication());
+//            adminInfo.set("useMailSSLAuthentication",configuration.isUseMailSSLAuthentication());
             adminInfo.set("useOAINamespace",configuration.isUseOAINamespace());
 
             // optional fields
@@ -214,7 +213,6 @@ public class DefaultProjectManager extends ProjectManager {
             properties.setProperty("repository.dir",(String)results.get("repositoryFolder"));
             properties.setProperty("xmlConfig.dir",(String)results.get("configFilesFolder"));
             properties.setProperty("oairequests.dir",(String)results.get("oaiRequestFolder"));
-//            properties.setProperty("database.dir",(String)results.get("derbyDbFolder"));
             properties.setProperty("baseurn",(String)results.get("baseUrn"));
             properties.setProperty("exportDefaultFolder",(String)results.get("defaultExportFolder"));
             properties.setProperty("administrator.email",(String)results.get("adminEmail"));
@@ -226,7 +224,7 @@ public class DefaultProjectManager extends ProjectManager {
             properties.setProperty("sample.records",(String)results.get("sampleRecords"));
             properties.setProperty("userCountriesTxtFile",String.valueOf(results.get("useCountriesTxt")));
             properties.setProperty("sendEmailAfterIngest",String.valueOf(results.get("sendEmailAfterIngest")));
-            properties.setProperty("useMailSSLAuthentication",String.valueOf(results.get("useMailSSLAuthentication")));
+//            properties.setProperty("useMailSSLAuthentication",String.valueOf(results.get("useMailSSLAuthentication")));
             properties.setProperty("useOAINamespace",String.valueOf(results.get("useOAINamespace")));
 
             // optional fields
