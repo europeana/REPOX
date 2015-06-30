@@ -36,7 +36,6 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_SAMPLE_RECORDS              = "sample.records";
     private static final String PROPERTY_DB_DRIVER_CLASSNAME         = "database.driverClassName";
     private static final String PROPERTY_DB_URL                      = "database.url";
-    private static final String PROPERTY_DB_CREATE                   = "database.create";
     private static final String PROPERTY_DB_USER                     = "database.user";
     private static final String PROPERTY_DB_PASSWORD                 = "database.password";
 
@@ -67,7 +66,6 @@ public abstract class RepoxConfiguration {
     
     private String              databaseDriverClassName;
     private String              databaseUrl;
-    private boolean             databaseCreate;
     private String              databaseUser;
     private String              databasePassword;
 
@@ -140,7 +138,6 @@ public abstract class RepoxConfiguration {
         this.smtpServer = (String)configuration.getProperty(PROPERTY_SMTP_SERVER);
         this.databaseDriverClassName = (String)configuration.getProperty(PROPERTY_DB_DRIVER_CLASSNAME);
         this.databaseUrl = (String)configuration.getProperty(PROPERTY_DB_URL);
-        this.databaseCreate = Boolean.parseBoolean((String)configuration.getProperty(PROPERTY_DB_CREATE));
         this.databaseUser = (String)configuration.getProperty(PROPERTY_DB_USER);
         this.databasePassword = (String)configuration.getProperty(PROPERTY_DB_PASSWORD);
 
@@ -235,14 +232,6 @@ public abstract class RepoxConfiguration {
 
     public void setDatabaseUrl(String databaseUrl) {
         this.databaseUrl = databaseUrl;
-    }
-
-    public boolean isDatabaseCreate() {
-        return databaseCreate;
-    }
-
-    public void setDatabaseCreate(boolean databaseCreate) {
-        this.databaseCreate = databaseCreate;
     }
 
     public File getTempDir() {
