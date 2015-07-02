@@ -630,10 +630,9 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     @Override
     public boolean checkLDAPAuthentication(String username, String password) throws ServerSideException{
-        String ldapHost = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapHost();
 //        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
 //        String ldapLoginDN = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapLoginDN();
 //        String loginDN = ldapUSerPrefix + username + ldapLoginDN;
-        return LDAPAuthenticator.checkLDAPAuthentication(ldapHost,username,password);
+        return LDAPAuthenticator.checkLDAPAuthentication(username,password);
     }
 }
