@@ -49,11 +49,10 @@ public class AdminForm extends VerticalPanel {
   private TextField<String> repositoryFolderField, configFilesFolderField, oaiRequestFolderField,
       ftpRequestField, baseUrnField, repositoryNameField, maxRecordsOaiField,
       defaultExportFolderField, adminEmailField, smtpServerField, smtpPortField,
-      repoxDefaultEmailSenderField, repoxDefualtEmailPassField, ldapPassField, httpRequestField,
-      sampleRecordsField, ldapHostField, backendUrl;
+      repoxDefaultEmailSenderField, repoxDefualtEmailPassField, ldapHostField, ldapPassField,
+      ldapDn, ldapBasePath, httpRequestField, sampleRecordsField, backendUrl;
 
-  private CheckBox useCountriesTxtFile, sendEmailAfterIngest,
-      useOAINamespace;
+  private CheckBox useCountriesTxtFile, sendEmailAfterIngest, useOAINamespace;
 
   public AdminForm() {
     service = (RepoxServiceAsync) Registry.get(HarvesterUI.REPOX_SERVICE);
@@ -230,12 +229,22 @@ public class AdminForm extends VerticalPanel {
     ldapHostField.setFieldLabel("LDAP Host");
     ldapHostField.setId("admin_ldapHost");
     simple.add(ldapHostField, formData);
+    
+    ldapDn = new TextField<String>();
+    ldapDn.setFieldLabel("LDAP DN");
+    ldapDn.setId("admin_ldapDn");
+    simple.add(ldapDn, formData);
 
     ldapPassField = new TextField<String>();
     ldapPassField.setFieldLabel("LDAP Password");
     ldapPassField.setId("admin_ldappassField");
     ldapPassField.setPassword(true);
     simple.add(ldapPassField, formData);
+    
+    ldapBasePath = new TextField<String>();
+    ldapBasePath.setFieldLabel("LDAP Base Path");
+    ldapBasePath.setId("admin_ldapBasePath");
+    simple.add(ldapBasePath, formData);
 
     CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     checkBoxGroup = new CheckBoxGroup();
@@ -252,12 +261,12 @@ public class AdminForm extends VerticalPanel {
     checkBoxGroup.add(sendEmailAfterIngest);
     simple.add(checkBoxGroup, formData);
 
-//    checkBoxGroup = new CheckBoxGroup();
-//    useMailSSLAuthentication = new CheckBox();
-//    checkBoxGroup.setId("useMailSSLAuthentication");
-//    checkBoxGroup.setFieldLabel("Use SSL Mail Authentication?");
-//    checkBoxGroup.add(useMailSSLAuthentication);
-//    simple.add(checkBoxGroup, formData);
+    // checkBoxGroup = new CheckBoxGroup();
+    // useMailSSLAuthentication = new CheckBox();
+    // checkBoxGroup.setId("useMailSSLAuthentication");
+    // checkBoxGroup.setFieldLabel("Use SSL Mail Authentication?");
+    // checkBoxGroup.add(useMailSSLAuthentication);
+    // simple.add(checkBoxGroup, formData);
 
     checkBoxGroup = new CheckBoxGroup();
     useOAINamespace = new CheckBox();
@@ -286,10 +295,12 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("httpRequestFolder", httpRequestField.getValue());
                 adminInfo.set("sampleRecords", sampleRecordsField.getValue());
                 adminInfo.set("ldapHost", ldapHostField.getValue());
+                adminInfo.set("ldapDn", ldapDn.getValue());
                 adminInfo.set("ldapRootPassword", ldapPassField.getValue());
+                adminInfo.set("ldapBasePath", ldapBasePath.getValue());
                 adminInfo.set("useCountriesTxt", useCountriesTxtFile.getValue());
                 adminInfo.set("sendEmailAfterIngest", sendEmailAfterIngest.getValue());
-//                adminInfo.set("useMailSSLAuthentication", useMailSSLAuthentication.getValue());
+                // adminInfo.set("useMailSSLAuthentication", useMailSSLAuthentication.getValue());
                 adminInfo.set("useOAINamespace", useOAINamespace.getValue());
                 adminInfo.set("backendUrl", backendUrl.getValue());
                 adminInfo.set("oaiRepoName", repositoryNameField.getValue());
@@ -358,10 +369,12 @@ public class AdminForm extends VerticalPanel {
         ftpRequestField.setValue((String) dataModel.get("ftpRequestFolder"));
         sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));
         ldapHostField.setValue((String) dataModel.get("ldapHost"));
+        ldapDn.setValue((String) dataModel.get("ldapDn"));
         ldapPassField.setValue((String) dataModel.get("ldapRootPassword"));
+        ldapBasePath.setValue((String) dataModel.get("ldapBasePath"));
         useCountriesTxtFile.setValue((Boolean) dataModel.get("useCountriesTxt"));
         sendEmailAfterIngest.setValue((Boolean) dataModel.get("sendEmailAfterIngest"));
-//        useMailSSLAuthentication.setValue((Boolean) dataModel.get("useMailSSLAuthentication"));
+        // useMailSSLAuthentication.setValue((Boolean) dataModel.get("useMailSSLAuthentication"));
         useOAINamespace.setValue((Boolean) dataModel.get("useOAINamespace"));
         backendUrl.setValue((String) dataModel.get("backendUrl"));
         repositoryNameField.setValue((String) dataModel.get("oaiRepoName"));
