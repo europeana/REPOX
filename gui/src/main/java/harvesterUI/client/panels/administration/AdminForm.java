@@ -50,7 +50,7 @@ public class AdminForm extends VerticalPanel {
       ftpRequestField, baseUrnField, repositoryNameField, maxRecordsOaiField,
       defaultExportFolderField, adminEmailField, smtpServerField, smtpPortField,
       repoxDefaultEmailSenderField, repoxDefualtEmailPassField, ldapHostField, ldapPassField,
-      ldapDn, ldapBasePath, httpRequestField, sampleRecordsField, backendUrl;
+      ldapRootDN, ldapBasePath, httpRequestField, sampleRecordsField, backendUrl;
 
   private CheckBox useCountriesTxtFile, sendEmailAfterIngest, useOAINamespace;
 
@@ -230,10 +230,10 @@ public class AdminForm extends VerticalPanel {
     ldapHostField.setId("admin_ldapHost");
     simple.add(ldapHostField, formData);
     
-    ldapDn = new TextField<String>();
-    ldapDn.setFieldLabel("LDAP DN");
-    ldapDn.setId("admin_ldapDn");
-    simple.add(ldapDn, formData);
+    ldapRootDN = new TextField<String>();
+    ldapRootDN.setFieldLabel("LDAP Root DN");
+    ldapRootDN.setId("admin_ldapRootDN");
+    simple.add(ldapRootDN, formData);
 
     ldapPassField = new TextField<String>();
     ldapPassField.setFieldLabel("LDAP Password");
@@ -295,7 +295,7 @@ public class AdminForm extends VerticalPanel {
                 adminInfo.set("httpRequestFolder", httpRequestField.getValue());
                 adminInfo.set("sampleRecords", sampleRecordsField.getValue());
                 adminInfo.set("ldapHost", ldapHostField.getValue());
-                adminInfo.set("ldapDn", ldapDn.getValue());
+                adminInfo.set("ldapRootDN", ldapRootDN.getValue());
                 adminInfo.set("ldapRootPassword", ldapPassField.getValue());
                 adminInfo.set("ldapBasePath", ldapBasePath.getValue());
                 adminInfo.set("useCountriesTxt", useCountriesTxtFile.getValue());
@@ -369,7 +369,7 @@ public class AdminForm extends VerticalPanel {
         ftpRequestField.setValue((String) dataModel.get("ftpRequestFolder"));
         sampleRecordsField.setValue(String.valueOf(dataModel.get("sampleRecords")));
         ldapHostField.setValue((String) dataModel.get("ldapHost"));
-        ldapDn.setValue((String) dataModel.get("ldapDn"));
+        ldapRootDN.setValue((String) dataModel.get("ldapRootDN"));
         ldapPassField.setValue((String) dataModel.get("ldapRootPassword"));
         ldapBasePath.setValue((String) dataModel.get("ldapBasePath"));
         useCountriesTxtFile.setValue((Boolean) dataModel.get("useCountriesTxt"));

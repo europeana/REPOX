@@ -204,11 +204,11 @@ public class DefaultProjectManager extends ProjectManager {
       // optional fields
       if (configuration.getLdapHost() != null)
         adminInfo.set("ldapHost", configuration.getLdapHost());
-      if (configuration.getLdapHost() != null)
-        adminInfo.set("ldapDn", configuration.getLdapRootDN());
+      if (configuration.getLdapRootDN() != null)
+        adminInfo.set("ldapRootDN", configuration.getLdapRootDN());
       if (configuration.getLdapRootPassword() != null)
         adminInfo.set("ldapRootPassword", configuration.getLdapRootPassword());
-      if (configuration.getLdapHost() != null)
+      if (configuration.getLdapBasePath() != null)
         adminInfo.set("ldapBasePath", configuration.getLdapBasePath());
       if (configuration.getRepoxDefaultEmailPass() != null)
         adminInfo.set("repoxDefaultEmailPass", configuration.getRepoxDefaultEmailPass());
@@ -251,12 +251,12 @@ public class DefaultProjectManager extends ProjectManager {
         properties.setProperty("default.email.pass", (String) results.get("repoxDefaultEmailPass"));
       if (results.get("ldapHost") != null)
         properties.setProperty("ldapHost", (String) results.get("ldapHost"));
-      if (results.get("ldapDn") != null)
-        properties.setProperty("ldapDn", (String) results.get("ldapDn"));
+      if (results.get("ldapRootDN") != null)
+        properties.setProperty("ldapRootDN", ((String) results.get("ldapRootDN")).replace(",", "\\,"));
       if (results.get("ldapRootPassword") != null)
         properties.setProperty("ldapRootPassword", (String) results.get("ldapRootPassword"));
       if (results.get("ldapBasePath") != null)
-        properties.setProperty("ldapBasePath", (String) results.get("ldapBasePath"));
+        properties.setProperty("ldapBasePath", ((String) results.get("ldapBasePath")).replace(",", "\\,"));
 
       PropertiesConfigurationLayout oaiPropertiesConfigrationLayout =
           PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
