@@ -95,7 +95,7 @@ import pt.utl.ist.z3950.TimestampHarvester;
 public class DefaultDataManager implements DataManager {
   private static final Logger log = Logger.getLogger(DefaultDataManager.class);
   private static final String ID_REGULAR_EXPRESSION = "[a-zA-Z_0-9]*";
-  protected static final int ID_MAX_SIZE = 160;
+  protected static final int ID_MAX_SIZE = 40;
 
   protected File dataFile;
   protected MetadataTransformationManager metadataTransformationManager;
