@@ -941,7 +941,7 @@ public class DefaultDataManager implements DataManager {
       saveData();
       return newAggregator;
     } else
-      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!");
+      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!", newAggregator.getId());
   }
 
   /**
@@ -1249,7 +1249,7 @@ public class DefaultDataManager implements DataManager {
           // generated
           if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
             throw new AlreadyExistsException("DataProvider " + newDataProvider.getId()
-                + " already exists!");
+                + " already exists!", newDataProvider.getId());
           }
           currentAggregator.addDataProvider(newDataProvider);
           break;
@@ -2177,7 +2177,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       // validate the URL server
       String newOaiSourceURL = oaiSourceURL;
@@ -2276,7 +2276,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2386,7 +2386,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2495,7 +2495,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2599,7 +2599,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       String accessType;
       if ((user != null && user.equals("")) || user == null) {
@@ -2729,7 +2729,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (url.equals("") || !FileUtil.checkUrl(url))
         throw new InvalidArgumentsException("url");
@@ -2841,7 +2841,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
 

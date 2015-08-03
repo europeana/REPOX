@@ -20,6 +20,6 @@ public class AlreadyExistsExceptionMapper implements ExceptionMapper<AlreadyExis
     @Override
     public Response toResponse(AlreadyExistsException ex) {
         //Status: 409, Info: Conflict
-        return Response.status(409).entity(new Result(ex.getMessage())).build();
+        return Response.status(409).entity(new Result(ex.getMessage() + " <" + ex.getDatasetId() + ">")).build();
     }
 }

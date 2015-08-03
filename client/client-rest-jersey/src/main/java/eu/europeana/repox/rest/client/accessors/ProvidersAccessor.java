@@ -221,10 +221,10 @@ public class ProvidersAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      //case 409:
-       // errorMessage = response.readEntity(Result.class);
-       // LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
-       // throw new AlreadyExistsException(errorMessage.getResult());
+      case 409:
+        errorMessage = response.readEntity(Result.class);
+        LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult(), errorMessage.getResult().substring(errorMessage.getResult().indexOf("<") + 1, errorMessage.getResult().indexOf(">")));
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
