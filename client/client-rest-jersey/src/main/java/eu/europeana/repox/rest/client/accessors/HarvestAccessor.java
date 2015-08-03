@@ -115,10 +115,10 @@ public class HarvestAccessor {
         Result errorMessage = response.readEntity(Result.class);
         LOGGER.warn("startHarvest(..) failure! : " + errorMessage.getResult());
         throw new DoesNotExistException(errorMessage.getResult());
-      case 409:
-        errorMessage = response.readEntity(Result.class);
-        LOGGER.warn("startHarvest(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+     // case 409:
+     //   errorMessage = response.readEntity(Result.class);
+     //   LOGGER.warn("startHarvest(..) failure! : " + errorMessage.getResult());
+     //   throw new AlreadyExistsException(errorMessage.getResult());
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("startHarvest(..) failure! : " + errorMessage.getResult());
@@ -195,10 +195,10 @@ public class HarvestAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      case 409:
-        errorMessage = response.readEntity(Result.class);
-        LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+     // case 409:
+     //   errorMessage = response.readEntity(Result.class);
+     //   LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());
+     //   throw new AlreadyExistsException(errorMessage.getResult());
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("scheduleHarvest(..) failure! : " + errorMessage.getResult());

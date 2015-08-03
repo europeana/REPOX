@@ -178,7 +178,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 stmt.close();
             }
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -210,7 +210,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 stmt.close();
             }
         } finally {
-            con.close();
+          //  con.close();
         }
     }
 
@@ -260,7 +260,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             e.printStackTrace();
             return oaiListResponse;
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -278,7 +278,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-            con.close();
+          //  con.close();
         }
     }
 
@@ -305,7 +305,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -331,7 +331,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-            con.close();
+         //   con.close();
         }
     }
 
@@ -352,7 +352,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-            con.close();
+          //  con.close();
         }
     }
 
@@ -438,7 +438,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 }
             }
         } finally {
-            con.close();
+          //  con.close();
         }
     }
 
@@ -544,7 +544,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 insStatement.close();
             }
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -625,7 +625,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 delPs.close();
             }
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -669,7 +669,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 selectPs.close();
             }
         } finally {
-            con.close();
+           // con.close();
         }
     }
 
@@ -759,7 +759,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 	            log.error("ERROR Counting records", e);
 	            return new int[] { 0, 0, 0};
 	        } finally {
-	            con.close();
+	          //  con.close();
 	        }
     }
 
@@ -809,7 +809,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 preparedStatement.close();
             }
         } finally {
-            con.close();
+          //  con.close();
         }
     }
 

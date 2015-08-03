@@ -174,10 +174,10 @@ public class MappingsAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createMapping(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      case 409:
-        errorMessage = response.readEntity(Result.class);
-        LOGGER.warn("createMapping(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+     // case 409:
+     //   errorMessage = response.readEntity(Result.class);
+     //   LOGGER.warn("createMapping(..) failure! : " + errorMessage.getResult());
+     //   throw new AlreadyExistsException(errorMessage.getResult());
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createMapping(..) failure! : " + errorMessage.getResult());
@@ -226,10 +226,10 @@ public class MappingsAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      case 409:
-        errorMessage = response.readEntity(Result.class);
-        LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+     // case 409:
+     //   errorMessage = response.readEntity(Result.class);
+    //    LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
+     //   throw new AlreadyExistsException(errorMessage.getResult());
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("updateMapping(..) failure! : " + errorMessage.getResult());
