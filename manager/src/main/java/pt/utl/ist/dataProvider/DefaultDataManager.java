@@ -709,7 +709,8 @@ public class DefaultDataManager implements DataManager {
             // export path
             if (currentDataSourceElement.elementText("exportDirPath") != null
                 && !currentDataSourceElement.elementText("exportDirPath").isEmpty())
-              dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
+//              dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
+              dataSource.setExportDir(configuration.getExportDefaultFolder() + "/" + id);
             else {
               File newExportDir =
                   new File(defaultExportDir.getAbsolutePath() + File.separator + dataSource.getId()
