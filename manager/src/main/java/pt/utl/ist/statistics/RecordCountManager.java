@@ -1,5 +1,16 @@
 package pt.utl.ist.statistics;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -12,15 +23,6 @@ import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.DataSourceContainer;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.XmlUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 /**
  */
@@ -35,7 +37,7 @@ public class RecordCountManager implements Runnable {
   private File configurationFile;
   private Calendar lastGenerationCalendar;
   private Calendar lastFullCount;
-  private HashMap<String, RecordCount> recordCounts;
+  private Map<String, RecordCount> recordCounts;
 
   /**
    * Creates a new instance of this class.
@@ -50,8 +52,8 @@ public class RecordCountManager implements Runnable {
     recordCounts = loadRecordCounts();
   }
 
-  private HashMap<String, RecordCount> loadRecordCounts() throws DocumentException, ParseException {
-    HashMap<String, RecordCount> recordCounts = new HashMap<String, RecordCount>();
+  private Map<String, RecordCount> loadRecordCounts() throws DocumentException, ParseException {
+    ConcurrentHashMap<String, RecordCount> recordCounts = new ConcurrentHashMap<String, RecordCount>();
 
     if (!configurationFile.exists()) {
       return recordCounts;
@@ -107,7 +109,7 @@ public class RecordCountManager implements Runnable {
     return recordCount;
   }
 
-  private void saveRecordCounts(HashMap<String, RecordCount> recordCounts) throws IOException {
+  private void saveRecordCounts(Map<String, RecordCount> recordCounts) throws IOException {
     Document document = DocumentHelper.createDocument();
 
     Element rootNode = document.addElement("recordcounts");
