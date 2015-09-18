@@ -497,7 +497,8 @@ public class DefaultDataManager implements DataManager {
                   currentDataSourceElement.attributeValue("isoImplementationClass");
               extractStrategy = new Iso2709FileExtractStrategy(isoImplementationClass);
             } else if (extractStrategyString.equals(MarcXchangeFileExtractStrategy.class
-                .getSimpleName()) || extractStrategyString.equals(MarcXchangeFileExtractStrategy.OLDCLASS)) {
+                .getSimpleName())
+                || extractStrategyString.equals(MarcXchangeFileExtractStrategy.OLDCLASS)) {
               extractStrategy = new MarcXchangeFileExtractStrategy();
             } else if (extractStrategyString
                 .equals(SimpleFileExtractStrategy.class.getSimpleName())
@@ -568,7 +569,7 @@ public class DefaultDataManager implements DataManager {
 
               harvestMethod = new IdSequenceHarvester(target, maximumId);
             }
-            
+
             dataSource =
                 new DataSourceZ3950(dataProvider, id, description, schema, namespace,
                     harvestMethod, recordIdPolicy, metadataTransformations);
@@ -709,14 +710,12 @@ public class DefaultDataManager implements DataManager {
             // export path
             if (currentDataSourceElement.elementText("exportDirPath") != null
                 && !currentDataSourceElement.elementText("exportDirPath").isEmpty())
-//              dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
+              // dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
               dataSource.setExportDir(configuration.getExportDefaultFolder() + "/" + id);
             else {
-              File newExportDir =
-                  new File(defaultExportDir.getAbsolutePath() + File.separator + dataSource.getId()
-                      + File.separator + "export");
+              // File newExportDir = new File(configuration.getExportDefaultFolder() + "/" + id);
               // FileUtils.forceMkdir(newExportDir);
-              dataSource.setExportDir(newExportDir.getAbsolutePath());
+              dataSource.setExportDir(configuration.getExportDefaultFolder() + "/" + id);
             }
 
             // Create new MDR schema if it doesn't exist
@@ -942,7 +941,8 @@ public class DefaultDataManager implements DataManager {
       saveData();
       return newAggregator;
     } else
-      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!", newAggregator.getId());
+      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!",
+          newAggregator.getId());
   }
 
   /**

@@ -78,7 +78,7 @@ public class PostgresqlDatabaseAccess implements DatabaseAccess {
     @Override
     public Connection openDbConnection() {
         try {
-            if(connection==null){
+            if(connection==null || connection.isClosed()){
                 connection = DriverManager.getConnection(dbUrl, dbProps);
             }
             return connection;
