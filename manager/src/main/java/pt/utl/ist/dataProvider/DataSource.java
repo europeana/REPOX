@@ -1135,7 +1135,7 @@ public abstract class DataSource {
         setStatus(null);
 
         //Clear the last ingest date
-        setLastUpdate(null);
+        //setLastUpdate(null);
 
         //Clear Old tasks
         //        oldTasksList.clear();
