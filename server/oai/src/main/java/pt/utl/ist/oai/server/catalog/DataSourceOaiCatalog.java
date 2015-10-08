@@ -617,7 +617,7 @@ public class DataSourceOaiCatalog extends AbstractCatalog {
             "Error - XSL is version 2 and is currently configured as version 1");
       } catch (TransformerException e) {
         log.error(
-            "Error Transforming record, maybe be error in xslt - " + " Set: " + currentItem.getSetSpec()
+            "Error Transforming record, may be an error in xslt - " + " Set: " + currentItem.getSetSpec()
                 + " ID: " + currentItem.getIdentifier(), e);
         transformationResultLogger.addRecordErrorEntry(currentItem.getIdentifier(), e.getMessage());
         throw e;
