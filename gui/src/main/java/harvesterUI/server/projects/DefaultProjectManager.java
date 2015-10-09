@@ -179,7 +179,7 @@ public class DefaultProjectManager extends ProjectManager {
       adminInfo.set("baseUrn", configuration.getBaseUrn());
 
       PropertiesConfigurationLayout propertiesConfigrationLayout =
-          PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
+          PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.OAI_FILE);
       PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
       adminInfo.set("oaiRepoName",
           properties.getProperty("Identify.repositoryName") == null ? "undefined" : properties
@@ -259,7 +259,7 @@ public class DefaultProjectManager extends ProjectManager {
         properties.setProperty("ldapBasePath", ((String) results.get("ldapBasePath")).replace(",", "\\,"));
 
       PropertiesConfigurationLayout oaiPropertiesConfigrationLayout =
-          PropertyUtil.loadCorrectedConfiguration("oaicat.properties");
+          PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.OAI_FILE);
       PropertiesConfiguration oaiConfiguration = oaiPropertiesConfigrationLayout.getConfiguration();
       if (results.get("oaiRepoName") != null)
         oaiConfiguration
