@@ -46,7 +46,7 @@ public abstract class RepoxConfiguration {
     private static final String PROPERTY_USE_COUNTRIES_TXT           = "userCountriesTxtFile";
     private static final String PROPERTY_SEND_EMAIL_AFTER_INGESTION  = "sendEmailAfterIngest";
 //    private static final String PROPERTY_SERVER_OAI_URL              = "currentServerOAIUrl";
-//    private static final String PROPERTY_USE_MAIL_AUTHENTICATION     = "useMailSSLAuthentication";
+    private static final String PROPERTY_USE_MAIL_AUTHENTICATION     = "useMailSSLAuthentication";
     private static final String PROPERTY_USE_OAI_NAMESPACE           = "useOAINamespace";
 
     private String              baseUrn;
@@ -76,7 +76,7 @@ public abstract class RepoxConfiguration {
     private Boolean             useCountriesTxt;
     private Boolean             sendEmailAfterIngest;
 //    private String              currentServerOAIUrl;
-//    private boolean             useMailSSLAuthentication;
+    private boolean             useMailSSLAuthentication;
     private boolean             useOAINamespace;
 
     /**
@@ -151,7 +151,7 @@ public abstract class RepoxConfiguration {
         this.sendEmailAfterIngest = Boolean.valueOf((String)configuration.getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION) == null ? "true" : (String)configuration
                 .getProperty(PROPERTY_SEND_EMAIL_AFTER_INGESTION));
 
-//        this.useMailSSLAuthentication = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : (String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
+        this.useMailSSLAuthentication = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION) == null ? "true" : (String)configuration.getProperty(PROPERTY_USE_MAIL_AUTHENTICATION));
         this.useOAINamespace = Boolean.valueOf((String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE) == null ? "false" : (String)configuration.getProperty(PROPERTY_USE_OAI_NAMESPACE));
         
 //      this.currentServerOAIUrl = (String)configuration.getProperty(PROPERTY_SERVER_OAI_URL);
@@ -301,9 +301,9 @@ public abstract class RepoxConfiguration {
 //        return currentServerOAIUrl;
 //    }
 
-//    public boolean isUseMailSSLAuthentication() {
-//        return useMailSSLAuthentication;
-//    }
+    public boolean isUseMailSSLAuthentication() {
+        return useMailSSLAuthentication;
+    }
 
     public boolean isUseOAINamespace() {
         return useOAINamespace;

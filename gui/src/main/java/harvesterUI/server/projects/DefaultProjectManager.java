@@ -198,7 +198,7 @@ public class DefaultProjectManager extends ProjectManager {
       adminInfo.set("sampleRecords", configuration.getSampleRecords());
       adminInfo.set("useCountriesTxt", configuration.getUseCountriesTxt());
       adminInfo.set("sendEmailAfterIngest", configuration.getSendEmailAfterIngest());
-      // adminInfo.set("useMailSSLAuthentication",configuration.isUseMailSSLAuthentication());
+      adminInfo.set("useMailSSLAuthentication",configuration.isUseMailSSLAuthentication());
       adminInfo.set("useOAINamespace", configuration.isUseOAINamespace());
 
       // optional fields
@@ -243,7 +243,7 @@ public class DefaultProjectManager extends ProjectManager {
           .setProperty("userCountriesTxtFile", String.valueOf(results.get("useCountriesTxt")));
       properties.setProperty("sendEmailAfterIngest",
           String.valueOf(results.get("sendEmailAfterIngest")));
-      // properties.setProperty("useMailSSLAuthentication",String.valueOf(results.get("useMailSSLAuthentication")));
+      properties.setProperty("useMailSSLAuthentication",String.valueOf(results.get("useMailSSLAuthentication")));
       properties.setProperty("useOAINamespace", String.valueOf(results.get("useOAINamespace")));
 
       // optional fields
