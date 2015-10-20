@@ -188,7 +188,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         try {
             Statement stmt = con.createStatement();
             try {
-                String recordTable = urnOfRecord.getDataSourceId().toLowerCase() + tableSuffix;
+                String recordTable = (urnOfRecord.getDataSourceId() + tableSuffix).toLowerCase();
                 String query = "select " + recordTable + ".value from " + recordTable + " where " + recordTable + ".nc = '" + urnOfRecord.getRecordId() + "'";
 
                 log.debug(query);
