@@ -22,9 +22,11 @@ public class DefaultEmailUtil implements EmailUtil {
 
     @Override
     public void sendEmail(String fromEmail, String[] recipientsEmail,
-            String subject, String message, File[] attachments, HashMap<String, Object> map) throws IOException, MessagingException, TemplateException {
+        String subject, String message, File[] attachments, HashMap<String, Object> map) throws IOException, MessagingException, TemplateException {
         String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
         String smtpPort = ((DefaultRepoxConfiguration)ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration()).getSmtpPort();
+        boolean smtpUseSSL = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().isUseMailSSLAuthentication();
+        
         if (smtpServer == null || smtpServer.isEmpty()) {
             return;
         }
@@ -53,9 +55,11 @@ public class DefaultEmailUtil implements EmailUtil {
 
         Properties mailConnectionProperties = (Properties)System.getProperties().clone();
         mailConnectionProperties.put("mail.smtp.auth", "true");
-        mailConnectionProperties.put("mail.smtp.starttls.enable", "true");
-        mailConnectionProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        mailConnectionProperties.put("mail.smtp.socketFactory.fallback", "false");
+        if(smtpUseSSL){
+            mailConnectionProperties.put("mail.smtp.starttls.enable", "true");
+            mailConnectionProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            mailConnectionProperties.put("mail.smtp.socketFactory.fallback", "false");
+        }
         mail.setJavaMailProperties(mailConnectionProperties);
 
         emailSender.setMailSender(mail);
