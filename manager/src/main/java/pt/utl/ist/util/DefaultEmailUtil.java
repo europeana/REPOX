@@ -46,17 +46,20 @@ public class DefaultEmailUtil implements EmailUtil {
         }
 
         JavaMailSenderImpl mail = new JavaMailSenderImpl();
-        mail.setUsername(fromEmail);
-        mail.setPassword(adminMailPass);
         mail.setPort(Integer.valueOf(smtpPort));
         mail.setHost(smtpServer);
 
-        Properties mailConnectionProperties = (Properties)System.getProperties().clone();
-        mailConnectionProperties.put("mail.smtp.auth", "true");
-        mailConnectionProperties.put("mail.smtp.starttls.enable", "true");
-        mailConnectionProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        mailConnectionProperties.put("mail.smtp.socketFactory.fallback", "false");
-        mail.setJavaMailProperties(mailConnectionProperties);
+        if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().isUseMailSSLAuthentication()) {
+            mail.setUsername(fromEmail);
+            mail.setPassword(adminMailPass);
+
+            Properties mailConnectionProperties = (Properties)System.getProperties().clone();
+            mailConnectionProperties.put("mail.smtp.auth", "true");
+            mailConnectionProperties.put("mail.smtp.starttls.enable", "true");
+            mailConnectionProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            mailConnectionProperties.put("mail.smtp.socketFactory.fallback", "false");
+            mail.setJavaMailProperties(mailConnectionProperties);
+        }
 
         emailSender.setMailSender(mail);
         if (map.get("mailType").equals("ingest")) {
