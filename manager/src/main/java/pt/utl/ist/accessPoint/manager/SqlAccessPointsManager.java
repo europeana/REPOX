@@ -189,7 +189,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             Statement stmt = con.createStatement();
             try {
                 String recordTable = (urnOfRecord.getDataSourceId() + tableSuffix).toLowerCase();
-                String query = "select " + recordTable.toLowerCase() + ".value from " + recordTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = '" + urnOfRecord.getRecordId() + "'";
+                String query = "select " + recordTable + ".value from " + recordTable + " where " + recordTable + ".nc = '" + urnOfRecord.getRecordId() + "'";
 
                 log.debug(query);
                 ResultSet rs = stmt.executeQuery(query);
@@ -677,36 +677,36 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
     public int[] getRecordCountLastrowPair(DataSource dataSource, Integer fromRow, String fromDate, String toDate) throws SQLException {
         int[] countLastrowPair = { 0, 0, 0 };
         // todo check ... stops here a lot during REPOX execution
-        String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
-        String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
+        String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
+        String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
         Connection con = databaseAccess.openDbConnection();
 
-        if(!tableExists(AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD, con) || !tableExists(AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD, con))
+        if(!tableExists(recordTable, con) || !tableExists(timestampTable, con))
         	return new int[] { 0, 0, 0};
         	
 	        try {
 	            TimeUtil.startTimers();
 	            TimeUtil.getTimeSinceLastTimerArray(1);
 	
-	            String maxRowQuery = "select max(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase();
-	            String countQuery = "select count(" + recordTable.toLowerCase() + ".nc) from " + recordTable.toLowerCase();
-	            String deletedQuery = "select count(" + recordTable.toLowerCase() + ".id) from " + recordTable.toLowerCase() + " where deleted > 0";
+	            String maxRowQuery = "select max(" + recordTable + ".id) from " + recordTable;
+	            String countQuery = "select count(" + recordTable + ".nc) from " + recordTable;
+	            String deletedQuery = "select count(" + recordTable + ".id) from " + recordTable + " where deleted > 0";
 	
 	            String fromQueryHelper = "";
 	            if (fromDate != null || toDate != null) {
-	                fromQueryHelper += ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = " + timestampTable.toLowerCase() + ".nc";
+	                fromQueryHelper += ", " + timestampTable + " where " + recordTable + ".nc = " + timestampTable + ".nc";
 	                if (fromDate != null) {
-	                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value >= '" + fromDate + "'";
+	                    fromQueryHelper += " and " + timestampTable + ".value >= '" + fromDate + "'";
 	                }
 	                if (toDate != null) {
-	                    fromQueryHelper += " and " + timestampTable.toLowerCase() + ".value <= '" + toDate + "'";
+	                    fromQueryHelper += " and " + timestampTable + ".value <= '" + toDate + "'";
 	                }
 	            }
 	
 	            maxRowQuery += fromQueryHelper;
 	            if (fromQueryHelper.contains("where")) {
 	                deletedQuery = deletedQuery.replace(" where deleted > 0", "");
-	                deletedQuery += fromQueryHelper + " and " + recordTable.toLowerCase() + ".deleted > 0";
+	                deletedQuery += fromQueryHelper + " and " + recordTable + ".deleted > 0";
 	            } else {
 	                deletedQuery += fromQueryHelper;
 	            }
@@ -737,8 +737,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 	
 	                    if (fromRow == null || countLastrowPair[1] > fromRow) {
 	                        countQuery += fromQueryHelper;
-	                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable.toLowerCase() + ".id > " + fromRow + " and " : "") + recordTable
-	                                .toLowerCase() + ".id <= " + countLastrowPair[1];
+	                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable + ".id > " + fromRow + " and " : "") + recordTable
+	                                 + ".id <= " + countLastrowPair[1];
 	
 	                        Statement statementCount = con.createStatement();
 	                        ResultSet rsCount = statementCount.executeQuery(countQuery);
@@ -775,16 +775,14 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             throw new ObjectNotFoundException("DataSource with id " + urnOfRecord.getDataSourceId() + " NOT found!");
         DataSource dataSource = dataSourceContainer.getDataSource();
 
-        String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
-        String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
+        String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
+        String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
 
         Connection con = databaseAccess.openDbConnection();
         try {
-            String query = "select " + recordTable.toLowerCase() + ".nc, " + timestampTable.toLowerCase() + ".deleted" + ", " + timestampTable.toLowerCase() + ".value" + ", " + recordTable
-                    .toLowerCase() + ".value";
+            String query = "select " + recordTable + ".nc, " + timestampTable + ".deleted" + ", " + timestampTable + ".value" + ", " + recordTable + ".value";
 
-            query += " from " + recordTable.toLowerCase() + ", " + timestampTable.toLowerCase() + " where " + recordTable.toLowerCase() + ".nc = ?" + " and " + recordTable.toLowerCase() + ".nc = " + timestampTable
-                    .toLowerCase() + ".nc";
+            query += " from " + recordTable + ", " + timestampTable + " where " + recordTable + ".nc = ?" + " and " + recordTable + ".nc = " + timestampTable + ".nc";
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
             try {
