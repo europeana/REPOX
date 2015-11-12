@@ -281,7 +281,8 @@ public class RecordCountManager implements Runnable {
     }
 
     recordCount.setCount(recordCount.getCount() - eraseRecords);
-    recordCount.setDeleted(recordCount.getDeleted() - deletedRecords);
+//    recordCount.setDeleted(recordCount.getDeleted() - deletedRecords);
+    recordCount.setDeleted(recordCount.getDeleted() + deletedRecords);
     recordCounts.put(dataSourceId, recordCount);
     saveRecordCounts(recordCounts);
   }

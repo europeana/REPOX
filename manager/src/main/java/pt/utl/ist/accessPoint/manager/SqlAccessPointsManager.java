@@ -375,17 +375,17 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
             PreparedStatement delPs = con.prepareStatement(query);
             try {
-                boolean marcAsDeleted = false;
+                boolean markedAsDeleted = false;
                 if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                     // check if record exists and if it marked as deleted
-                    marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
+                    markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
                 }
                 int result = delPs.executeUpdate();
 
                 if (accessPoint instanceof RecordRepoxFullAccessPoint && result > 0) {
                     // update the number of records
-                    LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSourceId, 1, marcAsDeleted ? 1 : 0);
+                    LogUtil.addReplacedRecordCount((String)record.getId(), logFile);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSourceId, 1, markedAsDeleted ? 1 : 0);
                 }
             } finally {
                 delPs.close();
@@ -469,33 +469,57 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             /* DELETE old indexes */
             // If Data Source has ids extracted or is IdProvided, the ids are extracted from the records and need
             // to be deleted before being inserted again (for performance: it's faster than updating)
-            if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy/*
-                                                                                                                                                         * ||
-                                                                                                                                                         * dataSource
-                                                                                                                                                         * instanceof
-                                                                                                                                                         * DataSourceOai
-                                                                                                                                                         */) {
+            if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy/*                                                                                                       */) {
                 String deleteQuery = "delete from " + table + " where nc = ?";
 
                 PreparedStatement delStatement = con.prepareStatement(deleteQuery);
 
                 try {
                     for (RecordRepox record : records) {
-                        boolean marcAsDeleted = false;
+                      //Run the if only for once accessPoint to update only once the results rather than multiple times.
                         if (accessPoint instanceof RecordRepoxFullAccessPoint) {
-                            // check if record exists and if it marked as deleted
-                            marcAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
+//                            //                            LogUtil.addEmptyRecordCount(recordId, logFile);
+//                            LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
+//                            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 1, marcAsDeleted ? 1 : 0);
+                          
+                          boolean recordStored = isRecordStored(con, table, (String)record.getId());
+                          boolean markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
+                          boolean incomingDeleted = record.isDeleted();
+                          if(recordStored)
+                          {
+                            LogUtil.addReplacedRecordCount((String)record.getId(), logFile);
+                            if(markedAsDeleted && !incomingDeleted)
+                            {
+                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), -1);
+                            }
+                            else if(!markedAsDeleted && incomingDeleted)
+                            {
+                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
+                            }
+//                            else if(!markedAsDeleted && !incomingDeleted)
+//                            {
+////                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 0, );
+//                            }
+//                            else if(markedAsDeleted && incomingDeleted)
+//                            {
+////                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 0, );
+//                            }
+                          }
+                          else
+                          {
+                            if(incomingDeleted)
+                            {
+                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
+                            }
+//                            else
+//                            {
+////                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 0, );
+//                            }
+                          }
                         }
-
                         delStatement.setString(1, (String)record.getId());
-                        int result = delStatement.executeUpdate();
+                        delStatement.executeUpdate();
                         delStatement.clearParameters();
-
-                        if (accessPoint instanceof RecordRepoxFullAccessPoint && result > 0) {
-                            //                            LogUtil.addEmptyRecordCount(recordId, logFile);
-                            LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
-                            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 1, marcAsDeleted ? 1 : 0);
-                        }
                     }
                 } finally {
                     delStatement.close();
@@ -548,6 +572,31 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         }
     }
 
+    private boolean isRecordStored(Connection con, String table, String id) {
+      String query = "select " + table + ".id from " + table + " where " + table + ".nc = '" + id + "'";
+
+      ResultSet rs = null;
+      try {
+          Statement stmt = con.createStatement();
+          rs = stmt.executeQuery(query);
+          if (rs.next()) {       
+              return true;
+          }
+          return false;
+      } catch (SQLException e) {
+          log.error(e.getMessage());
+          e.printStackTrace();
+          return false;
+      } finally {
+        try {
+          rs.close();
+        } catch (SQLException e) {
+          log.error(e.getMessage());
+          e.printStackTrace();
+          return false;
+        }
+      }
+    }
     private boolean isRecordMarkedAsDeleted(Connection con, String table, String id) {
         String query = "select " + table + ".deleted from " + table + " where " + table + ".nc = '" + id + "'";
 
