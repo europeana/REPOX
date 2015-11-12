@@ -473,6 +473,7 @@ public abstract class DataSource {
             StringUtil.simpleLog("Starting to import from Data Source with id " + id, this.getClass(), logFile);
             Date now = new Date();
 
+            //Blocking
             exitStatus = ingestRecords(logFile, fullIngest);
 
             if (exitStatus.isSuccessful()) {
