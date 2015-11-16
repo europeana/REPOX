@@ -42,7 +42,11 @@ public abstract class Task {
         OK, WARNINGS, ERRORS, CANCELED, FAILED, FORCE_EMPTY;
 
         public boolean isSuccessful() {
-            return (equals(OK) || equals(WARNINGS));
+            return (equals(OK));
+        }
+        
+        public boolean isWarnings() {
+          return (equals(WARNINGS));
         }
 
         public boolean isCanceled() {

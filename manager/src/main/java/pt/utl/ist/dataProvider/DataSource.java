@@ -480,7 +480,11 @@ public abstract class DataSource {
                 status = StatusDS.OK;
                 //                if(full)
                 //                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
-            } else if (exitStatus.isCanceled()) {
+            }
+            else if (exitStatus.isWarnings()) {
+              status = StatusDS.WARNING;
+            }
+            else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
                 if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
@@ -525,7 +529,10 @@ public abstract class DataSource {
 
             if (exitStatus.isSuccessful()) {
                 status = StatusDS.OK;
-            } else if (exitStatus.isCanceled()) {
+            } 
+            else if (exitStatus.isWarnings()) {
+              status = StatusDS.WARNING;
+            }else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
             } else if (exitStatus.isForceEmpty()) {
                 status = null;

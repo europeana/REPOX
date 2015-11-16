@@ -43,6 +43,7 @@ public class OaiHarvester implements RunnableStoppable {
     private static final short MAX_CONCURRENT_FILES_IN_SYSTEM = 10;
 
     private boolean             stopExecution                  = false;
+    private boolean             lastResumptionEmptyList        = false;
     private String              sourceUrl;
     private String              sourceSet;
     //	  YYYY = four-digit year ; MM = two-digit month (01=January, etc.) ; DD = two-digit day of month (01 through 31)
@@ -225,9 +226,16 @@ public class OaiHarvester implements RunnableStoppable {
                 numberOfRecordsPerResponse = listRecords.getRecordsNumberPerResponse();
             }
 
-            ingestionRecords += listRecords.getDocument().getElementsByTagName("record").getLength();
+            int batchCounter = listRecords.getDocument().getElementsByTagName("record").getLength();
+            boolean isResponseEmpty = (batchCounter == 0 ? true : false);
+            ingestionRecords += batchCounter;
+            
+            if (listRecords == null || listRecords.isResultEmpty() || isResponseEmpty) {
+              StringUtil.simpleLog("Response was an empty list in operation ListRecords (may be invalid set or does not exist new records from the last ingest)", this.getClass(), logFile);
+              lastResumptionEmptyList = true;
+            }
 
-            while (listRecords != null) {
+            while (listRecords != null && !listRecords.isResultEmpty() && !isResponseEmpty) {
                 //Block when a number of files in system, continue when there is space again
                 while (getRequestFile(currentRequest - MAX_CONCURRENT_FILES_IN_SYSTEM).exists()) {
                     try {
@@ -242,10 +250,6 @@ public class OaiHarvester implements RunnableStoppable {
                 }
 
                 long startTime = (new Date()).getTime();
-
-                if (listRecords.isResultEmpty()) {
-                    StringUtil.simpleLog("Response was an empty list in operation ListRecords (may be invalid set or does not exist new records from the last ingest)", this.getClass(), logFile);
-                }
 
                 NodeList errors = listRecords.getErrors();
                 if (errors != null && errors.getLength() > 0) {
@@ -267,7 +271,8 @@ public class OaiHarvester implements RunnableStoppable {
                     harvestFinishedOutputStream.write(("Harvest Finished.").getBytes("UTF-8"));
                     harvestFinishedOutputStream.close();
                     listRecords = null;
-                } else {
+                }
+                else {
                     StringUtil.simpleLog("ResumptionToken: " + resumptionToken, this.getClass(), logFile);
 
                     OutputStream resumptionOutputStream = new FileOutputStream(resumptionTokenPath);
@@ -276,8 +281,15 @@ public class OaiHarvester implements RunnableStoppable {
                     resumptionOutputStream.close();
 
                     listRecords = getListRecordsWithRetries(resumptionToken, MAX_OAI_VERB_RETRIES);
-                    ingestionRecords += listRecords.getDocument().getElementsByTagName("record").getLength();
+                    batchCounter = listRecords.getDocument().getElementsByTagName("record").getLength();
+                    isResponseEmpty = (batchCounter == 0 ? true : false);
+                    ingestionRecords += batchCounter;
 
+                }
+                
+                if (listRecords == null || listRecords.isResultEmpty() || isResponseEmpty) {
+                  StringUtil.simpleLog("Response was an empty list in operation ListRecords (may be invalid set or does not exist new records from the last ingest)", this.getClass(), logFile);
+                  lastResumptionEmptyList = true;
                 }
 
                 long totalTime = ((new Date()).getTime() - startTime) / 1000;
@@ -308,6 +320,10 @@ public class OaiHarvester implements RunnableStoppable {
 
     public boolean isHarvestFinished() {
         return getHarvestFinishedFile().exists();
+    }
+    
+    public boolean isLastResumptionWithEmptyList(){
+      return lastResumptionEmptyList;
     }
 
     public File getHarvestFinishedFile() {
