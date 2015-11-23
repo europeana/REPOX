@@ -227,7 +227,11 @@ public class OaiHarvester implements RunnableStoppable {
             }
 
             int batchCounter = listRecords.getDocument().getElementsByTagName("record").getLength();
-            boolean isResponseEmpty = (batchCounter == 0 ? true : false);
+            if(batchCounter == 0)
+              batchCounter = listRecords.getDocument().getElementsByTagNameNS("http://www.openarchives.org/OAI/2.0/", "record").getLength();
+            if(batchCounter == 0)
+              StringUtil.simpleLog("Cannot read responde, namespace of oai record is not correct!!", this.getClass(), logFile);
+            boolean isResponseEmpty =  (batchCounter == 0 ? true : false);
             ingestionRecords += batchCounter;
             
             if (listRecords == null || listRecords.isResultEmpty() || isResponseEmpty) {
@@ -282,6 +286,8 @@ public class OaiHarvester implements RunnableStoppable {
 
                     listRecords = getListRecordsWithRetries(resumptionToken, MAX_OAI_VERB_RETRIES);
                     batchCounter = listRecords.getDocument().getElementsByTagName("record").getLength();
+                    if(batchCounter == 0)
+                      batchCounter = listRecords.getDocument().getElementsByTagNameNS("http://www.openarchives.org/OAI/2.0/", "record").getLength();
                     isResponseEmpty = (batchCounter == 0 ? true : false);
                     ingestionRecords += batchCounter;
 
