@@ -4,6 +4,8 @@ import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 
 import java.util.Date;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+
 /**
  * Created to REPOX.
  * User: Edmundo
@@ -75,9 +77,9 @@ public class OldTaskUI extends HarvestTask {
 
     @SuppressWarnings("deprecation")
     public void parseDate() {
-        String date = (String) get("dateString");
+        String dateString = (String) get("dateString");
         String delimDateTime = "[ ]+";
-        String[] tokensDateTime = date.split(delimDateTime);
+        String[] tokensDateTime = dateString.split(delimDateTime);
 
         String delimDate = "[-]+";
         String[] tokensDate = tokensDateTime[0].split(delimDate);
@@ -92,11 +94,16 @@ public class OldTaskUI extends HarvestTask {
         set("minutes",Integer.parseInt(tokensTime[1]));
 
         //Create Date type
-        Date actualDate = new Date(getYear(),getMonth(),getDay());
-        actualDate.setYear(getYear()-1900);
-        actualDate.setMonth(getMonth()-1);
-        actualDate.setHours(getHours());
-        actualDate.setMinutes(getMinutes());
+//        Date actualDate = new Date(getYear(),getMonth(),getDay());
+//        actualDate.setYear(getYear()-1900);
+//        actualDate.setMonth(getMonth()-1);
+//        actualDate.setHours(getHours());
+//        actualDate.setMinutes(getMinutes());
+        
+//        DateTimeFormat sdf = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm");
+//        Date actualDate = null;
+//        actualDate = sdf.parse(dateString);
+        Date actualDate = new Date(getYear()-1900, getMonth()-1, getDay(), getHours(), getMinutes());
         set("date",actualDate);
 
         String monthString = convertSingleNumberToDate(getMonth());
