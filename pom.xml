@@ -5,7 +5,7 @@
 	<name>REPOX-SYSTEM</name>
 	<artifactId>repox-system</artifactId>
 	<groupId>repox</groupId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.1.0</version>
 	<packaging>pom</packaging>
 
 	<organization>
@@ -24,7 +24,7 @@
 		<connection>scm:git:git://github.com/europeana/repox2.git</connection>
 		<developerConnection>scm:git:git@github.com:europeana/repox2.git</developerConnection>
 		<url>https://github.com/europeana/repox2</url>
-		<tag>HEAD</tag>
+		<tag>v3.1.0</tag>
 	</scm>
 
 	<developers>
@@ -57,15 +57,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Versions -->
-		<repox.repox-manager.version>3.0.1-SNAPSHOT</repox.repox-manager.version>
-		<repox.repox-server.version>3.0.1-SNAPSHOT</repox.repox-server.version>
-		<repox.repox-server-oai.version>3.0.1-SNAPSHOT</repox.repox-server-oai.version>
+		<repox.repox-manager.version>3.1.0</repox.repox-manager.version>
+		<repox.repox-server.version>3.1.0</repox.repox-server.version>
+		<repox.repox-server-oai.version>3.1.0</repox.repox-server-oai.version>
 		<repox.repox-server-rest.version>2.6.0-SNAPSHOT</repox.repox-server-rest.version>
-		<repox.repox-server-rest-jersey.version>3.0.1-SNAPSHOT</repox.repox-server-rest-jersey.version>
+		<repox.repox-server-rest-jersey.version>3.1.0</repox.repox-server-rest-jersey.version>
 
-		<repox.repox-commons.version>3.0.1-SNAPSHOT</repox.repox-commons.version>
-		<repox.repox-resources.version>3.0.1-SNAPSHOT</repox.repox-resources.version>
-		<repox.repox-gui.version>3.0.1-SNAPSHOT</repox.repox-gui.version>
+		<repox.repox-commons.version>3.1.0</repox.repox-commons.version>
+		<repox.repox-resources.version>3.1.0</repox.repox-resources.version>
+		<repox.repox-gui.version>3.1.0</repox.repox-gui.version>
 
 		<eu.europeana.definitions.version>1.01</eu.europeana.definitions.version>
 		<postgresql.postgresql.version>9.1-901.jdbc4</postgresql.postgresql.version>
