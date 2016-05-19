@@ -102,11 +102,13 @@ The command to build is:
 
 ###Deploying Repox###
 - - -
-For Repox deployment there is a need of a MySQL or PostgreSQL database server and a servlet container as tomcat.  
+For Repox deployment there is a need of a PostgreSQL or MySQL database server and a servlet container as tomcat.  
 Tested versions are:  
-&nbsp;&nbsp;&nbsp;&nbsp; <b>MySQL</b> 5.5.40, 5.6.20  
 &nbsp;&nbsp;&nbsp;&nbsp; <b>PostgreSQL</b> 8.3.17, 9.1.14, 9.3.5  
+&nbsp;&nbsp;&nbsp;&nbsp; <b>MySQL</b> 5.5.40, 5.6.20  
 &nbsp;&nbsp;&nbsp;&nbsp; <b>Tomcat</b> 6.0.41, 7.0.55, 8.0.12  
+
+Strongly recommended the use of PostgreSQL, as it has the latest updates.  
 
 Additionally a database schema with a username and password that can access and modify it, is needed in the SQL server.
 These information must be added in the `configuration.properties` file mentioned above.  

@@ -35,7 +35,6 @@ import pt.utl.ist.util.exceptions.task.IllegalFileFormatException;
  */
 public class DefaultRepoxManager implements RepoxManager {
     private static final Logger           log = Logger.getLogger(DefaultRepoxManager.class);
-    private static String                 baseUrn;
 
     private DefaultRepoxConfiguration     configuration;
     private AccessPointsManager           accessPointsManager;
@@ -53,6 +52,10 @@ public class DefaultRepoxManager implements RepoxManager {
     @Override
     public DefaultRepoxConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public void setConfiguration(DefaultRepoxConfiguration configuration) {
+      this.configuration = configuration;
     }
 
     @Override
@@ -201,7 +204,7 @@ public class DefaultRepoxManager implements RepoxManager {
         end = System.currentTimeMillis();
         log.info("DefaultDataManager created in : " + (end - start)/(60*1000F) + " mins");
 
-        DefaultRepoxManager.baseUrn = configuration.getBaseUrn();
+//        DefaultRepoxManager.baseUrn = configuration.getBaseUrn();
 
         start = System.currentTimeMillis();
         log.info("AccessPointManager initializing.");
@@ -224,13 +227,5 @@ public class DefaultRepoxManager implements RepoxManager {
 
         long endInitializing = System.nanoTime();
         log.info("DefaultRepoxManager created in : " + (endInitializing - startInitializing)/(60*1000F) + " mins");
-    }
-
-    /**
-     * Gets the base URN of this Repox instance. Ex: urn:bn:repox:
-     * @return the base URN of this Repox instance. Ex: urn:bn:repox:
-     */
-    public String getBaseUrn() {
-        return baseUrn;
     }
 }

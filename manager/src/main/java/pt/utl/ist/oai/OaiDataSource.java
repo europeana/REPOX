@@ -268,9 +268,18 @@ public class OaiDataSource extends DataSource{
                     }
 
                     if (!harvesterThread.isAlive() && !harvester.isHarvestFinished() && getMaxRecord4Sample() == -1) {
+                      if(harvester.isLastResumptionWithEmptyList())
+                      {
+                        StringUtil.simpleLog("Ingest Process ended with warnings. Exiting.", this.getClass(), logFile);
+                        LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.WARNING.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        return Task.Status.WARNINGS;
+                      }
+                      else
+                      {
                         StringUtil.simpleLog("Harvester thread exited without finishing. Exiting ingesting Data Source Oai.", this.getClass(), logFile);
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
                         return Task.Status.FAILED;
+                      }
                     }
                     Thread.sleep(1000);
                 }

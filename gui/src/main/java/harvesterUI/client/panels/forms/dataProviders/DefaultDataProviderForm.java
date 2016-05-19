@@ -132,9 +132,6 @@ public class DefaultDataProviderForm extends DataProviderForm {
                 String type = typeCombo.getSimpleValue();
                 String nameCd = nameCode.getValue();
                 String hmpage = homepage.getValue();
-                if (hmpage != null && !hmpage.startsWith("http://") && !hmpage.startsWith("https://")) {
-                    hmpage = "http://" + hmpage;
-                }
 
                 if(homepage.getValue() != null && !homepage.getValue().isEmpty() && !homepage.getValue().
                         startsWith("http://") && !homepage.getValue().startsWith("https://")){

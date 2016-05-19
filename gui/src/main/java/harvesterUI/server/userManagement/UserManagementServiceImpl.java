@@ -525,104 +525,104 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
-    @Override
-    public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
-        try {
-            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
-            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
-            properties.setProperty("firstTimeUser","false");
-            PropertyUtil.saveProperties(propertiesConfigrationLayout, DefaultRepoxContextUtil.CONFIG_FILE);
-
-            SAXReader reader = new SAXReader();
-            String createRepoxUser = "http://repox.ist.utl.pt/repoxManagementServices/rest/createRegistration?name="+name+
-                    "&email="+mail+"&institution="+institution+
-                    "&skypeContact="+(skypeContact == null ? "" : skypeContact)+
-                    "&repoxUrl="+(repoxUrl == null ? "" : repoxUrl);
-            reader.read(new URL(createRepoxUser));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return RepoxServletResponseStates.GeneralStates.ERROR;
-        } catch (DocumentException e) {
+//    @Override
+//    public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
+//        try {
+//            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+//            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
+//            properties.setProperty("firstTimeUser","false");
+//            PropertyUtil.saveProperties(propertiesConfigrationLayout, DefaultRepoxContextUtil.CONFIG_FILE);
+//
+//            SAXReader reader = new SAXReader();
+//            String createRepoxUser = "http://repox.ist.utl.pt/repoxManagementServices/rest/createRegistration?name="+name+
+//                    "&email="+mail+"&institution="+institution+
+//                    "&skypeContact="+(skypeContact == null ? "" : skypeContact)+
+//                    "&repoxUrl="+(repoxUrl == null ? "" : repoxUrl);
+//            reader.read(new URL(createRepoxUser));
+//        } catch (MalformedURLException e) {
 //            e.printStackTrace();
-            // When no internet connection available
-            saveEntityRegistration(name, mail, institution, skypeContact, repoxUrl);
-            return RepoxServletResponseStates.GeneralStates.NO_INTERNET_CONNECTION;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServerSideException(Util.stackTraceToString(e));
-        }
-
-        return RepoxServletResponseStates.GeneralStates.SUCCESS;
-    }
-
-    private void saveEntityRegistration(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
-        try{
-            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
-
-            if(!registrationFile.exists()){
-                Document document = DocumentHelper.createDocument();
-
-                Element registrationNode = document.addElement("registrationInfo");
-                registrationNode.addAttribute("name",name);
-                registrationNode.addAttribute("mail",mail);
-                registrationNode.addAttribute("institution",institution);
-                registrationNode.addAttribute("skypeContact",skypeContact);
-                registrationNode.addAttribute("repoxUrl",repoxUrl);
-                registrationNode.addAttribute("registryDate",new Date().toString());
-
-                XmlUtil.writePrettyPrint(registrationFile, document);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServerSideException(Util.stackTraceToString(e));
-        }
-    }
-
-    @Override
-    public boolean isFirstTimeRepoxUsed() throws ServerSideException {
-        try{
-            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
-            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
-            boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser").toString());
-            if(!isFirstTime){
-                trySendRegistrationFromXML();
-            }
-            return isFirstTime;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServerSideException(Util.stackTraceToString(e));
-        }
-    }
-
-    private String trySendRegistrationFromXML() throws ServerSideException {
-        try{
-            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
-
-            if(registrationFile.exists()){
-                SAXReader reader = new SAXReader();
-                Document document = reader.read(registrationFile);
-
-                String name = document.valueOf("//registrationInfo/@name");
-                String mail = document.valueOf("//registrationInfo/@mail");
-                String institution = document.valueOf("//registrationInfo/@institution");
-                String skypeContact = document.valueOf("//registrationInfo/@skypeContact");
-                String repoxUrl = document.valueOf("//registrationInfo/@repoxUrl");
-
-                RepoxServletResponseStates.GeneralStates state =  registerNewEntity(name, mail, institution, skypeContact,repoxUrl);
-                if(state == RepoxServletResponseStates.GeneralStates.SUCCESS)
-                    registrationFile.delete();
-            }
-            return "OK";
-        }catch (NullPointerException e){
+//            return RepoxServletResponseStates.GeneralStates.ERROR;
+//        } catch (DocumentException e) {
+////            e.printStackTrace();
+//            // When no internet connection available
+//            saveEntityRegistration(name, mail, institution, skypeContact, repoxUrl);
+//            return RepoxServletResponseStates.GeneralStates.NO_INTERNET_CONNECTION;
+//        }catch (Exception e){
 //            e.printStackTrace();
-            return "OK";
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServerSideException(Util.stackTraceToString(e));
-        }
-    }
+//            throw new ServerSideException(Util.stackTraceToString(e));
+//        }
+//
+//        return RepoxServletResponseStates.GeneralStates.SUCCESS;
+//    }
+
+//    private void saveEntityRegistration(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
+//        try{
+//            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
+//                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
+//
+//            if(!registrationFile.exists()){
+//                Document document = DocumentHelper.createDocument();
+//
+//                Element registrationNode = document.addElement("registrationInfo");
+//                registrationNode.addAttribute("name",name);
+//                registrationNode.addAttribute("mail",mail);
+//                registrationNode.addAttribute("institution",institution);
+//                registrationNode.addAttribute("skypeContact",skypeContact);
+//                registrationNode.addAttribute("repoxUrl",repoxUrl);
+//                registrationNode.addAttribute("registryDate",new Date().toString());
+//
+//                XmlUtil.writePrettyPrint(registrationFile, document);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new ServerSideException(Util.stackTraceToString(e));
+//        }
+//    }
+
+//    @Override
+//    public boolean isFirstTimeRepoxUsed() throws ServerSideException {
+//        try{
+//            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
+//            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
+//            boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser").toString());
+//            if(!isFirstTime){
+//                trySendRegistrationFromXML();
+//            }
+//            return isFirstTime;
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new ServerSideException(Util.stackTraceToString(e));
+//        }
+//    }
+//
+//    private String trySendRegistrationFromXML() throws ServerSideException {
+//        try{
+//            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
+//                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
+//
+//            if(registrationFile.exists()){
+//                SAXReader reader = new SAXReader();
+//                Document document = reader.read(registrationFile);
+//
+//                String name = document.valueOf("//registrationInfo/@name");
+//                String mail = document.valueOf("//registrationInfo/@mail");
+//                String institution = document.valueOf("//registrationInfo/@institution");
+//                String skypeContact = document.valueOf("//registrationInfo/@skypeContact");
+//                String repoxUrl = document.valueOf("//registrationInfo/@repoxUrl");
+//
+//                RepoxServletResponseStates.GeneralStates state =  registerNewEntity(name, mail, institution, skypeContact,repoxUrl);
+//                if(state == RepoxServletResponseStates.GeneralStates.SUCCESS)
+//                    registrationFile.delete();
+//            }
+//            return "OK";
+//        }catch (NullPointerException e){
+////            e.printStackTrace();
+//            return "OK";
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new ServerSideException(Util.stackTraceToString(e));
+//        }
+//    }
 
     private ResponseState sendUserDataEmail(String username, String email, String password) throws ServerSideException {
         return RepoxServiceImpl.getProjectManager().sendUserDataEmail(username, email, password);
@@ -630,10 +630,9 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
 
     @Override
     public boolean checkLDAPAuthentication(String username, String password) throws ServerSideException{
-        String ldapHost = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapHost();
 //        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
 //        String ldapLoginDN = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapLoginDN();
 //        String loginDN = ldapUSerPrefix + username + ldapLoginDN;
-        return LDAPAuthenticator.checkLDAPAuthentication(ldapHost,username,password);
+        return LDAPAuthenticator.checkLDAPAuthentication(username,password);
     }
 }

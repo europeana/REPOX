@@ -18,7 +18,6 @@ import harvesterUI.client.mvc.controllers.RssController;
 import harvesterUI.client.mvc.controllers.SchemaMapperController;
 import harvesterUI.client.mvc.controllers.ServiceManagerController;
 import harvesterUI.client.mvc.controllers.StatisticsController;
-import harvesterUI.client.panels.administration.FirstTimeRepoxUsedDialog;
 import harvesterUI.client.panels.mdr.xmapper.usecase.SaveMappingCtrl;
 import harvesterUI.client.servlets.RepoxService;
 import harvesterUI.client.servlets.RepoxServiceAsync;
@@ -148,8 +147,9 @@ public class HarvesterUI implements EntryPoint,HistoryListener {
         //XMApper Controllers
         dispatcher.addController(new SaveMappingCtrl());
 
-        checkFirstTimeRepoxUsed();
+//        checkFirstTimeRepoxUsed();
 
+        startRepoxData();
         History.addHistoryListener(this);
     }
 
@@ -344,25 +344,25 @@ public class HarvesterUI implements EntryPoint,HistoryListener {
         repoxService.getInitialConfigData(projectTypeCall);
     }
 
-    private void checkFirstTimeRepoxUsed(){
-        //Check if its a first time use
-        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>(){
-            public void onFailure(Throwable caught) {
-                new ServerExceptionDialog("Failed to get response from server",caught.getMessage()).show();
-            }
-            public void onSuccess(Boolean isFirst) {
-                if(isFirst){
-                    GXT.hideLoadingPanel("loading");
-                    FirstTimeRepoxUsedDialog firstTimeRepoxUsedDialog = new FirstTimeRepoxUsedDialog();
-                    firstTimeRepoxUsedDialog.show();
-                    firstTimeRepoxUsedDialog.center();
-                }else{
-                    startRepoxData();
-                }
-            }
-        };
-        UserManagementServiceAsync userMangService = (UserManagementServiceAsync)Registry.get(USER_MANAGEMENT_SERVICE);
-        userMangService.isFirstTimeRepoxUsed(callback);
-    }
+//    private void checkFirstTimeRepoxUsed(){
+//        //Check if its a first time use
+//        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>(){
+//            public void onFailure(Throwable caught) {
+//                new ServerExceptionDialog("Failed to get response from server",caught.getMessage()).show();
+//            }
+//            public void onSuccess(Boolean isFirst) {
+//                if(isFirst){
+//                    GXT.hideLoadingPanel("loading");
+//                    FirstTimeRepoxUsedDialog firstTimeRepoxUsedDialog = new FirstTimeRepoxUsedDialog();
+//                    firstTimeRepoxUsedDialog.show();
+//                    firstTimeRepoxUsedDialog.center();
+//                }else{
+//                    startRepoxData();
+//                }
+//            }
+//        };
+//        UserManagementServiceAsync userMangService = (UserManagementServiceAsync)Registry.get(USER_MANAGEMENT_SERVICE);
+//        userMangService.isFirstTimeRepoxUsed(callback);
+//    }
 }
 

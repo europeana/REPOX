@@ -15,6 +15,8 @@ import org.oclc.oai.server.crosswalk.Crosswalks;
 import org.oclc.oai.server.verb.*;
 
 import javax.servlet.ServletContext;
+import javax.xml.transform.TransformerException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -458,8 +460,10 @@ public abstract class AbstractCatalog {
      *             sets aren't defined for this repository
      * @throws OAIInternalServerError
      *             signals an http status code 500 problem
+     * @throws TransformerException 
+     * @throws NumberFormatException 
      */
-    public abstract Map listIdentifiers(String from, String until, String set, String metadataPrefix) throws BadArgumentException, CannotDisseminateFormatException, NoItemsMatchException, NoSetHierarchyException, OAIInternalServerError;
+    public abstract Map listIdentifiers(String from, String until, String set, String metadataPrefix) throws BadArgumentException, CannotDisseminateFormatException, NoItemsMatchException, NoSetHierarchyException, OAIInternalServerError, NumberFormatException, TransformerException;
 
     /**
      * Retrieve the next set of Identifiers associated with the resumptionToken
@@ -476,8 +480,9 @@ public abstract class AbstractCatalog {
      * @throws OAIInternalServerError
      *             signals an http status code 500 problem
      * @throws NoItemsMatchException
+     * @throws TransformerException 
      */
-    public abstract Map listIdentifiers(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException;
+    public abstract Map listIdentifiers(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException, TransformerException;
 
     /**
      * Retrieve the specified metadata for the specified identifier
@@ -538,8 +543,10 @@ public abstract class AbstractCatalog {
      *                sets aren't defined for this repository
      * @exception OAIInternalServerError
      *                signals an http status code 500 problem
+     * @throws TransformerException 
+     * @throws NumberFormatException 
      */
-    public Map listRecords(String from, String until, String set, String metadataPrefix) throws BadArgumentException, CannotDisseminateFormatException, NoItemsMatchException, NoSetHierarchyException, OAIInternalServerError {
+    public Map listRecords(String from, String until, String set, String metadataPrefix) throws BadArgumentException, CannotDisseminateFormatException, NoItemsMatchException, NoSetHierarchyException, OAIInternalServerError, NumberFormatException, TransformerException {
         if (debug) {
             System.out.println("in AbstractCatalog.listRecords");
         }
@@ -579,8 +586,9 @@ public abstract class AbstractCatalog {
      * @throws OAIInternalServerError
      *             signals an http status code 500 problem
      * @throws NoItemsMatchException
+     * @throws TransformerException 
      */
-    public Map listRecords(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException {
+    public Map listRecords(String resumptionToken) throws BadResumptionTokenException, OAIInternalServerError, NoItemsMatchException, TransformerException {
         Map listIdentifiersMap = listIdentifiers(resumptionToken);
         resumptionToken = (String)listIdentifiersMap.get("resumptionToken");
         Iterator identifiers = (Iterator)listIdentifiersMap.get("identifiers");

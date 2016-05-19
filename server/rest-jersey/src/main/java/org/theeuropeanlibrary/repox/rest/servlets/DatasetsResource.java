@@ -236,7 +236,7 @@ public class DatasetsResource {
                 } catch (ObjectNotFoundException e) {
                     throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                 } catch (AlreadyExistsException e) {
-                    throw new AlreadyExistsException("Already exists: " + e.getMessage());
+                    throw new AlreadyExistsException("Already exists: " + e.getMessage(), e.getDatasetId());
                 } catch (SQLException | DocumentException | IOException e) {
                     throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                 }
@@ -297,7 +297,7 @@ public class DatasetsResource {
                     } catch (ObjectNotFoundException e) {
                         throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage(), e.getDatasetId());
                     } catch (SQLException | DocumentException | IOException e) {
                         throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
@@ -322,7 +322,7 @@ public class DatasetsResource {
                     } catch (ObjectNotFoundException e) {
                         throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage(), e.getDatasetId());
                     } catch (SQLException | DocumentException | IOException e) {
                         throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
@@ -344,13 +344,13 @@ public class DatasetsResource {
                     } catch (ObjectNotFoundException e) {
                         throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
                     } catch (AlreadyExistsException e) {
-                        throw new AlreadyExistsException("Already exists: " + e.getMessage());
+                        throw new AlreadyExistsException("Already exists: " + e.getMessage(), e.getDatasetId());
                     } catch (SQLException | DocumentException | IOException e) {
                         throw new InternalServerErrorException("Internal Server Error : " + e.getMessage());
                     }
                 }
             }
-            return Response.created(null).entity(new Result("DataSet with id = " + id + " and name = " + name + " created successfully")).build();
+            return Response.created(null).entity(new Result("DataSet with id = <" + id + "> and name = " + name + " created successfully")).build();
         }
         return Response.status(500).entity(new Result("Invalid dataSourceContainer instance in body!")).build();
     }

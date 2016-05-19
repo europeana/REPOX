@@ -411,8 +411,8 @@ public class DataSetViewInfo extends ContentPanel {
 
     public void setEditOldTasks(final DataSourceUI treeDataSourceUI) {
         OldTasksUtil.sortOldTasks(treeDataSourceUI.getOldTasks());
-        List<OldTaskUI> oldTaskUIs = treeDataSourceUI.getOldTasks();
-        int oldTasksSize = oldTaskUIs.size();
+        final List<OldTaskUI> oldTaskUIs = treeDataSourceUI.getOldTasks();
+        final int oldTasksSize = oldTaskUIs.size();
 
         if(oldTasksSize > 0) {
             for(int i=oldTasksSize-1; i>=0; i--) {
@@ -430,11 +430,13 @@ public class DataSetViewInfo extends ContentPanel {
                     taskContainer.add(nextLabel, new HBoxLayoutData(new Margins(0, 5, UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 0)));
                     taskContainer.add(getOldTaskDateAndTimeObject(oldTaskUIs.get(oldTasksSize-1)),
                             new HBoxLayoutData(new Margins(UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 5, UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 0)));
+                    final int copyi = i;
                     taskContainer.add(new Button(HarvesterUI.CONSTANTS.logFile(),HarvesterUI.ICONS.log_icon(),new SelectionListener<ButtonEvent>() {
                         @Override
                         public void componentSelected(ButtonEvent ce) {
-                            LayoutContainer lc = (LayoutContainer) ce.getButton().getParent();
-                            OldTaskUI oldTaskUI = treeDataSourceUI.getOldTask(lc.getItem(0).getId());
+//                            LayoutContainer lc = (LayoutContainer) ce.getButton().getParent();
+//                            OldTaskUI oldTaskUI = treeDataSourceUI.getOldTask(lc.getItem(0).getId());
+                            OldTaskUI oldTaskUI = oldTaskUIs.get(copyi);
                             UtilManager.showLogFromByLogName(oldTaskUI);
                         }
                     }),new HBoxLayoutData(new Margins(0, 5, UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 0)));
@@ -453,11 +455,13 @@ public class DataSetViewInfo extends ContentPanel {
                 anotherTaskContainer.add(nextLabel, new HBoxLayoutData(new Margins(0, UtilManager.SPECIAL_DATASET_VIEWINFO_LABEL_WIDTH, 1, 0)));
                 anotherTaskContainer.add(getOldTaskDateAndTimeObject(oldTaskUIs.get(i)),
                         new HBoxLayoutData(new Margins(UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 5, UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 0)));
+                final int copyi = i;
                 anotherTaskContainer.add(new Button(HarvesterUI.CONSTANTS.logFile(),HarvesterUI.ICONS.log_icon(), new SelectionListener<ButtonEvent>() {
                     @Override
                     public void componentSelected(ButtonEvent ce) {
-                        LayoutContainer lc = (LayoutContainer) ce.getButton().getParent();
-                        OldTaskUI oldTaskUI = treeDataSourceUI.getOldTask(lc.getItem(0).getId());
+//                        LayoutContainer lc = (LayoutContainer) ce.getButton().getParent();
+//                        OldTaskUI oldTaskUI = treeDataSourceUI.getOldTask(lc.getItem(0).getId());
+                        OldTaskUI oldTaskUI = oldTaskUIs.get(copyi);
                         UtilManager.showLogFromByLogName(oldTaskUI);
                     }
                 }),new HBoxLayoutData(new Margins(0, 5, UtilManager.SPECIAL_HBOX_BOTTOM_MARGIN, 0)));

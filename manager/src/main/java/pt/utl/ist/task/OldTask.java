@@ -1,8 +1,8 @@
 package pt.utl.ist.task;
 
-import pt.utl.ist.dataProvider.DataSource;
-
 import java.util.Date;
+
+import pt.utl.ist.dataProvider.DataSource;
 
 /**
  * Created to REPOX.
@@ -155,12 +155,10 @@ public class OldTask {
         minutes = Integer.parseInt(tokensTime[1]);
 
         //Create Date type
-        Date actualDate = new Date(getYear(), getMonth(), getDay());
-        actualDate.setYear(getYear() - 1900);
-        actualDate.setMonth(getMonth() - 1);
-        actualDate.setHours(getHours());
-        actualDate.setMinutes(getMinutes());
+        Date actualDate = new Date(year-1900, month-1, day, hours, minutes);
         this.actualDate = actualDate;
+        
+        System.out.println(actualDate.toString());
 
         String minString = "" + getMinutes();
         if (getMinutes() < 10) minString = "0" + getMinutes();

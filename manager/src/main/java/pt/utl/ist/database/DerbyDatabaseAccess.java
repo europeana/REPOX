@@ -36,10 +36,8 @@ public class DerbyDatabaseAccess implements DatabaseAccess {
             this.configuration = configuration;
 
             Properties dbConnectionProperties = new Properties();
-            String url = configuration.getDatabaseUrl() + configuration.getDatabasePath();
-            if (configuration.isDatabaseCreate()) {
-                url += ";create=true";
-            }
+//            String url = configuration.getDatabaseUrl() + configuration.getDatabasePath();
+            String url = configuration.getDatabaseUrl();
             dbConnectionProperties.put("url", url);
             dbConnectionProperties.put("driverClassName", configuration.getDatabaseDriverClassName());
 

@@ -59,8 +59,8 @@ public class HarvestOperationsServiceImpl extends RemoteServiceServlet implement
                     return "NO_DS_FOUND";
                 }
 
-                int oldValue = dataSource.getMaxRecord4Sample();
-                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceUI.getDataSourceSet(), true, oldValue != -1);
+//                int oldValue = dataSource.getMaxRecord4Sample();
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().startIngestDataSource(dataSourceUI.getDataSourceSet(), true, !dataSource.isSample());
             }
         }catch (ObjectNotFoundException e) {
             return "NO_DS_FOUND";

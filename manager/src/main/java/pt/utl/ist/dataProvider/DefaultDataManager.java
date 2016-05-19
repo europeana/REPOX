@@ -95,7 +95,7 @@ import pt.utl.ist.z3950.TimestampHarvester;
 public class DefaultDataManager implements DataManager {
   private static final Logger log = Logger.getLogger(DefaultDataManager.class);
   private static final String ID_REGULAR_EXPRESSION = "[a-zA-Z_0-9]*";
-  protected static final int ID_MAX_SIZE = 160;
+  protected static final int ID_MAX_SIZE = 40;
 
   protected File dataFile;
   protected MetadataTransformationManager metadataTransformationManager;
@@ -497,7 +497,8 @@ public class DefaultDataManager implements DataManager {
                   currentDataSourceElement.attributeValue("isoImplementationClass");
               extractStrategy = new Iso2709FileExtractStrategy(isoImplementationClass);
             } else if (extractStrategyString.equals(MarcXchangeFileExtractStrategy.class
-                .getSimpleName()) || extractStrategyString.equals(MarcXchangeFileExtractStrategy.OLDCLASS)) {
+                .getSimpleName())
+                || extractStrategyString.equals(MarcXchangeFileExtractStrategy.OLDCLASS)) {
               extractStrategy = new MarcXchangeFileExtractStrategy();
             } else if (extractStrategyString
                 .equals(SimpleFileExtractStrategy.class.getSimpleName())
@@ -568,15 +569,10 @@ public class DefaultDataManager implements DataManager {
 
               harvestMethod = new IdSequenceHarvester(target, maximumId);
             }
-            long startDsZ39 = System.currentTimeMillis();
-            log.info("Create datasource Z39.");
 
             dataSource =
                 new DataSourceZ3950(dataProvider, id, description, schema, namespace,
                     harvestMethod, recordIdPolicy, metadataTransformations);
-
-            long endDsZ39 = System.currentTimeMillis();
-            log.info("Create datasource Z39 in: " + (endDsZ39 - startDsZ39));
           } else {
             throw new RuntimeException("Loading configuration from Data Source of type "
                 + dataSourceType + " not implemented");
@@ -714,13 +710,12 @@ public class DefaultDataManager implements DataManager {
             // export path
             if (currentDataSourceElement.elementText("exportDirPath") != null
                 && !currentDataSourceElement.elementText("exportDirPath").isEmpty())
-              dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
+              // dataSource.setExportDir(currentDataSourceElement.elementText("exportDirPath"));
+              dataSource.setExportDir(configuration.getExportDefaultFolder() + "/" + id);
             else {
-              File newExportDir =
-                  new File(defaultExportDir.getAbsolutePath() + File.separator + dataSource.getId()
-                      + File.separator + "export");
+              // File newExportDir = new File(configuration.getExportDefaultFolder() + "/" + id);
               // FileUtils.forceMkdir(newExportDir);
-              dataSource.setExportDir(newExportDir.getAbsolutePath());
+              dataSource.setExportDir(configuration.getExportDefaultFolder() + "/" + id);
             }
 
             // Create new MDR schema if it doesn't exist
@@ -946,7 +941,8 @@ public class DefaultDataManager implements DataManager {
       saveData();
       return newAggregator;
     } else
-      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!");
+      throw new AlreadyExistsException("Aggregator " + newAggregator.getId() + " already exists!",
+          newAggregator.getId());
   }
 
   /**
@@ -1254,7 +1250,7 @@ public class DefaultDataManager implements DataManager {
           // generated
           if (checkIfDataProviderExists(aggregatorId, newDataProvider)) {
             throw new AlreadyExistsException("DataProvider " + newDataProvider.getId()
-                + " already exists!");
+                + " already exists!", newDataProvider.getId());
           }
           currentAggregator.addDataProvider(newDataProvider);
           break;
@@ -2182,7 +2178,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       // validate the URL server
       String newOaiSourceURL = oaiSourceURL;
@@ -2281,7 +2277,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2391,7 +2387,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2500,7 +2496,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (charset == null || charset.equals(""))
         throw new InvalidArgumentsException("charset is missing");
@@ -2604,7 +2600,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       String accessType;
       if ((user != null && user.equals("")) || user == null) {
@@ -2734,7 +2730,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       if (url.equals("") || !FileUtil.checkUrl(url))
         throw new InvalidArgumentsException("url");
@@ -2846,7 +2842,7 @@ public class DefaultDataManager implements DataManager {
         newId = DataSource.generateId(name);
 
       if (checkIfDataSourceExists(newId))
-        throw new AlreadyExistsException("DataSource " + newId + " already exists!");
+        throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       FileRetrieveStrategy retrieveStrategy = new FolderFileRetrieveStrategy();
 

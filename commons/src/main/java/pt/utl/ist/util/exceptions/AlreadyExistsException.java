@@ -8,19 +8,29 @@ import java.io.Serializable;
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Oct 16, 2014
  */
-public class AlreadyExistsException extends Exception implements Serializable{
-    private static final long serialVersionUID = 44L;
+public class AlreadyExistsException extends Exception implements Serializable {
+  private static final long serialVersionUID = 44L;
+  private String datasetId = null;
 
-    public AlreadyExistsException() {
-        super();
-    }
+  public AlreadyExistsException() {
+    super();
+  }
 
-    public AlreadyExistsException(String msg) {
-        super(msg);
-    }
+  public AlreadyExistsException(String msg) {
+    super(msg);
+  }
 
-    public AlreadyExistsException(String msg, Exception e) {
-        super(msg, e);
-    }
+  public AlreadyExistsException(String msg, String datasetId) {
+    super(msg);
+    this.datasetId = datasetId;
+  }
+
+  public AlreadyExistsException(String msg, Exception e) {
+    super(msg, e);
+  }
+  
+  public String getDatasetId() {
+    return datasetId;
+  }
 
 }

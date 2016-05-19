@@ -13,6 +13,8 @@ public interface RepoxContextUtil {
     String CONFIG_FILE      = "configuration.properties";
     /** RepoxContextUtil TEST_CONFIG_FILE */
     String TEST_CONFIG_FILE = "Test-configuration.properties";
+    /** RepoxContextUtil OAI_FILE */
+    String OAI_FILE      = "oaicat.properties";
 
     RepoxManager getRepoxManager();
 

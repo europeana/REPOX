@@ -231,7 +231,7 @@ public class ProvidersResource {
       throw new InvalidArgumentsException("Invalid argument: " + e.getMessage());
     } catch (AlreadyExistsException e) { // This basically happens if and provider already exists
                                          // with the same Id
-      throw new AlreadyExistsException("Already exists: " + e.getMessage());
+      throw new AlreadyExistsException("Already exists: " + e.getMessage(), e.getDatasetId());
     } catch (ObjectNotFoundException e) {
       throw new DoesNotExistException("Does NOT exist: " + e.getMessage());
     }
@@ -239,7 +239,7 @@ public class ProvidersResource {
     return Response
         .created(null)
         .entity(
-            new Result("DataProvider with id = " + createdProvider.getId() + " and name = "
+            new Result("DataProvider with id = <" + createdProvider.getId() + "> and name = "
                 + createdProvider.getName() + " created successfully")).build();
   }
 

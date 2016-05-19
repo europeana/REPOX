@@ -195,7 +195,7 @@ public class AggregatorsAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createAggregator(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      case 409:
+     case 409:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createAggregator(..) failure! : " + errorMessage.getResult());
         throw new AlreadyExistsException(errorMessage.getResult());

@@ -422,20 +422,20 @@ public abstract class DataSource {
         initAccessPoints();
     }
 
-    private void sendEmail(Task.Status exitStatus, File logFile) throws FileNotFoundException, MessagingException {
-        String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
-        if (smtpServer == null || smtpServer.isEmpty()) {
-            return;
-        }
-
-        String fromEmail = "repox@noreply.eu";
-        String subject = "REPOX Data Source ingesting finished. Exit status: " + exitStatus.toString();
-        String[] recipientsEmail = new String[] { ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getAdministratorEmail() };
-        File[] attachments = new File[] { logFile };
-
-        String message = "Data Source " + id + " finished ingesting." + " Exit status: " + exitStatus.toString() + "\nLog file is attached to this email." + "\n\n--------------------------------------------------------------------------------\n" + "This email is sent automatically by REPOX. Do not reply to this message.";
-
-    }
+//    private void sendEmail(Task.Status exitStatus, File logFile) throws FileNotFoundException, MessagingException {
+//        String smtpServer = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getSmtpServer();
+//        if (smtpServer == null || smtpServer.isEmpty()) {
+//            return;
+//        }
+//
+//        String fromEmail = "repox@noreply.eu";
+//        String subject = "REPOX Data Source ingesting finished. Exit status: " + exitStatus.toString();
+//        String[] recipientsEmail = new String[] { ConfigSingleton.getRepoxContextUtil().getRepoxManager().getConfiguration().getAdministratorEmail() };
+//        File[] attachments = new File[] { logFile };
+//
+//        String message = "Data Source " + id + " finished ingesting." + " Exit status: " + exitStatus.toString() + "\nLog file is attached to this email." + "\n\n--------------------------------------------------------------------------------\n" + "This email is sent automatically by REPOX. Do not reply to this message.";
+//
+//    }
 
     /**
      * @param taskId
@@ -473,13 +473,18 @@ public abstract class DataSource {
             StringUtil.simpleLog("Starting to import from Data Source with id " + id, this.getClass(), logFile);
             Date now = new Date();
 
+            //Blocking
             exitStatus = ingestRecords(logFile, fullIngest);
 
             if (exitStatus.isSuccessful()) {
                 status = StatusDS.OK;
                 //                if(full)
                 //                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().setDataSetSampleState(true,dataSource);
-            } else if (exitStatus.isCanceled()) {
+            }
+            else if (exitStatus.isWarnings()) {
+              status = StatusDS.WARNING;
+            }
+            else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
                 if (ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId) != null)
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getTaskManager().getTask(taskId).setFailTime(new GregorianCalendar());
@@ -524,7 +529,10 @@ public abstract class DataSource {
 
             if (exitStatus.isSuccessful()) {
                 status = StatusDS.OK;
-            } else if (exitStatus.isCanceled()) {
+            } 
+            else if (exitStatus.isWarnings()) {
+              status = StatusDS.WARNING;
+            }else if (exitStatus.isCanceled()) {
                 status = StatusDS.CANCELED;
             } else if (exitStatus.isForceEmpty()) {
                 status = null;
@@ -1135,7 +1143,7 @@ public abstract class DataSource {
         setStatus(null);
 
         //Clear the last ingest date
-        setLastUpdate(null);
+        //setLastUpdate(null);
 
         //Clear Old tasks
         //        oldTasksList.clear();

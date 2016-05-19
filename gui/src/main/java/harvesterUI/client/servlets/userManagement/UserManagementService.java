@@ -28,8 +28,8 @@ public interface UserManagementService extends RemoteService {
     public PagingLoadResult<User> getPagedUsers(PagingLoadConfig config) throws ServerSideException;
     public PagingLoadResult<DataProviderUI> getPagedAvailableDataProviders(PagingLoadConfig config) throws ServerSideException;
     public List<DataProviderUI> getAvailableDataProviders();
-    public boolean isFirstTimeRepoxUsed() throws ServerSideException;
-    public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException;
+//    public boolean isFirstTimeRepoxUsed() throws ServerSideException;
+//    public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException;
     public void addUserActivityData(String serverUrl);
 
     public String validateSessionId(String sessionId) throws ServerSideException;

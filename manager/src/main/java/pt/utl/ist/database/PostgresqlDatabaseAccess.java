@@ -22,7 +22,7 @@ public class PostgresqlDatabaseAccess implements DatabaseAccess {
     protected RepoxConfiguration configuration;
     protected String             dbUrl;
     protected Properties         dbProps;
-
+    private Connection connection;
     /**
      * Creates a new instance of this class.
      * 
@@ -78,7 +78,10 @@ public class PostgresqlDatabaseAccess implements DatabaseAccess {
     @Override
     public Connection openDbConnection() {
         try {
-            return DriverManager.getConnection(dbUrl, dbProps);
+            if(connection==null || connection.isClosed()){
+                connection = DriverManager.getConnection(dbUrl, dbProps);
+            }
+            return connection;
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             return null;

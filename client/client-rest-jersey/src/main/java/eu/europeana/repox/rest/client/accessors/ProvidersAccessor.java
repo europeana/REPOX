@@ -189,7 +189,7 @@ public class ProvidersAccessor {
    * @throws InternalServerErrorException
    * @throws DoesNotExistException
    */
-  public void createProvider(String aggregatorId, String id, String name, String country, String countryCode, 
+  public String createProvider(String aggregatorId, String id, String name, String country, String countryCode, 
       String description, String nameCode, String homepage, ProviderType providerType, String email)
       throws InvalidArgumentsException, MissingArgumentsException, AlreadyExistsException,
       InternalServerErrorException, DoesNotExistException {
@@ -224,13 +224,15 @@ public class ProvidersAccessor {
       case 409:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+        throw new AlreadyExistsException(errorMessage.getResult(), errorMessage.getResult().substring(errorMessage.getResult().indexOf("<") + 1, errorMessage.getResult().indexOf(">")));
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("createProvider(..) failure! : " + errorMessage.getResult());
         throw new InternalServerErrorException(errorMessage.getResult());
     }
     LOGGER.info("createProvider(..) success!");
+    Result result = response.readEntity(Result.class);
+    return result.getResult().substring(result.getResult().indexOf("<") + 1, result.getResult().indexOf(">"));
   }
   
   /**
@@ -280,10 +282,10 @@ public class ProvidersAccessor {
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("updateProvider(..) failure! : " + errorMessage.getResult());
         throw new MissingArgumentsException(errorMessage.getResult());
-      case 409:
-        errorMessage = response.readEntity(Result.class);
-        LOGGER.warn("updateProvider(..) failure! : " + errorMessage.getResult());
-        throw new AlreadyExistsException(errorMessage.getResult());
+     // case 409:
+      //  errorMessage = response.readEntity(Result.class);
+       // LOGGER.warn("updateProvider(..) failure! : " + errorMessage.getResult());
+      //  throw new AlreadyExistsException(errorMessage.getResult());
       case 500:
         errorMessage = response.readEntity(Result.class);
         LOGGER.warn("updateProvider(..) failure! : " + errorMessage.getResult());

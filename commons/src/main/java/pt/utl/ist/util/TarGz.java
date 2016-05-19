@@ -105,7 +105,10 @@ public class TarGz {
      */
     public static List<File> unTarGz(File tarGzFile, File tempDir) throws IOException, ArchiveException {
         File tarFile = TarGz.unGzip(tarGzFile, tempDir);
-        return TarGz.unTar(tarFile, tempDir);
+        List<File> unTarFiles = TarGz.unTar(tarFile, tempDir);
+        if(tarFile.exists())
+          tarFile.delete();
+        return unTarFiles;
     }
 
     /**

@@ -28,8 +28,8 @@ public interface UserManagementServiceAsync {
     public void getPagedUsers(PagingLoadConfig config, AsyncCallback<PagingLoadResult<User>> callback);
     public void getPagedAvailableDataProviders(PagingLoadConfig config, AsyncCallback<PagingLoadResult<DataProviderUI>> callback);
     public void getAvailableDataProviders(AsyncCallback<List<DataProviderUI>> callback);
-    public void isFirstTimeRepoxUsed(AsyncCallback<Boolean> callback);
-    public void registerNewEntity(String name, String mail,String institution, String skypeContact, String repoxUrl, AsyncCallback<RepoxServletResponseStates.GeneralStates> callback);
+//    public void isFirstTimeRepoxUsed(AsyncCallback<Boolean> callback);
+//    public void registerNewEntity(String name, String mail,String institution, String skypeContact, String repoxUrl, AsyncCallback<RepoxServletResponseStates.GeneralStates> callback);
     public void addUserActivityData(String serverUrl,AsyncCallback callback);
 
     public void validateSessionId(String sessionId,AsyncCallback<String> callback);

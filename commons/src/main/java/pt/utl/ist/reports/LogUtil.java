@@ -204,18 +204,20 @@ public class LogUtil {
     /**
      * @param recordId
      * @param logFile
+     * 
+     * Adds logging information on the logfile given regarding records that were replaced in the database.
      */
-    public static void addDuplicateRecordCount(String recordId, File logFile) {
+    public static void addReplacedRecordCount(String recordId, File logFile) {
         if (logFile == null) return;
 
         Document logDocument = getCorrectLogDocument(logFile);
 
-        Element emptyRecordsEl;
-        if (logDocument.getRootElement().selectSingleNode("duplicatedRecords") == null) {
-            emptyRecordsEl = logDocument.getRootElement().addElement("duplicatedRecords");
-            emptyRecordsEl.addAttribute("description", "Number of duplicated records");
+        Element replacedRecords;
+        if (logDocument.getRootElement().selectSingleNode("replacedRecords") == null) {
+            replacedRecords = logDocument.getRootElement().addElement("replacedRecords");
+            replacedRecords.addAttribute("description", "Number of replaced records");
         } else {
-            Element element = (Element)logDocument.getRootElement().selectSingleNode("duplicatedRecords");
+            Element element = (Element)logDocument.getRootElement().selectSingleNode("replacedRecords");
             int currentIndex = logDocument.getRootElement().content().indexOf(element);
             int lastDocPosition = logDocument.getRootElement().content().size() - 2;
             if (currentIndex != lastDocPosition) {
@@ -223,16 +225,32 @@ public class LogUtil {
                 logDocument.getRootElement().content().add(lastDocPosition, element);
             }
 
-            emptyRecordsEl = element;
+            replacedRecords = element;
+        }
+        
+        Element elementRecord = (Element)replacedRecords.selectSingleNode("record[@id='" + recordId + "']");
+        int recordIndex = replacedRecords.indexOf(elementRecord);
+        
+        if(recordIndex != -1)
+        {
+//          if (elementRecord.attributeValue("count") == null)
+//            elementRecord.addAttribute("count", "1");
+//          else
+//          {
+            elementRecord.addAttribute("count", String.valueOf(Integer.valueOf(elementRecord.valueOf("@count")) + 1));
+//          }
+        }
+        else
+        {
+          elementRecord = replacedRecords.addElement("record");
+          elementRecord.addAttribute("id", recordId);
+          elementRecord.addAttribute("count", "1");
         }
 
-        Element singleErrorNode = emptyRecordsEl.addElement("record");
-        singleErrorNode.addAttribute("id", recordId);
-
-        if (emptyRecordsEl.attributeValue("total") == null)
-            emptyRecordsEl.addAttribute("total", "1");
+        if (replacedRecords.attributeValue("total") == null)
+            replacedRecords.addAttribute("total", "1");
         else
-            emptyRecordsEl.addAttribute("total", String.valueOf(Integer.valueOf(emptyRecordsEl.valueOf("@total")) + 1));
+            replacedRecords.addAttribute("total", String.valueOf(Integer.valueOf(replacedRecords.valueOf("@total")) + 1));
 
         writeLogFile(logFile, logDocument);
     }
@@ -242,6 +260,8 @@ public class LogUtil {
      * @param startTime
      * @param status
      * @param set
+     * 
+     * Create the statistics information when starting to log a new set.
      */
     public static void startLogInfo(File logFile, Date startTime, String status, String set) {
         List<LogElement> logElements = new ArrayList<LogElement>();
@@ -264,6 +284,8 @@ public class LogUtil {
      * @param set
      * @param records
      * @param deleted
+     * 
+     * When finishing the log update the information of the statistics.
      */
     public static void endLogInfo(File logFile, Date startTime, Date endTime, String status, String set, int records, int deleted) {
         List<LogElement> logElements = new ArrayList<LogElement>();
