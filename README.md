@@ -72,7 +72,7 @@ the property `skipTests` from `true` to `false`, after refactoring the only upda
 Repox is a maven project and can be easily build by building the root project where the parent pom is.
 The command to build is:
 
-&nbsp;&nbsp;&nbsp;&nbsp; `clean install -Pproduction`  
+&nbsp;&nbsp;&nbsp;&nbsp; `mvn clean install -Pproduction`  
 
 ####Profiles####
 
