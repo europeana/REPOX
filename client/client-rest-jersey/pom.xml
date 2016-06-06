@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>repox</groupId>
 		<artifactId>repox-client</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.1.1-SNAPSHOT</version>
 	</parent>
 
 	<name>REPOX-CLIENT-REST-JERSEY</name>
 	<artifactId>repox-client-rest-jersey</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
