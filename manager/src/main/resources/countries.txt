@@ -1,5 +1,5 @@
 AF 	Afghanistan
-AX 	Åland Islands
+AX 	Aland Islands
 AL 	ALBANIA
 DZ 	Algeria
 AS 	American Samoa
