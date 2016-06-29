@@ -15,41 +15,15 @@ import harvesterUI.shared.externalServices.ExternalServiceUI;
 import harvesterUI.shared.externalServices.ServiceParameterUI;
 import harvesterUI.shared.mdr.TransformationUI;
 import harvesterUI.shared.servletResponseStates.ResponseState;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxManager;
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
-import pt.utl.ist.dataProvider.MessageType;
+import pt.utl.ist.dataProvider.*;
 import pt.utl.ist.dataProvider.dataSource.DataSourceTag;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdProvidedRecordIdPolicy;
-import pt.utl.ist.externalServices.ExternalRestService;
-import pt.utl.ist.externalServices.ExternalServiceNoMonitor;
-import pt.utl.ist.externalServices.ExternalServiceStates;
-import pt.utl.ist.externalServices.ExternalServiceType;
-import pt.utl.ist.externalServices.ServiceParameter;
+import pt.utl.ist.externalServices.*;
 import pt.utl.ist.ftp.FtpFileRetrieveStrategy;
 import pt.utl.ist.http.HttpFileRetrieveStrategy;
 import pt.utl.ist.marc.FolderFileRetrieveStrategy;
@@ -62,6 +36,15 @@ import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.IncompatibleInstanceException;
 import pt.utl.ist.util.exceptions.InvalidArgumentsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created to REPOX. User: Edmundo Date: 04-07-2011 Time: 13:35
@@ -575,20 +558,9 @@ public class DefaultSaveData {
           saveDataResponse.setResponseState(ResponseState.URL_NOT_EXISTS);
           return saveDataResponse;
         } else if (checkUrlResult.equals("SUCCESS"))
-          try {
-            url = new URL(homepage);
-          } catch (MalformedURLException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-          }
+            log.info("Homepage value: " + homepage + " is fine.");
       }
-    } else
-      try {
-        url = new URL("");
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
-        log.error(e.getMessage());
-      }
+    }
 
     if (update) {
       DataProvider dataProvider = defaultManager.getDataProvider(dataProviderUI.getId());
@@ -599,7 +571,7 @@ public class DefaultSaveData {
         dataProvider.setDescription(dataProviderUI.getDescription());
         dataProvider.setProviderType(ProviderType.valueOf(dataProviderUI.getType()));
         dataProvider.setNameCode(dataProviderUI.getNameCode());
-        dataProvider.setHomepage(url.toString());
+        dataProvider.setHomepage(homepage);
 
         try {
           dataProvider =
