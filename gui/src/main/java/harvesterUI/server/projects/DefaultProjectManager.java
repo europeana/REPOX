@@ -1,5 +1,6 @@
 package harvesterUI.server.projects;
 
+import com.extjs.gxt.ui.client.data.ModelData;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.DataType;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -29,38 +30,14 @@ import harvesterUI.shared.statistics.StatisticsType;
 import harvesterUI.shared.tasks.OldTaskUI;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.mail.AuthenticationFailedException;
-
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.dom4j.DocumentException;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxConfiguration;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.configuration.DefaultRepoxManager;
-import pt.utl.ist.dataProvider.Aggregator;
-import pt.utl.ist.dataProvider.Countries;
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.dataProvider.DefaultDataManager;
-import pt.utl.ist.dataProvider.DefaultDataSourceContainer;
+import pt.utl.ist.dataProvider.*;
 import pt.utl.ist.dataProvider.dataSource.IdExtractedRecordIdPolicy;
 import pt.utl.ist.dataProvider.dataSource.IdGeneratedRecordIdPolicy;
 import pt.utl.ist.metadataTransformation.MetadataTransformation;
@@ -75,7 +52,13 @@ import pt.utl.ist.util.PropertyUtil;
 import pt.utl.ist.util.exceptions.AlreadyExistsException;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 
-import com.extjs.gxt.ui.client.data.ModelData;
+import javax.mail.AuthenticationFailedException;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
  * @author Edmundo
@@ -154,12 +137,12 @@ public class DefaultProjectManager extends ProjectManager {
     Country[] countries = Country.values();
 
     for (int index = 0; index < countries.length; index++) {
-      String countryName = countries[index].name();
+      String codeName = countries[index].getCodeName();
 
       Iterator<Map.Entry<String, String>> iterator = Countries.getCountries().entrySet().iterator();
       while (iterator.hasNext()) {
         Map.Entry<String, String> mapEntry = iterator.next();
-        if (mapEntry.getValue().equals(countryName)) {
+        if (mapEntry.getKey().equalsIgnoreCase(codeName)) {
           results.put(mapEntry.getKey(), mapEntry.getValue());
         }
       }
