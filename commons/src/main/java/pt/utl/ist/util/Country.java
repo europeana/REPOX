@@ -2,74 +2,77 @@
 package pt.utl.ist.util;
 
 /**
- * 
- * 
  * @author Simon Tzanakis (Simon.Tzanakis@theeuropeanlibrary.org)
  * @since Nov 26, 2014
  */
- public enum Country
- {
-   FYROM("Former Yugoslav Republic Of Macedonia"), 
-   ALBANIA("Albania"), 
-   ARMENIA("Armenia"), 
-   AUSTRIA("Austria"), 
-   AZERBAIJAN("Azerbaijan"), 
-   BELGIUM("Belgium"), 
-   BOSNIA_AND_HERZEGOVINA("Bosnia and Herzegovina"), 
-   BULGARIA("Bulgaria"), 
-   CROATIA("Croatia"), 
-   CYPRUS("Cyprus"), 
-   CZECH("Czech Republic"), 
-   DENMARK("Denmark"), 
-   ESTONIA("Estonia"), 
-   EUROPE("Europe"), 
-   FINLAND("Finland"), 
-   FRANCE("France"), 
-   GEORGIA("Georgia"), 
-   GERMANY("Germany"), 
-   GREECE("Greece"), 
-   HUNGARY("Hungary"), 
-   ICELAND("Iceland"), 
-   IRELAND("Ireland"), 
-   ITALY("Italy"), 
-   LATVIA("Latvia"), 
-   LIECHTENSTEIN("Liechtenstein"), 
-   LITHUANIA("Lithuania"), 
-   LUXEMBOURG("Luxembourg"), 
-   MALTA("Malta"), 
-   MOLDOVA("Moldova"), 
-   NETHERLANDS("Netherlands"), 
-   NORWAY("Norway"), 
-   POLAND("Poland"), 
-   PORTUGAL("Portugal"), 
-   ROMANIA("Romania"), 
-   RUSSIA("Russia"), 
-   SERBIA("Serbia"), 
-   SLOVAKIA("Slovakia"), 
-   SLOVENIA("Slovenia"), 
-   SPAIN("Spain"), 
-   SWEDEN("Sweden"), 
-   SWITZERLAND("Switzerland"), 
-   TURKEY("Turkey"), 
-   UK("United Kingdom"), 
-   UKRAINE("Ukraine");
-   
-   private String englishName;
-   
-   private Country(String englishName) {
-     this.englishName = englishName;
-   }
-   
-   public String getEnglishName() {
-     return this.englishName;
-   }
-   
-   public static Country get(String string) {
-     for (Country t : values()) {
-       if (t.getEnglishName().equalsIgnoreCase(string)) {
-         return t;
-       }
-     }
-     throw new IllegalArgumentException("Did not recognize Country: [" + string + "]");
-   }
- }
+public enum Country {
+    FYROM("MK", "Former Yugoslav Republic Of Macedonia"),
+    ALBANIA("AL", "Albania"),
+    ARMENIA("AM", "Armenia"),
+    AUSTRIA("AT", "Austria"),
+    AZERBAIJAN("AZ", "Azerbaijan"),
+    BELGIUM("BE", "Belgium"),
+    BOSNIA_AND_HERZEGOVINA("BA", "Bosnia and Herzegovina"),
+    BULGARIA("BG", "Bulgaria"),
+    CROATIA("HR", "Croatia"),
+    CYPRUS("CY", "Cyprus"),
+    CZECH("CZ", "Czech Republic"),
+    DENMARK("DK", "Denmark"),
+    ESTONIA("EE", "Estonia"),
+    EUROPE("EU", "Europe"),
+    FINLAND("FI", "Finland"),
+    FRANCE("FR", "France"),
+    GEORGIA("GE", "Georgia"),
+    GERMANY("DE", "Germany"),
+    GREECE("GR", "Greece"),
+    HUNGARY("HU", "Hungary"),
+    ICELAND("IS", "Iceland"),
+    IRELAND("IE", "Ireland"),
+    ITALY("IT", "Italy"),
+    LATVIA("LV", "Latvia"),
+    LIECHTENSTEIN("LI", "Liechtenstein"),
+    LITHUANIA("LT", "Lithuania"),
+    LUXEMBOURG("LU", "Luxembourg"),
+    MALTA("MT", "Malta"),
+    MOLDOVA("MD", "Moldova"),
+    NETHERLANDS("NL", "Netherlands"),
+    NORWAY("NO", "Norway"),
+    POLAND("PL", "Poland"),
+    PORTUGAL("PT", "Portugal"),
+    ROMANIA("RO", "Romania"),
+    RUSSIA("RU", "Russia"),
+    SERBIA("RS", "Serbia"),
+    SLOVAKIA("SK", "Slovakia"),
+    SLOVENIA("SI", "Slovenia"),
+    SPAIN("ES", "Spain"),
+    SWEDEN("SE", "Sweden"),
+    SWITZERLAND("CH", "Switzerland"),
+    TURKEY("TR", "Turkey"),
+    UK("UK", "United Kingdom"),
+    UKRAINE("UA", "Ukraine"),
+    USA("US", "United States");
+
+    private String codeName;
+    private String englishName;
+
+    private Country(String codeName, String englishName) {
+        this.codeName = codeName;
+        this.englishName = englishName;
+    }
+
+    public String getCodeName() {
+        return this.codeName;
+    }
+    public String getEnglishName() {
+        return this.englishName;
+    }
+
+    public static Country get(String string) {
+        for (Country t : values()) {
+            if (t.getEnglishName().equalsIgnoreCase(string)) {
+                return t;
+            }
+        }
+        throw new IllegalArgumentException("Did not recognize Country: [" + string + "]");
+    }
+}
