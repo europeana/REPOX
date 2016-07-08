@@ -2132,7 +2132,7 @@ public class DefaultDataManager implements DataManager {
         throw new AlreadyExistsException("DataSource " + newId + " already exists!", newId);
 
       // validate the URL server
-      String newOaiSourceURL = oaiSourceURL;
+      String newOaiSourceURL = oaiSourceURL.trim();
       if (!newOaiSourceURL.startsWith("http://") && !newOaiSourceURL.startsWith("https://")) {
         newOaiSourceURL = "http://" + newOaiSourceURL;
       }
