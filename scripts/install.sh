@@ -1,7 +1,7 @@
 #!/bin/bash
 #This script will install all the requirement for you and start tomcat. REPOX will be available at
 #localhost:8080/repox
-#Usage : ./install.sh repoxDatabasePassword
+#Usage(Should run under root user) : ./install.sh repoxDatabasePassword
 #Install in a clean system without pre-existing tomcat 8 or postgres.
 #Usage with own risk.
 
