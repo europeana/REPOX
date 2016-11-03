@@ -135,6 +135,25 @@
 									</resources>
 								</configuration>
 							</execution>
+							<execution>
+								<id>copy-resources-security</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>src/main/webapp/WEB-INF</outputDirectory>
+									<resources>
+										<resource>
+											<directory>../server/rest-jersey/src/main/webapp/WEB-INF</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>security.xml</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
 						</executions>
 					</plugin>
 				</plugins>
@@ -158,6 +177,13 @@
 										<include>configuration.properties</include>
 										<include>gui.properties</include>
 										<include>log4j.properties</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+								<fileset>
+									<directory>src/main/webapp/WEB-INF</directory>
+									<includes>
+										<include>security.xml</include>
 									</includes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
@@ -360,6 +386,11 @@
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.12</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
