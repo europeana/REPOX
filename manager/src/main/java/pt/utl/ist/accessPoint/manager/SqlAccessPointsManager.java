@@ -1,22 +1,9 @@
 package pt.utl.ist.accessPoint.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.ibm.icu.text.SimpleDateFormat;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
-
 import pt.utl.ist.accessPoint.AccessPoint;
 import pt.utl.ist.accessPoint.RecordRepoxFullAccessPoint;
 import pt.utl.ist.configuration.ConfigSingleton;
@@ -35,7 +22,11 @@ import pt.utl.ist.util.ZipUtil;
 import pt.utl.ist.util.exceptions.ObjectNotFoundException;
 import pt.utl.ist.util.sql.SqlUtil;
 
-import com.ibm.icu.text.SimpleDateFormat;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 /**
  * Implementation of an AccessPointsManagerDefault based on a Sql database
@@ -457,8 +448,22 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             return;
         }
 
+        HashMap<String, RecordRepox> cleanedRecords = new HashMap<>();
+        List<Object> cleanedValues = new ArrayList<>();
         if (records == null || records.isEmpty()) {
             return;
+        }
+        else
+        {
+            //Clean records
+            for(int i = 0; i < records.size(); i++)
+            {
+                String id = String.valueOf(records.get(i).getId());
+                if(!cleanedRecords.containsKey(id)) {
+                    cleanedRecords.put(id, records.get(i));
+                    cleanedValues.add(values.get(i));
+                }
+            }
         }
 
         try {
@@ -474,8 +479,9 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
                 PreparedStatement delStatement = con.prepareStatement(deleteQuery);
 
+                int deletes = 0;
                 try {
-                    for (RecordRepox record : records) {
+                    for (RecordRepox record : cleanedRecords.values()) {
                       //Run the if only for once accessPoint to update only once the results rather than multiple times.
                         if (accessPoint instanceof RecordRepoxFullAccessPoint) {
 //                            //                            LogUtil.addEmptyRecordCount(recordId, logFile);
@@ -490,11 +496,13 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                             LogUtil.addReplacedRecordCount((String)record.getId(), logFile);
                             if(markedAsDeleted && !incomingDeleted)
                             {
-                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), -1);
+                                deletes-=1;
+//                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), -1);
                             }
                             else if(!markedAsDeleted && incomingDeleted)
                             {
-                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
+                                deletes+=1;
+//                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
                             }
 //                            else if(!markedAsDeleted && !incomingDeleted)
 //                            {
@@ -509,7 +517,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                           {
                             if(incomingDeleted)
                             {
-                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
+                                deletes+=1;
+//                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
                             }
 //                            else
 //                            {
@@ -521,6 +530,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         delStatement.executeUpdate();
                         delStatement.clearParameters();
                     }
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
                 } finally {
                     delStatement.close();
                 }
@@ -528,7 +538,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
             /* INSERT new indexes */
             List<Object[]> pairsForInsertion = new ArrayList<Object[]>();
-            for (int i = 0; i < records.size(); i++) {
+            for (int i = 0; i < cleanedValues.size(); i++) {
                 Object valueToInsert;
 
                 if (values.get(i) != null && values.get(i).getClass().equals(byte[].class)) {
@@ -536,7 +546,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 } else {
                     valueToInsert = values.get(i);
                 }
-                pairsForInsertion.addAll(getTripleArraysToInsert((String)records.get(i).getId(), records.get(i).isDeleted(), valueToInsert));
+                pairsForInsertion.addAll(getTripleArraysToInsert((String)cleanedRecords.get(i).getId(), cleanedRecords.get(i).isDeleted(), valueToInsert));
             }
 
             String pairsValues = "(?, ?, ?)";
@@ -762,24 +772,20 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 	
 	            //			countLastrowPair[1] = SqlUtil.getCount(maxQuery, con);
 	            Statement statementMaxRow = con.createStatement();
+                ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
 	            try {
-	                ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
-	                try {
 	                    if (rsMaxRow.next()) {
 	                        countLastrowPair[1] = rsMaxRow.getInt(1);
 	                    }
 	                    log.debug(maxRowQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
-	                } finally {
-	                    rsMaxRow.close();
-	                }
 	            } finally {
+                    rsMaxRow.close();
 	                statementMaxRow.close();
 	            }
 	
 	            Statement deletedRow = con.createStatement();
+                ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
 	            try {
-	                ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
-	                try {
 	                    if (rsDeletedRow.next()) {
 	                        countLastrowPair[2] = rsDeletedRow.getInt(1);
 	                    }
@@ -798,10 +804,8 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 	                    }
 	
 	                    return countLastrowPair;
-	                } finally {
-	                    rsDeletedRow.close();
-	                }
 	            } finally {
+                    rsDeletedRow.close();
 	                deletedRow.close();
 	            }
 	        } catch (Exception e) {
