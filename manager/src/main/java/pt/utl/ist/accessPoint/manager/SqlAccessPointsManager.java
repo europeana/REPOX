@@ -466,9 +466,6 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 }
                 else
                 {
-                    //Force replace, simulating what would happen in the db.
-                    cleanedRecords.put(id, records.get(i));
-                    cleanedValues.add(values.get(i));
                     if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                         RecordRepox recordRepox = cleanedRecords.get(id);
                         boolean deleted = recordRepox.isDeleted();
@@ -480,6 +477,9 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                             deletes += 1;
                         LogUtil.addReplacedRecordCount(id, logFile);
                     }
+                    //Force replace, simulating what would happen in the db.
+                    cleanedRecords.put(id, records.get(i));
+                    cleanedValues.add(values.get(i));
                 }
             }
             if (accessPoint instanceof RecordRepoxFullAccessPoint)
