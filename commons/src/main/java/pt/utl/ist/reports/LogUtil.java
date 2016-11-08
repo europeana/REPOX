@@ -7,7 +7,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
-
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.XmlUtil;
 import pt.utl.ist.util.date.DateUtil;
@@ -177,7 +176,7 @@ public class LogUtil {
         Element emptyRecordsEl;
         if (logDocument.getRootElement().selectSingleNode("emptyMetadata") == null) {
             emptyRecordsEl = logDocument.getRootElement().addElement("emptyMetadata");
-            emptyRecordsEl.addAttribute("description", "Number of records with an empty metadata element");
+            emptyRecordsEl.addAttribute("description", "Number of records with an empty metadata element(These records are discarded and do not replace any existing data)");
         } else {
             Element element = (Element)logDocument.getRootElement().selectSingleNode("emptyMetadata");
             int currentIndex = logDocument.getRootElement().content().indexOf(element);
@@ -190,8 +189,21 @@ public class LogUtil {
             emptyRecordsEl = element;
         }
 
-        Element singleErrorNode = emptyRecordsEl.addElement("record");
-        singleErrorNode.addAttribute("id", recordId);
+
+
+        Element elementRecord = (Element)emptyRecordsEl.selectSingleNode("record[@id='" + recordId + "']");
+        int recordIndex = emptyRecordsEl.indexOf(elementRecord);
+
+        if(recordIndex != -1)
+        {
+            elementRecord.addAttribute("count", String.valueOf(Integer.valueOf(elementRecord.valueOf("@count")) + 1));
+        }
+        else
+        {
+            elementRecord = emptyRecordsEl.addElement("record");
+            elementRecord.addAttribute("id", recordId);
+            elementRecord.addAttribute("count", "1");
+        }
 
         if (emptyRecordsEl.attributeValue("total") == null)
             emptyRecordsEl.addAttribute("total", "1");
@@ -253,6 +265,22 @@ public class LogUtil {
             replacedRecords.addAttribute("total", String.valueOf(Integer.valueOf(replacedRecords.valueOf("@total")) + 1));
 
         writeLogFile(logFile, logDocument);
+    }
+
+    public static int getReplacedCount(File logFile)
+    {
+        if (logFile == null) return 0;
+        int count = 0;
+        Document logDocument = getCorrectLogDocument(logFile);
+
+        Element replacedRecords;
+        if (logDocument.getRootElement().selectSingleNode("replacedRecords") != null) {
+            replacedRecords = (Element)logDocument.getRootElement().selectSingleNode("replacedRecords");
+            if (replacedRecords.attributeValue("total") != null) {
+                count = Integer.valueOf(replacedRecords.valueOf("@total")).intValue();
+            }
+        }
+        return count;
     }
 
     /**

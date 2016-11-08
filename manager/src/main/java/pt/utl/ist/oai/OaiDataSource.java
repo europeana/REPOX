@@ -1,34 +1,13 @@
 package pt.utl.ist.oai;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.transform.TransformerConfigurationException;
-
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.oclc.oai.harvester.verb.ListIdentifiers;
 import org.w3c.dom.NodeList;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataProvider;
 import pt.utl.ist.dataProvider.DataSource;
@@ -45,8 +24,15 @@ import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.TimeUtil;
 import pt.utl.ist.util.date.DateUtil;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.*;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
  * Implementation of a DataSource that makes requests to a OAI-PMH Provider and
@@ -308,30 +294,30 @@ public class OaiDataSource extends DataSource{
                     responseRecords = responseTransformer.splitResponseToRecords(currentRequestFile, this, logFile);
                 }
 
-                // to avoid records with duplicated ID's
-                for (RecordRepox responseRecord : responseRecords) {
-                    batchRecordsWithoutDuplicates.put(responseRecord.getId().toString(), responseRecord);
-                }
+//                // to avoid records with duplicated ID's
+//                for (RecordRepox responseRecord : responseRecords) {
+//                    batchRecordsWithoutDuplicates.put(responseRecord.getId().toString(), responseRecord);
+//                }
 
-                List<RecordRepox> batchRecords = new ArrayList<RecordRepox>(batchRecordsWithoutDuplicates.values());
-                lastIngestCount += batchRecords.size();
+//                List<RecordRepox> batchRecords = new ArrayList<RecordRepox>(batchRecordsWithoutDuplicates.values());
+                lastIngestCount += responseRecords.size();
 
                 log.info("Time for splitting " + responseRecords.size() + " records from response file: " + TimeUtil.getTimeSinceLastTimerArray(9));
 
-                while (batchRecords.size() > RECORDS_BATCH_SIZE) {
-                    List<RecordRepox> recordsToImport = batchRecords.subList(0, RECORDS_BATCH_SIZE);
-                    batchRecords = batchRecords.subList(RECORDS_BATCH_SIZE, batchRecords.size());
+                while (responseRecords.size() > RECORDS_BATCH_SIZE) {
+                    List<RecordRepox> recordsToImport = responseRecords.subList(0, RECORDS_BATCH_SIZE);
+                    responseRecords = responseRecords.subList(RECORDS_BATCH_SIZE, responseRecords.size());
 
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, recordsToImport, logFile);
 
                     log.info("Time for importing " + recordsToImport.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
                 }
-                if (!batchRecords.isEmpty()) {
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, batchRecords, logFile);
-                    log.info("Time for importing last " + batchRecords.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
+                if (!responseRecords.isEmpty()) {
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getAccessPointsManager().processRecords(this, responseRecords, logFile);
+                    log.info("Time for importing last " + responseRecords.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
                 }
 
-                addDeletedRecords(batchRecords);
+                addDeletedRecords(responseRecords);
 
                 currentRequestFile.delete();
                 currentRequest++;

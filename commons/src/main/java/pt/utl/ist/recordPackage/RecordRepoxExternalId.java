@@ -22,10 +22,21 @@ public class RecordRepoxExternalId implements RecordRepox {
     protected Element           dom;
     protected Object            recordId;
     protected boolean           isDeleted        = false;
+    protected boolean           isEmpty        = false;
 
     @Override
     public boolean isDeleted() {
         return isDeleted;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        this.isEmpty = isEmpty;
     }
 
     @Override

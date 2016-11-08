@@ -56,4 +56,8 @@ public interface RecordRepox {
      * @return true if record is deleted, false otherwise
      */
     public boolean isDeleted();
+
+    public boolean isEmpty();
+
+    public void setEmpty(boolean isEmpty);
 }

@@ -448,7 +448,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             return;
         }
 
-        HashMap<String, RecordRepox> cleanedRecords = new HashMap<>();
+        LinkedHashMap<String, RecordRepox> cleanedRecords = new LinkedHashMap<>();
         List<Object> cleanedValues = new ArrayList<>();
         if (records == null || records.isEmpty()) {
             return;
@@ -456,6 +456,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         else
         {
             //Clean records
+            int deletes = 0;
             for(int i = 0; i < records.size(); i++)
             {
                 String id = String.valueOf(records.get(i).getId());
@@ -463,7 +464,26 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                     cleanedRecords.put(id, records.get(i));
                     cleanedValues.add(values.get(i));
                 }
+                else
+                {
+                    //Force replace, simulating what would happen in the db.
+                    cleanedRecords.put(id, records.get(i));
+                    cleanedValues.add(values.get(i));
+                    if (accessPoint instanceof RecordRepoxFullAccessPoint) {
+                        RecordRepox recordRepox = cleanedRecords.get(id);
+                        boolean deleted = recordRepox.isDeleted();
+                        boolean incomingDeleted = records.get(i).isDeleted();
+
+                        if (deleted && !incomingDeleted)
+                            deletes -= 1;
+                        else if (!deleted && incomingDeleted)
+                            deletes += 1;
+                        LogUtil.addReplacedRecordCount(id, logFile);
+                    }
+                }
             }
+            if (accessPoint instanceof RecordRepoxFullAccessPoint)
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
         }
 
         try {
@@ -530,7 +550,10 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         delStatement.executeUpdate();
                         delStatement.clearParameters();
                     }
-                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
+                    if (accessPoint instanceof RecordRepoxFullAccessPoint) {
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateReplacedRecordsCount(dataSource.getId(), LogUtil.getReplacedCount(logFile));
+                    }
                 } finally {
                     delStatement.close();
                 }
@@ -538,16 +561,32 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
             /* INSERT new indexes */
             List<Object[]> pairsForInsertion = new ArrayList<Object[]>();
-            for (int i = 0; i < cleanedValues.size(); i++) {
+            int index = 0;
+            for (Map.Entry<String, RecordRepox> recordRepoxEntry : cleanedRecords.entrySet()) {
+                String key = recordRepoxEntry.getKey();
+                RecordRepox value = recordRepoxEntry.getValue();
+
                 Object valueToInsert;
 
-                if (values.get(i) != null && values.get(i).getClass().equals(byte[].class)) {
-                    valueToInsert = ZipUtil.zip((byte[])values.get(i));
+                if (values.get(index) != null && values.get(index).getClass().equals(byte[].class)) {
+                    valueToInsert = ZipUtil.zip((byte[])values.get(index));
                 } else {
-                    valueToInsert = values.get(i);
+                    valueToInsert = values.get(index);
                 }
-                pairsForInsertion.addAll(getTripleArraysToInsert((String)cleanedRecords.get(i).getId(), cleanedRecords.get(i).isDeleted(), valueToInsert));
+                pairsForInsertion.addAll(getTripleArraysToInsert(key, value.isDeleted(), valueToInsert));
+                index++;
             }
+
+//            for (int i = 0; i < cleanedValues.size(); i++) {
+//                Object valueToInsert;
+//
+//                if (values.get(i) != null && values.get(i).getClass().equals(byte[].class)) {
+//                    valueToInsert = ZipUtil.zip((byte[])values.get(i));
+//                } else {
+//                    valueToInsert = values.get(i);
+//                }
+//                pairsForInsertion.addAll(getTripleArraysToInsert((String)cleanedRecords.get().getId(), cleanedRecords.get(i).isDeleted(), valueToInsert));
+//            }
 
             String pairsValues = "(?, ?, ?)";
             for (int i = 1; i < pairsForInsertion.size(); i++) {

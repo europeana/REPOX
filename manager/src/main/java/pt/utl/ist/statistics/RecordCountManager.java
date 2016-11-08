@@ -1,5 +1,17 @@
 package pt.utl.ist.statistics;
 
+import org.apache.log4j.Logger;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.dataProvider.DataSource;
+import pt.utl.ist.dataProvider.DataSourceContainer;
+import pt.utl.ist.util.TimeUtil;
+import pt.utl.ist.util.XmlUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,19 +22,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-
-import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.dataProvider.DataSource;
-import pt.utl.ist.dataProvider.DataSourceContainer;
-import pt.utl.ist.util.TimeUtil;
-import pt.utl.ist.util.XmlUtil;
 
 /**
  */
@@ -80,12 +79,14 @@ public class RecordCountManager implements Runnable {
             .parse(recordCountElement.elementText("lastCountWithChangesDate")));
         String dataSourceId = recordCountElement.elementText("dataSourceId");
         String deletedRecords = recordCountElement.elementText("deletedRecords");
+        String replacedRecords = recordCountElement.elementText("replacedRecords");
         RecordCount recordCount =
             new RecordCount(dataSourceId,
                 Integer.parseInt(recordCountElement.elementText("count")),
                 Integer.parseInt((deletedRecords == null || deletedRecords.isEmpty()) ? "0"
                     : deletedRecords), Integer.parseInt(recordCountElement
-                    .elementText("lastLineCounted")), lastCountDate, lastCountWithChangesDate);
+                    .elementText("lastLineCounted")), Integer.parseInt((replacedRecords == null || replacedRecords.isEmpty()) ? "0"
+                    : replacedRecords), lastCountDate, lastCountWithChangesDate);
         recordCounts.put(dataSourceId, recordCount);
       }
     }
@@ -104,8 +105,14 @@ public class RecordCountManager implements Runnable {
     int count = recordCountLastrowPair[0];
     int lastRow = recordCountLastrowPair[1];
     int deleteRecords = recordCountLastrowPair[2];
+    int replaced = 0;
+    if (recordCounts.containsKey(dataSource.getId()))
+    {
+      RecordCount currentRecordCount = recordCounts.get(dataSource.getId());
+      replaced = currentRecordCount.getReplaced();
+    }
     Calendar now = Calendar.getInstance();
-    recordCount = new RecordCount(dataSource.getId(), count, deleteRecords, lastRow, now, now);
+    recordCount = new RecordCount(dataSource.getId(), count, deleteRecords, lastRow, replaced, now, now);
     return recordCount;
   }
 
@@ -129,6 +136,8 @@ public class RecordCountManager implements Runnable {
             Integer.toString(recordCount.getLastLineCounted()));
         currentRecordNode.addElement("deletedRecords").addText(
             Integer.toString(recordCount.getDeleted()));
+        currentRecordNode.addElement("replacedRecords").addText(
+                Integer.toString(recordCount.getReplaced()));
         currentRecordNode.addElement("lastCountDate").addText(lastCountDateString);
         currentRecordNode.addElement("lastCountWithChangesDate").addText(
             lastCountWithChangesDateString);
@@ -172,15 +181,19 @@ public class RecordCountManager implements Runnable {
     RecordCount newRecordCount =
         getCountFromRow(dataSource, currentRecordCount.getLastLineCounted());
 
-    if (newRecordCount.getCount() > 0) {
-      newRecordCount.setCount(currentRecordCount.getCount() + newRecordCount.getCount());
-      currentRecordCount = newRecordCount;
-    } else {
-      currentRecordCount.setLastCountDate(newRecordCount.getLastCountDate());
-      currentRecordCount.setDeleted(newRecordCount.getDeleted());
-    }
+    newRecordCount.setCount(currentRecordCount.getCount() + newRecordCount.getCount());
 
-    return currentRecordCount;
+
+//    if (newRecordCount.getCount() > 0) {
+//      newRecordCount.setCount(currentRecordCount.getCount() + newRecordCount.getCount());
+//      currentRecordCount = newRecordCount;
+//    } else {
+//      currentRecordCount.setLastCountDate(newRecordCount.getLastCountDate());
+//      currentRecordCount.setDeleted(newRecordCount.getDeleted());
+//      currentRecordCount.setReplaced(newRecordCount.getReplaced());
+//    }
+
+    return newRecordCount;
   }
 
   /**
@@ -267,6 +280,17 @@ public class RecordCountManager implements Runnable {
     saveRecordCounts(recordCounts);
   }
 
+  public void updateReplacedRecordsCount(String dataSourceId, int replacedRecords) throws IOException {
+    RecordCount recordCount = recordCounts.get(dataSourceId);
+    if (recordCount == null) {
+      return;
+    }
+
+    recordCount.setReplaced(replacedRecords);
+    recordCounts.put(dataSourceId, recordCount);
+    saveRecordCounts(recordCounts);
+  }
+
   /**
    * @param dataSourceId
    * @param eraseRecords
@@ -337,7 +361,7 @@ public class RecordCountManager implements Runnable {
         ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager()
             .getDataSourceContainer(dataSourceId).getDataSource();
     if (dataSource == null) {
-      return new RecordCount(dataSourceId, 0, 0, 0, null, null);
+      return new RecordCount(dataSourceId, 0, 0, 0, 0, null, null);
     }
 
     if (forceUpdate) {

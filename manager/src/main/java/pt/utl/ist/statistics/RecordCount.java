@@ -8,6 +8,7 @@ public class RecordCount {
     private String   dataSourceId;
     private int      count, deleted;
     private int      lastLineCounted;
+    private int     replaced;
     private Calendar lastCountDate;
     private Calendar lastCountWithChangesDate;
 
@@ -59,6 +60,14 @@ public class RecordCount {
         this.deleted = deleted;
     }
 
+    public int getReplaced() {
+        return replaced;
+    }
+
+    public void setReplaced(int replaced) {
+        this.replaced = replaced;
+    }
+
     /**
      * Creates a new instance of this class.
      * @param dataSourceId
@@ -68,12 +77,13 @@ public class RecordCount {
      * @param lastCountDate
      * @param lastCountWithChangesDate
      */
-    public RecordCount(String dataSourceId, int count, int deleted, int lastLineCounted, Calendar lastCountDate, Calendar lastCountWithChangesDate) {
+    public RecordCount(String dataSourceId, int count, int deleted, int lastLineCounted, int replaced, Calendar lastCountDate, Calendar lastCountWithChangesDate) {
         super();
         this.dataSourceId = dataSourceId;
         this.count = count;
         this.deleted = deleted;
         this.lastLineCounted = lastLineCounted;
+        this.replaced = replaced;
         this.lastCountDate = lastCountDate;
         this.lastCountWithChangesDate = lastCountWithChangesDate;
     }

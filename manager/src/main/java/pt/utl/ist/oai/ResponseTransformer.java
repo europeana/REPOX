@@ -1,26 +1,5 @@
 package pt.utl.ist.oai;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -31,7 +10,6 @@ import org.dom4j.Element;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 import org.dom4j.io.SAXReader;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.configuration.DefaultRepoxContextUtil;
 import pt.utl.ist.dataProvider.DataSource;
@@ -40,6 +18,16 @@ import pt.utl.ist.reports.LogUtil;
 import pt.utl.ist.util.FileUtil;
 import pt.utl.ist.util.StringUtil;
 import pt.utl.ist.util.XmlUtil;
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  */
@@ -159,6 +147,7 @@ public class ResponseTransformer {
 
       // if(currentElement.element("metadata").elements().size() > 0){
       boolean deleted = false;
+      boolean empty = false;
       Element recordElement = null;
       if (currentElement.attribute("status") != null
           && currentElement.attributeValue("status").equals("deleted")) {
@@ -178,8 +167,10 @@ public class ResponseTransformer {
             // remove namespace...
             // ((DefaultElement) recordElement).setDestNamespace(Namespace.NO_NAMESPACE);
           }
-          else
+          else {
+            LogUtil.addEmptyRecordCount(recordId, logFile);
             continue;
+          }
         } catch (Exception e) {
           log.error("Error getting metadata from dataSource " + dataSource.getId() + " in xmlFile "
               + xmlFile + " record identifier " + recordId, e);

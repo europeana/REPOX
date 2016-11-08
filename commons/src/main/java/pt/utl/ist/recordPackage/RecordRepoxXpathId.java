@@ -25,6 +25,7 @@ public class RecordRepoxXpathId implements RecordRepox {
     protected Element           dom;
     protected XPath             idXpath;
     protected boolean           isDeleted = false;
+    protected boolean           isEmpty = false;
 
     @Override
     public Object getId() {
@@ -42,6 +43,16 @@ public class RecordRepoxXpathId implements RecordRepox {
     }
 
     @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        this.isEmpty = isEmpty;
+    }
+
+    @Override
     public void setDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
@@ -54,7 +65,7 @@ public class RecordRepoxXpathId implements RecordRepox {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param dom
      * @param idXpath
      */
@@ -65,7 +76,7 @@ public class RecordRepoxXpathId implements RecordRepox {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param dom
      * @param idXpath
      * @param isDeleted

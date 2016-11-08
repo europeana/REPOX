@@ -6,8 +6,6 @@ package pt.utl.ist.marc;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
-
-import pt.utl.ist.marc.MarcRecord;
 import pt.utl.ist.marc.xml.MarcXChangeDom4jBuilder;
 import pt.utl.ist.recordPackage.RecordRepox;
 import pt.utl.ist.util.marc.RecordComparer;
@@ -22,8 +20,9 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
     static final long           serialVersionUID = 1;
 
     protected MarcRecord            record;
-    protected boolean           isDeleted        = false;
     protected String            marcFormat;
+    protected boolean           isDeleted        = false;
+    protected boolean           isEmpty        = false;
 
     /**
      * Creates a new instance of this class.
@@ -101,6 +100,16 @@ public class RecordRepoxMarc implements RecordRepox, Serializable {
     @Override
     public boolean isDeleted() {
         return isDeleted;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        this.isEmpty = isEmpty;
     }
 
     @Override
