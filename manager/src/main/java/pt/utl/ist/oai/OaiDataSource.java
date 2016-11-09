@@ -282,7 +282,7 @@ public class OaiDataSource extends DataSource{
                 }
 
                 // Split the OAI-PMH answer to Records and import them
-                Map<String, RecordRepox> batchRecordsWithoutDuplicates = new HashMap<String, RecordRepox>();
+//                Map<String, RecordRepox> batchRecordsWithoutDuplicates = new HashMap<String, RecordRepox>();
                 TimeUtil.getTimeSinceLastTimerArray(9);
                 ResponseTransformer responseTransformer = new ResponseTransformer();
                 List<RecordRepox> responseRecords;
@@ -300,7 +300,7 @@ public class OaiDataSource extends DataSource{
 //                }
 
 //                List<RecordRepox> batchRecords = new ArrayList<RecordRepox>(batchRecordsWithoutDuplicates.values());
-                lastIngestCount += responseRecords.size();
+//                lastIngestCount += responseRecords.size();
 
                 log.info("Time for splitting " + responseRecords.size() + " records from response file: " + TimeUtil.getTimeSinceLastTimerArray(9));
 
@@ -317,7 +317,11 @@ public class OaiDataSource extends DataSource{
                     log.info("Time for importing last " + responseRecords.size() + " records to DB: " + TimeUtil.getTimeSinceLastTimerArray(9));
                 }
 
-                addDeletedRecords(responseRecords);
+//                addDeletedRecords(responseRecords);
+
+                lastIngestCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id).getCount();
+                lastIngestDeletedCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id).getDeleted();
+
 
                 currentRequestFile.delete();
                 currentRequest++;
