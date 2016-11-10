@@ -222,10 +222,12 @@ public class OaiDataSource extends DataSource{
                     harvester.stop();
                     if (forceStopExecution) {
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return Task.Status.FORCE_EMPTY;
                     }
                     StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                     LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                     return Task.Status.CANCELED;
                 }
                 while (!currentRequestFile.exists()) { // Wait for the Harvester to write the request file
@@ -233,10 +235,12 @@ public class OaiDataSource extends DataSource{
                         harvester.stop();
                         if (forceStopExecution) {
                             LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
+                            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                             return Task.Status.FORCE_EMPTY;
                         }
                         StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return Task.Status.CANCELED;
                     }
                     if (harvester.isHarvestFinished()) {
@@ -245,11 +249,13 @@ public class OaiDataSource extends DataSource{
 
                         harvester.cleanUp();
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), ingestStatus.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return ingestStatus;
                     }
                     if (harvester.getRequestFileNoRecords().exists()) {
                         //StringUtil.simpleLog("Harvester result: " + harvester.readErrorCode(), this.getClass(), logFile);
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.OK.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return Task.Status.OK;
                     }
 
@@ -258,12 +264,14 @@ public class OaiDataSource extends DataSource{
                       {
                         StringUtil.simpleLog("Ingest Process ended with warnings. Exiting.", this.getClass(), logFile);
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.WARNING.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return Task.Status.WARNINGS;
                       }
                       else
                       {
                         StringUtil.simpleLog("Harvester thread exited without finishing. Exiting ingesting Data Source Oai.", this.getClass(), logFile);
                         LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
+                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                         return Task.Status.FAILED;
                       }
                     }
@@ -319,8 +327,9 @@ public class OaiDataSource extends DataSource{
 
 //                addDeletedRecords(responseRecords);
 
-                lastIngestCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id).getCount();
-                lastIngestDeletedCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id).getDeleted();
+                recordCount = ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(id, true);
+                lastIngestCount = recordCount.getCount();
+                lastIngestDeletedCount = recordCount.getDeleted();
 
 
                 currentRequestFile.delete();
@@ -336,16 +345,19 @@ public class OaiDataSource extends DataSource{
                 harvester.stop();
                 if (forceStopExecution) {
                     LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                     return Task.Status.FORCE_EMPTY;
                 }
                 StringUtil.simpleLog("Received stop signal: exiting import.", this.getClass(), logFile);
                 LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.CANCELED.name(), id, lastIngestCount, lastIngestDeletedCount);
+                ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
                 return Task.Status.CANCELED;
             }
             log.error("Error ingesting : " + e.getMessage(), e);
             harvester.stop();
             StringUtil.simpleLog("Error ingesting. Exiting ingesting Data Source Oai.", e, this.getClass(), logFile);
             LogUtil.endLogInfo(logFile, startIngestTime, new Date(), StatusDS.ERROR.name(), id, lastIngestCount, lastIngestDeletedCount);
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().saveRecordCounts();
             return Task.Status.ERRORS;
         }
     }

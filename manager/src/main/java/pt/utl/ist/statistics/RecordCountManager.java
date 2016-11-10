@@ -116,7 +116,7 @@ public class RecordCountManager implements Runnable {
     return recordCount;
   }
 
-  private void saveRecordCounts(Map<String, RecordCount> recordCounts) throws IOException {
+  public void saveRecordCounts() throws IOException {
     Document document = DocumentHelper.createDocument();
 
     Element rootNode = document.addElement("recordcounts");
@@ -257,7 +257,7 @@ public class RecordCountManager implements Runnable {
     }
 
     recordCounts = newRecordCounts;
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
     lastGenerationCalendar = generationStartTime;
     if (forceFullCount) {
       lastFullCount = generationStartTime;
@@ -277,7 +277,7 @@ public class RecordCountManager implements Runnable {
 
     recordCount.setDeleted(recordCount.getDeleted() + deletedRecords);
     recordCounts.put(dataSourceId, recordCount);
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
   }
 
   public void updateReplacedRecordsCount(String dataSourceId, int replacedRecords) throws IOException {
@@ -288,7 +288,7 @@ public class RecordCountManager implements Runnable {
 
     recordCount.setReplaced(replacedRecords);
     recordCounts.put(dataSourceId, recordCount);
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
   }
 
   /**
@@ -308,7 +308,7 @@ public class RecordCountManager implements Runnable {
 //    recordCount.setDeleted(recordCount.getDeleted() - deletedRecords);
     recordCount.setDeleted(recordCount.getDeleted() + deletedRecords);
     recordCounts.put(dataSourceId, recordCount);
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
   }
 
   /**
@@ -322,7 +322,7 @@ public class RecordCountManager implements Runnable {
       oldDataSourceCount.setDataSourceId(newId);
       recordCounts.put(newId, oldDataSourceCount);
     }
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
   }
 
   /**
@@ -331,7 +331,7 @@ public class RecordCountManager implements Runnable {
    */
   public void removeDataSourceCounts(String dataSourceId) throws IOException {
     recordCounts.remove(dataSourceId);
-    saveRecordCounts(recordCounts);
+//    saveRecordCounts(recordCounts);
 
   }
 
@@ -375,7 +375,7 @@ public class RecordCountManager implements Runnable {
       }
 
       recordCounts.put(dataSourceId, updatedRecordCount);
-      saveRecordCounts(recordCounts);
+//      saveRecordCounts(recordCounts);
 
       return updatedRecordCount;
     } else {
