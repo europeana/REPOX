@@ -32,13 +32,12 @@ import java.util.Date;
  * Implementation of an AccessPointsManagerDefault based on a Sql database
  *
  * @author Nuno Freire
- *
  */
 public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
     private static final Logger log = Logger.getLogger(SqlAccessPointsManager.class);
 
-    protected DatabaseAccess    databaseAccess;
+    protected DatabaseAccess databaseAccess;
 
     /**
      * Creates a new instance of this class.
@@ -95,14 +94,14 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
     private void setStatementParameter(PreparedStatement insStatement, Object value, int paramCounter, Class classOfParameter) throws SQLException {
         if (classOfParameter.equals(String.class)) {
-            String valString = (String)value;
+            String valString = (String) value;
             insStatement.setString(paramCounter, (valString.length() > 255 ? valString.substring(0, 255) : valString));
         } else if (classOfParameter.equals(Integer.class)) {
-            insStatement.setInt(paramCounter, (Integer)value);
+            insStatement.setInt(paramCounter, (Integer) value);
         } else if (classOfParameter.equals(Date.class)) {
-            insStatement.setDate(paramCounter, new java.sql.Date((((Date)value).getTime())));
+            insStatement.setDate(paramCounter, new java.sql.Date((((Date) value).getTime())));
         } else if (classOfParameter.equals(byte[].class)) {
-            insStatement.setBytes(paramCounter, (byte[])value);
+            insStatement.setBytes(paramCounter, (byte[]) value);
         } else {
             throw new RuntimeException("Index type not implemented");
         }
@@ -112,12 +111,12 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         Integer isDeletedInteger = (isDeleted ? 1 : 0);
         List<Object[]> allValues = new ArrayList<Object[]>();
         if (value instanceof List) {
-            List valueList = (List)value;
+            List valueList = (List) value;
             for (Object aValueList : valueList) {
-                allValues.add(new Object[] { identifier, isDeletedInteger, aValueList });
+                allValues.add(new Object[]{identifier, isDeletedInteger, aValueList});
             }
         } else {
-            allValues.add(new Object[] { identifier, isDeletedInteger, value });
+            allValues.add(new Object[]{identifier, isDeletedInteger, value});
         }
 
         return allValues;
@@ -169,7 +168,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 stmt.close();
             }
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
@@ -201,12 +200,12 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 stmt.close();
             }
         } finally {
-          //  con.close();
+            //  con.close();
         }
     }
 
     private OaiListResponse getHeaderAndRecordFromDataSource(DataSource dataSource, String fromDateString, String toDateString, Integer offset, Integer numberResults, boolean retrieveFullRecord,
-            Class itemClass) throws SQLException, IOException {
+                                                             Class itemClass) throws SQLException, IOException {
         OaiListResponse oaiListResponse = new OaiListResponse();
 
         boolean noResultLimit = (numberResults == null || numberResults <= 0);
@@ -251,7 +250,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             e.printStackTrace();
             return oaiListResponse;
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
@@ -269,7 +268,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-          //  con.close();
+            //  con.close();
         }
     }
 
@@ -296,7 +295,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
@@ -322,7 +321,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-         //   con.close();
+            //   con.close();
         }
     }
 
@@ -343,7 +342,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
-          //  con.close();
+            //  con.close();
         }
     }
 
@@ -369,13 +368,13 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 boolean markedAsDeleted = false;
                 if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                     // check if record exists and if it marked as deleted
-                    markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
+                    markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String) record.getId());
                 }
                 int result = delPs.executeUpdate();
 
                 if (accessPoint instanceof RecordRepoxFullAccessPoint && result > 0) {
                     // update the number of records
-                    LogUtil.addReplacedRecordCount((String)record.getId(), logFile);
+                    LogUtil.addReplacedRecordCount((String) record.getId(), logFile);
                     ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSourceId, 1, markedAsDeleted ? 1 : 0);
                 }
             } finally {
@@ -393,17 +392,17 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 
                         insPs.clearParameters();
                         if (accessPoint.typeOfIndex().equals(String.class)) {
-                            if (((String)val).length() > 255) {
-                                insPs.setString(1, ((String)val).substring(0, 255));
+                            if (((String) val).length() > 255) {
+                                insPs.setString(1, ((String) val).substring(0, 255));
                             } else {
-                                insPs.setString(1, (String)val);
+                                insPs.setString(1, (String) val);
                             }
                         } else if (accessPoint.typeOfIndex().equals(Integer.class)) {
-                            insPs.setInt(1, (Integer)val);
+                            insPs.setInt(1, (Integer) val);
                         } else if (accessPoint.typeOfIndex().equals(Date.class)) {
-                            insPs.setDate(1, new java.sql.Date(((Date)val).getTime()));
+                            insPs.setDate(1, new java.sql.Date(((Date) val).getTime()));
                         } else if (accessPoint.typeOfIndex().equals(byte[].class)) {
-                            byte[] valueToInsert = ZipUtil.zip((byte[])val);
+                            byte[] valueToInsert = ZipUtil.zip((byte[]) val);
                             insPs.setBytes(1, valueToInsert);
                         } else {
                             throw new RuntimeException("Index type not implemented");
@@ -429,7 +428,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 }
             }
         } finally {
-          //  con.close();
+            //  con.close();
         }
     }
 
@@ -452,20 +451,15 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
         List<Object> cleanedValues = new ArrayList<>();
         if (records == null || records.isEmpty()) {
             return;
-        }
-        else
-        {
+        } else {
             //Clean records
             int deletes = 0;
-            for(int i = 0; i < records.size(); i++)
-            {
+            for (int i = 0; i < records.size(); i++) {
                 String id = String.valueOf(records.get(i).getId());
-                if(!cleanedRecords.containsKey(id)) {
+                if (!cleanedRecords.containsKey(id)) {
                     cleanedRecords.put(id, records.get(i));
                     cleanedValues.add(values.get(i));
-                }
-                else
-                {
+                } else {
                     if (accessPoint instanceof RecordRepoxFullAccessPoint) {
                         RecordRepox recordRepox = cleanedRecords.get(id);
                         boolean deleted = recordRepox.isDeleted();
@@ -494,34 +488,32 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
             /* DELETE old indexes */
             // If Data Source has ids extracted or is IdProvided, the ids are extracted from the records and need
             // to be deleted before being inserted again (for performance: it's faster than updating)
-            if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy/*                                                                                                       */) {
-                String deleteQuery = "delete from " + table + " where nc = ?";
-
-                PreparedStatement delStatement = con.prepareStatement(deleteQuery);
+            if (dataSource.getRecordIdPolicy() instanceof IdExtractedRecordIdPolicy || dataSource.getRecordIdPolicy() instanceof IdProvidedRecordIdPolicy) {
+                String updateQuery = "update " + table + " set value = ?, deleted = ? " + "where nc = ?";
 
                 int deletes = 0;
-                try {
-                    for (RecordRepox record : cleanedRecords.values()) {
-                      //Run the if only for once accessPoint to update only once the results rather than multiple times.
-                        if (accessPoint instanceof RecordRepoxFullAccessPoint) {
+                Iterator<Map.Entry<String, RecordRepox>> iteratorRecords = cleanedRecords.entrySet().iterator();
+                Iterator<Object> iteratorValues = cleanedValues.iterator();
+                while (iteratorRecords.hasNext()) {
+                    Map.Entry<String, RecordRepox> entry = iteratorRecords.next();
+                    Object value = iteratorValues.next();
+                    RecordRepox record = entry.getValue();
+                    //Run the if only for once accessPoint to update only once the results rather than multiple times.
+                    boolean recordStored = isRecordStored(con, table, (String) record.getId());
+                    boolean markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String) record.getId());
+                    boolean incomingDeleted = record.isDeleted();
+                    if (accessPoint instanceof RecordRepoxFullAccessPoint) {
 //                            //                            LogUtil.addEmptyRecordCount(recordId, logFile);
 //                            LogUtil.addDuplicateRecordCount((String)record.getId(), logFile);
 //                            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 1, marcAsDeleted ? 1 : 0);
-                          
-                          boolean recordStored = isRecordStored(con, table, (String)record.getId());
-                          boolean markedAsDeleted = isRecordMarkedAsDeleted(con, table, (String)record.getId());
-                          boolean incomingDeleted = record.isDeleted();
-                          if(recordStored)
-                          {
-                            LogUtil.addReplacedRecordCount((String)record.getId(), logFile);
-                            if(markedAsDeleted && !incomingDeleted)
-                            {
-                                deletes-=1;
+
+                        if (recordStored) {
+                            LogUtil.addReplacedRecordCount((String) record.getId(), logFile);
+                            if (markedAsDeleted && !incomingDeleted) {
+                                deletes -= 1;
 //                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), -1);
-                            }
-                            else if(!markedAsDeleted && incomingDeleted)
-                            {
-                                deletes+=1;
+                            } else if (!markedAsDeleted && incomingDeleted) {
+                                deletes += 1;
 //                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
                             }
 //                            else if(!markedAsDeleted && !incomingDeleted)
@@ -532,49 +524,78 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 //                            {
 ////                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 0, );
 //                            }
-                          }
-                          else
-                          {
-                            if(incomingDeleted)
-                            {
-                                deletes+=1;
+                        } else {
+                            if (incomingDeleted) {
+                                deletes += 1;
 //                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), 1);
                             }
 //                            else
 //                            {
 ////                              ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateEraseRecordsCount(dataSource.getId(), 0, );
 //                            }
-                          }
                         }
-                        delStatement.setString(1, (String)record.getId());
-                        delStatement.executeUpdate();
-                        delStatement.clearParameters();
                     }
-                    if (accessPoint instanceof RecordRepoxFullAccessPoint) {
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
-                        ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateReplacedRecordsCount(dataSource.getId(), LogUtil.getReplacedCount(logFile));
+                    if (recordStored) {
+                            /* Update indexes */
+                        List<Object[]> pairsForInsertion = new ArrayList<Object[]>();
+                        Object valueToInsert;
+
+                        if (value != null && value.getClass().equals(byte[].class)) {
+                            valueToInsert = ZipUtil.zip((byte[]) value);
+                        } else {
+                            valueToInsert = value;
+                        }
+                        pairsForInsertion.addAll(getTripleArraysToInsert((String) record.getId(), incomingDeleted, valueToInsert));
+
+                        PreparedStatement updateStatement = con.prepareStatement(updateQuery);
+                        try {
+                            int paramCounter = 1;
+                            for (Object[] aPairsForInsertion : pairsForInsertion) {
+                                setStatementParameter(updateStatement, aPairsForInsertion[2], paramCounter, accessPoint.typeOfIndex());
+                                paramCounter++;
+                                setStatementParameter(updateStatement, aPairsForInsertion[1], paramCounter, Integer.class);
+                                paramCounter++;
+                                setStatementParameter(updateStatement, aPairsForInsertion[0], paramCounter, String.class);
+                                paramCounter++;
+                            }
+
+                            double prepareTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
+                            updateStatement.executeUpdate();
+                            updateStatement.clearParameters();
+                            double executeTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
+                            double totalTime = prepareTime + executeTime;
+                            log.info(accessPoint.getId() + " DB statement prepared/executed/total (s) " + prepareTime + "/" + executeTime + "/" + totalTime);
+                        } finally {
+                            updateStatement.close();
+                        }
+                        iteratorRecords.remove();
+                        iteratorValues.remove();
                     }
-                } finally {
-                    delStatement.close();
+                }
+                if (accessPoint instanceof RecordRepoxFullAccessPoint) {
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateDeletedRecordsCount(dataSource.getId(), deletes);
+                    ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().updateReplacedRecordsCount(dataSource.getId(), LogUtil.getReplacedCount(logFile));
                 }
             }
 
+            Iterator<Map.Entry<String, RecordRepox>> iteratorRecords = cleanedRecords.entrySet().iterator();
+            Iterator<Object> iteratorValues = cleanedValues.iterator();
             /* INSERT new indexes */
             List<Object[]> pairsForInsertion = new ArrayList<Object[]>();
-            int index = 0;
-            for (Map.Entry<String, RecordRepox> recordRepoxEntry : cleanedRecords.entrySet()) {
-                String key = recordRepoxEntry.getKey();
-                RecordRepox value = recordRepoxEntry.getValue();
+            while (iteratorRecords.hasNext()) {
+                Map.Entry<String, RecordRepox> entry = iteratorRecords.next();
+                Object value = iteratorValues.next();
+                String key = entry.getKey();
+                RecordRepox record = entry.getValue();
 
                 Object valueToInsert;
 
-                if (values.get(index) != null && values.get(index).getClass().equals(byte[].class)) {
-                    valueToInsert = ZipUtil.zip((byte[])values.get(index));
+                if (value != null && value.getClass().equals(byte[].class)) {
+                    valueToInsert = ZipUtil.zip((byte[]) value);
                 } else {
-                    valueToInsert = values.get(index);
+                    valueToInsert = value;
                 }
-                pairsForInsertion.addAll(getTripleArraysToInsert(key, value.isDeleted(), valueToInsert));
-                index++;
+                pairsForInsertion.addAll(getTripleArraysToInsert(key, record.isDeleted(), valueToInsert));
             }
 
 //            for (int i = 0; i < cleanedValues.size(); i++) {
@@ -588,64 +609,67 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
 //                pairsForInsertion.addAll(getTripleArraysToInsert((String)cleanedRecords.get().getId(), cleanedRecords.get(i).isDeleted(), valueToInsert));
 //            }
 
-            String pairsValues = "(?, ?, ?)";
-            for (int i = 1; i < pairsForInsertion.size(); i++) {
-                pairsValues += ", (?, ?, ?)";
-            }
-
-            String insStatementString = "insert into " + table + "(nc, deleted, value) values " + pairsValues;
-
-            PreparedStatement insStatement = con.prepareStatement(insStatementString);
-            try {
-                int paramCounter = 1;
-                for (Object[] aPairsForInsertion : pairsForInsertion) {
-                    setStatementParameter(insStatement, aPairsForInsertion[0], paramCounter, String.class);
-                    paramCounter++;
-                    setStatementParameter(insStatement, aPairsForInsertion[1], paramCounter, Integer.class);
-                    paramCounter++;
-                    setStatementParameter(insStatement, aPairsForInsertion[2], paramCounter, accessPoint.typeOfIndex());
-                    paramCounter++;
+            if(pairsForInsertion != null && pairsForInsertion.size() > 0) {
+                String pairsValues = "(?, ?, ?)";
+                for (int i = 1; i < pairsForInsertion.size(); i++) {
+                    pairsValues += ", (?, ?, ?)";
                 }
 
-                double prepareTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
-                insStatement.executeUpdate();
-                insStatement.clearParameters();
-                double executeTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
-                double totalTime = prepareTime + executeTime;
-                log.info(accessPoint.getId() + " DB statement prepared/executed/total (s) " + prepareTime + "/" + executeTime + "/" + totalTime);
-            } finally {
-                insStatement.close();
+                String insStatementString = "insert into " + table + "(nc, deleted, value) values " + pairsValues;
+
+                PreparedStatement insStatement = con.prepareStatement(insStatementString);
+                try {
+                    int paramCounter = 1;
+                    for (Object[] aPairsForInsertion : pairsForInsertion) {
+                        setStatementParameter(insStatement, aPairsForInsertion[0], paramCounter, String.class);
+                        paramCounter++;
+                        setStatementParameter(insStatement, aPairsForInsertion[1], paramCounter, Integer.class);
+                        paramCounter++;
+                        setStatementParameter(insStatement, aPairsForInsertion[2], paramCounter, accessPoint.typeOfIndex());
+                        paramCounter++;
+                    }
+
+                    double prepareTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
+                    insStatement.executeUpdate();
+                    insStatement.clearParameters();
+                    double executeTime = TimeUtil.getTimeSinceLastTimerArray(5) / 1000.0;
+                    double totalTime = prepareTime + executeTime;
+                    log.info(accessPoint.getId() + " DB statement prepared/executed/total (s) " + prepareTime + "/" + executeTime + "/" + totalTime);
+                } finally {
+                    insStatement.close();
+                }
             }
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
     private boolean isRecordStored(Connection con, String table, String id) {
-      String query = "select " + table + ".id from " + table + " where " + table + ".nc = '" + id + "'";
+        String query = "select " + table + ".id from " + table + " where " + table + ".nc = '" + id + "'";
 
-      ResultSet rs = null;
-      try {
-          Statement stmt = con.createStatement();
-          rs = stmt.executeQuery(query);
-          if (rs.next()) {       
-              return true;
-          }
-          return false;
-      } catch (SQLException e) {
-          log.error(e.getMessage());
-          e.printStackTrace();
-          return false;
-      } finally {
+        ResultSet rs = null;
         try {
-          rs.close();
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
-          log.error(e.getMessage());
-          e.printStackTrace();
-          return false;
+            log.error(e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
         }
-      }
     }
+
     private boolean isRecordMarkedAsDeleted(Connection con, String table, String id) {
         String query = "select " + table + ".deleted from " + table + " where " + table + ".nc = '" + id + "'";
 
@@ -700,8 +724,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                         if (rsMaxRow.getInt(1) == 1) {
                             return false;
                         }
-                    }
-                    else
+                    } else
                         throw new ObjectNotFoundException("Record with id: " + recordUrn.getRecordId() + " does NOT exist!");
                 } finally {
                     rsMaxRow.close();
@@ -723,7 +746,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 delPs.close();
             }
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
@@ -767,92 +790,92 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 selectPs.close();
             }
         } finally {
-           // con.close();
+            // con.close();
         }
     }
 
     @Override
     public int[] getRecordCountLastrowPair(DataSource dataSource, Integer fromRow, String fromDate, String toDate) throws SQLException {
-        int[] countLastrowPair = { 0, 0, 0 };
+        int[] countLastrowPair = {0, 0, 0};
         // todo check ... stops here a lot during REPOX execution
         String recordTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_RECORD_INTERNAL_BD;
         String timestampTable = AccessPoint.PREFIX_INTERNAL_BD + dataSource.getId().toLowerCase() + AccessPoint.SUFIX_TIMESTAMP_INTERNAL_BD;
         Connection con = databaseAccess.openDbConnection();
 
-        if(!tableExists(recordTable, con) || !tableExists(timestampTable, con))
-        	return new int[] { 0, 0, 0};
-        	
-	        try {
-	            TimeUtil.startTimers();
-	            TimeUtil.getTimeSinceLastTimerArray(1);
-	
-	            String maxRowQuery = "select max(" + recordTable + ".id) from " + recordTable;
-	            String countQuery = "select count(" + recordTable + ".nc) from " + recordTable;
-	            String deletedQuery = "select count(" + recordTable + ".id) from " + recordTable + " where deleted > 0";
-	
-	            String fromQueryHelper = "";
-	            if (fromDate != null || toDate != null) {
-	                fromQueryHelper += ", " + timestampTable + " where " + recordTable + ".nc = " + timestampTable + ".nc";
-	                if (fromDate != null) {
-	                    fromQueryHelper += " and " + timestampTable + ".value >= '" + fromDate + "'";
-	                }
-	                if (toDate != null) {
-	                    fromQueryHelper += " and " + timestampTable + ".value <= '" + toDate + "'";
-	                }
-	            }
-	
-	            maxRowQuery += fromQueryHelper;
-	            if (fromQueryHelper.contains("where")) {
-	                deletedQuery = deletedQuery.replace(" where deleted > 0", "");
-	                deletedQuery += fromQueryHelper + " and " + recordTable + ".deleted > 0";
-	            } else {
-	                deletedQuery += fromQueryHelper;
-	            }
-	
-	            //			countLastrowPair[1] = SqlUtil.getCount(maxQuery, con);
-	            Statement statementMaxRow = con.createStatement();
-                ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
-	            try {
-	                    if (rsMaxRow.next()) {
-	                        countLastrowPair[1] = rsMaxRow.getInt(1);
-	                    }
-	                    log.debug(maxRowQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
-	            } finally {
-                    rsMaxRow.close();
-	                statementMaxRow.close();
-	            }
-	
-	            Statement deletedRow = con.createStatement();
-                ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
-	            try {
-	                    if (rsDeletedRow.next()) {
-	                        countLastrowPair[2] = rsDeletedRow.getInt(1);
-	                    }
-	
-	                    if (fromRow == null || countLastrowPair[1] > fromRow) {
-	                        countQuery += fromQueryHelper;
-	                        countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable + ".id > " + fromRow + " and " : "") + recordTable
-	                                 + ".id <= " + countLastrowPair[1];
-	
-	                        Statement statementCount = con.createStatement();
-	                        ResultSet rsCount = statementCount.executeQuery(countQuery);
-	                        if (rsCount.next()) {
-	                            countLastrowPair[0] = rsCount.getInt(1);
-	                        }
-	                        log.info(countQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
-	                    }
-	
-	                    return countLastrowPair;
-	            } finally {
-                    rsDeletedRow.close();
-	                deletedRow.close();
-	            }
-	        } catch (Exception e) {
-	            log.error("ERROR Counting records", e);
-	            return new int[] { 0, 0, 0};
-	        } finally {
-	          //  con.close();
-	        }
+        if (!tableExists(recordTable, con) || !tableExists(timestampTable, con))
+            return new int[]{0, 0, 0};
+
+        try {
+            TimeUtil.startTimers();
+            TimeUtil.getTimeSinceLastTimerArray(1);
+
+            String maxRowQuery = "select max(" + recordTable + ".id) from " + recordTable;
+            String countQuery = "select count(" + recordTable + ".id) from " + recordTable;
+            String deletedQuery = "select count(" + recordTable + ".id) from " + recordTable + " where deleted > 0";
+
+            String fromQueryHelper = "";
+            if (fromDate != null || toDate != null) {
+                fromQueryHelper += ", " + timestampTable + " where " + recordTable + ".nc = " + timestampTable + ".nc";
+                if (fromDate != null) {
+                    fromQueryHelper += " and " + timestampTable + ".value >= '" + fromDate + "'";
+                }
+                if (toDate != null) {
+                    fromQueryHelper += " and " + timestampTable + ".value <= '" + toDate + "'";
+                }
+            }
+
+            //			countLastrowPair[1] = SqlUtil.getCount(maxQuery, con);
+            maxRowQuery += fromQueryHelper;
+            Statement statementMaxRow = con.createStatement();
+            ResultSet rsMaxRow = statementMaxRow.executeQuery(maxRowQuery);
+            try {
+                if (rsMaxRow.next()) {
+                    countLastrowPair[1] = rsMaxRow.getInt(1);
+                }
+                log.debug(maxRowQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
+            } finally {
+                rsMaxRow.close();
+                statementMaxRow.close();
+            }
+
+            if (fromQueryHelper.contains("where")) {
+                deletedQuery = deletedQuery.replace(" where deleted > 0", "");
+                deletedQuery += fromQueryHelper + " and " + recordTable + ".deleted > 0";
+            } else {
+                deletedQuery += fromQueryHelper;
+            }
+
+            Statement deletedRow = con.createStatement();
+            ResultSet rsDeletedRow = deletedRow.executeQuery(deletedQuery);
+            try {
+                if (rsDeletedRow.next()) {
+                    countLastrowPair[2] = rsDeletedRow.getInt(1);
+                }
+
+                if (fromRow == null || countLastrowPair[1] > fromRow) {
+                    countQuery += fromQueryHelper;
+                    countQuery += (fromQueryHelper.length() > 0 ? " and " : " where ") + (fromRow != null ? recordTable + ".id > " + fromRow + " and " : "") + recordTable
+                            + ".id <= " + countLastrowPair[1];
+
+                    Statement statementCount = con.createStatement();
+                    ResultSet rsCount = statementCount.executeQuery(countQuery);
+                    if (rsCount.next()) {
+                        countLastrowPair[0] = rsCount.getInt(1);
+                    }
+                    log.info(countQuery + ": " + TimeUtil.getTimeSinceLastTimerArray(1) + "ms");
+                }
+
+                return countLastrowPair;
+            } finally {
+                rsDeletedRow.close();
+                deletedRow.close();
+            }
+        } catch (Exception e) {
+            log.error("ERROR Counting records", e);
+            return new int[]{0, 0, 0};
+        } finally {
+            //  con.close();
+        }
     }
 
     @Override
@@ -899,7 +922,7 @@ public class SqlAccessPointsManager extends DefaultAccessPointsManager {
                 preparedStatement.close();
             }
         } finally {
-          //  con.close();
+            //  con.close();
         }
     }
 
