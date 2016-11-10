@@ -180,13 +180,7 @@
 									</includes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
-								<fileset>
-									<directory>src/main/webapp/WEB-INF</directory>
-									<includes>
-										<include>security.xml</include>
-									</includes>
-									<followSymlinks>false</followSymlinks>
-								</fileset>
+
 
 								<!-- Clean gwt directories, that were generated if gwt compile was 
 									used -->
