@@ -1,5 +1,7 @@
 package harvesterUI.server.dataManagement.dataSets;
 
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.dataManagement.DataSetOperationsService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.util.Util;
@@ -12,37 +14,10 @@ import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.dataTypes.dataSet.DatasetType;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.tasks.OldTaskUI;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.XPath;
+import org.dom4j.*;
 import org.oclc.oai.harvester.verb.ListMetadataFormats;
 import org.oclc.oai.harvester.verb.ListSets;
 import org.xml.sax.SAXParseException;
-
 import pt.utl.ist.configuration.ConfigSingleton;
 import pt.utl.ist.dataProvider.DataSource;
 import pt.utl.ist.dataProvider.LogFilenameComparator;
@@ -52,75 +27,87 @@ import pt.utl.ist.task.OldTask;
 import pt.utl.ist.task.ScheduledTask;
 import pt.utl.ist.util.FileUtil;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DataSetOperationsServiceImpl extends RemoteServiceServlet implements DataSetOperationsService {
 
-    public DataSetOperationsServiceImpl() {}
+    public DataSetOperationsServiceImpl() {
+    }
 
     private HttpSession getSession() {
         return this.getThreadLocalRequest().getSession();
     }
 
     public SaveDataResponse saveDataSource(boolean update, DatasetType type, String originalDSset, DataSourceUI dataSourceUI, int pageSize) throws ServerSideException {
-        return RepoxServiceImpl.getProjectManager().saveDataSource(update,type,originalDSset,dataSourceUI,pageSize);
+        return RepoxServiceImpl.getProjectManager().saveDataSource(update, type, originalDSset, dataSourceUI, pageSize);
     }
 
-    public Map<String,List<String>> checkOAIURL(String url) throws ServerSideException{
-        Map<String,List<String>> checkMap = new HashMap<String,List<String>>();
-        List<String> sets =  new ArrayList<String>();
-        List<String> mdPrefixes =  new ArrayList<String>();
-        List<String> setNames =  new ArrayList<String>();
+    public Map<String, List<String>> checkOAIURL(String url) throws ServerSideException {
+        Map<String, List<String>> checkMap = new HashMap<String, List<String>>();
+        List<String> sets = new ArrayList<String>();
+        List<String> mdPrefixes = new ArrayList<String>();
+        List<String> setNames = new ArrayList<String>();
         try {
             // Check http URLs
             String checkUrlResult = checkURL(url);
-            if(checkUrlResult.equals("URL_MALFORMED")) {
+            if (checkUrlResult.equals("URL_MALFORMED")) {
                 sets.add("URL_MALFORMED");
-                checkMap.put("ERROR",sets);
+                checkMap.put("ERROR", sets);
                 return checkMap;
-            } else if(checkUrlResult.equals("URL_NOT_EXISTS")) {
+            } else if (checkUrlResult.equals("URL_NOT_EXISTS")) {
                 sets.add("URL_NOT_EXISTS");
-                checkMap.put("ERROR",sets);
+                checkMap.put("ERROR", sets);
                 return checkMap;
             }
 
+            String resumptionToken = null;
+            List<Node> completeNodeList = new ArrayList<>();
             ListSets listSets = new ListSets(url);
-
-            if((listSets.getErrors() != null && listSets.getErrors().getLength() > 0)) {
-                XPath xPathError = DocumentHelper.createXPath("//oai:error[@code='noSetHierarchy']");
-                HashMap<String, String> nameSpaces = new HashMap<String, String>();
-                nameSpaces.put("oai", "http://www.openarchives.org/OAI/2.0/");
-                xPathError.setNamespaceURIs(nameSpaces);
-                List errorNodes = xPathError.selectNodes(DocumentHelper.parseText(listSets.toString()));
-                if(errorNodes != null && errorNodes.size() > 0) {
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                // Sets
-                Document document = DocumentHelper.parseText(listSets.toString());
-                XPath xPath = DocumentHelper.createXPath("//oai:set");
-                HashMap<String, String> nameSpaces = new HashMap<String, String>();
-                nameSpaces.put("oai", "http://www.openarchives.org/OAI/2.0/");
-                xPath.setNamespaceURIs(nameSpaces);
-                List<Node> nodeList = xPath.selectNodes(document.getRootElement());
-
-                if(nodeList == null || nodeList.size() == 0) {
-                    return null;
-                }
-
-                for (Node aNodeList : nodeList) {
-                    Element currentSetElement = (Element) aNodeList;
-                    String setSpec = currentSetElement.element("setSpec").getText();
-                    sets.add(setSpec);
-                    Element setNameElement = currentSetElement.element("setName");
-                    if(setNameElement != null){
-                        String setName = setNameElement.getText();
-                        setNames.add(setName);
+            do {
+                if(resumptionToken != null && !resumptionToken.equals(""))
+                    listSets = new ListSets(url, resumptionToken);
+                if ((listSets.getErrors() != null && listSets.getErrors().getLength() > 0)) {
+                    XPath xPathError = DocumentHelper.createXPath("//oai:error[@code='noSetHierarchy']");
+                    HashMap<String, String> nameSpaces = new HashMap<String, String>();
+                    nameSpaces.put("oai", "http://www.openarchives.org/OAI/2.0/");
+                    xPathError.setNamespaceURIs(nameSpaces);
+                    List errorNodes = xPathError.selectNodes(DocumentHelper.parseText(listSets.toString()));
+                    if (errorNodes != null && errorNodes.size() > 0) {
+                    } else {
+                        return null;
                     }
+                } else {
+                    // Sets
+                    Document document = DocumentHelper.parseText(listSets.toString());
+                    XPath xPath = DocumentHelper.createXPath("//oai:set");
+                    HashMap<String, String> nameSpaces = new HashMap<String, String>();
+                    nameSpaces.put("oai", "http://www.openarchives.org/OAI/2.0/");
+                    xPath.setNamespaceURIs(nameSpaces);
+                    List<Node> nodeList = xPath.selectNodes(document.getRootElement());
+                    completeNodeList.addAll(nodeList);
+
+                    resumptionToken = listSets.getResumptionToken();
+                }
+            } while (resumptionToken != null && !resumptionToken.equals(""));
+
+            if (completeNodeList == null || completeNodeList.size() == 0) {
+                return null;
+            }
+
+            for (Node aNodeList : completeNodeList) {
+                Element currentSetElement = (Element) aNodeList;
+                String setSpec = currentSetElement.element("setSpec").getText();
+                sets.add(setSpec);
+                Element setNameElement = currentSetElement.element("setName");
+                if (setNameElement != null) {
+                    String setName = setNameElement.getText();
+                    setNames.add(setName);
                 }
             }
 
@@ -133,7 +120,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             xPathMD.setNamespaceURIs(nameSpacesMD);
             List<Node> nodeListMD = xPathMD.selectNodes(documentMD.getRootElement());
 
-            if(nodeListMD == null || nodeListMD.size() == 0) {
+            if (nodeListMD == null || nodeListMD.size() == 0) {
                 // TODO: ERROR NO SETS
             }
 
@@ -144,13 +131,13 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             }
 
 
-        }catch (SAXParseException e) {
+        } catch (SAXParseException e) {
             sets.add("URL_NOT_EXISTS");
-            checkMap.put("ERROR",sets);
+            checkMap.put("ERROR", sets);
             return checkMap;
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
@@ -160,58 +147,57 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
         return checkMap;
     }
 
-    public static String checkURL(String inputURL) throws ServerSideException{
+    public static String checkURL(String inputURL) throws ServerSideException {
         try {
-            if(inputURL == null)
+            if (inputURL == null)
                 return null;
 
             URL url;
-            if(!inputURL.equals("")){
+            if (!inputURL.equals("")) {
                 url = new URL(inputURL);
-            }
-            else
+            } else
                 url = null;
 
             // Url doesn't exist
-            if(url != null && !FileUtil.checkUrl(inputURL))
+            if (url != null && !FileUtil.checkUrl(inputURL))
                 return "URL_NOT_EXISTS";
 
             return "SUCCESS";
         } catch (MalformedURLException e) {
             return "URL_MALFORMED";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public String addAllOAIURL(String url,String dataProviderID,String dsSchema,String dsNamespace,
-                               String dsMTDFormat, String name, String nameCode, String exportPath) throws ServerSideException{
-        return RepoxServiceImpl.getProjectManager().addAllOAIURL(url,dataProviderID,dsSchema,dsNamespace,dsMTDFormat,name,nameCode,exportPath,this);
+    public String addAllOAIURL(String url, String dataProviderID, String dsSchema, String dsNamespace,
+                               String dsMTDFormat, String name, String nameCode, String exportPath) throws ServerSideException {
+        return RepoxServiceImpl.getProjectManager().addAllOAIURL(url, dataProviderID, dsSchema, dsNamespace, dsMTDFormat, name, nameCode, exportPath, this);
     }
 
-    public Map<String,DataSetStatus> getAllDataSourceStatus(List<DataContainer> dataContainers) throws ServerSideException{
-        Map<String,DataSetStatus> statusMap = new HashMap<String,DataSetStatus>();
+    public Map<String, DataSetStatus> getAllDataSourceStatus(List<DataContainer> dataContainers) throws ServerSideException {
+        Map<String, DataSetStatus> statusMap = new HashMap<String, DataSetStatus>();
         try {
-            for(DataContainer dataContainer : dataContainers){
-                if(dataContainer instanceof DataProviderUI && ((DataProviderUI) dataContainer).getDataSourceUIList().size() == 1)
-                    getDSStatus(((DataProviderUI) dataContainer).getDataSourceUIList().get(0),statusMap);
-                if(dataContainer instanceof DataSourceUI)
-                    getDSStatus((DataSourceUI)dataContainer,statusMap);
+            for (DataContainer dataContainer : dataContainers) {
+                if (dataContainer instanceof DataProviderUI && ((DataProviderUI) dataContainer).getDataSourceUIList().size() == 1)
+                    getDSStatus(((DataProviderUI) dataContainer).getDataSourceUIList().get(0), statusMap);
+                if (dataContainer instanceof DataSourceUI)
+                    getDSStatus((DataSourceUI) dataContainer, statusMap);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
 
-        if(statusMap.size() <= 0)
+        if (statusMap.size() <= 0)
             return null;
         else {
             return statusMap;
         }
     }
 
-    protected void getDSStatus(DataSourceUI dataSourceUI, Map<String,DataSetStatus> statusMap) throws ServerSideException{
+    protected void getDSStatus(DataSourceUI dataSourceUI, Map<String, DataSetStatus> statusMap) throws ServerSideException {
         try {
             DataSource dataSource = RepoxServiceImpl.getRepoxManager().getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet()).getDataSource();
             DataSetStatus data = new DataSetStatus();
@@ -220,23 +206,23 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
             Date nextDate = null;
 
-            for(ScheduledTask scheduledTask : RepoxServiceImpl.getRepoxManager().getTaskManager().getScheduledTasks()) {
+            for (ScheduledTask scheduledTask : RepoxServiceImpl.getRepoxManager().getTaskManager().getScheduledTasks()) {
                 // Do this only for ingests and not exports
-                if(scheduledTask.getTaskClass().getSimpleName().equals("IngestDataSource")) {
-                    if(scheduledTask.getParameters()[1].equals(dataSource.getId())) {
-                        if(!scheduledTask.getNextIngestDate().isEmpty()) {
+                if (scheduledTask.getTaskClass().getSimpleName().equals("IngestDataSource")) {
+                    if (scheduledTask.getParameters()[1].equals(dataSource.getId())) {
+                        if (!scheduledTask.getNextIngestDate().isEmpty()) {
                             Date scheduleDate = Util.getDate(scheduledTask.getNextIngestDate());
-                            if(nextDate == null)
+                            if (nextDate == null)
                                 nextDate = scheduleDate;
-                            else if(scheduleDate.before(nextDate))
+                            else if (scheduleDate.before(nextDate))
                                 nextDate = scheduleDate;
                         }
                     }
                 }
             }
-            if(nextDate != null) {
+            if (nextDate != null) {
                 // check if task has passed already because TODO repox doesn't erase past scheduled tasks
-                if(nextDate.after(new Date()))
+                if (nextDate.after(new Date()))
                     data.set("nextIngestStr", formatter.format(nextDate));
             } else
                 data.set("nextIngestStr", "");
@@ -247,34 +233,34 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             RepoxServiceImpl.getRepoxManager().getRecordCountManager().getRecordCount(dataSource.getId(), true);
 
             int maxSample = dataSource.getMaxRecord4Sample();
-            if(maxSample == -1)
-                data.set("status",dataSource.getStatusString());
+            if (maxSample == -1)
+                data.set("status", dataSource.getStatusString());
             else
-                data.set("status",dataSource.getStatusString()+"_SAMPLE");
+                data.set("status", dataSource.getStatusString() + "_SAMPLE");
 
             // Check if has a retrying the task
-            if(Util.hasRunningTask(dataSource.getId()))
-                data.set("hasRunningTask",true);
+            if (Util.hasRunningTask(dataSource.getId()))
+                data.set("hasRunningTask", true);
             else
-                data.set("hasRunningTask",false);
+                data.set("hasRunningTask", false);
 
-            data.set("recordNum",dataSource.getNumberRecords()[2]);
-            if((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
+            data.set("recordNum", dataSource.getNumberRecords()[2]);
+            if ((dataSource instanceof OaiDataSource || dataSource instanceof DirectoryImporterDataSource)
                     && dataSource.getStatusString().equals("RUNNING")) {
-                try{
-                    data.set("totalRecordNum",dataSource.getNumberOfRecords2Harvest());
-                    data.set("totalRecordNumStr",dataSource.getNumberOfRecords2HarvestStr());
+                try {
+                    data.set("totalRecordNum", dataSource.getNumberOfRecords2Harvest());
+                    data.set("totalRecordNumStr", dataSource.getNumberOfRecords2HarvestStr());
                     data.set("ingestPercentage", dataSource.getPercentage());
                     data.set("ingestTimeLeft", dataSource.getTimeLeft());
-                }catch (NullPointerException e){
-                    data.set("totalRecordNum",null);
-                    data.set("totalRecordNumStr",null);
+                } catch (NullPointerException e) {
+                    data.set("totalRecordNum", null);
+                    data.set("totalRecordNumStr", null);
                     data.set("ingestPercentage", null);
                     data.set("ingestTimeLeft", null);
                 }
             }
-            statusMap.put(dataSource.getId(),data);
-        }catch (Exception e){
+            statusMap.put(dataSource.getId(), data);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
@@ -282,28 +268,28 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
 
     private List<OldTaskUI> getOldTasks(DataSource dataSource) {
         List<OldTaskUI> result = new ArrayList<OldTaskUI>();
-        for(OldTask oldTask: dataSource.getOldTasksList()) {
-            OldTaskUI oldTaskUI = new OldTaskUI(dataSource.getId(),oldTask.getId(),oldTask.getLogName(),
-                    oldTask.getIngestType(),oldTask.getStatus(),oldTask.getRetries(),
-                    oldTask.getRetryMax(),oldTask.getDelay(),oldTask.getDateString(),oldTask.getRecords());
+        for (OldTask oldTask : dataSource.getOldTasksList()) {
+            OldTaskUI oldTaskUI = new OldTaskUI(dataSource.getId(), oldTask.getId(), oldTask.getLogName(),
+                    oldTask.getIngestType(), oldTask.getStatus(), oldTask.getRetries(),
+                    oldTask.getRetryMax(), oldTask.getDelay(), oldTask.getDateString(), oldTask.getRecords());
             result.add(oldTaskUI);
         }
         return result;
     }
 
-    public String getLogFile(DataSourceUI dataSourceUI) throws ServerSideException{
+    public String getLogFile(DataSourceUI dataSourceUI) throws ServerSideException {
         try {
             DataSource dataSource = RepoxServiceImpl.getRepoxManager().getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet()).getDataSource();
 
             String delimFolder = "\\\\";
             String[] tokensFolder = dataSource.getLogFilenames().get(0).split(delimFolder);
             String correctFilename;
-            if(tokensFolder.length > 1)
+            if (tokensFolder.length > 1)
                 correctFilename = tokensFolder[0] + "/" + tokensFolder[1];
             else
                 correctFilename = dataSource.getLogFilenames().get(0);
             String path = ConfigSingleton.getRepoxContextUtil().getRepoxManager()
-                    .getConfiguration().getRepositoryPath()+ "/"+dataSource.getId()+ "/logs/" + correctFilename;
+                    .getConfiguration().getRepositoryPath() + "/" + dataSource.getId() + "/logs/" + correctFilename;
             File f = new File(path);
 
             File logFile = new File(getSession().getServletContext().getRealPath("resources/logs/" +
@@ -317,7 +303,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             BufferedWriter writer = new BufferedWriter(fstream);
 
             String line = null;
-            while ((line=reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 writer.write(line);
                 writer.newLine();   // Write system dependent end of line.
             }
@@ -326,22 +312,22 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             writer.close();
 
             return correctFilename;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public String getLogFileFromFileName(DataSourceUI dataSourceUI,String fileName) throws ServerSideException{
+    public String getLogFileFromFileName(DataSourceUI dataSourceUI, String fileName) throws ServerSideException {
         try {
             DataSource dataSource = RepoxServiceImpl.getRepoxManager().getDataManager().getDataSourceContainer(dataSourceUI.getDataSourceSet()).getDataSource();
 
             String correctFilename = null;
-            for(String logName : dataSource.getLogFilenames()) {
-                if(logName.equals(fileName)) {
+            for (String logName : dataSource.getLogFilenames()) {
+                if (logName.equals(fileName)) {
                     correctFilename = logName;
                     String path = ConfigSingleton.getRepoxContextUtil().getRepoxManager()
-                            .getConfiguration().getRepositoryPath()+ "/"+dataSource.getId()+ "/logs/" + logName;
+                            .getConfiguration().getRepositoryPath() + "/" + dataSource.getId() + "/logs/" + logName;
                     File f = new File(path);
 
                     File logFile = new File(getSession().getServletContext().getRealPath("resources/logs/" + logName));
@@ -354,7 +340,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
                     BufferedWriter writer = new BufferedWriter(fstream);
 
                     String line;
-                    while ((line=reader.readLine()) != null) {
+                    while ((line = reader.readLine()) != null) {
                         writer.write(line);
                         writer.newLine();   // Write system dependent end of line.
                     }
@@ -366,25 +352,25 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             }
 
             return correctFilename;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public String getExportPath(String dataSourceID) throws ServerSideException{
+    public String getExportPath(String dataSourceID) throws ServerSideException {
         try {
             File exportFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().getDataSourceContainer(dataSourceID).getDataSource().getExportDir());
 
-            if(exportFile == null)
+            if (exportFile == null)
                 return "NOT_FOUND";
 
-            if(!exportFile.exists())
+            if (!exportFile.exists())
                 return "NOT_FOUND";
 
-            List<String> fileNames = getExportFileNames(exportFile,dataSourceID);
+            List<String> fileNames = getExportFileNames(exportFile, dataSourceID);
 
-            if(fileNames.size() == 0)
+            if (fileNames.size() == 0)
                 return "NOT_FOUND";
             else {
                 return exportFile + "&&" + fileNames.get(0);
@@ -395,15 +381,15 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
         } catch (IOException e) {
             e.printStackTrace();
             return "ERROR";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public List<String> getExportFileNames(File exportDir, String dataSourceId) throws ServerSideException{
-        try{
-            if(!exportDir.exists()){
+    public List<String> getExportFileNames(File exportDir, String dataSourceId) throws ServerSideException {
+        try {
+            if (!exportDir.exists()) {
                 exportDir.mkdir();
             }
 
@@ -411,7 +397,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             List<String> exportFileNames = new ArrayList<String>();
 
             for (File exportFile : exportDirNames) {
-                if(exportFile.isFile() && exportFile.getName().endsWith(".zip") &&
+                if (exportFile.isFile() && exportFile.getName().endsWith(".zip") &&
                         exportFile.getName().contains(dataSourceId)) {
                     exportFileNames.add(exportFile.getName());
                 }
@@ -421,23 +407,23 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             Collections.reverse(exportFileNames);
 
             return exportFileNames;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
     }
 
-    public SaveDataResponse moveDataSources(List<DataSourceUI> dataSourceUIs, ModelData dataProviderUI, int pageSize) throws ServerSideException{
-        return RepoxServiceImpl.getProjectManager().moveDataSources(dataSourceUIs,dataProviderUI,pageSize);
+    public SaveDataResponse moveDataSources(List<DataSourceUI> dataSourceUIs, ModelData dataProviderUI, int pageSize) throws ServerSideException {
+        return RepoxServiceImpl.getProjectManager().moveDataSources(dataSourceUIs, dataProviderUI, pageSize);
     }
 
 
-    public String deleteDataSources(List<DataSourceUI> dataSourceUIs) throws ServerSideException{
+    public String deleteDataSources(List<DataSourceUI> dataSourceUIs) throws ServerSideException {
         return RepoxServiceImpl.getProjectManager().deleteDataSources(dataSourceUIs);
     }
 
-    public ResponseState stopRunningDataSet(String dataSetId) throws ServerSideException{
-        try{
+    public ResponseState stopRunningDataSet(String dataSetId) throws ServerSideException {
+        try {
             DataSource dataSource = RepoxServiceImpl.getRepoxManager().getDataManager().getDataSourceContainer(dataSetId).getDataSource();
             dataSource.setStatus(DataSource.StatusDS.CANCELED);
             RepoxServiceImpl.getRepoxManager().getDataManager().saveData();
@@ -451,11 +437,11 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
         }
     }
 
-    public ResponseState startSingleExternalService(String serviceId, String dataSetId) throws ServerSideException{
-        try{
-            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getExternalRestServicesManager().startExternalService(serviceId,dataSetId);
+    public ResponseState startSingleExternalService(String serviceId, String dataSetId) throws ServerSideException {
+        try {
+            ConfigSingleton.getRepoxContextUtil().getRepoxManager().getExternalRestServicesManager().startExternalService(serviceId, dataSetId);
             return ResponseState.SUCCESS;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServerSideException(Util.stackTraceToString(e));
         }
@@ -463,7 +449,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
 
     public ResponseState forceDataSetRecordUpdate(List<DataSourceUI> dataSourceUIs) {
         try {
-            for(DataSourceUI dataSourceUI : dataSourceUIs)
+            for (DataSourceUI dataSourceUI : dataSourceUIs)
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getRecordCountManager().getRecordCount(dataSourceUI.getDataSourceSet(), true);
             return ResponseState.SUCCESS;
         } catch (IOException e) {
@@ -477,7 +463,7 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
 
     public ResponseState clearLogsAndOldTasks(List<DataSourceUI> dataSourceUIs) {
         try {
-            for(DataSourceUI dataSourceUI : dataSourceUIs)
+            for (DataSourceUI dataSourceUI : dataSourceUIs)
                 ConfigSingleton.getRepoxContextUtil().getRepoxManager().getDataManager().removeLogsAndOldTasks(dataSourceUI.getDataSourceSet());
             return ResponseState.SUCCESS;
         } catch (IOException e) {

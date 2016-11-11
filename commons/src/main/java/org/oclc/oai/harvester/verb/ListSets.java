@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * This class represents an ListSets response on either the server or on the
@@ -50,6 +51,20 @@ public class ListSets extends HarvesterVerb {
     }
 
     /**
+     * Client-side ListSets verb constructor with resumptionToken
+     *
+     * @param baseURL
+     *            the baseURL of the server to be queried
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
+     */
+    public ListSets(String baseURL, String resumptionToken) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        super(baseURL + "?verb=ListSets" + "&resumptionToken=" + URLEncoder.encode(resumptionToken, "UTF-8"));
+    }
+
+    /**
      * Get the oai:resumptionToken from the response
      * 
      * @return the oai:resumptionToken as a String
@@ -59,9 +74,9 @@ public class ListSets extends HarvesterVerb {
     public String getResumptionToken() throws TransformerException, NoSuchFieldException {
         String namespace = getDefaultNamespace();
         if (namespace.contains(NAMESPACE_V2_0)) {
-            return getSingleString("/oai20:OAI-PMH/oai20:ListRecords/oai20:resumptionToken");
+            return getSingleString("/oai20:OAI-PMH/oai20:ListSets/oai20:resumptionToken");
         } else if (namespace.contains(NAMESPACE_V1_1)) {
-            return getSingleString("/oai11_ListRecords:ListRecords/oai11_ListRecords:resumptionToken");
+            return getSingleString("/oai11_ListSets:ListSets/oai11_ListSets:resumptionToken");
         } else {
             throw new NoSuchFieldException(namespace);
         }
