@@ -1,33 +1,24 @@
 package harvesterUI.client;
 
+import com.extjs.gxt.ui.client.GXT;
+import com.extjs.gxt.ui.client.Registry;
+import com.extjs.gxt.ui.client.mvc.Dispatcher;
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.HistoryListener;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import harvesterUI.client.core.AppEvents;
 import harvesterUI.client.icons.BaseIconsManager;
 import harvesterUI.client.icons.task_status.taskStatusIcons;
 import harvesterUI.client.language.RepoxConstants;
-import harvesterUI.client.mvc.controllers.AccountEditController;
-import harvesterUI.client.mvc.controllers.AdministrationController;
-import harvesterUI.client.mvc.controllers.AppController;
-import harvesterUI.client.mvc.controllers.BrowseController;
-import harvesterUI.client.mvc.controllers.DataSetActionsController;
-import harvesterUI.client.mvc.controllers.DataSetController;
-import harvesterUI.client.mvc.controllers.FormController;
-import harvesterUI.client.mvc.controllers.HarvestingController;
-import harvesterUI.client.mvc.controllers.HistoryController;
-import harvesterUI.client.mvc.controllers.OaiTestController;
-import harvesterUI.client.mvc.controllers.RssController;
-import harvesterUI.client.mvc.controllers.SchemaMapperController;
-import harvesterUI.client.mvc.controllers.ServiceManagerController;
-import harvesterUI.client.mvc.controllers.StatisticsController;
+import harvesterUI.client.mvc.controllers.*;
 import harvesterUI.client.panels.mdr.xmapper.usecase.SaveMappingCtrl;
 import harvesterUI.client.servlets.RepoxService;
 import harvesterUI.client.servlets.RepoxServiceAsync;
-import harvesterUI.client.servlets.dataManagement.AGGService;
-import harvesterUI.client.servlets.dataManagement.DPService;
-import harvesterUI.client.servlets.dataManagement.DataManagementService;
-import harvesterUI.client.servlets.dataManagement.DataManagementServiceAsync;
-import harvesterUI.client.servlets.dataManagement.DataSetOperationsService;
-import harvesterUI.client.servlets.dataManagement.FilterService;
-import harvesterUI.client.servlets.dataManagement.TagsService;
+import harvesterUI.client.servlets.dataManagement.*;
 import harvesterUI.client.servlets.dataManagement.search.SearchService;
 import harvesterUI.client.servlets.externalServices.ESManagementService;
 import harvesterUI.client.servlets.harvest.HarvestOperationsService;
@@ -43,21 +34,9 @@ import harvesterUI.client.util.UtilManager;
 import harvesterUI.shared.dataTypes.admin.MainConfigurationInfo;
 import harvesterUI.shared.dataTypes.dataSet.DataSourceUI;
 import harvesterUI.shared.users.UserRole;
-
-import java.util.logging.Logger;
-
 import pt.utl.ist.util.shared.ProjectType;
 
-import com.extjs.gxt.ui.client.GXT;
-import com.extjs.gxt.ui.client.Registry;
-import com.extjs.gxt.ui.client.mvc.Dispatcher;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.util.logging.Logger;
 
 //import com.extjs.gxt.ui.client.util.Theme;
 
@@ -159,26 +138,33 @@ public class HarvesterUI implements EntryPoint,HistoryListener {
                 Window.alert("Error: session could not be loaded.");
             }
             public void onSuccess(String userRole) {
-                String username = Cookies.getCookie(CookieManager.LOGGED_USERNAME);
-                String role = Cookies.getCookie(CookieManager.LOGGED_USER_ROLE);
-                String language = Cookies.getCookie(CookieManager.REPOX_LANGUAGE);
-                if(language == null || language.isEmpty())
-                    language = "en";
+                if(!userRole.equals("error")) {
+                    String username = Cookies.getCookie(CookieManager.LOGGED_USERNAME);
+                    String role = Cookies.getCookie(CookieManager.LOGGED_USER_ROLE);
+                    String language = Cookies.getCookie(CookieManager.REPOX_LANGUAGE);
+                    if (language == null || language.isEmpty())
+                        language = "en";
 
-                if(!UTIL_MANAGER.isDefaultLanguage(language) && !UtilManager.getUrlLocaleLanguage().equals(language))
-                    Window.Location.assign(UtilManager.getServerUrl() + "?locale=" + language);
-                else{
-                    Dispatcher.get().addController(new HistoryController());
-                    HarvesterUI.UTIL_MANAGER.setLoggedUser(username,role);
-                    UtilManager.sendUserActivityData();
-                    Dispatcher.forwardEvent(AppEvents.Init);
-                    Dispatcher.forwardEvent(AppEvents.ViewAccordingToRole);
+                    if (!UTIL_MANAGER.isDefaultLanguage(language) && !UtilManager.getUrlLocaleLanguage().equals(language))
+                        Window.Location.assign(UtilManager.getServerUrl() + "?locale=" + language);
+                    else {
+                        Dispatcher.get().addController(new HistoryController());
+                        HarvesterUI.UTIL_MANAGER.setLoggedUser(username, role);
+                        UtilManager.sendUserActivityData();
+                        Dispatcher.forwardEvent(AppEvents.Init);
+                        Dispatcher.forwardEvent(AppEvents.ViewAccordingToRole);
 
-                    Window.addWindowClosingHandler(new Window.ClosingHandler() {
-                        public void onWindowClosing(Window.ClosingEvent closingEvent) {
-                            closingEvent.setMessage("Do you really want to leave the page?");
-                        }
-                    });
+                        Window.addWindowClosingHandler(new Window.ClosingHandler() {
+                            public void onWindowClosing(Window.ClosingEvent closingEvent) {
+                                closingEvent.setMessage("Do you really want to leave the page?");
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    Dispatcher.forwardEvent(AppEvents.Login);
+                    GXT.hideLoadingPanel("loading");
                 }
             }
         };

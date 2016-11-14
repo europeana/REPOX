@@ -472,15 +472,4 @@ public class DataSetOperationsServiceImpl extends RemoteServiceServlet implement
             return ResponseState.ERROR;
         }
     }
-//    public String updateFtpParams(String dataSourceId){
-//        if(RepoxServiceImpl.getProjectType().equals("LIGHT")) {
-//            return LightSaveData.getDirPathFtp(dataSourceId);
-//        } else if(RepoxServiceImpl.getProjectType().equals("EUDML")) {
-//            return EuDMLSaveData.getDirPathFtp(dataSourceId);
-//        } else if(RepoxServiceImpl.getProjectType() == ProjectType.EUROPEANA) {
-//            return EuropeanaSaveData.getDirPathFtp(dataSourceId);
-//        }
-//        return null;
-//    }
-
 }

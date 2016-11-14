@@ -1,5 +1,9 @@
 package harvesterUI.server.userManagement;
 
+import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
+import com.extjs.gxt.ui.client.data.PagingLoadResult;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import harvesterUI.client.servlets.userManagement.UserManagementService;
 import harvesterUI.server.RepoxServiceImpl;
 import harvesterUI.server.dataManagement.RepoxDataExchangeManager;
@@ -7,12 +11,20 @@ import harvesterUI.server.util.Util;
 import harvesterUI.shared.ServerSideException;
 import harvesterUI.shared.dataTypes.DataProviderUI;
 import harvesterUI.shared.dataTypes.UserAuthentication;
-import harvesterUI.shared.servletResponseStates.RepoxServletResponseStates;
 import harvesterUI.shared.servletResponseStates.ResponseState;
 import harvesterUI.shared.users.DataProviderUser;
 import harvesterUI.shared.users.User;
 import harvesterUI.shared.users.UserRole;
+import org.dom4j.*;
+import org.dom4j.io.SAXReader;
+import org.mindrot.jbcrypt.BCrypt;
+import pt.utl.ist.configuration.ConfigSingleton;
+import pt.utl.ist.configuration.DefaultRepoxContextUtil;
+import pt.utl.ist.dataProvider.DataProvider;
+import pt.utl.ist.ldap.LDAPAuthenticator;
+import pt.utl.ist.util.XmlUtil;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -20,32 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.PropertiesConfigurationLayout;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
-import org.mindrot.jbcrypt.BCrypt;
-
-import pt.utl.ist.configuration.ConfigSingleton;
-import pt.utl.ist.configuration.DefaultRepoxContextUtil;
-import pt.utl.ist.dataProvider.DataProvider;
-import pt.utl.ist.ldap.LDAPAuthenticator;
-import pt.utl.ist.util.PropertyUtil;
-import pt.utl.ist.util.XmlUtil;
-
-import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
-import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import com.extjs.gxt.ui.client.data.PagingLoadResult;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class UserManagementServiceImpl extends RemoteServiceServlet implements UserManagementService {
 
@@ -441,18 +428,6 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
-//    private String encryptPassword(String pwd) {
-//        MessageDigest mdEnc = null; // Encryption algorithm
-//        try {
-//            mdEnc = MessageDigest.getInstance("MD5");
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//        mdEnc.reset();
-//        mdEnc.update(pwd.getBytes(), 0, pwd.length());
-//        return new BigInteger(1, mdEnc.digest()).toString(16); // Encrypted string
-//    }
-
     private static String generateRandomPassword(){
         return new BigInteger(130, new SecureRandom()).toString(32);
     }
@@ -485,29 +460,6 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
-//    public String saveLanguageData(String username, String language) throws ServerSideException {
-//        try {
-//            SAXReader reader = new SAXReader();
-//            Document document = reader.read(this.getThreadLocalRequest().usersFile);
-//            List list = document.selectNodes("//users/user");
-//
-//            for(Object node: list) {
-//                Node n = (Node) node;
-//                String userName = n.valueOf("userName");
-//                if(userName.equals(username)) {
-//                    n.selectSingleNode("language").setText(language);
-//                }
-//            }
-//
-//            File usersFile = new File(this.getThreadLocalRequest().usersFile);
-//            XmlUtil.writePrettyPrint(usersFile, document);
-//            return "SUCCESS";
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new ServerSideException(Util.stackTraceToString(e));
-//        }
-//    }
-
     @Override
     public void addUserActivityData(String serverUrl){
         try{
@@ -525,114 +477,12 @@ public class UserManagementServiceImpl extends RemoteServiceServlet implements U
         }
     }
 
-//    @Override
-//    public RepoxServletResponseStates.GeneralStates registerNewEntity(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
-//        try {
-//            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
-//            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
-//            properties.setProperty("firstTimeUser","false");
-//            PropertyUtil.saveProperties(propertiesConfigrationLayout, DefaultRepoxContextUtil.CONFIG_FILE);
-//
-//            SAXReader reader = new SAXReader();
-//            String createRepoxUser = "http://repox.ist.utl.pt/repoxManagementServices/rest/createRegistration?name="+name+
-//                    "&email="+mail+"&institution="+institution+
-//                    "&skypeContact="+(skypeContact == null ? "" : skypeContact)+
-//                    "&repoxUrl="+(repoxUrl == null ? "" : repoxUrl);
-//            reader.read(new URL(createRepoxUser));
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//            return RepoxServletResponseStates.GeneralStates.ERROR;
-//        } catch (DocumentException e) {
-////            e.printStackTrace();
-//            // When no internet connection available
-//            saveEntityRegistration(name, mail, institution, skypeContact, repoxUrl);
-//            return RepoxServletResponseStates.GeneralStates.NO_INTERNET_CONNECTION;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new ServerSideException(Util.stackTraceToString(e));
-//        }
-//
-//        return RepoxServletResponseStates.GeneralStates.SUCCESS;
-//    }
-
-//    private void saveEntityRegistration(String name, String mail, String institution, String skypeContact,String repoxUrl) throws ServerSideException {
-//        try{
-//            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-//                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
-//
-//            if(!registrationFile.exists()){
-//                Document document = DocumentHelper.createDocument();
-//
-//                Element registrationNode = document.addElement("registrationInfo");
-//                registrationNode.addAttribute("name",name);
-//                registrationNode.addAttribute("mail",mail);
-//                registrationNode.addAttribute("institution",institution);
-//                registrationNode.addAttribute("skypeContact",skypeContact);
-//                registrationNode.addAttribute("repoxUrl",repoxUrl);
-//                registrationNode.addAttribute("registryDate",new Date().toString());
-//
-//                XmlUtil.writePrettyPrint(registrationFile, document);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new ServerSideException(Util.stackTraceToString(e));
-//        }
-//    }
-
-//    @Override
-//    public boolean isFirstTimeRepoxUsed() throws ServerSideException {
-//        try{
-//            PropertiesConfigurationLayout propertiesConfigrationLayout = PropertyUtil.loadCorrectedConfiguration(DefaultRepoxContextUtil.CONFIG_FILE);
-//            PropertiesConfiguration properties = propertiesConfigrationLayout.getConfiguration();
-//            boolean isFirstTime = Boolean.valueOf(properties.getProperty("firstTimeUser").toString());
-//            if(!isFirstTime){
-//                trySendRegistrationFromXML();
-//            }
-//            return isFirstTime;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new ServerSideException(Util.stackTraceToString(e));
-//        }
-//    }
-//
-//    private String trySendRegistrationFromXML() throws ServerSideException {
-//        try{
-//            File registrationFile = new File(ConfigSingleton.getRepoxContextUtil().getRepoxManager().
-//                    getConfiguration().getXmlConfigPath() + File.separator + "registrationInfo.xml");
-//
-//            if(registrationFile.exists()){
-//                SAXReader reader = new SAXReader();
-//                Document document = reader.read(registrationFile);
-//
-//                String name = document.valueOf("//registrationInfo/@name");
-//                String mail = document.valueOf("//registrationInfo/@mail");
-//                String institution = document.valueOf("//registrationInfo/@institution");
-//                String skypeContact = document.valueOf("//registrationInfo/@skypeContact");
-//                String repoxUrl = document.valueOf("//registrationInfo/@repoxUrl");
-//
-//                RepoxServletResponseStates.GeneralStates state =  registerNewEntity(name, mail, institution, skypeContact,repoxUrl);
-//                if(state == RepoxServletResponseStates.GeneralStates.SUCCESS)
-//                    registrationFile.delete();
-//            }
-//            return "OK";
-//        }catch (NullPointerException e){
-////            e.printStackTrace();
-//            return "OK";
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new ServerSideException(Util.stackTraceToString(e));
-//        }
-//    }
-
     private ResponseState sendUserDataEmail(String username, String email, String password) throws ServerSideException {
         return RepoxServiceImpl.getProjectManager().sendUserDataEmail(username, email, password);
     }
 
     @Override
     public boolean checkLDAPAuthentication(String username, String password) throws ServerSideException{
-//        String ldapUSerPrefix = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapUserPrefix();
-//        String ldapLoginDN = RepoxServiceImpl.getRepoxManager().getConfiguration().getLdapLoginDN();
-//        String loginDN = ldapUSerPrefix + username + ldapLoginDN;
         return LDAPAuthenticator.checkLDAPAuthentication(username,password);
     }
 }
