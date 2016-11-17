@@ -18,6 +18,7 @@ else
 	apt-get install -y git
 	apt-get install -y maven
 	apt-get install -y postgresql postgresql-contrib
+	apt-get install -y sudo
 	/etc/init.d/postgresql start
 	sudo -H -u postgres bash -c "psql -c \"CREATE USER repox PASSWORD '$1'\""
 	sudo -H -u postgres bash -c "psql -c \"CREATE DATABASE repox;\""
@@ -28,7 +29,7 @@ else
 	git clone https://github.com/europeana/REPOX.git
 	cd /data/git/REPOX
 	git checkout development
-	sed -i -e "s/^database.user = repox$/database.user = $1/" /data/git/REPOX/resources/src/main/resources/configuration.properties
+	sed -i -e "s/^database.password = repox$/database.password = $1/" /data/git/REPOX/resources/src/main/resources/configuration.properties
 	mvn clean install -Pproduction
 	cp /data/git/REPOX/gui/target/repox.war /var/lib/tomcat8/webapps
 	chown tomcat8 -R /data/repoxData
