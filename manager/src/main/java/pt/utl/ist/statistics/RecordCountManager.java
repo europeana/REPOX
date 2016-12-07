@@ -116,7 +116,7 @@ public class RecordCountManager implements Runnable {
     return recordCount;
   }
 
-  public void saveRecordCounts() throws IOException {
+  public synchronized void saveRecordCounts() throws IOException {
     Document document = DocumentHelper.createDocument();
 
     Element rootNode = document.addElement("recordcounts");
